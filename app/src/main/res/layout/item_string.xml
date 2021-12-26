@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.AppCompatButton xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/button_title"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/item_title_height"
+    android:background="@android:drawable/list_selector_background"
+    android:gravity="center"
+    android:textColor="@color/teal_200"
+    android:textSize="@dimen/sp_16" />
