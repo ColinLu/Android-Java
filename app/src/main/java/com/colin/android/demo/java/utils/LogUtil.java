@@ -96,6 +96,11 @@ public final class LogUtil {
         print(Log.ASSERT, tag, String.format(Locale.getDefault(), format, args));
     }
 
+    public static void log(Exception e) {
+        print(Log.ERROR, null, format(e));
+    }
+
+
     private static void print(int priority, @Nullable String tag, @Nullable String msg) {
         if (!UtilHelper.getInstance().showLog(priority)) return;
         final StackTraceElement traceElement = getStackTrace(3);
@@ -104,10 +109,9 @@ public final class LogUtil {
     }
 
     private static void print(int priority, @NonNull String tag, @NonNull String head, @Nullable String msg) {
-        final StringBuilder sb = new StringBuilder();
-        sb.append(PLACEHOLDER).append(Constants.LINE_SEP)
-                .append(head).append(Constants.LINE_SEP).append(msg);
-        Log.println(priority, tag, msg);
+        final StringBuilder sb = new StringBuilder(PLACEHOLDER);
+        sb.append(Constants.LINE_SEP).append(head).append(Constants.LINE_SEP).append(msg);
+        Log.println(priority, tag, sb.toString());
     }
 
     @NonNull
@@ -130,10 +134,15 @@ public final class LogUtil {
         return className + ".java";
     }
 
+    private static String format(Throwable e) {
+        return null;
+    }
+
     @NonNull
     private static String getHead(@NonNull String fileName, @NonNull final StackTraceElement element) {
         return new Formatter().format("%s.%s(%s:%d)", element.getClassName(),
                 element.getMethodName(), fileName, element.getLineNumber()).toString();
     }
+
 
 }

@@ -1,0 +1,59 @@
+R_DEF: Internal format may change without notice
+local
+attr EdgeLayoutStyle
+attr LoadMoreStyle
+attr LoadRefreshViewStyle
+attr LoadingViewStyle
+attr? arrow
+attr? arrowColor
+attr? backgroundColor
+attr direction
+attr? edgeFlingFraction
+attr? edgeFlingFromTarget
+attr? edgeIsTarget
+attr? edgeOver
+attr? edgeRate
+attr? edgeScrollOffset
+attr? edgeScrollSpeed
+attr? edgeScrollTouchUp
+attr? edgeStartOffset
+attr? edgeTargetOffset
+attr loadColor
+attr loadSize
+attr? loadSpace
+attr? numberCurrent
+attr? numberMax
+attr? numberReachedColor
+attr? numberReachedHeight
+attr? numberShowText
+attr? numberTextColor
+attr? numberTextOffset
+attr? numberTextSize
+attr? numberUnreachedColor
+attr? numberUnreachedHeight
+attr? progressAlpha
+attr? progressColor
+attr? progressScale
+attr? progressStyle
+attr? pullText
+attr? radius
+attr? releaseText
+color colorAccent
+color colorPrimary
+color colorPrimaryDark
+dimen load_more_height_default
+dimen load_size_default
+id bottom
+id large
+id left
+id none
+id normal
+id right
+id top
+id wrap
+styleable EdgeLayout direction
+styleable EdgeLayout_Layout edgeIsTarget direction edgeStartOffset edgeTargetOffset edgeOver edgeRate edgeFlingFraction edgeFlingFromTarget edgeScrollSpeed edgeScrollOffset edgeScrollTouchUp
+styleable LoadMoreView android:layout_height android:textSize android:textColor pullText releaseText arrow arrowColor backgroundColor loadSpace loadSize loadColor
+styleable LoadRefreshView radius progressColor progressScale progressAlpha progressStyle
+styleable LoadingView loadSize loadColor
+styleable NumberProgressBar numberCurrent numberMax numberUnreachedColor numberUnreachedHeight numberReachedColor numberReachedHeight numberTextSize numberTextColor numberTextOffset numberShowText

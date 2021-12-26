@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr format="reference" name="EdgeLayoutStyle"/>
+    <attr format="reference" name="LoadMoreStyle"/>
+    <attr format="reference" name="LoadRefreshViewStyle"/>
+    <attr format="reference" name="LoadingViewStyle"/>
+    <attr name="direction">
+        <enum name="none" value="0"/>
+        <enum name="left" value="1"/>
+        <enum name="top" value="2"/>
+        <enum name="right" value="4"/>
+        <enum name="bottom" value="8"/>
+    </attr>
+    <attr format="reference|color" name="loadColor"/>
+    <attr format="reference|dimension" name="loadSize"/>
+    <color name="colorAccent">#FF4E9AF7</color>
+    <color name="colorPrimary">#FFFFFFFF</color>
+    <color name="colorPrimaryDark">#FFFFFFFF</color>
+    <dimen name="load_more_height_default">56dp</dimen>
+    <dimen name="load_size_default">32dp</dimen>
+    <declare-styleable name="EdgeLayout">
+        <attr name="direction"/>
+    </declare-styleable>
+    <declare-styleable name="EdgeLayout_Layout">
+        <attr format="boolean" name="edgeIsTarget"/>
+        <attr name="direction"/>
+        <attr format="dimension" name="edgeStartOffset"/>
+        <attr format="dimension|enum" name="edgeTargetOffset">
+            <enum name="wrap" value="-2"/>
+        </attr>
+        <attr format="boolean" name="edgeOver"/>
+        <attr format="float" name="edgeRate"/>
+        <attr format="float" name="edgeFlingFraction"/>
+        <attr format="boolean" name="edgeFlingFromTarget"/>
+        <attr format="integer" name="edgeScrollSpeed"/>
+        <attr format="boolean" name="edgeScrollOffset"/>
+        <attr format="boolean" name="edgeScrollTouchUp"/>
+    </declare-styleable>
+    <declare-styleable name="LoadMoreView">
+        <attr name="android:layout_height"/>
+        <attr name="android:textSize"/>
+        <attr name="android:textColor"/>
+        <attr format="reference|string" name="pullText"/>
+        <attr format="reference|string" name="releaseText"/>
+        <attr format="reference" name="arrow"/>
+        <attr format="reference|color" name="arrowColor"/>
+        <attr format="reference|color" name="backgroundColor"/>
+        <attr format="reference|dimension" name="loadSpace"/>
+        <attr name="loadSize"/>
+        <attr name="loadColor"/>
+
+    </declare-styleable>
+    <declare-styleable name="LoadRefreshView">
+        <attr format="reference|dimension" name="radius"/>
+        <attr format="reference|color" name="progressColor"/>
+        <attr format="float" name="progressScale"/>
+        <attr format="integer" name="progressAlpha"/>
+        <attr format="enum" name="progressStyle">
+            <enum name="large" value="0"/>
+            <enum name="normal" value="1"/>
+        </attr>
+    </declare-styleable>
+    <declare-styleable name="LoadingView">
+        <attr name="loadSize"/>
+        <attr name="loadColor"/>
+    </declare-styleable>
+    <declare-styleable name="NumberProgressBar">
+        <attr format="integer" name="numberCurrent"/>
+        <attr format="integer" name="numberMax"/>
+        <attr format="reference|color" name="numberUnreachedColor"/>
+        <attr format="reference|dimension" name="numberUnreachedHeight"/>
+        <attr format="reference|color" name="numberReachedColor"/>
+        <attr format="reference|dimension" name="numberReachedHeight"/>
+        <attr format="reference|dimension" name="numberTextSize"/>
+        <attr format="reference|color" name="numberTextColor"/>
+        <attr format="reference|dimension" name="numberTextOffset"/>
+        <attr format="boolean" name="numberShowText"/>
+    </declare-styleable>
+</resources>
