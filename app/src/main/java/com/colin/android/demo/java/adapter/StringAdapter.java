@@ -1,13 +1,11 @@
 package com.colin.android.demo.java.adapter;
 
-import android.content.Context;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.colin.android.demo.java.R;
-import com.colin.android.demo.java.base.BaseRecyclerAdapter;
-import com.colin.android.demo.java.base.BaseViewHolder;
+import com.colin.library.android.base.BaseAdapter;
+import com.colin.library.android.base.BaseViewHolder;
 
 import java.util.List;
 
@@ -17,9 +15,9 @@ import java.util.List;
  * <p>
  * 描述： TODO
  */
-public class StringAdapter extends BaseRecyclerAdapter<String> {
-    public StringAdapter(@NonNull Context context, @Nullable List<String> strings) {
-        super(context, strings);
+public class StringAdapter extends BaseAdapter<String> {
+    public StringAdapter(@Nullable List<String> strings) {
+        super(strings);
     }
 
     @Override
@@ -29,7 +27,6 @@ public class StringAdapter extends BaseRecyclerAdapter<String> {
 
     @Override
     public void onBindViewHolder(@NonNull BaseViewHolder holder, int position) {
-        assert mItemList != null;
         final String text = mItemList.get(position);
         holder.setText(R.id.button_title, text)
                 .setOnClickListener(R.id.button_title, v -> {

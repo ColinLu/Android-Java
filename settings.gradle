@@ -8,3 +8,6 @@ dependencyResolutionManagement {
 }
 rootProject.name = "DemoJava"
 include ':app'
+include ':Utils'
+include ':Base'
+include ':Widgets'

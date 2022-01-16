@@ -2,8 +2,11 @@ package com.colin.android.demo.java;
 
 import android.app.Application;
 
-import com.colin.android.demo.java.utils.data.UtilConfig;
-import com.colin.android.demo.java.utils.data.UtilHelper;
+import com.colin.library.android.utils.CrashUtil;
+import com.colin.library.android.utils.LogUtil;
+import com.colin.library.android.utils.data.UtilConfig;
+import com.colin.library.android.utils.data.UtilHelper;
+
 
 /**
  * 作者： ColinLu
@@ -16,5 +19,9 @@ public final class JavaApp extends Application {
     public void onCreate() {
         super.onCreate();
         UtilHelper.init(new UtilConfig.Builder(this).build());
+        CrashUtil.init((crashInfo, e) -> {
+            LogUtil.e(crashInfo);
+            LogUtil.log(e);
+        });
     }
 }

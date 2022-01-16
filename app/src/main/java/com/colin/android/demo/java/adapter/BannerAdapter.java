@@ -1,16 +1,12 @@
 package com.colin.android.demo.java.adapter;
 
-import android.content.Context;
-import android.view.View;
-
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.colin.android.demo.java.R;
-import com.colin.android.demo.java.base.BaseRecyclerAdapter;
-import com.colin.android.demo.java.base.BaseViewHolder;
-import com.colin.android.demo.java.ui.home.HomeFragment;
+import com.colin.library.android.base.BaseAdapter;
+import com.colin.library.android.base.BaseViewHolder;
 
 import java.util.List;
 
@@ -20,9 +16,9 @@ import java.util.List;
  * <p>
  * 描述： TODO
  */
-public class BannerAdapter extends BaseRecyclerAdapter<Integer> {
-    public BannerAdapter(@NonNull Context context, @Nullable List<Integer> integers) {
-        super(context, integers);
+public class BannerAdapter extends BaseAdapter<Integer> {
+    public BannerAdapter(@Nullable List<Integer> integers) {
+        super(integers);
     }
 
     @LayoutRes
@@ -33,7 +29,6 @@ public class BannerAdapter extends BaseRecyclerAdapter<Integer> {
 
     @Override
     public void onBindViewHolder(@NonNull BaseViewHolder holder, int position) {
-        assert mItemList != null;
         final Integer res = mItemList.get(position);
         holder.setImageResource(R.id.image_banner, res)
                 .setOnClickListener(R.id.image_banner, v -> {

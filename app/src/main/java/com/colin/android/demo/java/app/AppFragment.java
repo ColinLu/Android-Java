@@ -7,13 +7,10 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.viewbinding.ViewBinding;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
-import com.colin.android.demo.java.base.BaseFragment;
-
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.lang.reflect.ParameterizedType;
+import com.colin.library.android.base.BaseFragment;
 
 /**
  * 作者： ColinLu
@@ -21,30 +18,7 @@ import java.lang.reflect.ParameterizedType;
  * <p>
  * 描述： TODO
  */
-public abstract class AppFragment<Bind extends ViewBinding> extends BaseFragment<Bind> {
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        final ParameterizedType type = (ParameterizedType) getClass().getGenericSuperclass();
-        final Class cls = (Class) type.getActualTypeArguments()[0];
-        try {
-            final Method inflate = cls.getDeclaredMethod("inflate", LayoutInflater.class, ViewGroup.class, boolean.class);
-            mBinding = (Bind) inflate.invoke(null, inflater, container, false);
-        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-            e.printStackTrace();
-        }
-        return mBinding.getRoot();
-    }
+public abstract class AppFragment extends BaseFragment {
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        initView(savedInstanceState);
-        initData(getArguments());
-    }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        mBinding = null;
-    }
 }

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="NumberProgressBar">
+        <attr name="numberCurrent" format="integer" />
+        <attr name="numberMax" format="integer" />
+        <attr name="numberUnreachedColor" format="reference|color" />
+        <attr name="numberUnreachedHeight" format="reference|dimension" />
+        <attr name="numberReachedColor" format="reference|color" />
+        <attr name="numberReachedHeight" format="reference|dimension" />
+        <attr name="numberTextSize" format="reference|dimension" />
+        <attr name="numberTextColor" format="reference|color" />
+        <attr name="numberTextOffset" format="reference|dimension" />
+        <attr name="numberShowText" format="boolean" />
+    </declare-styleable>
+</resources>
