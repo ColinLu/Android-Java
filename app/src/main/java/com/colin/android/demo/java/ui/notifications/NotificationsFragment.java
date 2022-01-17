@@ -8,6 +8,7 @@ import androidx.annotation.RequiresApi;
 
 import com.colin.android.demo.java.R;
 import com.colin.android.demo.java.app.AppFragment;
+import com.colin.android.demo.java.databinding.ActivityMainBinding;
 
 import java.util.Arrays;
 import java.util.List;

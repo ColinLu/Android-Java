@@ -19,9 +19,6 @@ public final class JavaApp extends Application {
     public void onCreate() {
         super.onCreate();
         UtilHelper.init(new UtilConfig.Builder(this).build());
-        CrashUtil.init((crashInfo, e) -> {
-            LogUtil.e(crashInfo);
-            LogUtil.log(e);
-        });
+        CrashUtil.init((crashInfo, e) -> LogUtil.e(crashInfo));
     }
 }

@@ -1,6 +1,17 @@
 package com.colin.android.demo.java.app;
 
+import android.content.res.Resources;
+import android.os.Bundle;
+import android.view.LayoutInflater;
+
+import androidx.annotation.Nullable;
+import androidx.viewbinding.ViewBinding;
+
 import com.colin.library.android.base.BaseActivity;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
 
 /**
  * 作者： ColinLu
@@ -8,7 +19,33 @@ import com.colin.library.android.base.BaseActivity;
  * <p>
  * 描述： TODO
  */
-public abstract class AppActivity extends BaseActivity {
+public abstract class AppActivity<Bind extends ViewBinding> extends BaseActivity {
+    protected Bind mBinding;
 
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        final ParameterizedType type = (ParameterizedType) getClass().getGenericSuperclass();
+        final Class cls = (Class) type.getActualTypeArguments()[0];
+        try {
+            Method inflate = cls.getDeclaredMethod("inflate", LayoutInflater.class);
+            mBinding = (Bind) inflate.invoke(null, getLayoutInflater());
+            setContentView(mBinding.getRoot());
+        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+            e.printStackTrace();
+        }
+        initView(savedInstanceState);
+        initData(getIntent().getExtras());
+    }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mBinding = null;
+    }
+
+    @Override
+    public int layoutRes() {
+        return Resources.ID_NULL;
+    }
 }

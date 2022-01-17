@@ -8,11 +8,8 @@ import androidx.navigation.fragment.NavHostFragment;
 import com.colin.android.demo.java.R;
 import com.colin.android.demo.java.app.AppFragment;
 
-public class HomeFragment extends AppFragment {
-    @Override
-    public int layoutRes() {
-        return R.layout.fragment_home;
-    }
+public class HomeFragment extends AppFragment<HomeFragmentBinding> {
+
 
     @Override
     public void initView(@Nullable Bundle bundle) {

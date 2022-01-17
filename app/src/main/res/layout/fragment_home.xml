@@ -6,23 +6,15 @@
     android:layout_height="match_parent"
     tools:context=".ui.home.HomeFragment">
 
-    <TextView
-        android:id="@+id/textview_home"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/app_name"
-        app:layout_constraintBottom_toTopOf="@id/button_motion"
+    <Button
+        android:id="@+id/button_motion"
+        style="@style/Theme.App.Button"
+        android:layout_width="@dimen/dp_0"
+        android:layout_height="@dimen/button_height"
+        android:layout_marginTop="@dimen/item_title_height"
+        android:text="@string/motion"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/button_motion"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/motion"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textview_home" />
 </androidx.constraintlayout.widget.ConstraintLayout>
