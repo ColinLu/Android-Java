@@ -6,6 +6,7 @@ import androidx.annotation.Nullable;
 import com.colin.android.demo.java.R;
 import com.colin.library.android.base.BaseAdapter;
 import com.colin.library.android.base.BaseViewHolder;
+import com.colin.library.android.utils.LogUtil;
 
 import java.util.List;
 

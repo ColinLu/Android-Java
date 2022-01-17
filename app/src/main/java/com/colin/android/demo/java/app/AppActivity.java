@@ -8,6 +8,7 @@ import androidx.annotation.Nullable;
 import androidx.viewbinding.ViewBinding;
 
 import com.colin.library.android.base.BaseActivity;
+import com.colin.library.android.utils.LogUtil;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -37,6 +38,7 @@ public abstract class AppActivity<Bind extends ViewBinding> extends BaseActivity
         initView(savedInstanceState);
         initData(getIntent().getExtras());
     }
+
 
     @Override
     protected void onDestroy() {

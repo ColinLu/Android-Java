@@ -17,4 +17,25 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <Button
+        android:id="@+id/button_view"
+        style="@style/Theme.App.Button"
+        android:layout_width="@dimen/dp_0"
+        android:layout_height="@dimen/button_height"
+        android:layout_marginTop="@dimen/margin_default"
+        android:text="@string/view"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button_motion" />
+
+    <Button
+        android:id="@+id/button_method"
+        style="@style/Theme.App.Button"
+        android:layout_width="@dimen/dp_0"
+        android:layout_height="@dimen/button_height"
+        android:layout_marginTop="@dimen/margin_default"
+        android:text="@string/method"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button_view" />
 </androidx.constraintlayout.widget.ConstraintLayout>

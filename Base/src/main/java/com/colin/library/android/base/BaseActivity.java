@@ -15,6 +15,7 @@ import com.colin.library.android.base.def.IActivity;
  */
 public abstract class BaseActivity extends AppCompatActivity implements IActivity {
 
+    protected boolean mRefresh = true;
 
     @Nullable
     @Override
@@ -22,5 +23,18 @@ public abstract class BaseActivity extends AppCompatActivity implements IActivit
         return this;
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (mRefresh) {
+            mRefresh = false;
+            loadData(true);
+        }
+    }
+
+    /*返回界面  onResume 刷新*/
+    public void setRefresh(boolean refresh) {
+        mRefresh = refresh;
+    }
 
 }

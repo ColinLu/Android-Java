@@ -1,11 +1,15 @@
 package com.colin.android.demo.java.ui.motion;
 
 import android.os.Bundle;
+import android.view.View;
 
 import androidx.annotation.Nullable;
+import androidx.navigation.fragment.NavHostFragment;
 
 import com.colin.android.demo.java.R;
 import com.colin.android.demo.java.app.AppFragment;
+import com.colin.android.demo.java.databinding.FragmentMotionBinding;
+import com.colin.android.demo.java.ui.home.HomeFragment;
 
 /**
  * 作者： ColinLu
@@ -13,19 +17,19 @@ import com.colin.android.demo.java.app.AppFragment;
  * <p>
  * 描述： TODO
  */
-public class MotionFragment extends AppFragment {
-    @Override
-    public int layoutRes() {
-        return R.layout.fragment_motion;
-    }
+public class MotionFragment extends AppFragment<FragmentMotionBinding> {
 
     @Override
     public void initView(@Nullable Bundle bundle) {
-
     }
 
     @Override
     public void initData(@Nullable Bundle bundle) {
+
+    }
+
+    @Override
+    public void loadData(boolean refresh) {
 
     }
 }

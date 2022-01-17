@@ -15,38 +15,27 @@ import com.colin.android.demo.java.databinding.ActivityMainBinding;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.snackbar.Snackbar;
 
-public class MainActivity extends AppActivity {
+public class MainActivity extends AppActivity<ActivityMainBinding> {
     private AppBarConfiguration appBarConfiguration;
-    private ActivityMainBinding binding;
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
-
-        setSupportActionBar(binding.toolbar);
-
+    public void initView(@Nullable Bundle bundle) {
+        setSupportActionBar(mBinding.mToolbar);
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
         appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
 
-        binding.fab.setOnClickListener(view -> Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+        mBinding.fab.setOnClickListener(view -> Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show());
     }
 
     @Override
-    public int layoutRes() {
-        return R.layout.activity_main;
-    }
-
-    @Override
-    public void initView(@Nullable Bundle bundle) {
-
-    }
-
-    @Override
     public void initData(@Nullable Bundle bundle) {
+
+    }
+
+    @Override
+    public void loadData(boolean refresh) {
 
     }
 
@@ -68,8 +57,7 @@ public class MainActivity extends AppActivity {
 
     @Override
     public boolean onSupportNavigateUp() {
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
-        return NavigationUI.navigateUp(navController, appBarConfiguration)
-                || super.onSupportNavigateUp();
+        NavController controller = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
+        return NavigationUI.navigateUp(controller, appBarConfiguration) || super.onSupportNavigateUp();
     }
 }

@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.viewbinding.ViewBinding;
 
 import com.colin.library.android.base.BaseFragment;
@@ -55,4 +56,9 @@ public abstract class AppFragment<Bind extends ViewBinding> extends BaseFragment
     public int layoutRes() {
         return Resources.ID_NULL;
     }
+
+    protected void toNavigate(int action) {
+        NavHostFragment.findNavController(this).navigate(action);
+    }
+
 }

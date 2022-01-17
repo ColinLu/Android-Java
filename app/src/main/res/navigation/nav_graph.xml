@@ -4,17 +4,46 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
     app:startDestination="@id/HomeFragment">
-
     <fragment
         android:id="@+id/HomeFragment"
         android:name="com.colin.android.demo.java.ui.home.HomeFragment"
         android:label="@string/app_name"
         tools:layout="@layout/fragment_home">
-
         <action
             android:id="@+id/action_Home_to_Motion"
-            app:destination="@id/MotionFragment" />
+            app:destination="@+id/MotionFragment" />
+        <action
+            android:id="@+id/action_Home_to_View"
+            app:destination="@+id/ViewFragment" />
+        <action
+            android:id="@+id/action_Home_to_Method"
+            app:destination="@+id/MethodFragment" />
     </fragment>
+
+    <fragment
+        android:id="@+id/MethodFragment"
+        android:name="com.colin.android.demo.java.ui.method.MethodFragment"
+        android:label="@string/method"
+        tools:layout="@layout/layout_list">
+        <action
+            android:id="@+id/action_Method_to_Log"
+            app:destination="@+id/LogFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/ViewFragment"
+        android:name="com.colin.android.demo.java.ui.view.ViewFragment"
+        android:label="@string/view"
+        tools:layout="@layout/layout_list">
+        <action
+            android:id="@+id/action_View_to_Motion"
+            app:destination="@+id/MotionFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/LogFragment"
+        android:name="com.colin.android.demo.java.ui.method.LogFragment"
+        android:label="@string/log"
+        tools:layout="@layout/fragment_log" />
+
     <fragment
         android:id="@+id/MotionFragment"
         android:name="com.colin.android.demo.java.ui.motion.MotionFragment"
