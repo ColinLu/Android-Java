@@ -28,5 +28,6 @@ public interface IActivity {
 
     void initData(@Nullable Bundle bundle);
 
+    void loadData(boolean refresh);
 
 }

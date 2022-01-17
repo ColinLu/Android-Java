@@ -10,4 +10,6 @@
     <dimen name="button_size">18sp</dimen>
     <dimen name="button_height">50dp</dimen>
 
+    <dimen name="margin_default">@dimen/fab_margin</dimen>
+
 </resources>

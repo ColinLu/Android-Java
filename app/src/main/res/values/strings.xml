@@ -1,10 +1,79 @@
 <resources>
     <string name="app_name">DemoJava</string>
+    <string name="method">Method</string>
+    <string name="log">Log</string>
     <string name="next">Next</string>
+    <string name="permission">Permission</string>
+    <string name="path">Path</string>
+    <string name="view">View</string>
     <string name="motion">Motion</string>
+    <string name="edge">Edge</string>
     <string name="action_settings">Settings</string>
     <string name="previous">Previous</string>
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
+
+    <string-array name="view_list">
+        <item>@string/motion</item>
+        <item>@string/edge</item>
+        <item>@string/path</item>
+        <item>@string/path</item>
+        <item>@string/path</item>
+        <item>@string/path</item>
+        <item>@string/path</item>
+        <item>@string/path</item>
+        <item>@string/path</item>
+        <item>@string/path</item>
+        <item>@string/path</item>
+        <item>@string/path</item>
+        <item>@string/path</item>
+        <item>@string/path</item>
+        <item>@string/path</item>
+        <item>@string/path</item>
+        <item>@string/path</item>
+        <item>@string/path</item>
+        <item>@string/path</item>
+        <item>@string/path</item>
+        <item>@string/path</item>
+        <item>@string/path</item>
+        <item>@string/path</item>
+        <item>@string/path</item>
+        <item>@string/path</item>
+        <item>@string/path</item>
+        <item>@string/path</item>
+        <item>@string/path</item>
+    </string-array>
+    <string-array name="method_list">
+        <item>@string/log</item>
+        <item>@string/permission</item>
+        <item>@string/path</item>
+        <item>@string/path</item>
+        <item>@string/path</item>
+        <item>@string/path</item>
+        <item>@string/path</item>
+        <item>@string/path</item>
+        <item>@string/path</item>
+        <item>@string/path</item>
+        <item>@string/path</item>
+        <item>@string/path</item>
+        <item>@string/path</item>
+        <item>@string/path</item>
+        <item>@string/path</item>
+        <item>@string/path</item>
+        <item>@string/path</item>
+        <item>@string/path</item>
+        <item>@string/path</item>
+        <item>@string/path</item>
+        <item>@string/path</item>
+        <item>@string/path</item>
+        <item>@string/path</item>
+        <item>@string/path</item>
+        <item>@string/path</item>
+        <item>@string/path</item>
+        <item>@string/path</item>
+        <item>@string/path</item>
+    </string-array>
+
+
 </resources>

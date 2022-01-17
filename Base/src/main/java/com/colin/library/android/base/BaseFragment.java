@@ -23,7 +23,7 @@ import com.colin.library.android.base.def.IActivity;
 public abstract class BaseFragment extends Fragment implements IActivity {
     protected static final String STATE_SAVE_IS_HIDDEN = "STATE_SAVE_IS_HIDDEN";
     protected View mRootView;                                   //根布局
-
+    protected boolean mRefresh = true;
 
     /*Fragment开始*/
     @Override
@@ -55,8 +55,22 @@ public abstract class BaseFragment extends Fragment implements IActivity {
         initData(getArguments());
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (mRefresh) {
+            mRefresh = false;
+            loadData(true);
+        }
+    }
+
     @Nullable
     public <T extends View> T findViewById(@IdRes int id) {
         return (T) mRootView.findViewById(id);
+    }
+
+    /*返回界面  onResume 刷新*/
+    public void setRefresh(boolean refresh) {
+        mRefresh = refresh;
     }
 }
