@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel;
 import com.colin.android.demo.java.R;
 import com.colin.android.demo.java.def.Constants;
 import com.colin.android.demo.java.def.LoadState;
+import com.colin.android.demo.java.utils.DemoUtils;
 import com.colin.library.android.utils.data.UtilHelper;
 import com.colin.library.android.utils.thread.ThreadUtil;
 
@@ -19,28 +20,22 @@ import java.util.List;
  * 描述： TODO
  */
 public class MethodFragmentViewModel extends ViewModel {
-    private final MutableLiveData<List<String>> mMethodList;
+    private final MutableLiveData<List<String>> mList;
     private final MutableLiveData<Integer> mLoadState;
 
     public MethodFragmentViewModel() {
-        mMethodList = new MutableLiveData<>();
+        mList = new MutableLiveData<>();
         mLoadState = new MutableLiveData<>();
     }
 
     public void refresh(boolean refresh) {
         mLoadState.setValue(LoadState.ING);
-        ThreadUtil.doAsync(() -> mMethodList.postValue(getList()));
-        ThreadUtil.runOnUiDelayed(() -> mLoadState.setValue(LoadState.SUCCESS), Constants.DURATION_DELAYED);
+        ThreadUtil.doAsync(() -> mList.postValue(DemoUtils.getStringList(R.array.view_list)));
+        ThreadUtil.runUiDelayed(() -> mLoadState.setValue(LoadState.SUCCESS), Constants.DURATION_DELAYED);
     }
 
-    private List<String> getList() {
-        final String[] array = UtilHelper.getInstance().getContext().getResources()
-                .getStringArray(R.array.method_list);
-        return Arrays.asList(array);
-    }
-
-    public MutableLiveData<List<String>> getMethodList() {
-        return mMethodList;
+    public MutableLiveData<List<String>> getList() {
+        return mList;
     }
 
     public MutableLiveData<Integer> getLoadState() {

@@ -89,12 +89,12 @@ public final class ThreadUtil {
         return Looper.myLooper() == Looper.getMainLooper();
     }
 
-    public static void runOnUI(final Runnable runnable) {
+    public static void runUI(final Runnable runnable) {
         if (isUI()) runnable.run();
         else HANDLER.post(runnable);
     }
 
-    public static void runOnUiDelayed(final Runnable runnable, long delayMillis) {
+    public static void runUiDelayed(final Runnable runnable, long delayMillis) {
         HANDLER.postDelayed(runnable, delayMillis);
     }
 

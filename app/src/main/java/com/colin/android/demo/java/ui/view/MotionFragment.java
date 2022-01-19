@@ -1,4 +1,4 @@
-package com.colin.android.demo.java.ui.motion;
+package com.colin.android.demo.java.ui.view;
 
 import android.os.Bundle;
 import android.view.View;

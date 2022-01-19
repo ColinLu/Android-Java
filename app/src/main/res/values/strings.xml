@@ -75,5 +75,29 @@
         <item>@string/path</item>
     </string-array>
 
+    <string-array name="flow_data">
+        <item>Touch</item>
+        <item>C语言</item>
+        <item>Java语言</item>
+        <item>Objective-C语言</item>
+        <item>C++语言</item>
+        <item>PHP语言</item>
+        <item>C#语言</item>
+        <item>(Visual) Basic语言</item>
+        <item>Python语言</item>
+        <item>Perl语言</item>
+        <item>JavaScript语言</item>
+        <item>Ruby语言</item>
+        <item>Visual Basic .NET语言</item>
+        <item>Transact-SQL语言</item>
+        <item>Delphi/Object Pascal语言</item>
+        <item>Kotlin语言</item>
+        <item>Swift语言</item>
+        <item>Android语言</item>
+        <item>Go语言</item>
+        <item>.Net语言</item>
+        <item>PL/SQL语言</item>
+        <item>C++语言</item>
+    </string-array>
 
 </resources>

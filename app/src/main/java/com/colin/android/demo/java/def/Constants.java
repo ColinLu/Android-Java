@@ -7,5 +7,5 @@ package com.colin.android.demo.java.def;
  * 描述： TODO
  */
 public interface Constants {
-    long DURATION_DELAYED = 5000;
+    long DURATION_DELAYED = 3000;
 }

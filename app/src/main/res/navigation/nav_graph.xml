@@ -37,6 +37,9 @@
         <action
             android:id="@+id/action_View_to_Motion"
             app:destination="@+id/MotionFragment" />
+        <action
+            android:id="@+id/action_View_to_Edge"
+            app:destination="@+id/EdgeFragment" />
     </fragment>
     <fragment
         android:id="@+id/LogFragment"
@@ -46,12 +49,13 @@
 
     <fragment
         android:id="@+id/MotionFragment"
-        android:name="com.colin.android.demo.java.ui.motion.MotionFragment"
+        android:name="com.colin.android.demo.java.ui.view.MotionFragment"
         android:label="@string/motion"
-        tools:layout="@layout/fragment_motion">
+        tools:layout="@layout/fragment_motion" />
 
-        <action
-            android:id="@+id/action_Motion_to_Home"
-            app:destination="@id/HomeFragment" />
-    </fragment>
+    <fragment
+        android:id="@+id/EdgeFragment"
+        android:name="com.colin.android.demo.java.ui.view.EdgeFragment"
+        android:label="@string/edge"
+        tools:layout="@layout/layout_edge" />
 </navigation>

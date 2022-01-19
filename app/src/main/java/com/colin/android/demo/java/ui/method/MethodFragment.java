@@ -36,7 +36,12 @@ public class MethodFragment extends AppFragment<LayoutListBinding> implements On
     }
 
     private void initRecyclerView(Context context) {
-        mAdapter = new StringAdapter(null);
+        if (context == null) {
+            return;
+        }
+        if (mAdapter == null) {
+            mAdapter = new StringAdapter(null);
+        }
         mAdapter.setOnItemClickListener(this);
         mBinding.mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
         mBinding.mRecyclerView.setHasFixedSize(true);
@@ -47,7 +52,7 @@ public class MethodFragment extends AppFragment<LayoutListBinding> implements On
     @Override
     public void initData(@Nullable Bundle bundle) {
         mViewModel = new ViewModelProvider(this).get(MethodFragmentViewModel.class);
-        mViewModel.getMethodList().observe(this, list -> mAdapter.setData(list));
+        mViewModel.getList().observe(this, list -> mAdapter.setData(list));
         mViewModel.getLoadState().observe(this, state -> mBinding.mRefreshList.setRefreshing(state == LoadState.ING));
     }
 

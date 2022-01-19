@@ -11,10 +11,11 @@ import java.lang.annotation.RetentionPolicy;
  * <p>
  * 描述： TODO
  */
-@IntDef({LoadState.ING, LoadState.SUCCESS, LoadState.ERROR})
+@IntDef({LoadState.ING, LoadState.MORE, LoadState.SUCCESS, LoadState.ERROR})
 @Retention(RetentionPolicy.SOURCE)
 public @interface LoadState {
     int ING = 0;
-    int SUCCESS = 1;
-    int ERROR = 2;
+    int MORE = 1;
+    int SUCCESS = 2;
+    int ERROR = 3;
 }
