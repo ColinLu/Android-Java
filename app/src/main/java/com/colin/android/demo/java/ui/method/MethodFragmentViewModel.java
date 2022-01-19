@@ -30,7 +30,7 @@ public class MethodFragmentViewModel extends ViewModel {
 
     public void refresh(boolean refresh) {
         mLoadState.setValue(LoadState.ING);
-        ThreadUtil.doAsync(() -> mList.postValue(DemoUtils.getStringList(R.array.view_list)));
+        ThreadUtil.doAsync(() -> mList.postValue(DemoUtils.getStringList(R.array.method_list)));
         ThreadUtil.runUiDelayed(() -> mLoadState.setValue(LoadState.SUCCESS), Constants.DURATION_DELAYED);
     }
 

@@ -32,6 +32,7 @@
     <Button
         android:id="@+id/mButtonMotion"
         style="@style/Theme.App.Button"
+        android:layout_width="@dimen/dp_0"
         android:layout_height="@dimen/button_height"
         android:text="@string/previous"
         app:layout_constraintBottom_toBottomOf="parent"
