@@ -12,6 +12,7 @@ import com.colin.library.android.base.def.IActivity;
  * 时间： 2022-01-15 11:26
  * <p>
  * 描述： Activity 基类
+ * 实现刷新机制
  */
 public abstract class BaseActivity extends AppCompatActivity implements IActivity {
 

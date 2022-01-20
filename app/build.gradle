@@ -42,10 +42,12 @@ android {
 
     buildTypes {
         debug {
+            ext.enableCrashlytics = false
             debuggable true
             jniDebuggable true
-            minifyEnabled false
-            shrinkResources false
+            minifyEnabled false             //true，打开混淆；
+            shrinkResources false           //打开资源压缩
+            zipAlignEnabled true            //是否移除无用资源
             signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             manifestPlaceholders = [
@@ -53,16 +55,28 @@ android {
             ]
         }
         release {
+            ext.enableCrashlytics = false
             debuggable false
             jniDebuggable false
-            minifyEnabled false
-            shrinkResources false
+            minifyEnabled false             //true，打开混淆；
+            shrinkResources false           //打开资源压缩
+            zipAlignEnabled true            //是否移除无用资源
             signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             manifestPlaceholders = [
                     networkSecurityConfig: "@xml/network_security_config"
             ]
         }
+    }
+
+    dexOptions {
+        //最大堆内存
+        javaMaxHeapSize '2048m'
+        //预编译
+        preDexLibraries = true
+        //线程数
+        threadCount = 16
+        dexInProcess = true
     }
 
     compileOptions {
@@ -76,6 +90,11 @@ android {
 
     buildFeatures {
         viewBinding true
+    }
+
+    lintOptions {
+        checkReleaseBuilds false
+        abortOnError false
     }
 }
 
@@ -97,18 +116,21 @@ dependencies {
     implementation("androidx.work:work-runtime-ktx:${versions.androidx_work_manager}")
 
 
-//    implementation 'androidx.viewpager2:viewpager2:1.0.0'
     // RxJava
     implementation "io.reactivex.rxjava2:rxjava:${versions.rxjava2}"
     implementation "io.reactivex.rxjava2:rxandroid:${versions.rxandroid2}"
+
     implementation 'androidx.viewpager2:viewpager2:1.1.0-alpha01'
+
+
+    testImplementation "junit:junit:${versions.junit}"
+    androidTestImplementation "androidx.test.ext:junit:${versions.androidx_junit}"
+    androidTestImplementation "androidx.test.espresso:espresso-core:${versions.androidx_espresso}"
+
 
     implementation project(path: ':Base')
     implementation project(path: ':Utils')
     implementation project(path: ':Widgets')
 
-    testImplementation "junit:junit:${versions.junit}"
-    androidTestImplementation "androidx.test.ext:junit:${versions.androidx_junit}"
-    androidTestImplementation "androidx.test.espresso:espresso-core:${versions.androidx_espresso}"
 
 }

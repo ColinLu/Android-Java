@@ -24,6 +24,10 @@ public abstract class BaseAdapter<ITEM> extends RecyclerView.Adapter<BaseViewHol
     protected final List<ITEM> mItemList;
     protected OnItemClickListener mItemClickListener;
 
+    public BaseAdapter() {
+        this(null);
+    }
+
     public BaseAdapter(@Nullable List<ITEM> list) {
         mItemList = new ArrayList<>();
         if (list != null && list.size() > 0) mItemList.addAll(list);

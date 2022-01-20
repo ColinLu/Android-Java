@@ -39,7 +39,7 @@ public class ViewFragment extends AppFragment<LayoutListBinding> implements OnIt
             return;
         }
         if (mAdapter == null) {
-            mAdapter = new StringAdapter(null);
+            mAdapter = new StringAdapter();
         }
         mAdapter.setOnItemClickListener(this);
         mBinding.mRecyclerView.setLayoutManager(new LinearLayoutManager(context));

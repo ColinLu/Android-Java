@@ -9,7 +9,7 @@ import java.lang.annotation.RetentionPolicy;
  * 作者： ColinLu
  * 时间： 2022-01-18 22:51
  * <p>
- * 描述： TODO
+ * 描述： 加载状态
  */
 @IntDef({LoadState.ING, LoadState.MORE, LoadState.SUCCESS, LoadState.ERROR})
 @Retention(RetentionPolicy.SOURCE)

@@ -14,7 +14,7 @@ import java.util.List;
  * 作者： ColinLu
  * 时间： 2021-12-14 22:55
  * <p>
- * 描述： TODO
+ * 描述： Banner适配器
  */
 public class BannerAdapter extends BaseAdapter<Integer> {
     public BannerAdapter(@Nullable List<Integer> integers) {
@@ -32,9 +32,7 @@ public class BannerAdapter extends BaseAdapter<Integer> {
         final Integer res = mItemList.get(position);
         holder.setImageResource(R.id.image_banner, res)
                 .setOnClickListener(R.id.image_banner, v -> {
-                    if (mItemClickListener != null) {
-                        mItemClickListener.item(v, position, res);
-                    }
+                    if (mItemClickListener != null) mItemClickListener.item(v, position, res);
                 });
     }
 }

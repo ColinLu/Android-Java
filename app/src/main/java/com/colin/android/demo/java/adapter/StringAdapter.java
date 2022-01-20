@@ -17,8 +17,8 @@ import java.util.List;
  * 描述： TODO
  */
 public class StringAdapter extends BaseAdapter<String> {
-    public StringAdapter(@Nullable List<String> strings) {
-        super(strings);
+    public StringAdapter() {
+        super();
     }
 
     @Override
@@ -31,9 +31,8 @@ public class StringAdapter extends BaseAdapter<String> {
         final String text = mItemList.get(position);
         holder.setText(R.id.button_title, text)
                 .setOnClickListener(R.id.button_title, v -> {
-                    if (mItemClickListener != null) {
-                        mItemClickListener.item(v, position, text);
-                    }
+                    if (mItemClickListener != null) mItemClickListener.item(v, position, text);
+
                 });
     }
 }
