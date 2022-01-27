@@ -10,9 +10,6 @@
         android:label="@string/app_name"
         tools:layout="@layout/fragment_home">
         <action
-            android:id="@+id/action_Home_to_Motion"
-            app:destination="@+id/MotionFragment" />
-        <action
             android:id="@+id/action_Home_to_View"
             app:destination="@+id/ViewFragment" />
         <action
@@ -40,6 +37,9 @@
         <action
             android:id="@+id/action_View_to_Edge"
             app:destination="@+id/EdgeFragment" />
+        <action
+            android:id="@+id/action_View_to_Gradient"
+            app:destination="@+id/GradientTextFragment" />
     </fragment>
     <fragment
         android:id="@+id/LogFragment"
@@ -58,4 +58,9 @@
         android:name="com.colin.android.demo.java.ui.view.EdgeFragment"
         android:label="@string/edge"
         tools:layout="@layout/layout_edge" />
+    <fragment
+        android:id="@+id/GradientTextFragment"
+        android:name="com.colin.android.demo.java.ui.view.GradientTextFragment"
+        android:label="@string/gradient"
+        tools:layout="@layout/fragment_gradient_text" />
 </navigation>

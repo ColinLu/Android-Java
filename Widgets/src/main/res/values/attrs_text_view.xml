@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="GradientTextView">
+        <attr name="android:orientation" />
+        <attr name="showGradient" format="boolean" />
+        <attr name="textStartColor" format="reference|color" />
+        <attr name="textEndColor" format="reference|color" />
+    </declare-styleable>
+
+    <attr name="GradientTextViewStyle" format="reference" />
+
+</resources>

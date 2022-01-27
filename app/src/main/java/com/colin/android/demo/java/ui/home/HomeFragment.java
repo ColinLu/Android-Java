@@ -13,11 +13,9 @@ public class HomeFragment extends AppFragment<FragmentHomeBinding> {
 
     @Override
     public void initView(@Nullable Bundle bundle) {
-        mBinding.buttonMotion.setOnClickListener(v -> toNavigate(R.id.action_Home_to_Motion));
         mBinding.buttonMethod.setOnClickListener(v -> toNavigate(R.id.action_Home_to_Method));
         mBinding.buttonView.setOnClickListener(v -> toNavigate(R.id.action_Home_to_View));
     }
-
 
     @Override
     public void initData(@Nullable Bundle bundle) {

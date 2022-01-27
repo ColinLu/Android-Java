@@ -23,13 +23,66 @@
 
     <style name="Theme.App.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
-    <style name="Theme.App.Button" parent="Widget.MaterialComponents.Button">
-        <item name="android:layout_marginStart">@dimen/margin_default</item>
-        <item name="android:layout_marginEnd">@dimen/margin_default</item>
+    <!--点击按钮样式-->
+    <style name="Theme.App.Button" parent="Theme.MaterialComponents.DayNight">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/app_button_height</item>
+        <item name="android:textSize">@dimen/app_text_button</item>
+        <item name="android:textColor">@color/app_text_button</item>
+        <item name="android:textStyle">bold</item>
         <item name="android:textAllCaps">false</item>
-        <item name="android:textColor">@color/white</item>
-        <item name="android:textSize">@dimen/button_size</item>
+        <item name="android:text">@string/app_name</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">middle</item>
+        <item name="android:layout_marginEnd">@dimen/app_margin_default</item>
+        <item name="android:layout_marginStart">@dimen/app_margin_default</item>
+        <item name="android:gravity">center</item>
+        <item name="android:background">@drawable/button_style</item>
     </style>
 
+    <!--默认文本框样式-->
+    <style name="Theme.App.TextView" parent="Theme.MaterialComponents.DayNight">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:text">@string/app_name</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:paddingLeft">@dimen/dp_0</item>
+        <item name="android:paddingTop">@dimen/dp_0</item>
+        <item name="android:paddingRight">@dimen/dp_0</item>
+        <item name="android:paddingBottom">@dimen/dp_0</item>
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:textSize">@dimen/app_text_default</item>
+        <item name="android:textColor">@color/app_text_default</item>
+        <item name="android:textColorHint">@color/app_text_hint</item>
+    </style>
 
+    <!--默认输入框样式-->
+    <style name="Theme.App.EditText" parent="Theme.MaterialComponents.DayNight">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/app_edit_height</item>
+        <item name="android:background">@null</item>
+        <item name="android:hint">@string/app_name</item>
+        <item name="android:textSize">@dimen/app_text_default</item>
+        <item name="android:textColor">@color/app_text_default</item>
+        <item name="android:textColorHint">@color/app_text_hint</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:paddingLeft">@dimen/dp_0</item>
+        <item name="android:paddingTop">@dimen/dp_0</item>
+        <item name="android:paddingRight">@dimen/dp_0</item>
+        <item name="android:paddingBottom">@dimen/dp_0</item>
+    </style>
+    <!--默认文本框样式-->
+    <style name="Theme.App.CardView" parent="Theme.MaterialComponents.DayNight">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:minHeight">@dimen/app_item_height</item>
+        <item name="cardCornerRadius">@dimen/app_radius_default</item>
+        <item name="cardElevation">@dimen/app_elevation_default</item>
+        <item name="cardMaxElevation">@dimen/app_elevation_default</item>
+        <item name="cardUseCompatPadding">false</item>
+        <item name="cardPreventCornerOverlap">true</item>
+        <item name="cardBackgroundColor">@color/app_item</item>
+        <item name="android:foreground">?attr/selectableItemBackground</item>
+    </style>
 </resources>

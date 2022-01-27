@@ -6,4 +6,6 @@
     <color name="colorPrimary">#FFFFFFFF</color>
     <!--App 状态选中等颜色-->
     <color name="colorAccent">#FF4E9AF7</color>
+
+    <color name="textColorPrimary">?android:attr/textColorPrimary</color>
 </resources>

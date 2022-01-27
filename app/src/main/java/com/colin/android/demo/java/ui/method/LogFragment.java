@@ -21,14 +21,12 @@ public class LogFragment extends AppFragment<FragmentLogBinding> {
 
     @Override
     public void initView(@Nullable Bundle bundle) {
-        mBinding.mButtonLogI.setOnClickListener(v -> LogUtil.i(TAG, "log i", "log i"));
-        mBinding.mButtonLogV.setOnClickListener(v -> LogUtil.v(TAG, "log v", "log v"));
-        mBinding.mButtonLogW.setOnClickListener(v -> LogUtil.w(TAG, "log w", "log w"));
-        mBinding.mButtonLogA.setOnClickListener(v -> LogUtil.a(TAG, "log a", "log a"));
-        mBinding.mButtonLogE.setOnClickListener(v -> LogUtil.e(TAG, "log e", "log e"));
-        mBinding.mButtonLogThrowable.setOnClickListener(v -> {
-            LogUtil.log(new NullPointerException("log throwable"));
-        });
+        mBinding.mButtonLogI.setOnClickListener(v -> LogUtil.i(null));
+        mBinding.mButtonLogV.setOnClickListener(v -> LogUtil.v("log v"));
+        mBinding.mButtonLogW.setOnClickListener(v -> LogUtil.wTag(TAG, "log w"));
+        mBinding.mButtonLogA.setOnClickListener(v -> LogUtil.a("log a", "log a"));
+        mBinding.mButtonLogE.setOnClickListener(v -> LogUtil.eTag(TAG, "log e", "log e"));
+        mBinding.mButtonLogThrowable.setOnClickListener(v -> LogUtil.log(new NullPointerException("log throwable")));
     }
 
     @Override

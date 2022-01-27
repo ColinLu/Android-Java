@@ -112,6 +112,18 @@
                       </LayoutPositions>
                     </value>
                   </entry>
+                  <entry key="GradientTextFragment">
+                    <value>
+                      <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="12" />
+                            <option name="y" value="12" />
+                          </Point>
+                        </option>
+                      </LayoutPositions>
+                    </value>
+                  </entry>
                   <entry key="HomeFragment">
                     <value>
                       <LayoutPositions>
@@ -124,11 +136,6 @@
                         <option name="myPositions">
                           <map>
                             <entry key="action_Home_to_Method">
-                              <value>
-                                <LayoutPositions />
-                              </value>
-                            </entry>
-                            <entry key="action_Home_to_Motion">
                               <value>
                                 <LayoutPositions />
                               </value>
@@ -200,6 +207,11 @@
                         <option name="myPositions">
                           <map>
                             <entry key="action_View_to_Edge">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
+                            <entry key="action_View_to_Gradient">
                               <value>
                                 <LayoutPositions />
                               </value>

@@ -8,6 +8,7 @@
     <string name="view">View</string>
     <string name="motion">Motion</string>
     <string name="edge">Edge</string>
+    <string name="gradient">Gradient</string>
     <string name="action_settings">Settings</string>
     <string name="previous">Previous</string>
     <string name="title_home">Home</string>
@@ -17,7 +18,7 @@
     <string-array name="view_list">
         <item>@string/motion</item>
         <item>@string/edge</item>
-        <item>@string/path</item>
+        <item>@string/gradient</item>
         <item>@string/path</item>
         <item>@string/path</item>
         <item>@string/path</item>

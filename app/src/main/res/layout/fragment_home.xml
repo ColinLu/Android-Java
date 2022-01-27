@@ -6,36 +6,24 @@
     android:layout_height="match_parent"
     tools:context=".ui.home.HomeFragment">
 
-    <Button
-        android:id="@+id/button_motion"
-        style="@style/Theme.App.Button"
-        android:layout_width="@dimen/dp_0"
-        android:layout_height="@dimen/button_height"
-        android:layout_marginTop="@dimen/item_title_height"
-        android:text="@string/motion"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/button_view"
         style="@style/Theme.App.Button"
         android:layout_width="@dimen/dp_0"
-        android:layout_height="@dimen/button_height"
         android:layout_marginTop="@dimen/margin_default"
         android:text="@string/view"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button_motion" />
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/button_method"
         style="@style/Theme.App.Button"
         android:layout_width="@dimen/dp_0"
-        android:layout_height="@dimen/button_height"
         android:layout_marginTop="@dimen/margin_default"
         android:text="@string/method"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button_view" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

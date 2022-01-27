@@ -70,6 +70,9 @@ public class ViewFragment extends AppFragment<LayoutListBinding> implements OnIt
             case "Edge":
                 DemoUtils.toNavigate(this, R.id.action_View_to_Edge);
                 break;
+            case "Gradient":
+                DemoUtils.toNavigate(this, R.id.action_View_to_Gradient);
+                break;
             default:
                 break;
         }
