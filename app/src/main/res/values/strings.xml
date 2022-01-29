@@ -100,5 +100,38 @@
         <item>PL/SQL语言</item>
         <item>C++语言</item>
     </string-array>
+    <string-array name="path_list">
+        <item>root</item>
+        <item>内部存储:cache</item>
+        <item>内部存储:file</item>
+        <item>内部存储:sp</item>
+        <item>内部存储:db</item>
+        <item>@string/path</item>
+        <item>@string/path</item>
+        <item>@string/path</item>
+        <item>@string/path</item>
+        <item>@string/path</item>
+        <item>@string/path</item>
+        <item>@string/path</item>
+        <item>@string/path</item>
+        <item>@string/path</item>
+        <item>@string/path</item>
+        <item>@string/path</item>
+        <item>@string/path</item>
+        <item>@string/path</item>
+        <item>@string/path</item>
+        <item>@string/path</item>
+        <item>@string/path</item>
+        <item>@string/path</item>
+        <item>@string/path</item>
+        <item>@string/path</item>
+        <item>@string/path</item>
+        <item>@string/path</item>
+        <item>@string/path</item>
+        <item>@string/path</item>
+        <item>@string/path</item>
+        <item>@string/path</item>
+        <item>@string/path</item>
+    </string-array>
 
 </resources>
