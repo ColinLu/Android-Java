@@ -100,6 +100,30 @@
             <LayoutPositions>
               <option name="myPositions">
                 <map>
+                  <entry key="CircleImageFragment">
+                    <value>
+                      <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="12" />
+                            <option name="y" value="12" />
+                          </Point>
+                        </option>
+                      </LayoutPositions>
+                    </value>
+                  </entry>
+                  <entry key="ContactListFragment">
+                    <value>
+                      <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="12" />
+                            <option name="y" value="12" />
+                          </Point>
+                        </option>
+                      </LayoutPositions>
+                    </value>
+                  </entry>
                   <entry key="EdgeFragment">
                     <value>
                       <LayoutPositions>
@@ -206,6 +230,11 @@
                         </option>
                         <option name="myPositions">
                           <map>
+                            <entry key="action_View_to_Circle">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
                             <entry key="action_View_to_Edge">
                               <value>
                                 <LayoutPositions />

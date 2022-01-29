@@ -26,6 +26,7 @@
             android:id="@+id/text_dialog"
             android:layout_width="@dimen/dp_0"
             android:layout_height="wrap_content"
+            android:gravity="center"
             android:minHeight="@dimen/app_dialog_height"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"

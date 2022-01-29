@@ -32,7 +32,6 @@ public class StringAdapter extends BaseAdapter<String> {
         holder.setText(R.id.button_title, text)
                 .setOnClickListener(R.id.button_title, v -> {
                     if (mItemClickListener != null) mItemClickListener.item(v, position, text);
-
                 });
     }
 }

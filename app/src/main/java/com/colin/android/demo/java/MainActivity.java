@@ -1,5 +1,6 @@
 package com.colin.android.demo.java;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -16,6 +17,7 @@ import com.google.android.material.snackbar.Snackbar;
 
 public class MainActivity extends AppActivity<ActivityMainBinding> {
     private AppBarConfiguration appBarConfiguration;
+
 
     @Override
     public void initView(@Nullable Bundle bundle) {

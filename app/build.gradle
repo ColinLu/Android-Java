@@ -84,18 +84,16 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
-    lintOptions {
-        disable 'RestrictedApi'
-    }
 
     buildFeatures {
         viewBinding true
     }
-
-    lintOptions {
-        checkReleaseBuilds false
+    lint {
         abortOnError false
+        checkReleaseBuilds false
+        disable 'RestrictedApi'
     }
+
 }
 
 dependencies {

@@ -85,4 +85,11 @@
         <item name="cardBackgroundColor">@color/app_item</item>
         <item name="android:foreground">?attr/selectableItemBackground</item>
     </style>
+
+    <style name="Theme.App.Image" parent="Theme.MaterialComponents.DayNight" />
+
+    <style name="Circle">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
 </resources>

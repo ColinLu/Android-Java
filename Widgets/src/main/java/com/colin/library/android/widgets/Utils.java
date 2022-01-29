@@ -34,7 +34,6 @@ import androidx.core.content.ContextCompat;
 public final class Utils {
     private static final float DENSITY_OFFSET = 0.5F;
     private static TypedValue sTmpValue;
-
     /*资源 颜色*/
     @ColorInt
     public static int getAttrColor(@NonNull Context context, @AttrRes int attrRes) {

@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.colin.android.demo.java">
 
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+
     <application
         android:name=".JavaApp"
         android:allowBackup="false"
@@ -10,6 +12,16 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.App.NoActionBar">
+        <provider
+            android:name="com.colin.library.android.provider.AppFileProvider"
+            android:authorities="${applicationId}.provider"
+            android:exported="false"
+            android:grantUriPermissions="true"
+            android:multiprocess="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/app_provider" />
+        </provider>
         <activity
             android:name=".MainActivity"
             android:exported="true"

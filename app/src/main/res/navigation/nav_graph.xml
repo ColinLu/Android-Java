@@ -25,6 +25,10 @@
         <action
             android:id="@+id/action_Method_to_Log"
             app:destination="@+id/LogFragment" />
+
+        <action
+            android:id="@+id/action_Method_to_ContactList"
+            app:destination="@+id/ContactListFragment" />
     </fragment>
     <fragment
         android:id="@+id/ViewFragment"
@@ -40,6 +44,9 @@
         <action
             android:id="@+id/action_View_to_Gradient"
             app:destination="@+id/GradientTextFragment" />
+        <action
+            android:id="@+id/action_View_to_Circle"
+            app:destination="@+id/CircleImageFragment" />
     </fragment>
     <fragment
         android:id="@+id/LogFragment"
@@ -54,6 +61,12 @@
         tools:layout="@layout/fragment_motion" />
 
     <fragment
+        android:id="@+id/ContactListFragment"
+        android:name="com.colin.android.demo.java.ui.method.ContactListFragment"
+        android:label="@string/contact"
+        tools:layout="@layout/layout_list" />
+
+    <fragment
         android:id="@+id/EdgeFragment"
         android:name="com.colin.android.demo.java.ui.view.EdgeFragment"
         android:label="@string/edge"
@@ -63,4 +76,10 @@
         android:name="com.colin.android.demo.java.ui.view.GradientTextFragment"
         android:label="@string/gradient"
         tools:layout="@layout/fragment_gradient_text" />
+
+    <fragment
+        android:id="@+id/CircleImageFragment"
+        android:name="com.colin.android.demo.java.ui.view.CircleImageFragment"
+        android:label="@string/circle"
+        tools:layout="@layout/fragment_circle_image" />
 </navigation>

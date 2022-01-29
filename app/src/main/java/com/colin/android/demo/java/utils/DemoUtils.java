@@ -11,9 +11,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelStoreOwner;
 import androidx.navigation.fragment.NavHostFragment;
 
-import com.colin.android.demo.java.ui.view.ViewFragment;
 import com.colin.library.android.utils.ResourceUtil;
-import com.colin.library.android.utils.data.UtilHelper;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -43,4 +41,6 @@ public final class DemoUtils {
         final String[] array = ResourceUtil.getResources().getStringArray(arrayRes);
         return Arrays.asList(array);
     }
+
+
 }

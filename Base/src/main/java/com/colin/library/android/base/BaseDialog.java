@@ -1,11 +1,13 @@
 package com.colin.library.android.base;
 
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -69,7 +71,7 @@ public abstract class BaseDialog<Returner> extends DialogFragment implements IAc
     protected CharSequence mRightButton = null;
 
     /*Dialog点击弹框之外是否可以消失 true 可以  false 不能*/
-    protected boolean mOutViewCancel = false;
+    protected boolean mOutViewCancel = true;
     /*Dialog是否显示一个按钮*/
     protected boolean mSingleButton = false;
     @NonNull
@@ -98,9 +100,16 @@ public abstract class BaseDialog<Returner> extends DialogFragment implements IAc
     @Nullable
     protected DialogInterface.OnDismissListener mOnDismissListener = null;
 
+    /*弹框开始 设置样式*/
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setStyle(DialogFragment.STYLE_NORMAL, R.style.App_Dialog);
+    }
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+        initParams(null == getDialog() ? null : getDialog().getWindow());
         initView(savedInstanceState);
         initData(getArguments());
     }
@@ -110,6 +119,17 @@ public abstract class BaseDialog<Returner> extends DialogFragment implements IAc
     public void onStart() {
         super.onStart();
         if (null != mOnShowListener) mOnShowListener.onShow(getDialog());
+    }
+
+    /*创建Dialog*/
+    @NonNull
+    @Override
+    public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
+        final Dialog dialog = super.onCreateDialog(savedInstanceState);
+        dialog.setCancelable(isOutViewCancel());
+        dialog.setCanceledOnTouchOutside(isOutViewCancel());
+        dialog.setOnKeyListener((dialog1, keyCode, event) -> keyCode == KeyEvent.KEYCODE_BACK && !isOutViewCancel());
+        return dialog;
     }
 
     @Override
