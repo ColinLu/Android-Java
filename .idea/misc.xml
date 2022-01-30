@@ -4,6 +4,10 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="../../../../Library/Android/sdk/platforms/android-31/data/res/drawable/list_selector_background.xml" value="0.1" />
+        <entry key="Base/src/main/res/drawable/button_style.xml" value="0.121" />
+        <entry key="Base/src/main/res/drawable/ic_back.xml" value="0.121" />
+        <entry key="Base/src/main/res/drawable/ic_bg.xml" value="0.121" />
+        <entry key="Base/src/main/res/drawable/splash_bg.xml" value="0.121" />
         <entry key="app/src/main/res/drawable/button_style.xml" value="0.23333333333333334" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.19166666666666668" />
         <entry key="app/src/main/res/layout/content_main.xml" value="0.19166666666666668" />
