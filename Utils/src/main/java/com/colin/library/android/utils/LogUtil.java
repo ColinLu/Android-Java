@@ -57,7 +57,6 @@ public final class LogUtil {
         print(Log.DEBUG, tag, format(args));
     }
 
-    @SafeVarargs
     public static void i(@Nullable Object... args) {
         print(Log.INFO, null, format(args));
     }

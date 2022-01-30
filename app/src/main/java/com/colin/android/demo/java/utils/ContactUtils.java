@@ -3,7 +3,6 @@ package com.colin.android.demo.java.utils;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
-import android.provider.ContactsContract;
 import android.provider.ContactsContract.CommonDataKinds.Phone;
 
 import androidx.annotation.NonNull;
@@ -24,48 +23,44 @@ import java.util.List;
  */
 public final class ContactUtils {
     private static final String[] PROJECTION_CONTACT_LIST = {
-            ContactsContract.Contacts._ID,
-            ContactsContract.Contacts.DISPLAY_NAME,
-            ContactsContract.CommonDataKinds.Phone.NUMBER,
-            ContactsContract.Contacts.HAS_PHONE_NUMBER,
-            ContactsContract.Contacts.PHOTO_ID,
-            ContactsContract.Contacts.PHOTO_URI
+            Phone._ID,
+            Phone.CONTACT_ID,
+            Phone.DISPLAY_NAME,
+            Phone.NUMBER,
+            Phone.PHOTO_URI
     };
 
     @NonNull
     public static List<ContactBean> getContactList(@Nullable Context context) {
         final List<ContactBean> list = new ArrayList<>();
-        final Cursor cursor = getCursor(context, Phone.CONTENT_URI, null,
+        final Cursor cursor = getCursor(context, Phone.CONTENT_URI, PROJECTION_CONTACT_LIST,
                 null, null, null);
         if (cursor == null) {
             return list;
         }
         if (cursor.getCount() == 0) {
-            IOUtil.close(cursor);
+            cursor.close();
             return list;
         }
         final StringBuilder sb = new StringBuilder();
         ContactBean bean = null;
         if (cursor.moveToFirst()) {
             do {
-                final int has = cursor.getInt(cursor.getColumnIndexOrThrow(Phone.HAS_PHONE_NUMBER));
-                if (has <= 0) continue;
-                bean = new ContactBean(cursor.getInt(cursor.getColumnIndexOrThrow(Phone.CONTACT_ID)));
+                bean = new ContactBean(cursor.getLong(cursor.getColumnIndexOrThrow(Phone._ID)));
+                bean.contact_id = cursor.getLong(cursor.getColumnIndexOrThrow(Phone.CONTACT_ID));
                 bean.name = cursor.getString(cursor.getColumnIndexOrThrow(Phone.DISPLAY_NAME));
-                bean.photo = cursor.getString(cursor.getColumnIndexOrThrow(Phone.PHOTO_URI));
                 bean.number = cursor.getString(cursor.getColumnIndexOrThrow(Phone.NUMBER));
-                String data2 = cursor.getString(cursor.getColumnIndexOrThrow("data2"));
-                String data4 = cursor.getString(cursor.getColumnIndexOrThrow("data4"));
-                sb.append("name  :").append(bean.name).append('\n');
-                sb.append("photo :").append(bean.photo).append('\n');
-                sb.append("number:").append(bean.number).append('\n');
-                sb.append("data2 :").append(data2).append('\n');
-                sb.append("data4 :").append(data4).append('\n');
+                bean.photo = cursor.getString(cursor.getColumnIndexOrThrow(Phone.PHOTO_URI));
+                sb.append("id        :").append(bean.id).append('\n');
+                sb.append("contact_id:").append(bean.contact_id).append('\n');
+                sb.append("name      :").append(bean.name).append('\n');
+                sb.append("number    :").append(bean.number).append('\n');
+                sb.append("photo     :").append(bean.photo).append('\n');
                 list.add(bean);
             } while (cursor.moveToNext());
         }
-        LogUtil.e(sb.toString());
-        IOUtil.close(cursor);
+        LogUtil.e(sb.toString().trim());
+        cursor.close();
         return list;
     }
 
@@ -77,6 +72,5 @@ public final class ContactUtils {
         }
         return context.getContentResolver().query(uri, projection, selection, selectionArgs, sortOrder);
     }
-
 
 }

@@ -9,12 +9,13 @@ import java.util.Objects;
  * 描述： TODO
  */
 public class ContactBean {
-    public int id;
+    public long id;
+    public long contact_id;
     public String name;
     public String photo;
     public String number;
 
-    public ContactBean(int id) {
+    public ContactBean(long id) {
         this.id = id;
     }
 
@@ -26,6 +27,7 @@ public class ContactBean {
         ContactBean bean = (ContactBean) o;
 
         if (id != bean.id) return false;
+        if (contact_id != bean.contact_id) return false;
         if (!Objects.equals(name, bean.name)) return false;
         if (!Objects.equals(photo, bean.photo)) return false;
         return Objects.equals(number, bean.number);
@@ -33,7 +35,8 @@ public class ContactBean {
 
     @Override
     public int hashCode() {
-        int result = id;
+        int result = (int) (id ^ (id >>> 32));
+        result = 31 * result + (int) (contact_id ^ (contact_id >>> 32));
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (photo != null ? photo.hashCode() : 0);
         result = 31 * result + (number != null ? number.hashCode() : 0);
@@ -44,6 +47,7 @@ public class ContactBean {
     public String toString() {
         return "ContactBean{" +
                 "id=" + id +
+                ", contact_id=" + contact_id +
                 ", name='" + name + '\'' +
                 ", photo='" + photo + '\'' +
                 ", number='" + number + '\'' +

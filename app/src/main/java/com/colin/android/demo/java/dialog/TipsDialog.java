@@ -32,6 +32,15 @@ public final class TipsDialog extends AppDialog<DialogAppBinding> {
         }
     }
 
+
+    public void setContact(@NonNull ContactBean bean) {
+        if (mBinding != null && !bean.equals(mContactBean)) {
+            contactToView(bean);
+        }
+        this.mContactBean = bean;
+    }
+
+
     private void contactToView(@NonNull ContactBean bean) {
         if (TextUtils.isEmpty(bean.photo)) {
             mBinding.imageDialog.setImageURI(null);
@@ -39,12 +48,5 @@ public final class TipsDialog extends AppDialog<DialogAppBinding> {
             mBinding.imageDialog.setImageURI(Uri.parse(bean.photo));
         }
         mBinding.textDialog.setText(bean.toString());
-    }
-
-    public void setContact(@NonNull ContactBean bean) {
-        if (mBinding != null && !bean.equals(mContactBean)) {
-            contactToView(bean);
-        }
-        this.mContactBean = bean;
     }
 }

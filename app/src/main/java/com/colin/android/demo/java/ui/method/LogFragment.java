@@ -21,7 +21,7 @@ public class LogFragment extends AppFragment<FragmentLogBinding> {
 
     @Override
     public void initView(@Nullable Bundle bundle) {
-        mBinding.mButtonLogI.setOnClickListener(v -> LogUtil.i(null));
+        mBinding.mButtonLogI.setOnClickListener(v -> LogUtil.i((Object) null));
         mBinding.mButtonLogV.setOnClickListener(v -> LogUtil.v("log v"));
         mBinding.mButtonLogW.setOnClickListener(v -> LogUtil.wTag(TAG, "log w"));
         mBinding.mButtonLogA.setOnClickListener(v -> LogUtil.a("log a", "log a"));
