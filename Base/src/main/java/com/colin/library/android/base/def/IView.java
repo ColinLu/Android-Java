@@ -14,7 +14,7 @@ import androidx.lifecycle.Lifecycle;
  * <p>
  * 描述： 界面实现定义
  */
-public interface IActivity {
+public interface IView {
     @Nullable
     Context getContext();
 

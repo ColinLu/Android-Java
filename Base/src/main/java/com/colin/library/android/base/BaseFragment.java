@@ -12,7 +12,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.colin.library.android.base.def.IActivity;
+import com.colin.library.android.base.def.IView;
 
 /**
  * 作者： ColinLu
@@ -20,7 +20,7 @@ import com.colin.library.android.base.def.IActivity;
  * <p>
  * 描述： Fragment 基类
  */
-public abstract class BaseFragment extends Fragment implements IActivity {
+public abstract class BaseFragment extends Fragment implements IView {
     protected static final String STATE_SAVE_IS_HIDDEN = "STATE_SAVE_IS_HIDDEN";
     protected View mRootView;                                   //根布局
     protected boolean mRefresh = true;

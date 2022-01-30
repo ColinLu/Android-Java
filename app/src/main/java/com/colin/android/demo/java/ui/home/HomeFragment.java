@@ -24,11 +24,6 @@ public class HomeFragment extends AppFragment<FragmentHomeBinding> {
     public void initView(@Nullable Bundle bundle) {
         mBinding.buttonMethod.setOnClickListener(v -> toNavigate(R.id.action_Home_to_Method));
         mBinding.buttonView.setOnClickListener(v -> toNavigate(R.id.action_Home_to_View));
-        mBinding.buttonContact.setOnClickListener(v -> getContact());
-    }
-
-    private void getContact() {
-        ThreadUtil.doAsync(() -> ContactUtils.getContactList(getContext()));
     }
 
     @Override

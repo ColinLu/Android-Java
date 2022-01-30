@@ -27,7 +27,7 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.colin.library.android.base.def.IActivity;
+import com.colin.library.android.base.def.IView;
 
 import java.lang.reflect.Field;
 
@@ -37,7 +37,7 @@ import java.lang.reflect.Field;
  * <p>
  * 描述： 弹框基类
  */
-public abstract class BaseDialog<Returner> extends DialogFragment implements IActivity {
+public abstract class BaseDialog<Returner> extends DialogFragment implements IView {
     protected boolean mRefresh = true;
 
     /*Dialog标题*/

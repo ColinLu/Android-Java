@@ -5,7 +5,7 @@ import android.content.Context;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.colin.library.android.base.def.IActivity;
+import com.colin.library.android.base.def.IView;
 
 /**
  * 作者： ColinLu
@@ -14,7 +14,7 @@ import com.colin.library.android.base.def.IActivity;
  * 描述： Activity 基类
  * 实现刷新机制
  */
-public abstract class BaseActivity extends AppCompatActivity implements IActivity {
+public abstract class BaseActivity extends AppCompatActivity implements IView {
 
     protected boolean mRefresh = true;
 

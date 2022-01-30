@@ -1,6 +1,5 @@
 package com.colin.android.demo.java;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -52,7 +51,6 @@ public class MainActivity extends AppActivity<ActivityMainBinding> {
         if (id == R.id.action_settings) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
