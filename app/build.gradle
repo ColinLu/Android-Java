@@ -119,6 +119,7 @@ dependencies {
     implementation "io.reactivex.rxjava2:rxandroid:${versions.rxandroid2}"
 
     implementation 'androidx.viewpager2:viewpager2:1.1.0-alpha01'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
 
 
     testImplementation "junit:junit:${versions.junit}"

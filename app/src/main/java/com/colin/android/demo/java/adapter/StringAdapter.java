@@ -1,5 +1,7 @@
 package com.colin.android.demo.java.adapter;
 
+import android.view.Gravity;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -17,6 +19,7 @@ import java.util.List;
  * 描述： TODO
  */
 public class StringAdapter extends BaseAdapter<String> {
+    private Gravity mGravity;
     public StringAdapter() {
         super();
     }

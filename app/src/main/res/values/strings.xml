@@ -17,6 +17,24 @@
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
 
+    <string name="path_root_system">root system</string>
+    <string name="path_root_data">root data</string>
+    <string name="path_root_storage">root storage</string>
+    <string name="path_data_app">data app</string>
+    <string name="path_external">External</string>
+    <string name="path_external_music">external music</string>
+    <string name="path_external_dcim">external dcim</string>
+    <string name="path_external_picture">external picture</string>
+    <string name="path_external_download">external download</string>
+    <string name="path_external_custom">external custom</string>
+    <string name="path_user_data">user data</string>
+    <string name="path_user_cache">user cache</string>
+    <string name="path_user_code_cache">user code cache</string>
+    <string name="path_user_files">user files</string>
+
+    <string name="search">Search</string>
+    <string name="web">Web</string>
+
     <string-array name="view_list">
         <item>@string/motion</item>
         <item>@string/edge</item>
@@ -103,22 +121,20 @@
         <item>C++语言</item>
     </string-array>
     <string-array name="path_list">
-        <item>root</item>
-        <item>内部存储:cache</item>
-        <item>内部存储:file</item>
-        <item>内部存储:sp</item>
-        <item>内部存储:db</item>
-        <item>@string/path</item>
-        <item>@string/path</item>
-        <item>@string/path</item>
-        <item>@string/path</item>
-        <item>@string/path</item>
-        <item>@string/path</item>
-        <item>@string/path</item>
-        <item>@string/path</item>
-        <item>@string/path</item>
-        <item>@string/path</item>
-        <item>@string/path</item>
+        <item>@string/path_root_system</item>
+        <item>@string/path_root_storage</item>
+        <item>@string/path_root_data</item>
+        <item>@string/path_external</item>
+        <item>@string/path_external_dcim</item>
+        <item>@string/path_external_picture</item>
+        <item>@string/path_external_download</item>
+        <item>@string/path_external_music</item>
+        <item>@string/path_external_custom</item>
+        <item>@string/path_data_app</item>
+        <item>@string/path_user_data</item>
+        <item>@string/path_user_cache</item>
+        <item>@string/path_user_code_cache</item>
+        <item>@string/path_user_files</item>
         <item>@string/path</item>
         <item>@string/path</item>
         <item>@string/path</item>
@@ -135,5 +151,7 @@
         <item>@string/path</item>
         <item>@string/path</item>
     </string-array>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

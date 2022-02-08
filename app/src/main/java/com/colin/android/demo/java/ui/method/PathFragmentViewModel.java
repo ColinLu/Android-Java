@@ -28,7 +28,7 @@ public class PathFragmentViewModel extends ViewModel {
 
     public void refresh(boolean refresh) {
         mLoadState.setValue(LoadState.ING);
-        ThreadUtil.doAsync(() -> mList.postValue(DemoUtils.getStringList(R.array.method_list)));
+        ThreadUtil.doAsync(() -> mList.postValue(DemoUtils.getStringList(R.array.path_list)));
         ThreadUtil.runUiDelayed(() -> mLoadState.setValue(LoadState.SUCCESS), Constants.DURATION_DELAYED);
     }
 

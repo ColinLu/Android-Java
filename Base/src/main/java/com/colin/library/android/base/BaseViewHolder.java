@@ -62,16 +62,19 @@ public class BaseViewHolder extends RecyclerView.ViewHolder {
         imageView.setImageResource(res);
         return this;
     }
+
     @NonNull
     public BaseViewHolder setImageURI(@IdRes int id, @Nullable Uri uri) {
         final ImageView imageView = getView(id);
         imageView.setImageURI(uri);
         return this;
     }
+
     @NonNull
     public BaseViewHolder setOnClickListener(@IdRes int id, @Nullable View.OnClickListener listener) {
         final View view = getView(id);
         view.setOnClickListener(listener);
         return this;
     }
+
 }

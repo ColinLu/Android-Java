@@ -200,6 +200,7 @@
     </style>
 
     <style name="Text">
+        <item name="android:textAllCaps">false</item>
         <item name="android:textSize">@dimen/app_text_default</item>
         <item name="android:textColor">@color/app_text_default</item>
     </style>

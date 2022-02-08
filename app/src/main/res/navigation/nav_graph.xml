@@ -15,8 +15,16 @@
         <action
             android:id="@+id/action_Home_to_Method"
             app:destination="@+id/MethodFragment" />
+        <action
+            android:id="@+id/action_Home_to_Web"
+            app:destination="@+id/WebIndexFragment" />
     </fragment>
-
+    <fragment
+        android:id="@+id/WebIndexFragment"
+        android:name="com.colin.android.demo.java.ui.web.WebIndexFragment"
+        android:label="@string/web"
+        tools:layout="@layout/fragment_web_index">
+    </fragment>
     <fragment
         android:id="@+id/MethodFragment"
         android:name="com.colin.android.demo.java.ui.method.MethodFragment"
@@ -29,6 +37,9 @@
         <action
             android:id="@+id/action_Method_to_ContactList"
             app:destination="@+id/ContactListFragment" />
+        <action
+            android:id="@+id/action_Method_to_Path"
+            app:destination="@+id/PathFragment" />
     </fragment>
     <fragment
         android:id="@+id/ViewFragment"
@@ -53,7 +64,11 @@
         android:name="com.colin.android.demo.java.ui.method.LogFragment"
         android:label="@string/log"
         tools:layout="@layout/fragment_log" />
-
+    <fragment
+        android:id="@+id/PathFragment"
+        android:name="com.colin.android.demo.java.ui.method.PathFragment"
+        android:label="@string/path"
+        tools:layout="@layout/layout_list" />
     <fragment
         android:id="@+id/MotionFragment"
         android:name="com.colin.android.demo.java.ui.view.MotionFragment"

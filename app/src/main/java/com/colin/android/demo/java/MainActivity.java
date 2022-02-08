@@ -1,10 +1,14 @@
 package com.colin.android.demo.java;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -12,21 +16,44 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.colin.android.demo.java.app.AppActivity;
 import com.colin.android.demo.java.databinding.ActivityMainBinding;
+import com.colin.library.android.utils.LogUtil;
+import com.colin.library.android.widgets.def.OnAppBarStateChangeListener;
+import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.snackbar.Snackbar;
 
 public class MainActivity extends AppActivity<ActivityMainBinding> {
     private AppBarConfiguration appBarConfiguration;
+    @OnAppBarStateChangeListener.State
+    private int mState;
+    private int mOffset;
 
-
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public void initView(@Nullable Bundle bundle) {
         setSupportActionBar(mBinding.mToolbar);
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
-        appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
-        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
+        final NavController controller = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
+        appBarConfiguration = new AppBarConfiguration.Builder(controller.getGraph()).build();
+        NavigationUI.setupActionBarWithNavController(this, controller, appBarConfiguration);
 
         mBinding.fab.setOnClickListener(view -> Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show());
+
+        mBinding.mAppBar.addOnOffsetChangedListener(new OnAppBarStateChangeListener() {
+            @Override
+            public void onStateChanged(AppBarLayout appBarLayout, @State int state, int offset) {
+                LogUtil.i("state:" + state + "\t offset:" + offset);
+                mState = state;
+                mOffset = offset;
+            }
+        });
+        final CoordinatorLayout.Behavior<AppBarLayout> behavior = mBinding.mAppBar.getBehavior();
+        LogUtil.i("behavior:" + (behavior == null ? "null" : behavior.getClass().getSimpleName()));
+        mBinding.mCoordinatorLayout.setOnScrollChangeListener((v, scrollX, scrollY, oldScrollX, oldScrollY) -> {
+            LogUtil.i(scrollX, scrollY, oldScrollX, oldScrollY);
+        });
+
+        mBinding.mAppBar.setOnScrollChangeListener((v, scrollX, scrollY, oldScrollX, oldScrollY) -> LogUtil.i(scrollX, scrollY, oldScrollX, oldScrollY));
+        mBinding.mToolbar.setOnScrollChangeListener((v, scrollX, scrollY, oldScrollX, oldScrollY) -> LogUtil.i(scrollX, scrollY, oldScrollX, oldScrollY));
     }
 
     @Override
@@ -56,7 +83,19 @@ public class MainActivity extends AppActivity<ActivityMainBinding> {
 
     @Override
     public boolean onSupportNavigateUp() {
-        NavController controller = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
+        final NavController controller = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
         return NavigationUI.navigateUp(controller, appBarConfiguration) || super.onSupportNavigateUp();
+    }
+
+    public void refreshToolbar() {
+        if (mState == OnAppBarStateChangeListener.State.EXPANDED) {
+            return;
+        }
+        final int total = mBinding.mAppBar.getTotalScrollRange();
+        if (mOffset == total) {
+            return;
+        }
+        LogUtil.i(mOffset);
+        mBinding.mAppBar.offsetTopAndBottom(mOffset);
     }
 }

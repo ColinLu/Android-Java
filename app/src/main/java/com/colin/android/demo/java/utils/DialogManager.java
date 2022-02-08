@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import com.colin.android.demo.java.def.bean.ContactBean;
+import com.colin.android.demo.java.dialog.PathDialog;
 import com.colin.android.demo.java.dialog.TipsDialog;
 import com.colin.library.android.utils.LogUtil;
 
@@ -15,14 +16,11 @@ import java.lang.ref.WeakReference;
  * 作者： ColinLu
  * 时间： 2022-01-30 13:30
  * <p>
- * 描述： TODO
+ * 描述： 弹框统一管理
  */
 public final class DialogManager {
     private static final String TAG = "DialogManager";
     private WeakReference<Fragment> mDialogRef;
-
-    private DialogManager() {
-    }
 
     private static final class Holder {
         private static final DialogManager instance = new DialogManager();
@@ -32,11 +30,21 @@ public final class DialogManager {
         return DialogManager.Holder.instance;
     }
 
+    private DialogManager() {
+    }
+
 
     public void show(@Nullable FragmentManager manager, @Nullable ContactBean bean) {
         if (manager == null || bean == null) return;
         final TipsDialog dialog = getTipsDialog(manager, TAG);
         dialog.setContact(bean);
+        dialog.show(manager, TAG);
+    }
+
+    public void showPath(@Nullable FragmentManager manager, @NonNull String title, @Nullable String path) {
+        if (manager == null || path == null) return;
+        final PathDialog dialog = getPathDialog(manager, TAG);
+        dialog.setPath(title, path);
         dialog.show(manager, TAG);
     }
 
@@ -52,6 +60,22 @@ public final class DialogManager {
             return (TipsDialog) fragment;
         }
         final TipsDialog dialog = new TipsDialog();
+        mDialogRef = new WeakReference<>(dialog);
+        return dialog;
+    }
+
+    private PathDialog getPathDialog(@NonNull FragmentManager manager, @NonNull String tag) {
+        Fragment fragment = mDialogRef == null ? null : mDialogRef.get();
+        if (fragment instanceof PathDialog) {
+            LogUtil.i(TAG, "dialog mDialogRef");
+            return (PathDialog) fragment;
+        }
+        fragment = manager.findFragmentByTag(tag);
+        if (fragment instanceof PathDialog) {
+            LogUtil.i(TAG, "dialog findFragmentByTag");
+            return (PathDialog) fragment;
+        }
+        final PathDialog dialog = new PathDialog();
         mDialogRef = new WeakReference<>(dialog);
         return dialog;
     }

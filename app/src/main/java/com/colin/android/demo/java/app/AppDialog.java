@@ -52,4 +52,6 @@ public abstract class AppDialog<Bind extends ViewBinding> extends BaseDialog<App
     public void loadData(boolean refresh) {
 
     }
+
+
 }

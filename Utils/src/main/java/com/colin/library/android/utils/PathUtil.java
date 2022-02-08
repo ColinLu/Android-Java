@@ -33,38 +33,134 @@ public final class PathUtil {
         return storageState() && Environment.getExternalStorageDirectory().canWrite();
     }
 
+    /*  /system */
+    public static File getRootSystem() {
+        return Environment.getRootDirectory();
+    }
+
+    /*  /storage*/
+    public static File getRootStorage() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            return Environment.getStorageDirectory();
+        }
+        return null;
+    }
+
+    /*  /data */
+    public static File getRootData() {
+        return Environment.getDataDirectory();
+    }
+
+    /*  /data/cache*/
+    public static File getDownloadCache() {
+        return Environment.getDownloadCacheDirectory();
+    }
+
+
     /*/data/data/package*/
     @NonNull
-    public static File getAppData() {
+    public static File getInternalApp() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
             return new File(UtilHelper.getInstance().getContext().getApplicationInfo().dataDir);
         }
         return UtilHelper.getInstance().getContext().getDataDir();
     }
 
-    /*/data/data/package*/
+    /*/data/user/0/package*/
+    public static File getUserData() {
+        return getUserData(UtilHelper.getInstance().getContext());
+    }
+
+    /*/data/user/0/package*/
+    public static File getUserData(@NonNull Context context) {
+        return context.getCodeCacheDir();
+    }
+
+    /*/data/user/0/package/cache*/
+    public static File getUserCache() {
+        return getUserCache(UtilHelper.getInstance().getContext());
+    }
+
+    /*/data/user/0/package/cache*/
+    public static File getUserCache(@NonNull Context context) {
+        return context.getCacheDir();
+    }
+
+    /*/data/user/0/package/code_cache*/
+    public static File getUserCodeCache() {
+        return getUserCodeCache(UtilHelper.getInstance().getContext());
+    }
+
+    /*/data/user/0/package/code_cache*/
+    public static File getUserCodeCache(@NonNull Context context) {
+        return context.getCodeCacheDir();
+    }
+
+    /*/data/user/0/package/files*/
+    public static File getUserFiles() {
+        return getUserFiles(UtilHelper.getInstance().getContext());
+    }
+
+    /*/data/user/0/package/files*/
+    public static File getUserFiles(@NonNull Context context) {
+        return context.getFilesDir();
+    }
+
+    /*  storage/emulated/0*/
+    public static File getExternalStorage() {
+        return Environment.getExternalStorageDirectory();
+    }
+
+    /*  storage/emulated/0/type */
+    public static File getExternalFile(@NonNull String type) {
+        return Environment.getExternalStoragePublicDirectory(type);
+    }
+
+    /**
+     * /storage/emulated/0/Android/data/package/files    type == null
+     * /storage/emulated/0/Android/data/package/files/type
+     *
+     * @param context
+     * @param type
+     * @return
+     */
+    public static File getExternalFile(@NonNull Context context, @Nullable String type) {
+        return context.getExternalFilesDir(type);
+    }
+
+    /*/storage/emulated/0/Android/data/package/cache*/
+    public static File getExternalCache() {
+        return getExternalCache(UtilHelper.getInstance().getContext());
+    }
+
+    /*/storage/emulated/0/Android/data/package/cache*/
+    public static File getExternalCache(@NonNull Context context) {
+        return context.getExternalCacheDir();
+    }
+
+
     @NonNull
-    public static String getAppDataPath() {
+    public static String getInternalAppPath() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
             return UtilHelper.getInstance().getContext().getApplicationInfo().dataDir;
         }
         return UtilHelper.getInstance().getContext().getDataDir().getAbsolutePath();
     }
 
-    /*/data/data/package/shared_prefs*/
-    public static String getSpPath() {
-        return getAppDataPath() + Constants.FILE_SEP + "shared_prefs";
-    }
-
-    /*/data/data/package/code_cache*/
-    public static String getCodeCache() {
-        return getAppDataPath() + Constants.FILE_SEP + "code_cache";
-    }
-
     /*清除缓存 操作 /data/data/package/cache */
     @NonNull
     public static File getInternalCache() {
         return UtilHelper.getInstance().getContext().getCacheDir();
+    }
+
+    /*/data/data/package/shared_prefs*/
+    public static String getInternalAppSpPath() {
+        return getInternalAppPath() + Constants.FILE_SEP + "shared_prefs";
+    }
+
+    /*/data/data/package/code_cache*/
+    public static String getInternalAppCodeCache() {
+        return getInternalAppPath() + Constants.FILE_SEP + "code_cache";
     }
 
 

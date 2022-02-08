@@ -7,8 +7,6 @@ import androidx.annotation.Nullable;
 
 import com.colin.android.demo.java.app.AppFragment;
 import com.colin.android.demo.java.databinding.FragmentCircleImageBinding;
-import com.colin.android.demo.java.databinding.FragmentMotionBinding;
-import com.colin.library.android.widgets.image.CircleImageView;
 
 
 /**

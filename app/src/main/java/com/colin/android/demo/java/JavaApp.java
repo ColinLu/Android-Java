@@ -18,7 +18,9 @@ public final class JavaApp extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        //初始化
         UtilHelper.init(new UtilConfig.Builder(this, true).build());
+        //异常输出
         CrashUtil.init((crashInfo, e) -> LogUtil.e(crashInfo));
     }
 }
