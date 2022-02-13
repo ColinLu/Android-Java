@@ -69,13 +69,13 @@
         <item name="android:id">@id/toolbar</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">?attr/actionBarSize</item>
-        <item name="contentInsetLeft">@dimen/dp_0</item>
-        <item name="contentInsetStart">@dimen/dp_0</item>
-        <item name="contentInsetEnd">@dimen/dp_0</item>
-        <item name="contentInsetRight">@dimen/dp_0</item>
+        <item name="contentInsetStart">@dimen/app_margin_default</item>
+        <item name="contentInsetEnd">@dimen/app_margin_default</item>
         <item name="navigationIcon">@drawable/ic_back</item>
+        <item name="titleTextAppearance">@style/Text.Title</item>
         <item name="navigationContentDescription">@string/app_name</item>
         <item name="actionMenuTextColor">@color/app_text_title</item>
+        <item name="contentInsetStartWithNavigation">@dimen/dp_0</item>
     </style>
 
     <style name="App.Toolbar.AppBar" parent="ThemeOverlay.AppCompat.DayNight.ActionBar" />

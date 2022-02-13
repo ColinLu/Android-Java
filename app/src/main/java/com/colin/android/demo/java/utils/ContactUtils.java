@@ -3,7 +3,10 @@ package com.colin.android.demo.java.utils;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
+import android.provider.ContactsContract;
 import android.provider.ContactsContract.CommonDataKinds.Phone;
+import android.provider.SyncStateContract;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -33,6 +36,11 @@ public final class ContactUtils {
     @NonNull
     public static List<ContactBean> getContactList(@Nullable Context context) {
         final List<ContactBean> list = new ArrayList<>();
+        print(context, Phone.CONTENT_URI);
+        print(context, ContactsContract.RawContacts.CONTENT_URI);
+        print(context, ContactsContract.Contacts.CONTENT_URI);
+        print(context, ContactsContract.RawContactsEntity.CONTENT_URI);
+        print(context, ContactsContract.RawContactsEntity.CONTENT_URI);
         final Cursor cursor = getCursor(context, Phone.CONTENT_URI, PROJECTION_CONTACT_LIST,
                 null, null, null);
         if (cursor == null) {
@@ -64,9 +72,34 @@ public final class ContactUtils {
         return list;
     }
 
+    private static void print(Context context, Uri uri) {
+        LogUtil.e(uri.toString());
+        final Cursor cursor = getCursor(context, uri, null, null, null, null);
+        if (cursor != null) {
+            print(cursor);
+            cursor.close();
+        }
+    }
+
+    private static void print(Cursor cursor) {
+        final StringBuilder sb = new StringBuilder();
+        if (cursor.moveToFirst()) {
+            do {
+                for (int i = 0; i < cursor.getColumnCount(); i++) {
+                    final String name = cursor.getColumnName(i);
+                    final String value = cursor.getString(i);
+                    sb.append("name").append(name).append('\n');
+                    sb.append("value").append(value == null ? "null" : value).append('\n');
+                }
+            } while (cursor.moveToNext());
+        }
+        LogUtil.e(sb.toString().trim());
+    }
+
+
     @Nullable
-    private static Cursor getCursor(@Nullable Context context, @Nullable Uri uri, @Nullable String[] projection, @Nullable String selection,
-                                    @Nullable String[] selectionArgs, @Nullable String sortOrder) {
+    private static Cursor getCursor(@Nullable Context context, @Nullable Uri uri, @Nullable String[] projection,
+                                    @Nullable String selection, @Nullable String[] selectionArgs, @Nullable String sortOrder) {
         if (context == null || uri == null) {
             return null;
         }

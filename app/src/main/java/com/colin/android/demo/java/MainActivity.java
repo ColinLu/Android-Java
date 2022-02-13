@@ -46,14 +46,6 @@ public class MainActivity extends AppActivity<ActivityMainBinding> {
                 mOffset = offset;
             }
         });
-        final CoordinatorLayout.Behavior<AppBarLayout> behavior = mBinding.mAppBar.getBehavior();
-        LogUtil.i("behavior:" + (behavior == null ? "null" : behavior.getClass().getSimpleName()));
-        mBinding.mCoordinatorLayout.setOnScrollChangeListener((v, scrollX, scrollY, oldScrollX, oldScrollY) -> {
-            LogUtil.i(scrollX, scrollY, oldScrollX, oldScrollY);
-        });
-
-        mBinding.mAppBar.setOnScrollChangeListener((v, scrollX, scrollY, oldScrollX, oldScrollY) -> LogUtil.i(scrollX, scrollY, oldScrollX, oldScrollY));
-        mBinding.mToolbar.setOnScrollChangeListener((v, scrollX, scrollY, oldScrollX, oldScrollY) -> LogUtil.i(scrollX, scrollY, oldScrollX, oldScrollY));
     }
 
     @Override
@@ -87,15 +79,15 @@ public class MainActivity extends AppActivity<ActivityMainBinding> {
         return NavigationUI.navigateUp(controller, appBarConfiguration) || super.onSupportNavigateUp();
     }
 
-    public void refreshToolbar() {
+    public void setExpanded() {
+        LogUtil.e("expanded:" + mState);
         if (mState == OnAppBarStateChangeListener.State.EXPANDED) {
-            return;
-        }
-        final int total = mBinding.mAppBar.getTotalScrollRange();
-        if (mOffset == total) {
-            return;
-        }
-        LogUtil.i(mOffset);
-        mBinding.mAppBar.offsetTopAndBottom(mOffset);
+            mBinding.mAppBar.setExpanded(false);
+        } else mBinding.mAppBar.setExpanded(mState == OnAppBarStateChangeListener.State.COLLAPSED);
+    }
+
+    public void setExpanded(boolean expanded) {
+        LogUtil.e("expanded:" + expanded);
+        mBinding.mAppBar.setExpanded(expanded);
     }
 }

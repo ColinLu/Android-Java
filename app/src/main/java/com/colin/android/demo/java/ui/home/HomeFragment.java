@@ -40,9 +40,6 @@ public class HomeFragment extends AppFragment<FragmentHomeBinding> implements Vi
 
     @Override
     public void onClick(View v) {
-        if (getActivity() instanceof MainActivity) {
-            ((MainActivity) getActivity()).refreshToolbar();
-        }
         switch (v.getId()) {
             case R.id.button_view:
                 DemoUtils.toNavigate(this, R.id.action_Home_to_View);
@@ -51,6 +48,9 @@ public class HomeFragment extends AppFragment<FragmentHomeBinding> implements Vi
                 DemoUtils.toNavigate(this, R.id.action_Home_to_Method);
                 break;
             case R.id.button_web:
+                if (getActivity() instanceof MainActivity) {
+                    ((MainActivity) getActivity()).setExpanded(false);
+                }
                 DemoUtils.toNavigate(this, R.id.action_Home_to_Web);
                 break;
             default:
