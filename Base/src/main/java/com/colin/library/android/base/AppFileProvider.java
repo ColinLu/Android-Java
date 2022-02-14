@@ -1,4 +1,4 @@
-package com.colin.library.android.provider;
+package com.colin.library.android.base;
 
 import android.content.Context;
 import android.net.Uri;
@@ -8,16 +8,10 @@ import androidx.core.content.FileProvider;
 
 import java.io.File;
 
-/**
- * 作者： ColinLu
- * 时间： 2022-01-28 22:57
- * <p>
- * 描述： 适配Android 7
- */
 ///////////////////////////////////////////////////////////////////////////
 //    manifest 配置
 //     <provider
-//            android:name="com.colin.library.android.provider.AppFileProvider"
+//            android:name="com.colin.library.android.base.provider.AppFileProvider"
 //            android:authorities="${applicationId}.provider"
 //            android:exported="false"
 //            android:grantUriPermissions="true"

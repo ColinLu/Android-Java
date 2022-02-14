@@ -28,6 +28,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.colin.library.android.base.def.IView;
+import com.colin.library.android.utils.data.Constants;
 
 import java.lang.reflect.Field;
 
@@ -42,7 +43,7 @@ public abstract class BaseDialog<Returner> extends DialogFragment implements IVi
 
     /*Dialog标题*/
     @ColorInt
-    protected int mTitleColor = -1;
+    protected int mTitleColor = Constants.INVALID;
     @StringRes
     protected int mTitleRes = Resources.ID_NULL;
     @Nullable
@@ -51,21 +52,21 @@ public abstract class BaseDialog<Returner> extends DialogFragment implements IVi
 
     /*Dialog提示文案*/
     @ColorInt
-    protected int mMessageColor = -1;
+    protected int mMessageColor = Constants.INVALID;
     protected int mMessageRes = Resources.ID_NULL;
     @Nullable
     protected CharSequence mMessage = null;
 
     /*Dialog左边按钮效果*/
     @ColorInt
-    protected int mLeftButtonColor = -1;
+    protected int mLeftButtonColor = Constants.INVALID;
     protected int mLeftButtonRes = Resources.ID_NULL;
     @Nullable
     protected CharSequence mLeftButton = null;
 
     /*Dialog右边按钮效果*/
     @ColorInt
-    protected int mRightButtonColor = -1;
+    protected int mRightButtonColor = Constants.INVALID;
     protected int mRightButtonRes = Resources.ID_NULL;
     @Nullable
     protected CharSequence mRightButton = null;
@@ -80,7 +81,7 @@ public abstract class BaseDialog<Returner> extends DialogFragment implements IVi
     protected View mRootView;
     /*Dialog布局文件*/
     @LayoutRes
-    protected int mLayoutRes = 0;
+    protected int mLayoutRes = Resources.ID_NULL;
 
     /*宽高显示比例  0 不处理 1 全屏占比*/
     @FloatRange(from = 0F, to = 1.0F)

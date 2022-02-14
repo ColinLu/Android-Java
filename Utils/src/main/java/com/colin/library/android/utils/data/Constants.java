@@ -40,38 +40,6 @@ public interface Constants {
     String ENCODE_ISO_8859_1 = "iso8859-1";
     /*常见加密*/
     @NonNull
-    String ALGORITHM_MD_2 = "MD2";
-    @NonNull
-    String ALGORITHM_MD_5 = "MD5";
-    @NonNull
-    String ALGORITHM_SHA_1 = "SHA-1";
-    @NonNull
-    String ALGORITHM_SHA_224 = "SHA-224";
-    @NonNull
-    String ALGORITHM_SHA_256 = "SHA-256";
-    @NonNull
-    String ALGORITHM_SHA_384 = "SHA-384";
-    @NonNull
-    String ALGORITHM_SHA_512 = "SHA-512";
-    @NonNull
-    String ALGORITHM_HMAC_MD_5 = "HmacMD5";
-    @NonNull
-    String ALGORITHM_HMAC_SHA_1 = "HmacSHA1";
-    @NonNull
-    String ALGORITHM_HMAC_SHA_224 = "HmacSHA224";
-    @NonNull
-    String ALGORITHM_HMAC_SHA_256 = "HmacSHA256";
-    @NonNull
-    String ALGORITHM_HMAC_SHA_384 = "HmacSHA384";
-    @NonNull
-    String ALGORITHM_HMAC_SHA_512 = "HmacSHA512";
-    @NonNull
-    String ALGORITHM_DES = "DES";
-    @NonNull
-    String ALGORITHM_AES = "AES";
-    @NonNull
-    String ALGORITHM_RSA = "RSA";
-    @NonNull
     byte[] DIGITS_BYTE_LOWER = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
     @NonNull
     byte[] DIGITS_BYTE_UPPER = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};

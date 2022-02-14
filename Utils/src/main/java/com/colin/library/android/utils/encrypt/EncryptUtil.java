@@ -1,6 +1,5 @@
 package com.colin.library.android.utils.encrypt;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.colin.library.android.utils.ArrayUtil;
@@ -8,6 +7,7 @@ import com.colin.library.android.utils.FileUtil;
 import com.colin.library.android.utils.IOUtil;
 import com.colin.library.android.utils.LogUtil;
 import com.colin.library.android.utils.StringUtil;
+import com.colin.library.android.utils.annotation.Algorithm;
 import com.colin.library.android.utils.data.Constants;
 
 import java.io.File;
@@ -35,32 +35,32 @@ public final class EncryptUtil {
     ///////////////////////////////////////////////////////////////////////////
     @Nullable
     public static byte[] getByteMD2(@Nullable final String data) {
-        return digest(StringUtil.getBytes(data), Constants.ALGORITHM_MD_2);
+        return digest(Algorithm.MD_2, StringUtil.getBytes(data));
     }
 
     @Nullable
     public static byte[] getByteMD2(@Nullable final byte[] data) {
-        return digest(data, Constants.ALGORITHM_MD_2);
+        return digest(Algorithm.MD_2, data);
     }
 
     @Nullable
     public static byte[] getByteMD2(@Nullable final File file) {
-        return digest(file, Constants.ALGORITHM_MD_2);
+        return digest(Algorithm.MD_2, file);
     }
 
     @Nullable
     public static String getStringMD2(@Nullable final String data) {
-        return HexUtil.getString(digest(StringUtil.getBytes(data), Constants.ALGORITHM_MD_2));
+        return HexUtil.getString(digest(Algorithm.MD_2, StringUtil.getBytes(data)));
     }
 
     @Nullable
     public static String getStringMD2(@Nullable final byte[] data) {
-        return HexUtil.getString(digest(data, Constants.ALGORITHM_MD_2));
+        return HexUtil.getString(digest(Algorithm.MD_2, data));
     }
 
     @Nullable
     public static String getStringMD2(@Nullable final File file) {
-        return HexUtil.getString(digest(file, Constants.ALGORITHM_MD_2));
+        return HexUtil.getString(digest(Algorithm.MD_2, file));
     }
 
 
@@ -73,32 +73,32 @@ public final class EncryptUtil {
     ///////////////////////////////////////////////////////////////////////////
     @Nullable
     public static byte[] getByteMD5(@Nullable final String data) {
-        return digest(StringUtil.getBytes(data), Constants.ALGORITHM_MD_5);
+        return digest(Algorithm.MD_5, StringUtil.getBytes(data));
     }
 
     @Nullable
     public static byte[] getByteMD5(@Nullable final byte[] data) {
-        return digest(data, Constants.ALGORITHM_MD_5);
+        return digest(Algorithm.MD_5, data);
     }
 
     @Nullable
     public static byte[] getByteMD5(@Nullable final File file) {
-        return digest(file, Constants.ALGORITHM_MD_5);
+        return digest(Algorithm.MD_5, file);
     }
 
     @Nullable
     public static String getStringMD5(@Nullable final String data) {
-        return HexUtil.getString(digest(StringUtil.getBytes(data), Constants.ALGORITHM_MD_5));
+        return HexUtil.getString(digest(Algorithm.MD_5, StringUtil.getBytes(data)));
     }
 
     @Nullable
     public static String getStringMD5(@Nullable final byte[] data) {
-        return HexUtil.getString(digest(data, Constants.ALGORITHM_MD_5));
+        return HexUtil.getString(digest(Algorithm.MD_5, data));
     }
 
     @Nullable
     public static String getStringMD5(@Nullable final File file) {
-        return HexUtil.getString(digest(file, Constants.ALGORITHM_MD_5));
+        return HexUtil.getString(digest(Algorithm.MD_5, file));
     }
 
     @Nullable
@@ -148,32 +148,32 @@ public final class EncryptUtil {
     ///////////////////////////////////////////////////////////////////////////
     @Nullable
     public static byte[] getByteSHA1(@Nullable final String data) {
-        return digest(StringUtil.getBytes(data), Constants.ALGORITHM_SHA_1);
+        return digest(Algorithm.SHA_1, StringUtil.getBytes(data));
     }
 
     @Nullable
     public static byte[] getByteSHA1(@Nullable final byte[] data) {
-        return digest(data, Constants.ALGORITHM_SHA_1);
+        return digest(Algorithm.SHA_1, data);
     }
 
     @Nullable
     public static byte[] getByteSHA1(@Nullable final File file) {
-        return digest(file, Constants.ALGORITHM_SHA_1);
+        return digest(Algorithm.SHA_1, file);
     }
 
     @Nullable
     public static String getStringSHA1(@Nullable final String data) {
-        return HexUtil.getString(digest(StringUtil.getBytes(data), Constants.ALGORITHM_SHA_1));
+        return HexUtil.getString(digest(Algorithm.SHA_1, StringUtil.getBytes(data)));
     }
 
     @Nullable
     public static String getStringSHA1(@Nullable final byte[] data) {
-        return HexUtil.getString(digest(data, Constants.ALGORITHM_SHA_1));
+        return HexUtil.getString(digest(Algorithm.SHA_1, data));
     }
 
     @Nullable
     public static String getStringSHA1(@Nullable final File file) {
-        return HexUtil.getString(digest(file, Constants.ALGORITHM_SHA_1));
+        return HexUtil.getString(digest(Algorithm.SHA_1, file));
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -181,32 +181,32 @@ public final class EncryptUtil {
     ///////////////////////////////////////////////////////////////////////////
     @Nullable
     public static byte[] getByteSHA224(@Nullable final String data) {
-        return digest(StringUtil.getBytes(data), Constants.ALGORITHM_SHA_224);
+        return digest(Algorithm.SHA_224, StringUtil.getBytes(data));
     }
 
     @Nullable
     public static byte[] getByteSHA224(@Nullable final byte[] data) {
-        return digest(data, Constants.ALGORITHM_SHA_224);
+        return digest(Algorithm.SHA_224, data);
     }
 
     @Nullable
     public static byte[] getByteSHA224(@Nullable final File file) {
-        return digest(file, Constants.ALGORITHM_SHA_224);
+        return digest(Algorithm.SHA_224, file);
     }
 
     @Nullable
     public static String getStringSHA224(@Nullable final String data) {
-        return HexUtil.getString(digest(StringUtil.getBytes(data), Constants.ALGORITHM_SHA_224));
+        return HexUtil.getString(digest(Algorithm.SHA_224, StringUtil.getBytes(data)));
     }
 
     @Nullable
     public static String getStringSHA224(@Nullable final byte[] data) {
-        return HexUtil.getString(digest(data, Constants.ALGORITHM_SHA_224));
+        return HexUtil.getString(digest(Algorithm.SHA_224, data));
     }
 
     @Nullable
     public static String getStringSHA224(@Nullable final File file) {
-        return HexUtil.getString(digest(file, Constants.ALGORITHM_SHA_224));
+        return HexUtil.getString(digest(Algorithm.SHA_224, file));
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -214,32 +214,32 @@ public final class EncryptUtil {
     ///////////////////////////////////////////////////////////////////////////
     @Nullable
     public static byte[] getByteSHA256(@Nullable final String data) {
-        return digest(StringUtil.getBytes(data), Constants.ALGORITHM_SHA_256);
+        return digest(Algorithm.SHA_256, StringUtil.getBytes(data));
     }
 
     @Nullable
     public static byte[] getByteSHA256(@Nullable final byte[] data) {
-        return digest(data, Constants.ALGORITHM_SHA_256);
+        return digest(Algorithm.SHA_256, data);
     }
 
     @Nullable
     public static byte[] getByteSHA256(@Nullable final File file) {
-        return digest(file, Constants.ALGORITHM_SHA_256);
+        return digest(Algorithm.SHA_256, file);
     }
 
     @Nullable
     public static String getStringSHA256(@Nullable final String data) {
-        return HexUtil.getString(digest(StringUtil.getBytes(data), Constants.ALGORITHM_SHA_256));
+        return HexUtil.getString(digest(Algorithm.SHA_256, StringUtil.getBytes(data)));
     }
 
     @Nullable
     public static String getStringSHA256(@Nullable final byte[] data) {
-        return HexUtil.getString(digest(data, Constants.ALGORITHM_SHA_256));
+        return HexUtil.getString(digest(Algorithm.SHA_256, data));
     }
 
     @Nullable
     public static String getStringSHA256(@Nullable final File file) {
-        return HexUtil.getString(digest(file, Constants.ALGORITHM_SHA_256));
+        return HexUtil.getString(digest(Algorithm.SHA_256, file));
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -247,32 +247,32 @@ public final class EncryptUtil {
     ///////////////////////////////////////////////////////////////////////////
     @Nullable
     public static byte[] getByteSHA384(@Nullable final String data) {
-        return digest(StringUtil.getBytes(data), Constants.ALGORITHM_SHA_384);
+        return digest(Algorithm.SHA_384, StringUtil.getBytes(data));
     }
 
     @Nullable
     public static byte[] getByteSHA384(@Nullable final byte[] data) {
-        return digest(data, Constants.ALGORITHM_SHA_384);
+        return digest(Algorithm.SHA_384, data);
     }
 
     @Nullable
     public static byte[] getByteSHA384(@Nullable final File file) {
-        return digest(file, Constants.ALGORITHM_SHA_384);
+        return digest(Algorithm.SHA_384, file);
     }
 
     @Nullable
     public static String getStringSHA384(@Nullable final String data) {
-        return HexUtil.getString(digest(StringUtil.getBytes(data), Constants.ALGORITHM_SHA_384));
+        return HexUtil.getString(digest(Algorithm.SHA_384, StringUtil.getBytes(data)));
     }
 
     @Nullable
     public static String getStringSHA384(@Nullable final byte[] data) {
-        return HexUtil.getString(digest(data, Constants.ALGORITHM_SHA_384));
+        return HexUtil.getString(digest(Algorithm.SHA_384, data));
     }
 
     @Nullable
     public static String getStringSHA384(@Nullable final File file) {
-        return HexUtil.getString(digest(file, Constants.ALGORITHM_SHA_384));
+        return HexUtil.getString(digest(Algorithm.SHA_384, file));
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -280,32 +280,32 @@ public final class EncryptUtil {
     ///////////////////////////////////////////////////////////////////////////
     @Nullable
     public static byte[] getByteSHA512(@Nullable final String data) {
-        return digest(StringUtil.getBytes(data), Constants.ALGORITHM_SHA_512);
+        return digest(Algorithm.SHA_512, StringUtil.getBytes(data));
     }
 
     @Nullable
     public static byte[] getByteSHA512(@Nullable final byte[] data) {
-        return digest(data, Constants.ALGORITHM_SHA_512);
+        return digest(Algorithm.SHA_512, data);
     }
 
     @Nullable
     public static byte[] getByteSHA512(@Nullable final File file) {
-        return digest(file, Constants.ALGORITHM_SHA_512);
+        return digest(Algorithm.SHA_512, file);
     }
 
     @Nullable
     public static String getStringSHA512(@Nullable final String data) {
-        return HexUtil.getString(digest(StringUtil.getBytes(data), Constants.ALGORITHM_SHA_512));
+        return HexUtil.getString(digest(Algorithm.SHA_512, StringUtil.getBytes(data)));
     }
 
     @Nullable
     public static String getStringSHA512(@Nullable final byte[] data) {
-        return HexUtil.getString(digest(data, Constants.ALGORITHM_SHA_512));
+        return HexUtil.getString(digest(Algorithm.SHA_512, data));
     }
 
     @Nullable
     public static String getStringSHA512(@Nullable final File file) {
-        return HexUtil.getString(digest(file, Constants.ALGORITHM_SHA_512));
+        return HexUtil.getString(digest(Algorithm.SHA_512, file));
     }
 
 
@@ -314,22 +314,22 @@ public final class EncryptUtil {
     ///////////////////////////////////////////////////////////////////////////
     @Nullable
     public static byte[] getByteHMacMD5(@Nullable final String data, @Nullable final String key) {
-        return macTemplate(StringUtil.getBytes(data), StringUtil.getBytes(key), Constants.ALGORITHM_HMAC_MD_5);
+        return macTemplate(Algorithm.HMAC_MD_5, StringUtil.getBytes(data), StringUtil.getBytes(key));
     }
 
     @Nullable
     public static byte[] getByteHMacMD5(@Nullable final byte[] data, @Nullable final byte[] key) {
-        return macTemplate(data, key, Constants.ALGORITHM_HMAC_MD_5);
+        return macTemplate(Algorithm.HMAC_MD_5, data, key);
     }
 
     @Nullable
     public static String getStringHMacMD5(@Nullable final String data, @Nullable final String key) {
-        return HexUtil.getString(macTemplate(StringUtil.getBytes(data), StringUtil.getBytes(key), Constants.ALGORITHM_HMAC_MD_5));
+        return HexUtil.getString(macTemplate(Algorithm.HMAC_MD_5, StringUtil.getBytes(data), StringUtil.getBytes(key)));
     }
 
     @Nullable
     public static String getStringHMacMD5(@Nullable final byte[] data, @Nullable final byte[] key) {
-        return HexUtil.getString(macTemplate(data, key, Constants.ALGORITHM_HMAC_MD_5));
+        return HexUtil.getString(macTemplate(Algorithm.HMAC_MD_5, data, key));
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -337,22 +337,22 @@ public final class EncryptUtil {
     ///////////////////////////////////////////////////////////////////////////
     @Nullable
     public static byte[] getByteHMacSHA1(@Nullable final String data, @Nullable final String key) {
-        return macTemplate(StringUtil.getBytes(data), StringUtil.getBytes(key), Constants.ALGORITHM_HMAC_SHA_1);
+        return macTemplate(Algorithm.HMAC_SHA_1, StringUtil.getBytes(data), StringUtil.getBytes(key));
     }
 
     @Nullable
     public static byte[] getByteHMacSHA1(@Nullable final byte[] data, @Nullable final byte[] key) {
-        return macTemplate(data, key, Constants.ALGORITHM_HMAC_SHA_1);
+        return macTemplate(Algorithm.HMAC_SHA_1, data, key);
     }
 
     @Nullable
     public static String getStringHMacSHA1(@Nullable final String data, @Nullable final String key) {
-        return HexUtil.getString(macTemplate(StringUtil.getBytes(data), StringUtil.getBytes(key), Constants.ALGORITHM_HMAC_SHA_1));
+        return HexUtil.getString(macTemplate(Algorithm.HMAC_SHA_1, StringUtil.getBytes(data), StringUtil.getBytes(key)));
     }
 
     @Nullable
     public static String getStringHMacSHA1(@Nullable final byte[] data, @Nullable final byte[] key) {
-        return HexUtil.getString(macTemplate(data, key, Constants.ALGORITHM_HMAC_SHA_1));
+        return HexUtil.getString(macTemplate(Algorithm.HMAC_SHA_1, data, key));
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -360,22 +360,22 @@ public final class EncryptUtil {
     ///////////////////////////////////////////////////////////////////////////
     @Nullable
     public static byte[] getByteHMacSHA224(@Nullable final String data, @Nullable final String key) {
-        return macTemplate(StringUtil.getBytes(data), StringUtil.getBytes(key), Constants.ALGORITHM_HMAC_SHA_224);
+        return macTemplate(Algorithm.HMAC_SHA_224, StringUtil.getBytes(data), StringUtil.getBytes(key));
     }
 
     @Nullable
     public static byte[] getByteHMacSHA224(@Nullable final byte[] data, @Nullable final byte[] key) {
-        return macTemplate(data, key, Constants.ALGORITHM_HMAC_SHA_224);
+        return macTemplate(Algorithm.HMAC_SHA_224, data, key);
     }
 
     @Nullable
     public static String getStringHMacSHA224(@Nullable final String data, @Nullable final String key) {
-        return HexUtil.getString(macTemplate(StringUtil.getBytes(data), StringUtil.getBytes(key), Constants.ALGORITHM_HMAC_SHA_224));
+        return HexUtil.getString(macTemplate(Algorithm.HMAC_SHA_224, StringUtil.getBytes(data), StringUtil.getBytes(key)));
     }
 
     @Nullable
     public static String getStringHMacSHA224(@Nullable final byte[] data, @Nullable final byte[] key) {
-        return HexUtil.getString(macTemplate(data, key, Constants.ALGORITHM_HMAC_SHA_224));
+        return HexUtil.getString(macTemplate(Algorithm.HMAC_SHA_224, data, key));
     }
 
 
@@ -384,22 +384,22 @@ public final class EncryptUtil {
     ///////////////////////////////////////////////////////////////////////////
     @Nullable
     public static byte[] getByteHMacSHA256(@Nullable final String data, @Nullable final String key) {
-        return macTemplate(StringUtil.getBytes(data), StringUtil.getBytes(key), Constants.ALGORITHM_HMAC_SHA_256);
+        return macTemplate(Algorithm.HMAC_SHA_256, StringUtil.getBytes(data), StringUtil.getBytes(key));
     }
 
     @Nullable
     public static byte[] getByteHMacSHA256(@Nullable final byte[] data, @Nullable final byte[] key) {
-        return macTemplate(data, key, Constants.ALGORITHM_HMAC_SHA_256);
+        return macTemplate(Algorithm.HMAC_SHA_256, data, key);
     }
 
     @Nullable
     public static String getStringHMacSHA256(@Nullable final String data, @Nullable final String key) {
-        return HexUtil.getString(macTemplate(StringUtil.getBytes(data), StringUtil.getBytes(key), Constants.ALGORITHM_HMAC_SHA_256));
+        return HexUtil.getString(macTemplate(Algorithm.HMAC_SHA_256, StringUtil.getBytes(data), StringUtil.getBytes(key)));
     }
 
     @Nullable
     public static String getStringHMacSHA256(@Nullable final byte[] data, @Nullable final byte[] key) {
-        return HexUtil.getString(macTemplate(data, key, Constants.ALGORITHM_HMAC_SHA_256));
+        return HexUtil.getString(macTemplate(Algorithm.HMAC_SHA_256, data, key));
     }
 
 
@@ -408,22 +408,22 @@ public final class EncryptUtil {
     ///////////////////////////////////////////////////////////////////////////
     @Nullable
     public static byte[] getByteHMacSHA384(@Nullable final String data, @Nullable final String key) {
-        return macTemplate(StringUtil.getBytes(data), StringUtil.getBytes(key), Constants.ALGORITHM_HMAC_SHA_384);
+        return macTemplate(Algorithm.HMAC_SHA_384, StringUtil.getBytes(data), StringUtil.getBytes(key));
     }
 
     @Nullable
     public static byte[] getByteHMacSHA384(@Nullable final byte[] data, @Nullable final byte[] key) {
-        return macTemplate(data, key, Constants.ALGORITHM_HMAC_SHA_384);
+        return macTemplate(Algorithm.HMAC_SHA_384, data, key);
     }
 
     @Nullable
     public static String getStringHMacSHA384(@Nullable final String data, @Nullable final String key) {
-        return HexUtil.getString(macTemplate(StringUtil.getBytes(data), StringUtil.getBytes(key), Constants.ALGORITHM_HMAC_SHA_384));
+        return HexUtil.getString(macTemplate(Algorithm.HMAC_SHA_384, StringUtil.getBytes(data), StringUtil.getBytes(key)));
     }
 
     @Nullable
     public static String getStringHMacSHA384(@Nullable final byte[] data, @Nullable final byte[] key) {
-        return HexUtil.getString(macTemplate(data, key, Constants.ALGORITHM_HMAC_SHA_384));
+        return HexUtil.getString(macTemplate(Algorithm.HMAC_SHA_384, data, key));
     }
 
 
@@ -432,22 +432,22 @@ public final class EncryptUtil {
     ///////////////////////////////////////////////////////////////////////////
     @Nullable
     public static byte[] getByteHMacSHA512(@Nullable final String data, @Nullable final String key) {
-        return macTemplate(StringUtil.getBytes(data), StringUtil.getBytes(key), Constants.ALGORITHM_HMAC_SHA_512);
+        return macTemplate(Algorithm.HMAC_SHA_512, StringUtil.getBytes(data), StringUtil.getBytes(key));
     }
 
     @Nullable
     public static byte[] getByteHMacSHA512(@Nullable final byte[] data, @Nullable final byte[] key) {
-        return macTemplate(data, key, Constants.ALGORITHM_HMAC_SHA_512);
+        return macTemplate(Algorithm.HMAC_SHA_512, data, key);
     }
 
     @Nullable
     public static String getStringHMacSHA512(@Nullable final String data, @Nullable final String key) {
-        return HexUtil.getString(macTemplate(StringUtil.getBytes(data), StringUtil.getBytes(key), Constants.ALGORITHM_HMAC_SHA_512));
+        return HexUtil.getString(macTemplate(Algorithm.HMAC_SHA_512, StringUtil.getBytes(data), StringUtil.getBytes(key)));
     }
 
     @Nullable
     public static String getStringHMacSHA512(@Nullable final byte[] data, @Nullable final byte[] key) {
-        return HexUtil.getString(macTemplate(data, key, Constants.ALGORITHM_HMAC_SHA_512));
+        return HexUtil.getString(macTemplate(Algorithm.HMAC_SHA_512, data, key));
     }
 
 
@@ -458,7 +458,7 @@ public final class EncryptUtil {
      * @param algorithm 算法，如MD5,SHA-1, SHA-224, SHA-256, SHA-384, SHA-512
      * @return
      */
-    public static byte[] digest(@Nullable final byte[] data, @NonNull final String algorithm) {
+    public static byte[] digest(@Algorithm final String algorithm, @Nullable final byte[] data) {
         if (ArrayUtil.isEmpty(data)) return null;
         try {
             MessageDigest messageDigest = MessageDigest.getInstance(algorithm);
@@ -478,7 +478,7 @@ public final class EncryptUtil {
      * @return
      */
     @Nullable
-    public static byte[] digest(@Nullable final File file, @NonNull final String algorithm) {
+    public static byte[] digest(@Algorithm final String algorithm, @Nullable final File file) {
         if (!FileUtil.isFile(file)) return null;
         FileInputStream fis = null;
         DigestInputStream is = null;
@@ -507,7 +507,7 @@ public final class EncryptUtil {
      * @return 指定加密算法和密钥, 加密后的数据
      */
     @Nullable
-    public static byte[] macTemplate(@Nullable final byte[] data, @Nullable final byte[] key, @NonNull final String algorithm) {
+    public static byte[] macTemplate(@Algorithm final String algorithm, @Nullable final byte[] data, @Nullable final byte[] key) {
         if (data == null || data.length == 0 || key == null || key.length == 0) return null;
         try {
             SecretKeySpec secretKey = new SecretKeySpec(key, algorithm);

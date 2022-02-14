@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.os.Handler;
 import android.os.Message;
 
+import androidx.annotation.CallSuper;
 import androidx.annotation.NonNull;
 
 import java.lang.ref.WeakReference;
@@ -21,6 +22,7 @@ public final class WeakHandler extends Handler {
         mContextRef = new WeakReference<>(activity);
     }
 
+    @CallSuper
     @Override
     public void dispatchMessage(@NonNull Message msg) {
         final Activity activity = mContextRef == null ? null : mContextRef.get();

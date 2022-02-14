@@ -8,7 +8,6 @@ android {
     defaultConfig {
         minSdk build_versions.min_sdk
         targetSdk build_versions.target_sdk
-
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
     }
@@ -33,8 +32,4 @@ android {
 dependencies {
     implementation "com.google.android.material:material:${versions.android_material}"
     implementation "androidx.appcompat:appcompat:${versions.androidx_appcompat}"
-
-    testImplementation "junit:junit:${versions.junit}"
-    androidTestImplementation "androidx.test.ext:junit:${versions.androidx_junit}"
-    androidTestImplementation "androidx.test.espresso:espresso-core:${versions.androidx_espresso}"
 }

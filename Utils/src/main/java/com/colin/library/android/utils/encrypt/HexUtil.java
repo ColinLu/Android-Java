@@ -15,27 +15,34 @@ import com.colin.library.android.utils.data.Constants;
  */
 public final class HexUtil {
 
+
+    /*普通字节数组-> 16进制字符串*/
+    @Nullable
+    public static String getString(@Nullable final String text) {
+        return getString(Constants.DIGITS_BYTE_LOWER, StringUtil.getBytes(text));
+    }
+
     /*普通字节数组-> 16进制字符串*/
     @Nullable
     public static String getString(@Nullable final byte[] bytes) {
-        return getString(bytes, Constants.DIGITS_BYTE_LOWER);
+        return getString(Constants.DIGITS_BYTE_LOWER, bytes);
     }
 
     /*普通字节数组-> 16进制字符串*/
     @Nullable
-    public static String getString(@Nullable final byte[] bytes, final boolean upper) {
-        return getString(bytes, upper ? Constants.DIGITS_BYTE_UPPER : Constants.DIGITS_BYTE_LOWER);
+    public static String getString(final boolean upper, @Nullable final byte[] bytes) {
+        return getString(upper ? Constants.DIGITS_BYTE_UPPER : Constants.DIGITS_BYTE_LOWER, bytes);
     }
 
     /*普通字节数组-> 16进制字符串*/
     @Nullable
-    public static String getString(@Nullable final byte[] bytes, @NonNull final byte[] digits) {
-        return StringUtil.getString(getBytes(bytes, digits));
+    public static String getString(@NonNull final byte[] digits, @Nullable final byte[] bytes) {
+        return StringUtil.getString(getBytes(digits, bytes));
     }
 
     /*普通字节数组->16进制数组*/
     @Nullable
-    public static byte[] getBytes(@Nullable final byte[] bytes, @NonNull final byte[] digits) {
+    public static byte[] getBytes(@NonNull final byte[] digits, @Nullable final byte[] bytes) {
         final int len = null == bytes ? 0 : bytes.length;
         if (len == 0) return null;
         final byte[] values = new byte[len << 1];

@@ -126,7 +126,7 @@ public final class EncodeUtil {
     @Nullable
     public static String binEncode(@Nullable final String input) {
         if (TextUtils.isEmpty(input)) return null;
-        StringBuilder stringBuilder = new StringBuilder();
+        final StringBuilder stringBuilder = new StringBuilder();
         for (char i : input.toCharArray()) {
             stringBuilder.append(Integer.toBinaryString(i));
             stringBuilder.append(' ');
@@ -143,9 +143,9 @@ public final class EncodeUtil {
     @Nullable
     public static String binDecode(@Nullable final String input) {
         if (TextUtils.isEmpty(input)) return null;
-        String[] splitted = input.split(" ");
+        final String[] array = input.split(" ");
         StringBuilder sb = new StringBuilder();
-        for (String i : splitted) {
+        for (String i : array) {
             sb.append(((char) Integer.parseInt(i.replace(" ", ""), 2)));
         }
         return sb.toString();

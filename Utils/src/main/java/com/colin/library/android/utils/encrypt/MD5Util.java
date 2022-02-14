@@ -3,11 +3,10 @@ package com.colin.library.android.utils.encrypt;
 
 import androidx.annotation.Nullable;
 
-
 import com.colin.library.android.utils.ArrayUtil;
 import com.colin.library.android.utils.FileUtil;
 import com.colin.library.android.utils.StringUtil;
-import com.colin.library.android.utils.data.Constants;
+import com.colin.library.android.utils.annotation.Algorithm;
 
 import java.io.File;
 
@@ -35,7 +34,7 @@ public final class MD5Util {
     @Nullable
     public static byte[] getByte(@Nullable final byte[] data) {
         if (ArrayUtil.isEmpty(data)) return null;
-        return EncryptUtil.digest(data, Constants.ALGORITHM_MD_5);
+        return EncryptUtil.digest(Algorithm.MD_5, data);
     }
 
     /**
@@ -47,7 +46,7 @@ public final class MD5Util {
     @Nullable
     public static byte[] getByte(@Nullable final String data) {
         if (StringUtil.isEmpty(data)) return null;
-        return EncryptUtil.digest(data.getBytes(), Constants.ALGORITHM_MD_5);
+        return EncryptUtil.digest(Algorithm.MD_5, data.getBytes());
     }
 
     /**
@@ -59,7 +58,7 @@ public final class MD5Util {
     @Nullable
     public static byte[] getByte(@Nullable File file) {
         if (!FileUtil.isFile(file)) return null;
-        return EncryptUtil.digest(file, Constants.ALGORITHM_MD_5);
+        return EncryptUtil.digest(Algorithm.MD_5, file);
     }
 
     public static byte[] getByte(@Nullable final byte[] data, @Nullable final byte[] salt) {
@@ -74,14 +73,14 @@ public final class MD5Util {
     @Nullable
     public static String getString(@Nullable final byte[] data) {
         if (ArrayUtil.isEmpty(data)) return null;
-        return HexUtil.getString(EncryptUtil.digest(data, Constants.ALGORITHM_MD_5));
+        return HexUtil.getString(EncryptUtil.digest(Algorithm.MD_5, data));
     }
 
     /* hex string */
     @Nullable
     public static String getString(@Nullable final String data) {
         if (StringUtil.isEmpty(data)) return null;
-        return HexUtil.getString(EncryptUtil.digest(data.getBytes(), Constants.ALGORITHM_MD_5));
+        return HexUtil.getString(EncryptUtil.digest(Algorithm.MD_5, data.getBytes()));
     }
 
 
@@ -89,7 +88,7 @@ public final class MD5Util {
     @Nullable
     public static String getString(@Nullable final File file) {
         if (!FileUtil.isFile(file)) return null;
-        return HexUtil.getString(EncryptUtil.digest(file, Constants.ALGORITHM_MD_5));
+        return HexUtil.getString(EncryptUtil.digest(Algorithm.MD_5, file));
     }
 
     public static String getString(@Nullable final byte[] data, @Nullable final byte[] salt) {
