@@ -1,12 +1,10 @@
 package com.colin.library.android.utils;
 
-import android.Manifest;
 import android.text.TextUtils;
 import android.webkit.MimeTypeMap;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresPermission;
 
 import java.io.File;
 import java.io.IOException;

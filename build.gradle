@@ -1,7 +1,9 @@
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
     apply from: 'config.gradle'
-
+    // 线程池优化Gradle插件，测试稳定后再上线，目前仅用于线程池排查
+    if (readLocalProperty("THREAD_POOL_SHRINK")) {
+        apply from: "thread.gradle"
+    }
     repositories {
         google()
         mavenCentral()
@@ -9,9 +11,6 @@ buildscript {
 
     dependencies {
         classpath "com.android.tools.build:gradle:$build_versions.android_gradle_plugin"
-
-        // NOTE: Do not place your application dependencies here; they belong
-        // in the individual module build.gradle files
     }
 }
 

@@ -31,12 +31,12 @@ android {
 
 dependencies {
 
-    implementation "com.google.android.material:material:${versions.android_material}"
-    implementation "androidx.appcompat:appcompat:${versions.androidx_appcompat}"
     compileOnly project(path: ':Utils')
     compileOnly project(path: ':Widgets')
+    compileOnly dependency.android_material
+    compileOnly dependency.androidx_appcompat
 
-    testImplementation "junit:junit:${versions.junit}"
-    androidTestImplementation "androidx.test.ext:junit:${versions.androidx_junit}"
-    androidTestImplementation "androidx.test.espresso:espresso-core:${versions.androidx_espresso}"
+    testImplementation dependency.test_android_junit
+    testImplementation dependency.test_androidx_junit
+    testImplementation dependency.test_androidx_espresso
 }

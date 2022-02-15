@@ -30,11 +30,10 @@ android {
 }
 
 dependencies {
+    compileOnly dependency.android_material
+    compileOnly dependency.androidx_appcompat
 
-    implementation "com.google.android.material:material:${versions.android_material}"
-    implementation "androidx.appcompat:appcompat:${versions.androidx_appcompat}"
-
-    testImplementation "junit:junit:${versions.junit}"
-    androidTestImplementation "androidx.test.ext:junit:${versions.androidx_junit}"
-    androidTestImplementation "androidx.test.espresso:espresso-core:${versions.androidx_espresso}"
+    testImplementation dependency.test_android_junit
+    androidTestImplementation dependency.test_androidx_junit
+    androidTestImplementation dependency.test_androidx_espresso
 }

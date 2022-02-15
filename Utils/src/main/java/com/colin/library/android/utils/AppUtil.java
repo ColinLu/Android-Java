@@ -1,8 +1,11 @@
 package com.colin.library.android.utils;
 
 import android.content.Context;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.Drawable;
+import android.text.TextUtils;
 
 import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
@@ -45,6 +48,60 @@ public final class AppUtil {
         return StringUtil.isEmpty(versionName) ? "" : versionName;
     }
 
+    @Nullable
+    public static Drawable getIcon() {
+        return getIcon(UtilHelper.getInstance().getContext().getPackageName());
+    }
+
+    /*App Icon*/
+    @Nullable
+    public static Drawable getIcon(@Nullable String packageName) {
+        if (TextUtils.isEmpty(packageName)) return null;
+        final Context context = UtilHelper.getInstance().getContext();
+        final PackageInfo info = getPackageInfo(context, packageName, 0);
+        return info == null ? null : info.applicationInfo.loadIcon(context.getPackageManager());
+    }
+
+    @Nullable
+    public static String getAppName() {
+        return getAppName(UtilHelper.getInstance().getContext().getPackageName());
+    }
+
+    /*App Name*/
+    @Nullable
+    public static String getAppName(@Nullable String packageName) {
+        if (TextUtils.isEmpty(packageName)) return null;
+        final Context context = UtilHelper.getInstance().getContext();
+        final PackageInfo info = getPackageInfo(context, packageName, 0);
+        return info == null ? null : info.applicationInfo.loadLabel(context.getPackageManager()).toString();
+    }
+
+    @Nullable
+    public static String getAppPath() {
+        return getAppPath(UtilHelper.getInstance().getContext().getPackageName());
+    }
+
+    /*App 安装路径*/
+    @Nullable
+    public static String getAppPath(@Nullable String packageName) {
+        if (TextUtils.isEmpty(packageName)) return null;
+        final Context context = UtilHelper.getInstance().getContext();
+        final PackageInfo info = getPackageInfo(context, packageName, 0);
+        return info == null ? null : info.applicationInfo.sourceDir;
+    }
+
+    public static boolean isDebug() {
+        return isDebug(UtilHelper.getInstance().getContext().getPackageName());
+    }
+
+    public static boolean isDebug(@Nullable final String packageName) {
+        if (TextUtils.isEmpty(packageName)) return false;
+        final Context context = UtilHelper.getInstance().getContext();
+        final PackageInfo info = getPackageInfo(context, packageName, 0);
+        final ApplicationInfo app = info == null ? null : info.applicationInfo;
+        return app != null && (app.flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0;
+    }
+
     /**
      * 获取AndroidManifest.xml文件的信息
      *
@@ -62,7 +119,7 @@ public final class AppUtil {
      */
     @Nullable
     public static PackageInfo getPackageInfo(@Nullable Context context, int flags) {
-        return getPackageInfo(context, null == context ? null : context.getPackageName(), 0);
+        return getPackageInfo(context, null == context ? null : context.getPackageName(), flags);
     }
 
     @Nullable

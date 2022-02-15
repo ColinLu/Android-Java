@@ -30,6 +30,8 @@ android {
 }
 
 dependencies {
-    implementation "com.google.android.material:material:${versions.android_material}"
-    implementation "androidx.appcompat:appcompat:${versions.androidx_appcompat}"
+    compileOnly dependency.android_material
+    compileOnly dependency.androidx_appcompat
+    compileOnly dependency.ok_http
+    compileOnly dependency.g_son
 }
