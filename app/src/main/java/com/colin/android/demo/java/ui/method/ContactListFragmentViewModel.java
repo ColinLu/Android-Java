@@ -30,7 +30,7 @@ public class ContactListFragmentViewModel extends ViewModel {
     public void refresh(boolean refresh) {
         mLoadState.setValue(LoadState.ING);
         ThreadUtil.doAsync(() -> mList.postValue(ContactUtils.getContactList(UtilHelper.getInstance().getContext())));
-        ThreadUtil.runUiDelayed(() -> mLoadState.setValue(LoadState.SUCCESS), Constants.DURATION_DELAYED);
+        ThreadUtil.runUIDelayed(() -> mLoadState.setValue(LoadState.SUCCESS), Constants.DURATION_DELAYED);
     }
 
     public MutableLiveData<List<ContactBean>> getList() {

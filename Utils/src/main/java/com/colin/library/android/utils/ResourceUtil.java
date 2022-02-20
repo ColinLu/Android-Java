@@ -1,12 +1,15 @@
 package com.colin.library.android.utils;
 
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.ColorRes;
+import androidx.annotation.DimenRes;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.FloatRange;
 import androidx.annotation.IntRange;
@@ -15,6 +18,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.core.content.ContextCompat;
 
+import com.colin.library.android.utils.data.Constants;
 import com.colin.library.android.utils.data.UtilHelper;
 
 
@@ -36,8 +40,63 @@ public final class ResourceUtil {
         throw new UnsupportedOperationException("don't instantiate");
     }
 
+    public static Uri getUri(@DrawableRes int id) {
+        return getUri(getResources(), id);
+    }
+
+    public static Uri getUri(@Nullable Resources resources, @DrawableRes int id) {
+        if (null == resources || id == Resources.ID_NULL) return null;
+        return Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://"
+                + resources.getResourcePackageName(id) + "/"
+                + resources.getResourceTypeName(id) + "/"
+                + resources.getResourceEntryName(id));
+    }
+
+    /**
+     * 状态栏高度
+     *
+     * @return
+     */
+    public static int getStatusBarHeight() {
+        int dimenResId = getDimenResId(Constants.HEIGHT_STATUS_BAR);
+        return dimenResId == 0 ? 0 : ResourceUtil.getResources().getDimensionPixelSize(dimenResId);
+    }
+
+    /**
+     * 底部导航栏高度
+     *
+     * @return
+     */
+    public static int getNavBarHeight() {
+        int dimenResId = ResourceUtil.getDimenResId(Constants.HEIGHT_NAVIGATION_BAR);
+        return dimenResId == 0 ? 0 : ResourceUtil.getResources().getDimensionPixelSize(dimenResId);
+    }
+
     public static int setColorAlpha(@ColorInt int color, @FloatRange(from = 0, to = 1) final float alpha) {
         return (color & 0X00FFFFFF) | ((int) (alpha * 255.0f + 0.5f) << 24);
+    }
+
+    /**
+     * 获取长度资源文件ID
+     *
+     * @param name
+     * @return
+     */
+    @DimenRes
+    public static int getDimenResId(@NonNull String name) {
+        return getIdentifier(name, "dimen", "android");
+    }
+
+    /**
+     * 获取资源文件ID
+     *
+     * @param name
+     * @param defType
+     * @param defPackage
+     * @return
+     */
+    public static int getIdentifier(@NonNull String name, @NonNull String defType, @NonNull String defPackage) {
+        return getResources().getIdentifier(name, defType, defPackage);
     }
 
     /**

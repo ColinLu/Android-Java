@@ -1,6 +1,8 @@
 package com.colin.library.android.utils;
 
 
+import android.text.TextUtils;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.collection.LruCache;
@@ -239,4 +241,16 @@ public final class TimeUtil {
         return number;
     }
 
+    public static long parseHttpTime(@Nullable String time) {
+        if (TextUtils.isEmpty(time)) return 0;
+        final SimpleDateFormat format = getDateFormat(Constants.FORMAT_TIME_HTTP);
+        format.setTimeZone(Constants.TIME_ZONE_GMT);
+        try {
+            final Date date = format.parse(time);
+            return null == date ? 0 : date.getTime();
+        } catch (ParseException e) {
+            LogUtil.log(e);
+        }
+        return 0;
+    }
 }

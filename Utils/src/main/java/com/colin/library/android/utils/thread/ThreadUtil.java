@@ -94,7 +94,7 @@ public final class ThreadUtil {
         else HANDLER.post(runnable);
     }
 
-    public static void runUiDelayed(final Runnable runnable, long delayMillis) {
+    public static void runUIDelayed(final Runnable runnable, long delayMillis) {
         HANDLER.postDelayed(runnable, delayMillis);
     }
 

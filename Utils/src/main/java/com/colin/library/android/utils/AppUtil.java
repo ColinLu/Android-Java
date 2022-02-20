@@ -1,15 +1,27 @@
 package com.colin.library.android.utils;
 
+import android.app.ActivityManager;
+import android.app.DownloadManager;
+import android.app.NotificationManager;
+import android.content.ClipboardManager;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
+import android.location.LocationManager;
+import android.net.ConnectivityManager;
+import android.os.UserManager;
+import android.telephony.TelephonyManager;
 import android.text.TextUtils;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 
 import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 
 import com.colin.library.android.utils.data.Constants;
 import com.colin.library.android.utils.data.UtilHelper;
@@ -145,5 +157,49 @@ public final class AppUtil {
             LogUtil.log(e);
         }
         return null;
+    }
+
+    public static ContentResolver getContentResolver() {
+        return UtilHelper.getInstance().getContext().getContentResolver();
+    }
+
+    public static ActivityManager getActivityManager() {
+        return ContextCompat.getSystemService(UtilHelper.getInstance().getContext(), ActivityManager.class);
+    }
+
+    public static WindowManager getWindowManager() {
+        return ContextCompat.getSystemService(UtilHelper.getInstance().getContext(), WindowManager.class);
+    }
+
+    public static LocationManager getLocationManager() {
+        return ContextCompat.getSystemService(UtilHelper.getInstance().getContext(), LocationManager.class);
+    }
+
+    public static NotificationManager getNotificationManager() {
+        return ContextCompat.getSystemService(UtilHelper.getInstance().getContext(), NotificationManager.class);
+    }
+
+    public static ConnectivityManager getConnectivityManager() {
+        return ContextCompat.getSystemService(UtilHelper.getInstance().getContext(), ConnectivityManager.class);
+    }
+
+    public static TelephonyManager getTelephonyManager() {
+        return ContextCompat.getSystemService(UtilHelper.getInstance().getContext(), TelephonyManager.class);
+    }
+
+    public static InputMethodManager getInputMethodManager() {
+        return ContextCompat.getSystemService(UtilHelper.getInstance().getContext(), InputMethodManager.class);
+    }
+
+    public static DownloadManager getDownloadManager() {
+        return ContextCompat.getSystemService(UtilHelper.getInstance().getContext(), DownloadManager.class);
+    }
+
+    public static ClipboardManager getClipboardManager() {
+        return ContextCompat.getSystemService(UtilHelper.getInstance().getContext(), ClipboardManager.class);
+    }
+
+    public static UserManager getUserManager() {
+        return ContextCompat.getSystemService(UtilHelper.getInstance().getContext(), UserManager.class);
     }
 }

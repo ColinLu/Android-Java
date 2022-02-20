@@ -35,6 +35,10 @@
     <string name="search">Search</string>
     <string name="web">Web</string>
 
+    <string name="http_get">Get</string>
+    <string name="http_post">Post</string>
+    <string name="http_put">Put</string>
+
     <string-array name="view_list">
         <item>@string/motion</item>
         <item>@string/edge</item>

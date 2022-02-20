@@ -29,7 +29,7 @@ public class EdgeFragmentViewModel extends ViewModel {
     public void refresh(boolean refresh) {
         mLoadState.setValue(refresh ? LoadState.ING : LoadState.MORE);
         ThreadUtil.doAsync(() -> mList.postValue(DemoUtils.getStringList(R.array.flow_data)));
-        ThreadUtil.runUiDelayed(() -> mLoadState.setValue(LoadState.SUCCESS), Constants.DURATION_DELAYED);
+        ThreadUtil.runUIDelayed(() -> mLoadState.setValue(LoadState.SUCCESS), Constants.DURATION_DELAYED);
     }
 
     public MutableLiveData<List<String>> getList() {

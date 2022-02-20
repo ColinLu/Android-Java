@@ -1,6 +1,10 @@
 package com.colin.library.android.utils.data;
 
+import android.app.Application;
 import android.content.Context;
+
+import com.colin.library.android.utils.ActivityUtil;
+import com.colin.library.android.utils.BuildConfig;
 
 /**
  * 作者： ColinLu
@@ -22,8 +26,13 @@ public final class UtilHelper {
         return Holder.instance;
     }
 
+    public static void init(Application app) {
+        init(new UtilConfig.Builder(app, BuildConfig.DEBUG).build());
+    }
+
     public static void init(UtilConfig config) {
         sConfig = config;
+        ActivityUtil.getInstance().register((Application) config.getApplication());
     }
 
 

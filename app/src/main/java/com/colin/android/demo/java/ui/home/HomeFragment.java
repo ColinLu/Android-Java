@@ -13,6 +13,9 @@ import com.colin.android.demo.java.R;
 import com.colin.android.demo.java.app.AppFragment;
 import com.colin.android.demo.java.databinding.FragmentHomeBinding;
 import com.colin.android.demo.java.utils.DemoUtils;
+import com.colin.library.android.okHttp.OkHttp;
+import com.colin.library.android.okHttp.annotation.Method;
+import com.colin.library.android.okHttp.callback.IHttpCallback;
 
 public class HomeFragment extends AppFragment<FragmentHomeBinding> implements View.OnClickListener {
     @Override
@@ -26,6 +29,8 @@ public class HomeFragment extends AppFragment<FragmentHomeBinding> implements Vi
         mBinding.buttonMethod.setOnClickListener(this);
         mBinding.buttonView.setOnClickListener(this);
         mBinding.buttonWeb.setOnClickListener(this);
+        mBinding.buttonGet.setOnClickListener(this);
+        mBinding.buttonPost.setOnClickListener(this);
     }
 
     @Override
@@ -53,8 +58,21 @@ public class HomeFragment extends AppFragment<FragmentHomeBinding> implements Vi
                 }
                 DemoUtils.toNavigate(this, R.id.action_Home_to_Web);
                 break;
+            case R.id.button_get:
+                http(Method.GET);
+                break;
             default:
                 break;
         }
+    }
+
+    private void http(@Method @NonNull String method) {
+        OkHttp.getInstance().get("")
+                .execute(new IHttpCallback<String>() {
+                    @Override
+                    public void success(@Nullable String s) {
+
+                    }
+                });
     }
 }

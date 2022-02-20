@@ -100,6 +100,7 @@ dependencies {
     implementation project(path: ':Base')
     implementation project(path: ':Utils')
     implementation project(path: ':Widgets')
+    implementation project(path: ':OkHttp')
 
     implementation dependency.android_material
     implementation dependency.androidx_appcompat
