@@ -3,10 +3,6 @@ package com.colin.library.android.okHttp.parse;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.colin.library.android.okHttp.bean.HttpException;
-
-import java.io.IOException;
-
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 
@@ -19,13 +15,8 @@ import okhttp3.ResponseBody;
 public class StringParseResponse implements IParseResponse<String> {
     @Nullable
     @Override
-    public String parse(@NonNull Response response) throws HttpException {
+    public String parse(@NonNull Response response) throws Throwable {
         final ResponseBody body = response.body();
-        if (body == null) return null;
-        try {
-            return body.string();
-        } catch (IOException e) {
-            throw new HttpException(HttpException.CODE_HTTP_PARSE, "parse", e);
-        }
+        return body == null ? null : body.string();
     }
 }

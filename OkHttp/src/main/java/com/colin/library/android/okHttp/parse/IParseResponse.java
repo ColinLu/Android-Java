@@ -18,7 +18,7 @@ import okhttp3.Response;
 public interface IParseResponse<Result> extends IProgress {
     @Nullable
     @WorkerThread
-    default Result parse(@NonNull Response response) throws HttpException {
+    default Result parse(@NonNull Response response) throws Throwable {
         return (Result) null;
     }
 }

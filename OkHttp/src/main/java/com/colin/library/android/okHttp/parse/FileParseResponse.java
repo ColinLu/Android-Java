@@ -72,7 +72,7 @@ public class FileParseResponse implements IParseResponse<File> {
 
     @Override
     @Nullable
-    public File parse(@NonNull Response response) throws HttpException {
+    public File parse(@NonNull Response response) throws Throwable {
         final ResponseBody body = response.body();
         final long total = null == body ? -1 : body.contentLength();
         final File file = getDownloadFile(response);

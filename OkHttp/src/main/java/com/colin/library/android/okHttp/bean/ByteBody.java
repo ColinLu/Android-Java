@@ -6,7 +6,10 @@ import androidx.annotation.Nullable;
 import com.colin.library.android.okHttp.request.IRequestBody;
 import com.colin.library.android.utils.HttpUtil;
 
+import java.util.Locale;
+
 import okhttp3.MediaType;
+import okhttp3.OkHttp;
 import okhttp3.RequestBody;
 
 /**
@@ -18,30 +21,30 @@ import okhttp3.RequestBody;
 public class ByteBody implements IRequestBody {
     @NonNull
     private final byte[] mBytes;
-    @Nullable
+    @NonNull
     private final String mContentType;
-    @Nullable
-    private final String mEncode;
+    @NonNull
+    private final String mCharset;
     private final int mOffset;
     private final int mCount;
 
-    public ByteBody(@NonNull byte[] data, @Nullable String contentType, @Nullable String encode, int offset, int count) {
+    public ByteBody(@NonNull byte[] data, @NonNull String contentType, @NonNull String charset, int offset, int count) {
         this.mBytes = data;
         this.mContentType = contentType;
-        this.mEncode = encode;
+        this.mCharset = charset;
         this.mOffset = offset;
         this.mCount = count;
     }
 
     @Nullable
     @Override
-    public MediaType getMediaType(@NonNull String encode) {
-        return HttpUtil.getMediaType(mContentType, encode);
+    public MediaType getMediaType() {
+        return MediaType.parse(String.format(Locale.US, "%s; charset=%s", mContentType, mCharset));
     }
 
     @NonNull
     @Override
-    public RequestBody getRequestBody(@NonNull String encode) {
-        return RequestBody.create(getMediaType(encode), mBytes, mOffset, mCount);
+    public RequestBody getRequestBody() {
+        return RequestBody.Companion.create(mBytes, getMediaType(), mOffset, mCount);
     }
 }

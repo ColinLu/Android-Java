@@ -8,8 +8,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.Size;
 
-import com.colin.library.android.okHttp.bean.HttpException;
-
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 
@@ -42,7 +40,7 @@ public class BitmapParseResponse implements IParseResponse<Bitmap> {
 
     @Nullable
     @Override
-    public Bitmap parse(@NonNull Response response) throws HttpException {
+    public Bitmap parse(@NonNull Response response) throws Throwable {
         final ResponseBody body = response.body();
         final byte[] bytes = null == body ? null : body.bytes();
         if (null == bytes || bytes.length == 0) return null;
