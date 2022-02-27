@@ -1,31 +1,23 @@
 package com.colin.library.android.okHttp.parse;
 
 
-import android.os.Environment;
 import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresPermission;
 import androidx.annotation.WorkerThread;
 
 import com.colin.library.android.okHttp.OkHttp;
-import com.colin.library.android.okHttp.bean.HttpException;
 import com.colin.library.android.okHttp.progress.IProgress;
 import com.colin.library.android.utils.FileUtil;
 import com.colin.library.android.utils.HttpUtil;
 import com.colin.library.android.utils.PathUtil;
-import com.colin.library.android.utils.StringUtil;
-import com.colin.library.android.utils.encrypt.EncodeUtil;
 import com.colin.library.android.utils.thread.ThreadUtil;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
-import java.net.URI;
 
-import okhttp3.HttpUrl;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 import okhttp3.internal.Util;
@@ -95,9 +87,7 @@ public class FileParseResponse implements IParseResponse<File> {
         }
     }
 
-    @Override
-    @WorkerThread
-    public void progress(float total, float progress) {
+    public void progress(long total, float progress) {
         if (mProgress != null) ThreadUtil.runUI(() -> mProgress.progress(total, progress));
     }
 
