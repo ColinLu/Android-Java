@@ -2,6 +2,7 @@ package com.colin.library.android.okHttp.parse;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.WorkerThread;
 
 import okhttp3.Response;
 import okhttp3.ResponseBody;
@@ -15,6 +16,7 @@ import okhttp3.ResponseBody;
 public class StringParseResponse implements IParseResponse<String> {
     @Nullable
     @Override
+    @WorkerThread
     public String parse(@NonNull Response response) throws Throwable {
         final ResponseBody body = response.body();
         return body == null ? null : body.string();

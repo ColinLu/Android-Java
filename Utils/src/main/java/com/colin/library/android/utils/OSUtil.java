@@ -98,20 +98,14 @@ public final class OSUtil {
         String line = null;
         BufferedReader input = null;
         try {
-            Process p = Runtime.getRuntime().exec("getprop " + name);
+            final Process p = Runtime.getRuntime().exec("getprop " + name);
             input = new BufferedReader(new InputStreamReader(p.getInputStream()), 1024);
             line = input.readLine();
             input.close();
         } catch (IOException ex) {
             return null;
         } finally {
-            if (input != null) {
-                try {
-                    input.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
+            IOUtil.close(input);
         }
         return line;
     }

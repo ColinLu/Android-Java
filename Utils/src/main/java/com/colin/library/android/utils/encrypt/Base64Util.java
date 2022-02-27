@@ -10,8 +10,8 @@ import androidx.annotation.Nullable;
 
 import com.colin.library.android.utils.BitmapUtil;
 import com.colin.library.android.utils.IOUtil;
+import com.colin.library.android.utils.StringUtil;
 import com.colin.library.android.utils.annotation.Encode;
-import com.colin.library.android.utils.data.Constants;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
@@ -34,33 +34,33 @@ public final class Base64Util {
             -1, -1, -1, -1};
 
     @Nullable
-    public static String getString(@Nullable String data, boolean isEncode) {
+    public static String getString(@Nullable final String data, final boolean isEncode) {
         if (TextUtils.isEmpty(data)) return null;
-        byte[] bytes = getBytes(data, Encode.UTF_8);
+        final byte[] bytes = getBytes(data, Encode.UTF_8);
         if (null == bytes || bytes.length == 0) return null;
-        byte[] values = isEncode ? encode(bytes) : decode(bytes);
+        final byte[] values = isEncode ? encode(bytes) : decode(bytes);
         if (null == values || values.length == 0) return null;
         return new String(values);
     }
 
     @Nullable
-    public static String getString(@Nullable byte[] bytes, boolean isEncode) {
+    public static String getString(@Nullable final byte[] bytes, final boolean isEncode) {
         if (null == bytes || bytes.length == 0) return null;
-        byte[] values = isEncode ? encode(bytes) : decode(bytes);
+        final byte[] values = isEncode ? encode(bytes) : decode(bytes);
         if (null == values || values.length == 0) return null;
         return new String(values);
     }
 
     @Nullable
-    public static byte[] getBytes(@Nullable String data, boolean isEncode) {
+    public static byte[] getBytes(@Nullable final String data, final boolean isEncode) {
         if (TextUtils.isEmpty(data)) return null;
-        byte[] bytes = getBytes(data, Encode.UTF_8);
+        final byte[] bytes = getBytes(data, Encode.UTF_8);
         if (null == bytes || bytes.length == 0) return null;
         return isEncode ? encode(bytes) : decode(bytes);
     }
 
     @Nullable
-    public static byte[] getBytes(@Nullable byte[] bytes, boolean isEncode) {
+    public static byte[] getBytes(@Nullable final byte[] bytes, final boolean isEncode) {
         if (null == bytes || bytes.length == 0) return null;
         return isEncode ? encode(bytes) : decode(bytes);
     }
@@ -72,10 +72,10 @@ public final class Base64Util {
      * @return
      */
     @Nullable
-    public static byte[] encode(@Nullable byte[] data) {
+    public static byte[] encode(@Nullable final byte[] data) {
         if (null == data || data.length == 0) return null;
         final StringBuffer sb = new StringBuffer();
-        int len = data.length;
+        final int len = data.length;
         int i = 0;
         int b1, b2, b3;
         while (i < len) {
@@ -87,16 +87,17 @@ public final class Base64Util {
                 break;
             }
             b2 = data[i++] & 0xff;
+            final int bb = ((b1 & 0x03) << 4) | ((b2 & 0xF0) >>> 4);
             if (i == len) {
                 sb.append(ENCODE_BASE64_CHARS[b1 >>> 2]);
-                sb.append(ENCODE_BASE64_CHARS[((b1 & 0x03) << 4) | ((b2 & 0xF0) >>> 4)]);
+                sb.append(ENCODE_BASE64_CHARS[bb]);
                 sb.append(ENCODE_BASE64_CHARS[(b2 & 0x0f) << 2]);
                 sb.append("=");
                 break;
             }
             b3 = data[i++] & 0xff;
             sb.append(ENCODE_BASE64_CHARS[b1 >>> 2]);
-            sb.append(ENCODE_BASE64_CHARS[((b1 & 0x03) << 4) | ((b2 & 0xF0) >>> 4)]);
+            sb.append(ENCODE_BASE64_CHARS[bb]);
             sb.append(ENCODE_BASE64_CHARS[((b2 & 0x0f) << 2) | ((b3 & 0xC0) >>> 6)]);
             sb.append(ENCODE_BASE64_CHARS[b3 & 0x3f]);
         }
@@ -111,16 +112,16 @@ public final class Base64Util {
      * @return
      */
     @Nullable
-    public static byte[] decode(String data) {
+    public static byte[] decode(final String data) {
         if (null == data || data.length() == 0) return null;
         return decode(getBytes(data, Encode.UTF_8));
     }
 
     @Nullable
-    public static byte[] decode(byte[] bytes) {
+    public static byte[] decode(final byte[] bytes) {
         if (null == bytes || bytes.length == 0) return null;
-        StringBuffer sb = new StringBuffer();
-        int len = bytes.length;
+        final StringBuffer sb = new StringBuffer();
+        final int len = bytes.length;
         int i = 0;
         int b1, b2, b3, b4;
         while (i < len) {
@@ -149,9 +150,10 @@ public final class Base64Util {
                 b4 = DECODE_BASE64_BYTES[b4];
             } while (i < len && b4 == -1);
             if (b4 == -1) break;
+
             sb.append((char) (((b3 & 0x03) << 6) | b4));
         }
-        return getBytes(sb.toString(), Constants.ENCODE_ISO_8859_1);
+        return getBytes(sb.toString(), Encode.ISO_8859_1);
     }
 
     /**
@@ -163,11 +165,11 @@ public final class Base64Util {
     @Nullable
     public static String getBase64(@Nullable final Bitmap bitmap) {
         if (BitmapUtil.isEmpty(bitmap)) return null;
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        final ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
         IOUtil.flush(baos);
         IOUtil.close(baos);
-        byte[] bitmapBytes = baos.toByteArray();
+        final byte[] bitmapBytes = baos.toByteArray();
         return getString(bitmapBytes, true);
     }
 
@@ -181,11 +183,12 @@ public final class Base64Util {
     public static Bitmap toBitmap(@Nullable final String string) {
         if (TextUtils.isEmpty(string)) return null;
         try {
-            String[] split = string.split(",");
+            final String[] split = string.split(",");
             if (split.length == 0) return null;
-            byte[] bitmapArray = getBytes(split[split.length - 1], false);
-            if (null == bitmapArray || bitmapArray.length == 0) return null;
-            return BitmapFactory.decodeByteArray(bitmapArray, 0, bitmapArray.length);
+            final byte[] array = getBytes(split[split.length - 1], false);
+            final int length = array == null ? 0 : array.length;
+            if (length == 0) return null;
+            return BitmapFactory.decodeByteArray(array, 0, length);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -195,14 +198,14 @@ public final class Base64Util {
 
     /**
      * @param base64Code
-     * @param savePath
+     * @param path
      */
-    public static void toFile(String base64Code, String savePath) {
-        if (TextUtils.isEmpty(base64Code) || TextUtils.isEmpty(savePath)) return;
-        byte[] buffer = Base64.decode(base64Code, Base64.DEFAULT);
+    public static void toFile(@Nullable final String base64Code, @Nullable final String path) {
+        if (TextUtils.isEmpty(base64Code) || StringUtil.isSpace(path)) return;
+        final byte[] buffer = Base64.decode(base64Code, Base64.DEFAULT);
         FileOutputStream out = null;
         try {
-            out = new FileOutputStream(savePath);
+            out = new FileOutputStream(path);
             out.write(buffer);
         } catch (IOException e) {
             e.printStackTrace();
@@ -212,10 +215,11 @@ public final class Base64Util {
         }
     }
 
-    private static byte[] getBytes(String data, String charsetName) {
+    @Nullable
+    private static byte[] getBytes(@Nullable final String data, @Encode final String charset) {
         if (null == data || data.length() == 0) return null;
         try {
-            return data.getBytes(charsetName);
+            return data.getBytes(charset);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }

@@ -11,26 +11,30 @@ import java.util.TimeZone;
  * 描述： Util 常量
  */
 public interface Constants {
-    char FILE_POINT = '.';
-    //文件分隔符  xx/xx
+    ///////////////////////////////////////////////////////////////////////////
+    // 分隔符
+    ///////////////////////////////////////////////////////////////////////////
     String FILE_SEP = System.getProperty("file.separator");
-    //行分割线
     String LINE_SEP = System.getProperty("line.separator");
+
     int INVALID = -1;
     //文件读写缓冲区大小
     int FILE_BUFFER_SIZE = 10 * 1024;
-    @NonNull
-    String FORMAT_TIME_PATTERN = "yyyy-MM-dd HH:mm:ss:SSS";
-    @NonNull
-    String FORMAT_TIME_HTTP = "EEE, dd MMM y HH:mm:ss 'GMT'";
+    ///////////////////////////////////////////////////////////////////////////
+    // time of format
+    ///////////////////////////////////////////////////////////////////////////
     TimeZone TIME_ZONE_GMT = TimeZone.getTimeZone("GMT");
-    /*剪切板 key*/
+    String FORMAT_TIME_PATTERN = "yyyy-MM-dd HH:mm:ss:SSS";
+    String FORMAT_TIME_HTTP = "EEE, dd MMM y HH:mm:ss 'GMT'";
+
+    ///////////////////////////////////////////////////////////////////////////
+    // 剪切板 key
+    ///////////////////////////////////////////////////////////////////////////
     String CLIP_LABEL_TEXT = "TEXT";
     String CLIP_LABEL_URI = "URI";
     String CLIP_LABEL_INTENT = "INTENT";
-    @NonNull
+
     String HEIGHT_STATUS_BAR = "status_bar_height";
-    @NonNull
     String HEIGHT_NAVIGATION_BAR = "navigation_bar_height";
     /*常用mime 类型值*/
     @NonNull
@@ -46,16 +50,6 @@ public interface Constants {
     String DEFAULT_MUSIC_SUFFIX = ".mp3";
     @NonNull
     String DEFAULT_VIDEO_SUFFIX = ".mp4";
-
-    //加解密统一编码方式
-    @NonNull
-    String UTF_8 = "UTF-8";
-    @NonNull
-    String GBK = "GBK";
-    @NonNull
-    String ENCODE_GB_2312 = "GB2312";
-    @NonNull
-    String ENCODE_8859_1 = "8859_1";
 
     @NonNull
     String ENCODE_UNICODE = "Unicode";

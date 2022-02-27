@@ -18,7 +18,7 @@ import com.colin.library.android.utils.data.Constants;
  * <p>
  * 描述： 剪切板工具类
  */
-public class ClipboardUtil {
+public final class ClipboardUtil {
     private ClipboardUtil() {
         throw new UnsupportedOperationException("don't instantiate");
     }

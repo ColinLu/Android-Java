@@ -4,9 +4,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
 
-import com.colin.library.android.okHttp.bean.HttpException;
-import com.colin.library.android.okHttp.progress.IProgress;
-
 import okhttp3.Response;
 
 /**
@@ -15,10 +12,11 @@ import okhttp3.Response;
  * <p>
  * 描述： Response 数据解析 返回需要字段 子线程实现
  */
-public interface IParseResponse<Result> extends IProgress {
+public interface IParseResponse<Result> {
+
     @Nullable
     @WorkerThread
     default Result parse(@NonNull Response response) throws Throwable {
-        return (Result) null;
+        return null;
     }
 }

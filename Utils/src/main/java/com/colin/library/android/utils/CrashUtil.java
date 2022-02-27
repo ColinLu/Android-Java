@@ -16,7 +16,7 @@ import java.io.File;
  * <p>
  * 描述： 异常收集 本地缓存 txt
  */
-public class CrashUtil {
+public final class CrashUtil {
     private CrashUtil() {
         throw new UnsupportedOperationException("don't instantiate");
     }
@@ -94,7 +94,7 @@ public class CrashUtil {
             if (mOnCrashListener != null) mOnCrashListener.onCrash(crashInfo, e);
             if (null == mFolder) mFolder = PathUtil.getInternalCache();
             if (StringUtil.isEmpty(mFileName)) mFileName = getDefaultName(time);
-            File file = new File(mFolder, mFileName);
+            final File file = new File(mFolder, mFileName);
             LogUtil.e(file.getAbsolutePath());
             FileIOUtil.toFile(crashInfo, file, true);
         }

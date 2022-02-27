@@ -20,7 +20,7 @@ import androidx.annotation.Nullable;
  * <p>
  * 描述： 键盘工具类
  */
-public class KeyboardUtil {
+public final class KeyboardUtil {
     private static int sDecorViewInvisibleHeightPre;
     private static ViewTreeObserver.OnGlobalLayoutListener onGlobalLayoutListener;
     private static OnSoftInputChangedListener onSoftInputChangedListener;
