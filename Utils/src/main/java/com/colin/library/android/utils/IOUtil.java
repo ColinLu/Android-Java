@@ -12,6 +12,8 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.CharArrayWriter;
 import java.io.Closeable;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.Flushable;
 import java.io.IOException;
 import java.io.InputStream;
@@ -335,27 +337,11 @@ public final class IOUtil {
         output.write(data.toString().getBytes(charset));
     }
 
-    public static void write(@NonNull final InputStream is, @NonNull final OutputStream os) throws IOException {
-        final byte[] buffer = new byte[4096];
-        int len;
-        while ((len = is.read(buffer)) != -1) os.write(buffer, 0, len);
-    }
-
-    public static void write(@NonNull final Reader input, @NonNull final OutputStream output) throws IOException {
-        final Writer out = new OutputStreamWriter(output);
-        write(input, out);
-        out.flush();
-    }
 
     public static void write(@NonNull final InputStream input, @NonNull final Writer output) throws IOException {
         write(new InputStreamReader(input), output);
     }
 
-    public static void write(@NonNull final Reader input, @NonNull final OutputStream output, @NonNull final Charset charset) throws IOException {
-        final Writer out = new OutputStreamWriter(output, charset);
-        write(input, out);
-        out.flush();
-    }
 
     public static void write(@NonNull final InputStream input, @NonNull final OutputStream output, @NonNull final Charset charset) throws IOException {
         write(new InputStreamReader(input, charset), output);
@@ -369,6 +355,26 @@ public final class IOUtil {
         final char[] buffer = new char[4096];
         int len;
         while (-1 != (len = input.read(buffer))) output.write(buffer, 0, len);
+    }
+
+
+    public static void write(@NonNull final InputStream is, @NonNull final OutputStream os) throws IOException {
+        final byte[] buffer = new byte[4096];
+        int len;
+        while ((len = is.read(buffer)) != -1) os.write(buffer, 0, len);
+    }
+
+    public static void write(@NonNull final Reader input, @NonNull final OutputStream output) throws IOException {
+        ;
+        final Writer out = new OutputStreamWriter(output);
+        write(input, out);
+        out.flush();
+    }
+
+    public static void write(@NonNull final Reader input, @NonNull final OutputStream output, @NonNull final Charset charset) throws IOException {
+        final Writer out = new OutputStreamWriter(output, charset);
+        write(input, out);
+        out.flush();
     }
 
     /**

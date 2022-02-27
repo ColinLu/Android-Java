@@ -81,6 +81,7 @@ public final class TimeUtil {
      *
      * @return
      */
+    @NonNull
     public static String getTimeString() {
         return getTimeString(System.currentTimeMillis());
     }
@@ -92,6 +93,7 @@ public final class TimeUtil {
      * @param time
      * @return
      */
+    @NonNull
     public static String getTimeString(final long time) {
         return getTimeString(Constants.FORMAT_TIME_PATTERN, time);
     }
@@ -102,6 +104,7 @@ public final class TimeUtil {
      * @param pattern 时间格式
      * @return
      */
+    @NonNull
     public static String getTimeString(@NonNull final String pattern) {
         return getTimeString(pattern, System.currentTimeMillis());
     }
@@ -113,7 +116,7 @@ public final class TimeUtil {
      * @param time
      * @return
      */
-    @Nullable
+    @NonNull
     public static String getTimeString(@NonNull final String pattern, final long time) {
         return getTimeString(getDateFormat(pattern), time);
     }
@@ -124,6 +127,7 @@ public final class TimeUtil {
      * @param simpleDateFormat
      * @return
      */
+    @NonNull
     public static String getTimeString(@NonNull final SimpleDateFormat simpleDateFormat) {
         return getTimeString(simpleDateFormat, System.currentTimeMillis());
     }
@@ -134,6 +138,7 @@ public final class TimeUtil {
      * @param simpleDateFormat
      * @return
      */
+    @NonNull
     public static String getTimeString(@NonNull final SimpleDateFormat simpleDateFormat, final long time) {
         return simpleDateFormat.format(new Date(time));
     }

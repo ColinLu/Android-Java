@@ -8,6 +8,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.Size;
 
+import com.colin.library.android.utils.BitmapUtil;
+
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 
@@ -43,22 +45,8 @@ public class BitmapParseResponse implements IParseResponse<Bitmap> {
     public Bitmap parse(@NonNull Response response) throws Throwable {
         final ResponseBody body = response.body();
         final byte[] bytes = null == body ? null : body.bytes();
-        if (null == bytes || bytes.length == 0) return null;
-        if (mMaxWidth == 0 || mMaxHeight == 0) return parse(bytes, mConfig);
-        else return parse(bytes, mConfig, mScaleType, mMaxWidth, mMaxHeight);
-    }
-
-    /**
-     * 工厂类 处理图片
-     *
-     * @param byteArray 图片字节数组
-     * @param config    图片效果配置
-     * @return
-     */
-    @Nullable
-    private Bitmap parse(@NonNull @Size(min = 1) final byte[] byteArray, @NonNull final Bitmap.Config config) {
-        final BitmapFactory.Options options = getBitmapOptions(config);
-        return BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length, options);
+        if (mMaxWidth == 0 || mMaxHeight == 0) return BitmapUtil.getBitmap(bytes, mConfig);
+        else return BitmapUtil.getBitmap(bytes, mConfig, mScaleType, mMaxWidth, mMaxHeight);
     }
 
     @Nullable

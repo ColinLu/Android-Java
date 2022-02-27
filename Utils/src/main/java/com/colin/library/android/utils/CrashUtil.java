@@ -96,7 +96,7 @@ public class CrashUtil {
             if (StringUtil.isEmpty(mFileName)) mFileName = getDefaultName(time);
             File file = new File(mFolder, mFileName);
             LogUtil.e(file.getAbsolutePath());
-            FileIOUtil.toFile(file, crashInfo, true);
+            FileIOUtil.toFile(crashInfo, file, true);
         }
     }
 

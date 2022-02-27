@@ -6,9 +6,8 @@ import android.text.TextUtils;
 
 import androidx.annotation.Nullable;
 
-
 import com.colin.library.android.utils.LogUtil;
-import com.colin.library.android.utils.data.Constants;
+import com.colin.library.android.utils.annotation.Encode;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -26,7 +25,7 @@ public final class EncodeUtil {
     /*加密 url*/
     @Nullable
     public static String encode(@Nullable final String url) {
-        return encode(url, Constants.UTF_8);
+        return encode(url, Encode.UTF_8);
     }
 
     /*加密 url*/
@@ -45,7 +44,7 @@ public final class EncodeUtil {
     /*解密 url*/
     @Nullable
     public static String decode(@Nullable final String url) {
-        return encode(url, Constants.UTF_8);
+        return encode(url, Encode.UTF_8);
     }
 
     /*解密 url*/

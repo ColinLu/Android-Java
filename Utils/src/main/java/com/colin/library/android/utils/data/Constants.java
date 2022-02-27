@@ -11,6 +11,7 @@ import java.util.TimeZone;
  * 描述： Util 常量
  */
 public interface Constants {
+    char FILE_POINT = '.';
     //文件分隔符  xx/xx
     String FILE_SEP = System.getProperty("file.separator");
     //行分割线

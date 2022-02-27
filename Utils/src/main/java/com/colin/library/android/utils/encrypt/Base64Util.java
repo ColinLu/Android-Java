@@ -8,9 +8,9 @@ import android.util.Base64;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-
 import com.colin.library.android.utils.BitmapUtil;
 import com.colin.library.android.utils.IOUtil;
+import com.colin.library.android.utils.annotation.Encode;
 import com.colin.library.android.utils.data.Constants;
 
 import java.io.ByteArrayOutputStream;
@@ -36,7 +36,7 @@ public final class Base64Util {
     @Nullable
     public static String getString(@Nullable String data, boolean isEncode) {
         if (TextUtils.isEmpty(data)) return null;
-        byte[] bytes = getBytes(data, Constants.UTF_8);
+        byte[] bytes = getBytes(data, Encode.UTF_8);
         if (null == bytes || bytes.length == 0) return null;
         byte[] values = isEncode ? encode(bytes) : decode(bytes);
         if (null == values || values.length == 0) return null;
@@ -54,7 +54,7 @@ public final class Base64Util {
     @Nullable
     public static byte[] getBytes(@Nullable String data, boolean isEncode) {
         if (TextUtils.isEmpty(data)) return null;
-        byte[] bytes = getBytes(data, Constants.UTF_8);
+        byte[] bytes = getBytes(data, Encode.UTF_8);
         if (null == bytes || bytes.length == 0) return null;
         return isEncode ? encode(bytes) : decode(bytes);
     }
@@ -101,7 +101,7 @@ public final class Base64Util {
             sb.append(ENCODE_BASE64_CHARS[b3 & 0x3f]);
         }
 
-        return getBytes(sb.toString(), Constants.UTF_8);
+        return getBytes(sb.toString(), Encode.UTF_8);
     }
 
     /**
@@ -113,7 +113,7 @@ public final class Base64Util {
     @Nullable
     public static byte[] decode(String data) {
         if (null == data || data.length() == 0) return null;
-        return decode(getBytes(data, Constants.UTF_8));
+        return decode(getBytes(data, Encode.UTF_8));
     }
 
     @Nullable
@@ -137,7 +137,7 @@ public final class Base64Util {
             sb.append((char) ((b1 << 2) | ((b2 & 0x30) >>> 4)));
             do {
                 b3 = bytes[i++];
-                if (b3 == 61) return getBytes(sb.toString(), Constants.ENCODE_ISO_8859_1);
+                if (b3 == 61) return getBytes(sb.toString(), Encode.ISO_8859_1);
                 b3 = DECODE_BASE64_BYTES[b3];
             } while (i < len && b3 == -1);
             if (b3 == -1) break;
@@ -145,7 +145,7 @@ public final class Base64Util {
             sb.append((char) (((b2 & 0x0f) << 4) | ((b3 & 0x3c) >>> 2)));
             do {
                 b4 = bytes[i++];
-                if (b4 == 61) return getBytes(sb.toString(), Constants.ENCODE_ISO_8859_1);
+                if (b4 == 61) return getBytes(sb.toString(), Encode.ISO_8859_1);
                 b4 = DECODE_BASE64_BYTES[b4];
             } while (i < len && b4 == -1);
             if (b4 == -1) break;

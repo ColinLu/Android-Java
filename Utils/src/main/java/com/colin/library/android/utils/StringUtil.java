@@ -1,5 +1,7 @@
 package com.colin.library.android.utils;
 
+import android.text.TextUtils;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -17,9 +19,16 @@ public final class StringUtil {
         throw new UnsupportedOperationException("don't instantiate");
     }
 
-    public static boolean isEmpty(@Nullable final CharSequence text) {
-        return text == null || text.length() == 0;
+    public static boolean isEmpty(@Nullable final CharSequence... texts) {
+        final int len = texts == null ? 0 : texts.length;
+        if (len == 0) return true;
+        for (int i = 0; i < len; i++) {
+            final CharSequence text = texts[i];
+            if (TextUtils.isEmpty(text)) return true;
+        }
+        return false;
     }
+
 
     /*是空白*/
     public static boolean isSpace(@Nullable final CharSequence text) {
@@ -28,6 +37,17 @@ public final class StringUtil {
             if (!Character.isWhitespace(text.charAt(i))) return false;
         }
         return true;
+    }
+
+    /*是空白*/
+    public static boolean isSpace(@Nullable final CharSequence... texts) {
+        final int len = texts == null ? 0 : texts.length;
+        if (len == 0) return true;
+        for (int i = 0; i < len; i++) {
+            final CharSequence text = texts[i];
+            if (isSpace(text)) return true;
+        }
+        return false;
     }
 
     /*是否相同*/

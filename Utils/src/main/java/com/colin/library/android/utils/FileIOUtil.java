@@ -1,16 +1,14 @@
 package com.colin.library.android.utils;
 
-import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
-import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
-
-import android.Manifest;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.os.Environment;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresPermission;
 import androidx.annotation.WorkerThread;
 
+import com.colin.library.android.utils.annotation.Encode;
 import com.colin.library.android.utils.data.Constants;
 
 import java.io.BufferedOutputStream;
@@ -56,55 +54,51 @@ public final class FileIOUtil {
     /**
      * 将输入流写入文件
      *
-     * @param filePath 路径
-     * @param is       输入流
-     * @return {@code true}: 写入成功<br>{@code false}: 写入失败
-     */
-    @RequiresPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-    public static boolean toFile(@Nullable final String filePath, @Nullable final InputStream is) {
-        return toFile(FileUtil.getFile(filePath), is, false);
-    }
-
-    /**
-     * 将输入流写入文件
-     *
-     * @param filePath 路径
-     * @param is       输入流
-     * @param append   是否追加在文件末
-     * @return {@code true}: 写入成功<br>{@code false}: 写入失败
-     */
-    @RequiresPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-    public static boolean toFile(@Nullable final String filePath, @Nullable final InputStream is, final boolean append) {
-        return toFile(FileUtil.getFile(filePath), is, append);
-    }
-
-    /**
-     * 将输入流写入文件
-     *
-     * @param file 文件
      * @param is   输入流
+     * @param path 路径
      * @return {@code true}: 写入成功<br>{@code false}: 写入失败
      */
-    @RequiresPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-    public static boolean toFile(@Nullable final File file, @Nullable final InputStream is) {
-        return toFile(file, is, false);
+    public static boolean toFile(@Nullable final InputStream is, @Nullable final String path) {
+        return toFile(is, FileUtil.getFile(path), false);
     }
 
     /**
      * 将输入流写入文件
      *
-     * @param file   文件
      * @param is     输入流
+     * @param path   路径
      * @param append 是否追加在文件末
      * @return {@code true}: 写入成功<br>{@code false}: 写入失败
      */
-    @RequiresPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-    public static boolean toFile(@Nullable final File file, @Nullable final InputStream is, final boolean append) {
+    public static boolean toFile(@Nullable final InputStream is, @Nullable final String path, final boolean append) {
+        return toFile(is, FileUtil.getFile(path), append);
+    }
+
+    /**
+     * 将输入流写入文件
+     *
+     * @param is   输入流
+     * @param file 文件
+     * @return {@code true}: 写入成功<br>{@code false}: 写入失败
+     */
+    public static boolean toFile(@Nullable final InputStream is, @Nullable final File file) {
+        return toFile(is, file, false);
+    }
+
+    /**
+     * 将输入流写入文件
+     *
+     * @param is     输入流
+     * @param file   文件
+     * @param append 是否追加在文件末
+     * @return {@code true}: 写入成功<br>{@code false}: 写入失败
+     */
+    public static boolean toFile(@Nullable final InputStream is, @Nullable final File file, final boolean append) {
         if (null == is || !FileUtil.createOrExistsFile(file)) return false;
         BufferedOutputStream os = null;
         try {
             os = new BufferedOutputStream(new FileOutputStream(file, append));
-            byte[] data = new byte[sBufferSize];
+            final byte[] data = new byte[sBufferSize];
             int len;
             while ((len = is.read(data, 0, sBufferSize)) != Constants.INVALID) {
                 os.write(data, 0, len);
@@ -122,26 +116,24 @@ public final class FileIOUtil {
     /**
      * 将字节数组写入文件
      *
-     * @param filePath 文件路径
-     * @param bytes    字节数组
+     * @param bytes 字节数组
+     * @param path  文件路径
      * @return {@code true}: 写入成功<br>{@code false}: 写入失败
      */
-    @RequiresPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-    public static boolean toFile(@Nullable final String filePath, @Nullable final byte[] bytes) {
-        return toFile(FileUtil.getFile(filePath), bytes, false);
+    public static boolean toFile(@Nullable final byte[] bytes, @Nullable final String path) {
+        return toFile(bytes, FileUtil.getFile(path), false);
     }
 
     /**
      * 将字节数组写入文件
      *
-     * @param filePath 文件路径
-     * @param bytes    字节数组
-     * @param append   是否追加在文件末
+     * @param bytes  字节数组
+     * @param path   文件路径
+     * @param append 是否追加在文件末
      * @return {@code true}: 写入成功<br>{@code false}: 写入失败
      */
-    @RequiresPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-    public static boolean toFile(@Nullable final String filePath, @Nullable final byte[] bytes, final boolean append) {
-        return toFile(FileUtil.getFile(filePath), bytes, append);
+    public static boolean toFile(@Nullable final byte[] bytes, @Nullable final String path, final boolean append) {
+        return toFile(bytes, FileUtil.getFile(path), append);
     }
 
     /**
@@ -151,9 +143,8 @@ public final class FileIOUtil {
      * @param bytes 字节数组
      * @return {@code true}: 写入成功<br>{@code false}: 写入失败
      */
-    @RequiresPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-    public static boolean toFile(@Nullable final File file, @Nullable final byte[] bytes) {
-        return toFile(file, bytes, false);
+    public static boolean toFile(@Nullable final byte[] bytes, @Nullable final File file) {
+        return toFile(bytes, file, false);
     }
 
     /**
@@ -164,8 +155,7 @@ public final class FileIOUtil {
      * @param append 是否追加在文件末
      * @return {@code true}: 写入成功<br>{@code false}: 写入失败
      */
-    @RequiresPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-    public static boolean toFile(@Nullable final File file, @Nullable final byte[] bytes, final boolean append) {
+    public static boolean toFile(@Nullable final byte[] bytes, @Nullable final File file, final boolean append) {
         if (ArrayUtil.isEmpty(bytes) || FileUtil.createOrExistsFile(file)) return false;
         BufferedOutputStream bos = null;
         try {
@@ -184,50 +174,46 @@ public final class FileIOUtil {
     /**
      * 将字符串写入文件
      *
-     * @param filePath 文件路径
-     * @param content  写入内容
-     * @return {@code true}: 写入成功<br>{@code false}: 写入失败
-     */
-    @RequiresPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-    public static boolean toFile(@Nullable final String filePath, @Nullable final String content) {
-        return toFile(FileUtil.getFile(filePath), content, false);
-    }
-
-    /**
-     * 将字符串写入文件
-     *
-     * @param filePath 文件路径
-     * @param content  写入内容
-     * @param append   是否追加在文件末
-     * @return {@code true}: 写入成功<br>{@code false}: 写入失败
-     */
-    @RequiresPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-    public static boolean toFile(@Nullable final String filePath, @Nullable final String content, final boolean append) {
-        return toFile(FileUtil.getFile(filePath), content, append);
-    }
-
-    /**
-     * 将字符串写入文件
-     *
-     * @param file    文件
      * @param content 写入内容
+     * @param path    文件路径
      * @return {@code true}: 写入成功<br>{@code false}: 写入失败
      */
-    @RequiresPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-    public static boolean toFile(@Nullable final File file, @Nullable final String content) {
-        return toFile(file, content, false);
+    public static boolean toFile(@Nullable final String content, @Nullable final String path) {
+        return toFile(content, FileUtil.getFile(path), false);
     }
 
     /**
      * 将字符串写入文件
      *
-     * @param file    文件
      * @param content 写入内容
+     * @param path    文件路径
      * @param append  是否追加在文件末
      * @return {@code true}: 写入成功<br>{@code false}: 写入失败
      */
-    @RequiresPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-    public static boolean toFile(@Nullable final File file, @Nullable final String content, final boolean append) {
+    public static boolean toFile(@Nullable final String content, @Nullable final String path, final boolean append) {
+        return toFile(content, FileUtil.getFile(path), append);
+    }
+
+    /**
+     * 将字符串写入文件
+     *
+     * @param content 写入内容
+     * @param file    文件
+     * @return {@code true}: 写入成功<br>{@code false}: 写入失败
+     */
+    public static boolean toFile(@Nullable final String content, @Nullable final File file) {
+        return toFile(content, file, false);
+    }
+
+    /**
+     * 将字符串写入文件
+     *
+     * @param content 写入内容
+     * @param file    文件
+     * @param append  是否追加在文件末
+     * @return {@code true}: 写入成功<br>{@code false}: 写入失败
+     */
+    public static boolean toFile(@Nullable final String content, @Nullable final File file, final boolean append) {
         if (StringUtil.isEmpty(content) || !FileUtil.createOrExistsFile(file)) return false;
         BufferedWriter bw = null;
         try {
@@ -251,7 +237,6 @@ public final class FileIOUtil {
      * @param isForce  是否写入文件
      * @return {@code true}: 写入成功<br>{@code false}: 写入失败
      */
-    @RequiresPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
     public static boolean toFileChannel(@Nullable final String filePath, @Nullable final byte[] bytes, final boolean isForce) {
         return toFileChannel(FileUtil.getFile(filePath), bytes, false, isForce);
     }
@@ -265,7 +250,6 @@ public final class FileIOUtil {
      * @param isForce  是否写入文件
      * @return {@code true}: 写入成功<br>{@code false}: 写入失败
      */
-    @RequiresPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
     public static boolean toFileChannel(@Nullable final String filePath, @Nullable final byte[] bytes, final boolean append, final boolean isForce) {
         return toFileChannel(FileUtil.getFile(filePath), bytes, append, isForce);
     }
@@ -278,7 +262,6 @@ public final class FileIOUtil {
      * @param isForce 是否写入文件
      * @return {@code true}: 写入成功<br>{@code false}: 写入失败
      */
-    @RequiresPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
     public static boolean toFileChannel(@Nullable final File file, @Nullable final byte[] bytes, final boolean isForce) {
         return toFileChannel(file, bytes, false, isForce);
     }
@@ -292,7 +275,6 @@ public final class FileIOUtil {
      * @param isForce 是否写入文件
      * @return {@code true}: 写入成功<br>{@code false}: 写入失败
      */
-    @RequiresPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
     public static boolean toFileChannel(@Nullable final File file, @Nullable final byte[] bytes, final boolean append, final boolean isForce) {
         if (ArrayUtil.isEmpty(bytes) || !FileUtil.createOrExistsFile(file)) return false;
         FileChannel fc = null;
@@ -318,7 +300,6 @@ public final class FileIOUtil {
      * @param isForce  是否写入文件
      * @return {@code true}: 写入成功<br>{@code false}: 写入失败
      */
-    @RequiresPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
     public static boolean toFileChannelMap(@Nullable final String filePath, @Nullable final byte[] bytes, final boolean isForce) {
         return toFileChannelMap(FileUtil.getFile(filePath), bytes, false, isForce);
     }
@@ -332,7 +313,6 @@ public final class FileIOUtil {
      * @param isForce  是否写入文件
      * @return {@code true}: 写入成功<br>{@code false}: 写入失败
      */
-    @RequiresPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
     public static boolean toFileChannelMap(@Nullable final String filePath, @Nullable final byte[] bytes, final boolean append, final boolean isForce) {
         return toFileChannelMap(FileUtil.getFile(filePath), bytes, append, isForce);
     }
@@ -345,7 +325,6 @@ public final class FileIOUtil {
      * @param isForce 是否写入文件
      * @return {@code true}: 写入成功<br>{@code false}: 写入失败
      */
-    @RequiresPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
     public static boolean toFileChannelMap(@Nullable final File file, @Nullable final byte[] bytes, final boolean isForce) {
         return toFileChannelMap(file, bytes, false, isForce);
     }
@@ -359,7 +338,6 @@ public final class FileIOUtil {
      * @param isForce 是否写入文件
      * @return {@code true}: 写入成功<br>{@code false}: 写入失败
      */
-    @RequiresPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
     public static boolean toFileChannelMap(@Nullable final File file, @Nullable final byte[] bytes, final boolean append, final boolean isForce) {
         if (!FileUtil.createOrExistsFile(file) || ArrayUtil.isEmpty(bytes)) return false;
         FileChannel fc = null;
@@ -507,24 +485,24 @@ public final class FileIOUtil {
     /**
      * 读取文件到字符串中
      *
-     * @param filePath 文件路径
+     * @param path 文件路径
      * @return 字符串
      */
     @Nullable
-    public static String toString(@Nullable final String filePath) {
-        return toString(FileUtil.getFile(filePath), null);
+    public static String toString(@Nullable final String path) {
+        return toString(FileUtil.getFile(path), Encode.UTF_8);
     }
 
     /**
      * 读取文件到字符串中
      *
-     * @param filePath    文件路径
-     * @param charsetName 编码格式
+     * @param path    文件路径
+     * @param charset 编码格式
      * @return 字符串
      */
     @Nullable
-    public static String toString(@Nullable final String filePath, @Nullable final String charsetName) {
-        return toString(FileUtil.getFile(filePath), charsetName);
+    public static String toString(@Nullable final String path, @NonNull final String charset) {
+        return toString(FileUtil.getFile(path), charset);
     }
 
     /**
@@ -535,27 +513,24 @@ public final class FileIOUtil {
      */
     @Nullable
     public static String toString(@Nullable final File file) {
-        return toString(file, null);
+        return toString(file, Encode.UTF_8);
     }
 
     /**
      * 读取文件到字符串中
      *
-     * @param file        文件
-     * @param charsetName 编码格式
+     * @param file    文件
+     * @param charset 编码格式
      * @return 字符串
      */
     @Nullable
-    public static String toString(@Nullable final File file, @Nullable final String charsetName) {
+    public static String toString(@Nullable final File file, @NonNull final String charset) {
         if (!FileUtil.isFile(file)) return null;
         BufferedReader reader = null;
         try {
-            StringBuilder sb = new StringBuilder();
-            if (null == charsetName || charsetName.length() == 0) {
-                reader = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
-            } else {
-                reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), charsetName));
-            }
+            final StringBuilder sb = new StringBuilder();
+            reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), charset));
+
             String line;
             if ((line = reader.readLine()) != null) {
                 sb.append(line);
@@ -575,12 +550,12 @@ public final class FileIOUtil {
     /**
      * 读取文件到字节数组中
      *
-     * @param filePath 文件路径
+     * @param path 文件路径
      * @return 字符数组
      */
     @Nullable
-    public static byte[] toBytes(@Nullable final String filePath) {
-        return toBytes(FileUtil.getFile(filePath));
+    public static byte[] toBytes(@Nullable final String path) {
+        return toBytes(FileUtil.getFile(path));
     }
 
     /**
@@ -614,12 +589,12 @@ public final class FileIOUtil {
     /**
      * 读取文件到字节数组中
      *
-     * @param filePath 文件路径
+     * @param path 文件路径
      * @return 字符数组
      */
     @Nullable
-    public static byte[] toBytesByChannel(@Nullable final String filePath) {
-        return toBytesByChannel(FileUtil.getFile(filePath));
+    public static byte[] toBytesByChannel(@Nullable final String path) {
+        return toBytesByChannel(FileUtil.getFile(path));
     }
 
     /**
@@ -650,12 +625,12 @@ public final class FileIOUtil {
     /**
      * 读取文件到字节数组中
      *
-     * @param filePath 文件路径
+     * @param path 文件路径
      * @return 字符数组
      */
     @Nullable
-    public static byte[] toBytesByChannelMap(final String filePath) {
-        return toBytesByChannelMap(FileUtil.getFile(filePath));
+    public static byte[] toBytesByChannelMap(final String path) {
+        return toBytesByChannelMap(FileUtil.getFile(path));
     }
 
     /**
@@ -685,7 +660,6 @@ public final class FileIOUtil {
 
     @Nullable
     @WorkerThread
-    @RequiresPermission(allOf = {READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE})
     public static String save(@Nullable final Context context, @Nullable final Bitmap bitmap) {
         return save(context, bitmap, true);
     }
@@ -693,20 +667,24 @@ public final class FileIOUtil {
 
     @Nullable
     @WorkerThread
-    @RequiresPermission(allOf = {READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE})
     public static String save(@Nullable final Context context, @Nullable final Bitmap bitmap, final boolean recycle) {
         if (null == context || BitmapUtil.isEmpty(bitmap)) return null;
         String path = null;
+        FileOutputStream out = null;
         try {
-            File file = FileUtil.createImageFile(".png");
-            path = file.getAbsolutePath();
-            FileOutputStream out = new FileOutputStream(file);
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
-            out.flush();
-            out.close();
-            if (recycle) BitmapUtil.recycle(bitmap);
+            final File file = FileUtil.getFile(PathUtil.getExternalFile(Environment.DIRECTORY_DCIM), FileUtil.getDefaultName(".png"));
+            final boolean existsFile = FileUtil.createOrExistsFile(file);
+            if (existsFile) {
+                path = file.getAbsolutePath();
+                out = new FileOutputStream(file);
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
+            }
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            IOUtil.flush(out);
+            IOUtil.close(out);
+            if (recycle) BitmapUtil.recycle(bitmap);
         }
         return path;
     }

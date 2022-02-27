@@ -4,10 +4,8 @@ package com.colin.library.android.okHttp.policy;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.colin.library.android.okHttp.OkHttp;
 import com.colin.library.android.okHttp.bean.HttpException;
 import com.colin.library.android.okHttp.callback.IHttpCallback;
-import com.colin.library.android.okHttp.request.IRequest;
 import com.colin.library.android.utils.LogUtil;
 import com.colin.library.android.utils.thread.ThreadUtil;
 

@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 
 import com.colin.library.android.okHttp.bean.HttpConfig;
 import com.colin.library.android.okHttp.request.GetRequest;
+import com.colin.library.android.utils.annotation.Encode;
 import com.colin.library.android.utils.data.Constants;
 
 /**
@@ -18,7 +19,7 @@ public final class OkHttp {
     public static final int RETRY_CALL_DEFAULT = 3;
     public static final long TIME_OUT_DEFAULT = 60L;
     /*Encode*/
-    public static final String ENCODE_DEFAULT = Constants.UTF_8;
+    public static final String ENCODE_DEFAULT = Encode.UTF_8;
     /*Head*/
     public static final String HEAD_KEY_RESPONSE_CODE = "ResponseCode";
     public static final String HEAD_KEY_RESPONSE_MESSAGE = "ResponseMessage";

@@ -1,6 +1,7 @@
 package com.colin.library.android.utils;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.BitmapShader;
@@ -41,6 +42,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
+import okhttp3.Response;
+
 /**
  * 作者： ColinLu
  * 时间： 2021-12-26 20:25
@@ -60,56 +63,70 @@ public final class BitmapUtil {
     /**
      * 获得指定大小的图片
      *
-     * @param file      文件
-     * @param maxWidth  最大宽度
-     * @param maxHeight 最大高度
+     * @param file   文件
+     * @param width  最大宽度
+     * @param height 最大高度
      * @return bitmap
      */
     @Nullable
     public static Bitmap getBitmap(@Nullable final File file,
-                                   @IntRange(from = 0) final int maxWidth,
-                                   @IntRange(from = 0) final int maxHeight) {
+                                   @IntRange(from = 0) final int width,
+                                   @IntRange(from = 0) final int height) {
         if (!FileUtil.isFile(file)) return null;
-        assert file != null;
         String filePath = file.getAbsolutePath();
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
         BitmapFactory.decodeFile(filePath, options);
-        options.inSampleSize = calculateInSampleSize(options, maxWidth, maxHeight);
+        options.inSampleSize = calculateInSampleSize(options, width, height);
         options.inJustDecodeBounds = false;
         return BitmapFactory.decodeFile(filePath, options);
     }
 
+    /*path -> Bitmap*/
     @Nullable
-    public static Bitmap getBitmap(@Nullable final String filePath) {
-        return getBitmap(filePath, null);
+    public static Bitmap getBitmap(@Nullable final String path) {
+        return getBitmap(path, (BitmapFactory.Options) null);
     }
 
+    /*path -> Bitmap*/
     @Nullable
-    public static Bitmap getBitmap(@Nullable final String filePath, BitmapFactory.Options options) {
-        if (!FileUtil.isFile(filePath)) return null;
-        return BitmapFactory.decodeFile(filePath, options);
+    public static Bitmap getBitmap(@Nullable final String path, @Nullable BitmapFactory.Options options) {
+        if (!FileUtil.isFile(path)) return null;
+        return BitmapFactory.decodeFile(path, options);
     }
 
+    /*file -> Bitmap*/
     @Nullable
     public static Bitmap getBitmap(@Nullable final File file) {
         if (null == file || !file.exists() || !file.isFile()) return null;
         return BitmapFactory.decodeFile(file.getAbsolutePath(), null);
     }
 
+    /*res -> Bitmap*/
     @Nullable
-    public static Bitmap getBitmap(@DrawableRes final int drawableRes) {
-        if (drawableRes == 0) return null;
-        Drawable drawable = ContextCompat.getDrawable(UtilHelper.getInstance().getContext(), drawableRes);
+    public static Bitmap getBitmap(@DrawableRes final int res) {
+        return getBitmap(UtilHelper.getInstance().getContext(), res);
+    }
+
+    /*res -> Bitmap*/
+    @Nullable
+    public static Bitmap getBitmap(@Nullable final Context context, @DrawableRes final int res) {
+        if (res == Resources.ID_NULL || context == null) return null;
+        return getBitmap(ContextCompat.getDrawable(context, res));
+    }
+
+    /*Drawable -> Bitmap*/
+    @Nullable
+    public static Bitmap getBitmap(@Nullable final Drawable drawable) {
         if (null == drawable) return null;
-        Canvas canvas = new Canvas();
-        Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        if (drawable.getIntrinsicWidth() <= 0 || drawable.getIntrinsicHeight() <= 0) return null;
+        final Canvas canvas = new Canvas();
+        final Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
         canvas.setBitmap(bitmap);
         drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
         drawable.draw(canvas);
         return bitmap;
     }
-
 
     /*View -> Bitmap https://github.com/tyrantgit/ExplosionField */
     @Nullable
@@ -117,12 +134,13 @@ public final class BitmapUtil {
         return getBitmap(view, 1.0F);
     }
 
+    /*View -> Bitmap https://github.com/tyrantgit/ExplosionField */
     @Nullable
     public static Bitmap getBitmap(@Nullable final View view, @FloatRange(from = 0, to = 1) final float scale) {
-        if (null == view || !view.isShown()) return null;
         if (view instanceof ImageView) return getBitmap((ImageView) view);
+        if (null == view || !view.isShown()) return null;
         view.clearFocus();
-        Bitmap bitmap = createBitmapSafely((int) (view.getWidth() * scale), (int) (view.getHeight() * scale), Bitmap.Config.ARGB_8888, 1);
+        final Bitmap bitmap = createBitmapSafely((int) (view.getWidth() * scale), (int) (view.getHeight() * scale), Bitmap.Config.ARGB_8888, 1);
         if (bitmap != null) {
             Canvas canvas = new Canvas();
             canvas.setBitmap(bitmap);
@@ -144,6 +162,7 @@ public final class BitmapUtil {
         return null;
     }
 
+    /*Uri -> Bitmap */
     @Nullable
     public static Bitmap getBitmap(@Nullable final Context context, @Nullable final Uri uri) {
         if (null == context || null == uri) return null;
@@ -161,30 +180,71 @@ public final class BitmapUtil {
     }
 
     @Nullable
-    public static Bitmap getBitmap(@Nullable final InputStream is,
-                                   @IntRange(from = 0) final int maxWidth,
-                                   @IntRange(from = 0) final int maxHeight) {
-        if (is == null) return null;
-        return getBitmap(IOUtil.getBytes(is), 0, maxWidth, maxHeight);
+    public static Bitmap getBitmap(@Nullable final InputStream is, final int width, final int height) {
+        return is == null ? null : getBitmap(IOUtil.getBytes(is), 0, width, height);
     }
 
     @Nullable
     public static Bitmap getBitmap(@Nullable final byte[] data, @IntRange(from = 0) final int offset,
-                                   @IntRange(from = 0) final int maxWidth,
-                                   @IntRange(from = 0) final int maxHeight) {
+                                   @IntRange(from = 0) final int width, @IntRange(from = 0) final int height) {
         if (null == data || data.length == 0) return null;
-        BitmapFactory.Options options = new BitmapFactory.Options();
+        final BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
         BitmapFactory.decodeByteArray(data, offset, data.length, options);
-        options.inSampleSize = calculateInSampleSize(options, maxWidth, maxHeight);
+        options.inSampleSize = calculateInSampleSize(options, width, height);
         options.inJustDecodeBounds = false;
         return BitmapFactory.decodeByteArray(data, offset, data.length, options);
     }
 
+    @Nullable
+    public static Bitmap getBitmap(@Nullable final byte[] bytes, @NonNull final Bitmap.Config config) {
+        final int length = bytes == null ? 0 : bytes.length;
+        return length == 0 ? null : BitmapFactory.decodeByteArray(bytes, 0, length, getBitmapOptions(config));
+    }
+
+    /**
+     * 解析图片
+     *
+     * @param bytes     图片数据源
+     * @param config    图片输出配置
+     * @param scaleType 图片显示类型
+     * @param width     用户需要图片宽度
+     * @param height    用户需要图片高度
+     * @return
+     */
+    @Nullable
+    public static Bitmap getBitmap(@Nullable final byte[] bytes, @NonNull Bitmap.Config config,
+                                   @NonNull ImageView.ScaleType scaleType, int width, int height) {
+        final int length = bytes == null ? 0 : bytes.length;
+        if (length == 0) return null;
+        final BitmapFactory.Options options = new BitmapFactory.Options();
+        Bitmap bitmap;
+        if (width == 0 && height == 0) {
+            options.inPreferredConfig = config;
+            bitmap = BitmapFactory.decodeByteArray(bytes, 0, length, options);
+        } else {
+            options.inJustDecodeBounds = true;
+            BitmapFactory.decodeByteArray(bytes, 0, length, options);
+            final int outWidth = options.outWidth;
+            final int outHeight = options.outHeight;
+            final int bestWidth = getBestSize(scaleType, width, height, outWidth, outHeight);
+            final int bestHeight = getBestSize(scaleType, height, width, outHeight, outWidth);
+            options.inSampleSize = getBestSampleSize(outWidth, outHeight, bestWidth, bestHeight);
+            options.inJustDecodeBounds = false;
+            final Bitmap tempBitmap = BitmapFactory.decodeByteArray(bytes, 0, length, options);
+            if (tempBitmap != null && (tempBitmap.getWidth() > bestWidth || tempBitmap.getHeight() > bestHeight)) {
+                bitmap = Bitmap.createScaledBitmap(tempBitmap, bestWidth, bestHeight, true);
+                tempBitmap.recycle();
+            } else bitmap = tempBitmap;
+        }
+        return bitmap;
+    }
+
+
     /**
      * 得到bitmap的大小
      */
-    public static long getBitmapSize(@Nullable Bitmap bitmap) {
+    public static long getSize(@Nullable Bitmap bitmap) {
         if (isEmpty(bitmap)) return 0;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) // API 19
             return bitmap.getAllocationByteCount();
@@ -194,35 +254,34 @@ public final class BitmapUtil {
     }
 
     /**
-     * 重新编码 Bitmap
+     * 压缩图片【质量】 Bitmap
      *
      * @param bitmap  需要重新编码的 bitmap
      * @param format  编码后的格式 如 Bitmap.CompressFormat.PNG
-     * @param quality 质量
+     * @param quality 质量[0,100]
      * @return 重新编码后的图片
      */
-    public static Bitmap recode(@Nullable final Bitmap bitmap, @Nullable final Bitmap.CompressFormat format, @IntRange(from = 0, to = 100) final int quality) {
-        return recode(bitmap, format, null, quality);
+    public static Bitmap compress(@Nullable final Bitmap bitmap, @Nullable final Bitmap.CompressFormat format, @IntRange(from = 0, to = 100) final int quality) {
+        return compress(bitmap, format, null, quality);
     }
 
     /**
-     * 重新编码 Bitmap
+     * 压缩图片【质量】 Bitmap
      *
      * @param bitmap  需要重新编码的 bitmap
      * @param format  编码后的格式 如 Bitmap.CompressFormat.PNG
      * @param options {@link BitmapFactory.Options}
-     * @param quality 质量
+     * @param quality 质量[0,100]
      * @return 重新编码后的图片
      */
-    public static Bitmap recode(@Nullable final Bitmap bitmap, @Nullable final Bitmap.CompressFormat format,
-                                @Nullable final BitmapFactory.Options options,
-                                @IntRange(from = 0, to = 100) final int quality) {
+    public static Bitmap compress(@Nullable final Bitmap bitmap, @Nullable final Bitmap.CompressFormat format,
+                                  @Nullable final BitmapFactory.Options options, final int quality) {
         if (isEmpty(bitmap) || format == null) return null;
         ByteArrayOutputStream baos = null;
         try {
             baos = new ByteArrayOutputStream();
             bitmap.compress(format, quality, baos);
-            byte[] data = baos.toByteArray();
+            final byte[] data = baos.toByteArray();
             return BitmapFactory.decodeByteArray(data, 0, data.length, options);
         } catch (Exception e) {
             e.printStackTrace();
@@ -242,7 +301,7 @@ public final class BitmapUtil {
      */
     public static Bitmap rotate(@Nullable final Bitmap bitmap, final float degrees) {
         if (isEmpty(bitmap)) return null;
-        Matrix matrix = new Matrix();
+        final Matrix matrix = new Matrix();
         matrix.postRotate(degrees);
         return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, false);
     }
@@ -272,31 +331,11 @@ public final class BitmapUtil {
      */
     public static Bitmap rotate(@Nullable final Bitmap bitmap, final int degrees, final float px, final float py, final boolean recycle) {
         if (isEmpty(bitmap) || degrees == 0) return bitmap;
-        Matrix matrix = new Matrix();
+        final Matrix matrix = new Matrix();
         matrix.setRotate(degrees, px, py);
-        Bitmap newBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+        final Bitmap newBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
         if (recycle && !bitmap.isRecycled()) bitmap.recycle();
         return newBitmap;
-    }
-
-    /**
-     * 水平翻转图片 ( 左右颠倒 )
-     *
-     * @param bitmap 源图片
-     * @return 翻转后的图片
-     */
-    public static Bitmap reverseByHorizontal(@Nullable final Bitmap bitmap) {
-        return reverse(bitmap, true);
-    }
-
-    /**
-     * 垂直翻转图片 ( 上下颠倒 )
-     *
-     * @param bitmap 源图片
-     * @return 翻转后的图片
-     */
-    public static Bitmap reverseByVertical(@Nullable final Bitmap bitmap) {
-        return reverse(bitmap, false);
     }
 
     /**
@@ -307,12 +346,36 @@ public final class BitmapUtil {
      * @return 翻转后的图片
      */
     public static Bitmap reverse(@Nullable final Bitmap bitmap, final boolean horizontal) {
+        if (horizontal) return reverseByHorizontal(bitmap);
+        else return reverseByVertical(bitmap);
+    }
+
+    /**
+     * 水平翻转图片 ( 左右颠倒 )
+     *
+     * @param bitmap 源图片
+     * @return 翻转后的图片
+     */
+    public static Bitmap reverseByHorizontal(@Nullable final Bitmap bitmap) {
         if (isEmpty(bitmap)) return null;
-        Matrix matrix = new Matrix();
-        if (horizontal) matrix.preScale(-1, 1);
-        else matrix.preScale(1, -1);
+        final Matrix matrix = new Matrix();
+        matrix.preScale(-1, 1);
         return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, false);
     }
+
+    /**
+     * 垂直翻转图片 ( 上下颠倒 )
+     *
+     * @param bitmap 源图片
+     * @return 翻转后的图片
+     */
+    public static Bitmap reverseByVertical(@Nullable final Bitmap bitmap) {
+        if (isEmpty(bitmap)) return null;
+        final Matrix matrix = new Matrix();
+        matrix.preScale(1, -1);
+        return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, false);
+    }
+
 
     /**
      * 读取图片属性, 获取图片被旋转的角度
@@ -424,14 +487,14 @@ public final class BitmapUtil {
 
             // 属于宽度 * 对应比例 >= 高度
             if (diffHeight >= 0) { // 以高度做偏移
-                return Bitmap.createBitmap(bitmap, 0, diffHeight / 2, width, reHeight, null, false);
+                return Bitmap.createBitmap(bitmap, 0, diffHeight >> 1, width, reHeight, null, false);
             } else { // 以宽度做偏移
                 // 获取需要裁剪的宽度
                 int reWidth = (int) ((height * widthScale) / heightScale);
                 // 判断需要裁剪的宽度与偏移差距
                 int diffWidth = width - reWidth;
                 // 创建图片
-                return Bitmap.createBitmap(bitmap, diffWidth / 2, 0, reWidth, height, null, false);
+                return Bitmap.createBitmap(bitmap, diffWidth >> 1, 0, reWidth, height, null, false);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -1392,6 +1455,62 @@ public final class BitmapUtil {
             }
             return null;
         }
+    }
+
+    @NonNull
+    private static BitmapFactory.Options getBitmapOptions(@NonNull Bitmap.Config decodeConfig) {
+        final BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inPreferredConfig = decodeConfig;
+        return options;
+    }
+
+    /**
+     * 计算长度 根据 ImageView.ScaleType
+     *
+     * @param outPrimary    图片本来输出Size
+     * @param userPrimary   用户想要的最大Size
+     * @param userSecondary 用户想要的最大Size 备用
+     * @param outSecondary  图片本来输出Size 备用
+     * @param scaleType     图片显示效果
+     * @return
+     */
+    private static int getBestSize(@NonNull final ImageView.ScaleType scaleType, final int userPrimary,
+                                   final int userSecondary, final int outPrimary, final int outSecondary) {
+        // If no dominant value at all, just return the actual.
+        if (userPrimary == 0 && userSecondary == 0) return outPrimary;
+
+        // If ScaleType.FIT_XY fill the whole rectangle, ignore ratio.
+        if (scaleType == ImageView.ScaleType.FIT_XY)
+            return userPrimary == 0 ? outPrimary : userPrimary;
+
+        // If primary is unspecified, scale primary to match secondary's scaling ratio.
+        if (userPrimary == 0) {
+            final double ratio = (double) userSecondary / (double) outSecondary;
+            return (int) (outPrimary * ratio);
+        }
+
+        if (userSecondary == 0) return userPrimary;
+        final double ratio = (double) outSecondary / (double) outPrimary;
+        int resized = userPrimary;
+
+        // If ScaleType.CENTER_CROP fill the whole rectangle, preserve aspect ratio.
+        if (scaleType == ImageView.ScaleType.CENTER_CROP) {
+            if ((resized * ratio) < userSecondary) resized = (int) (userSecondary / ratio);
+            return resized;
+        }
+
+        if ((resized * ratio) > userSecondary) resized = (int) (userSecondary / ratio);
+        return resized;
+    }
+
+
+    private static int getBestSampleSize(int outWidth, int outHeight, int userWidth, int userHeight) {
+        final double wr = (double) outWidth / userWidth;
+        final double hr = (double) outHeight / userHeight;
+        final double ratio = Math.min(wr, hr);
+        float n = 1.0f;
+        while ((n * 2) <= ratio) n *= 2;
+        return (int) n;
     }
 
 }
