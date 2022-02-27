@@ -46,6 +46,7 @@ public final class PathUtil {
         return null;
     }
 
+
     /*  /data */
     public static File getRootData() {
         return Environment.getDataDirectory();
@@ -164,4 +165,11 @@ public final class PathUtil {
     }
 
 
+    public static String getPath(@Nullable final File file) {
+        return file == null ? null : file.getPath();
+    }
+
+    public static String getAbsolutePath(@Nullable final File file) {
+        return file == null ? null : file.getAbsolutePath();
+    }
 }

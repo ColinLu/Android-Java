@@ -48,7 +48,7 @@ public class HttpPolicy<Result> implements IPolicy<Result> {
         try {
             checkState();
             response = mCall.execute();
-        } catch (Exception e) {
+        } catch (Throwable e) {
             e.printStackTrace();
         } finally {
             if (response != null) Util.closeQuietly(response);
@@ -66,8 +66,8 @@ public class HttpPolicy<Result> implements IPolicy<Result> {
                 checkState();
                 //开始请求服务器
                 request(callback);
-            } catch (HttpException e) {
-                fail(callback, e);
+            } catch (Throwable e) {
+                fail(callback, new HttpException(HttpException.CODE_HTTP_STATE, mRequest.url().toString(), e));
             }
         });
     }
@@ -107,9 +107,8 @@ public class HttpPolicy<Result> implements IPolicy<Result> {
         });
     }
 
-    private void checkState() throws HttpException {
-        if (mExecuted)
-            throw new HttpException(HttpException.CODE_HTTP_STATE, mRequest.url().toString(), "Already executed!");
+    private void checkState() throws Throwable {
+        if (mExecuted) throw new Throwable("Already executed!");
         mCall = mHttpClient.newCall(mRequest);
         mExecuted = true;
         if (mCanceled) mCall.cancel();
@@ -152,8 +151,8 @@ public class HttpPolicy<Result> implements IPolicy<Result> {
                     //解析操作
                     final Result result = callback.parse(response);
                     success(callback, result);
-                } catch (HttpException e) {
-                    fail(callback, e);
+                } catch (Throwable e) {
+                    fail(callback, new HttpException(code, mRequest.url().toString(), e));
                 } finally {
                     if (responseBody != null) Util.closeQuietly(responseBody);
                     Util.closeQuietly(response);

@@ -3,9 +3,7 @@ package com.colin.library.android.okHttp.bean;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.colin.library.android.okHttp.request.IRequestBody;
-import com.colin.library.android.utils.HttpUtil;
-import com.colin.library.android.utils.StringUtil;
+import java.util.Locale;
 
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
@@ -22,24 +20,23 @@ public class ContentBody implements IRequestBody {
     @Nullable
     private final String mContentType;
     @Nullable
-    private final String mEncode;
+    private final String mCharset;
 
-    public ContentBody(@NonNull String content, @Nullable String contentType, @Nullable String encode) {
+    public ContentBody(@NonNull String content, @NonNull String contentType, @NonNull String charset) {
         this.mContent = content;
         this.mContentType = contentType;
-        this.mEncode = encode;
+        this.mCharset = charset;
     }
 
     @Nullable
     @Override
-    public MediaType getMediaType(@NonNull String encode) {
-        if (StringUtil.isEmpty(mContentType)) return null;
-        return HttpUtil.getMediaType(mContentType, StringUtil.isEmpty(mEncode) ? encode : mEncode);
+    public MediaType getMediaType() {
+        return MediaType.parse(String.format(Locale.US, "%s; charset=%s", mContentType, mCharset));
     }
 
     @NonNull
     @Override
-    public RequestBody getRequestBody(@NonNull String encode) {
-        return RequestBody.create(getMediaType(encode), mContent);
+    public RequestBody getRequestBody() {
+        return RequestBody.Companion.create(mContent, getMediaType());
     }
 }

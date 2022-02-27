@@ -35,6 +35,7 @@ import androidx.core.content.ContextCompat;
 
 import com.colin.library.android.utils.data.Constants;
 import com.colin.library.android.utils.data.UtilHelper;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;

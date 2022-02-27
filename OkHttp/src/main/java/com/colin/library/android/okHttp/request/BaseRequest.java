@@ -28,7 +28,7 @@ import okhttp3.Response;
  * 作者： ColinLu
  * 时间： 2022-02-17 00:25
  * <p>
- * 描述： TODO
+ * 描述： 基本请求，不含请求体
  */
 public class BaseRequest<Returner> implements IRequest<Returner> {
     @NonNull

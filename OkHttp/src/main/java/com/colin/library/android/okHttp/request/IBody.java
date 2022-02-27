@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.Size;
 
+import com.colin.library.android.okHttp.bean.IRequestBody;
 import com.colin.library.android.okHttp.progress.IProgress;
 
 import org.json.JSONArray;
@@ -33,55 +34,51 @@ public interface IBody<Returner> extends IRequest<Returner> {
     /*上传Json内容*/
     Returner json(@Nullable String json);
 
-    Returner json(@Nullable String json, @Nullable String encode);
+    Returner json(@Nullable String json, @NonNull String charset);
 
     Returner json(@Nullable JSONObject json);
 
-    Returner json(@Nullable JSONObject json, @Nullable String encode);
+    Returner json(@Nullable JSONObject json, @NonNull String charset);
 
     Returner json(@Nullable @Size(min = 0) JSONArray json);
 
-    Returner json(@Nullable @Size(min = 0) JSONArray json, @Nullable String encode);
+    Returner json(@Nullable @Size(min = 0) JSONArray json, @NonNull String charset);
 
     /*上传Xml内容*/
     Returner xml(@Nullable String xml);
 
-    Returner xml(@Nullable String xml, @Nullable String encode);
+    Returner xml(@Nullable String xml, @NonNull String charset);
 
     /*上传文本内容*/
     Returner content(@Nullable String content);
 
-    Returner content(@Nullable String content, @Nullable String contentType);
+    Returner content(@Nullable String content, @NonNull String contentType);
 
-    Returner content(@Nullable String content, @Nullable String contentType, @Nullable String encode);
+    Returner content(@Nullable String content, @NonNull String contentType, @NonNull String charset);
 
     /*上传字节数组内容*/
-    Returner bytes(@Nullable @Size(min = 0) byte[] bytes);
+    Returner bytes(@Nullable byte[] bytes);
 
-    Returner bytes(@Nullable @Size(min = 0) byte[] bytes, @Nullable String encode);
+    Returner bytes(@Nullable byte[] bytes, @NonNull String charset);
 
-    Returner bytes(@Nullable @Size(min = 0) byte[] bytes, int offset, int count);
+    Returner bytes(@Nullable byte[] bytes, int offset, int count);
 
-    Returner bytes(@Nullable @Size(min = 0) byte[] bytes, @Nullable String contentType, int offset, int count);
+    Returner bytes(@Nullable byte[] bytes, @NonNull String contentType, int offset, int count);
 
-    Returner bytes(@Nullable @Size(min = 0) byte[] bytes, @Nullable String contentType, @Nullable String encode, int offset, int count);
+    Returner bytes(@Nullable byte[] bytes, @NonNull String contentType, @NonNull String charset, int offset, int count);
 
     /*上传文件*/
-    Returner file(@Nullable File file);
+    Returner file(@Nullable File... files);
 
-    Returner file(@Nullable File file, @Nullable String encode);
+    Returner file(@Nullable List<File> list);
 
-    Returner file(@Nullable File file, @Nullable String key, @Nullable String encode);
+    Returner file(@Nullable String key, @Nullable File... files);
 
-    Returner file(@Nullable List<File> files);
+    Returner file(@Nullable String key, @Nullable List<File> list);
 
-    Returner file(@Nullable List<File> files, @Nullable String encode);
+    Returner file(@Nullable String key, @Nullable String charset, @Nullable File... files);
 
-    Returner file(@Nullable String key, @Size(min = 0) @Nullable File... files);
-
-    Returner file(@Nullable String key, @Nullable @Size(min = 0) List<File> list);
-
-    Returner file(@Nullable String key, @Nullable @Size(min = 0) List<File> list, @Nullable String encode);
+    Returner file(@Nullable String key, @Nullable String charset, @Nullable List<File> list);
 
     Returner removeFile(@Nullable String key);
 

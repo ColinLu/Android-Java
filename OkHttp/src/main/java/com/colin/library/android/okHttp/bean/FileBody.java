@@ -5,7 +5,6 @@ import android.text.TextUtils;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.colin.library.android.okHttp.request.IRequestBody;
 import com.colin.library.android.utils.HttpUtil;
 
 import java.io.File;
@@ -22,29 +21,20 @@ import okhttp3.RequestBody;
 public class FileBody implements IRequestBody {
     @NonNull
     private final File mFile;
-    @NonNull
+    @Nullable
     private final String mKey;
     @Nullable
-    private final String mEncode;
+    private final String mCharset;
 
-    public FileBody(@NonNull File file, @NonNull String key) {
-        this(file, key, null);
-    }
-
-    public FileBody(@NonNull File file, @NonNull String key, @Nullable String encode) {
+    public FileBody(@NonNull File file, @Nullable String key, @Nullable String charset) {
         this.mFile = file;
         this.mKey = key;
-        this.mEncode = encode;
+        this.mCharset = charset;
     }
 
     @NonNull
     public String getKey() {
-        return mKey;
-    }
-
-    @NonNull
-    public File getFile() {
-        return mFile;
+        return TextUtils.isEmpty(mKey) ? mFile.getName() : mKey;
     }
 
     @NonNull
@@ -54,13 +44,13 @@ public class FileBody implements IRequestBody {
 
     @Nullable
     @Override
-    public MediaType getMediaType(@NonNull String encode) {
-        return HttpUtil.getMediaType(HttpUtil.getMimeType(mFile.getName()), TextUtils.isEmpty(mEncode) ? encode : mEncode);
+    public MediaType getMediaType() {
+        return HttpUtil.getMediaType(HttpUtil.getMimeType(mFile.getName()), mCharset);
     }
 
     @NonNull
     @Override
-    public RequestBody getRequestBody(@NonNull String encode) {
-        return RequestBody.create(getMediaType(encode), mFile);
+    public RequestBody getRequestBody() {
+        return RequestBody.Companion.create(mFile, getMediaType());
     }
 }

@@ -5,8 +5,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.colin.library.android.okHttp.bean.HttpException;
-import com.colin.library.android.okHttp.parse.IParse;
-import com.colin.library.android.okHttp.request.IRequest;
+import com.colin.library.android.okHttp.parse.IParseResponse;
 import com.colin.library.android.utils.LogUtil;
 
 import okhttp3.Request;
@@ -17,7 +16,7 @@ import okhttp3.Request;
  * <p>
  * 描述： TODO
  */
-public interface IHttpCallback<Result> extends IParse<Result> {
+public interface IHttpCallback<Result> extends IParseResponse<Result> {
 
     /*网络请求开始*/
     @MainThread

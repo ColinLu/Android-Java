@@ -1,5 +1,7 @@
 package com.colin.library.android.okHttp.callback;
 
+import androidx.annotation.NonNull;
+
 import com.colin.library.android.okHttp.parse.IParseResponse;
 import com.colin.library.android.okHttp.parse.StringParseResponse;
 
@@ -9,14 +11,15 @@ import com.colin.library.android.okHttp.parse.StringParseResponse;
  * <p>
  * 描述： TODO
  */
-public class StringHttpCallback implements IHttpCallback<String> {
+public final class StringHttpCallback implements IHttpCallback<String> {
+    @NonNull
     protected final IParseResponse<String> mParseResponse;
 
     public StringHttpCallback() {
         this(new StringParseResponse());
     }
 
-    public StringHttpCallback(IParseResponse<String> parseResponse) {
-        mParseResponse = parseResponse;
+    public StringHttpCallback(@NonNull IParseResponse<String> parseResponse) {
+        this.mParseResponse = parseResponse;
     }
 }

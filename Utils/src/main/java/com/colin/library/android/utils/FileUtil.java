@@ -104,6 +104,11 @@ public final class FileUtil {
     }
 
     /*创建文件  不存在 创建，存在不创建*/
+    public static boolean createOrExistsFile(@Nullable final File parent, @Nullable String fileName) {
+        return createOrExistsFile(getFile(parent, fileName));
+    }
+
+    /*创建文件  不存在 创建，存在不创建*/
     public static boolean createOrExistsFile(@Nullable final String path) {
         return createOrExistsFile(getFile(path));
     }
@@ -124,6 +129,7 @@ public final class FileUtil {
             return false;
         }
     }
+
 
     /*创建文件夹  不存在 创建，存在不创建*/
     public static boolean createOrExistsDir(@Nullable final String path) {
@@ -230,7 +236,7 @@ public final class FileUtil {
     }
 
     @NonNull
-    public static String getDefaultName(@NonNull String Suffix) {
+    public static String getFileNameDef(@Nullable String Suffix) {
         return TimeUtil.getTimeString() + Suffix;
     }
 
@@ -436,6 +442,7 @@ public final class FileUtil {
             return String.format(Locale.CHINESE, "%.3fGB", (double) fileSizeByte / 1073741824);
         }
     }
+
 
 
     public interface OnFileListener {

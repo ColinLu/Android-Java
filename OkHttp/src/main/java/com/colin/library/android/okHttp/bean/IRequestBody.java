@@ -1,4 +1,4 @@
-package com.colin.library.android.okHttp.request;
+package com.colin.library.android.okHttp.bean;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -14,8 +14,8 @@ import okhttp3.RequestBody;
  */
 public interface IRequestBody {
     @Nullable
-    MediaType getMediaType(@NonNull String encode);
+    MediaType getMediaType();
 
     @NonNull
-    RequestBody getRequestBody(@NonNull String encode);
+    RequestBody getRequestBody();
 }

@@ -672,7 +672,7 @@ public final class FileIOUtil {
         String path = null;
         FileOutputStream out = null;
         try {
-            final File file = FileUtil.getFile(PathUtil.getExternalFile(Environment.DIRECTORY_DCIM), FileUtil.getDefaultName(".png"));
+            final File file = FileUtil.getFile(PathUtil.getExternalFile(Environment.DIRECTORY_DCIM), FileUtil.getFileNameDef(".png"));
             final boolean existsFile = FileUtil.createOrExistsFile(file);
             if (existsFile) {
                 path = file.getAbsolutePath();

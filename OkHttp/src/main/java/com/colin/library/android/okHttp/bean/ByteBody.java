@@ -3,13 +3,9 @@ package com.colin.library.android.okHttp.bean;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.colin.library.android.okHttp.request.IRequestBody;
-import com.colin.library.android.utils.HttpUtil;
-
 import java.util.Locale;
 
 import okhttp3.MediaType;
-import okhttp3.OkHttp;
 import okhttp3.RequestBody;
 
 /**

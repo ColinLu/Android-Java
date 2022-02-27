@@ -17,6 +17,7 @@ import java.util.Locale;
 import java.util.Scanner;
 import java.util.StringTokenizer;
 
+import okhttp3.HttpUrl;
 import okhttp3.MediaType;
 
 /**
@@ -128,6 +129,11 @@ public final class HttpUtil {
         return null;
     }
 
+    @Nullable
+    public static String getFileName(@Nullable final HttpUrl url) {
+        return getFileName(url == null ? null : url.toString());
+    }
+
     /*解析URL地址 获取文件名字 带后缀 eg:  xxx.txt*/
     @Nullable
     public static String getFileName(@Nullable final String url) {
@@ -153,8 +159,8 @@ public final class HttpUtil {
      * @return If you have a value key, you will return the parsed value if you don't return the default value.
      */
     @Nullable
-    public static String value(@Nullable String header, @Nullable String key, @Nullable String def) {
-        if (!StringUtil.isEmpty(header) && !StringUtil.isEmpty(key)) {
+    public static String head(@Nullable String header, @Nullable String key, @Nullable String def) {
+        if (!TextUtils.isEmpty(header) && !TextUtils.isEmpty(key)) {
             final StringTokenizer stringTokenizer = new StringTokenizer(header, ";");
             while (stringTokenizer.hasMoreElements()) {
                 final String valuePair = stringTokenizer.nextToken();
@@ -194,7 +200,7 @@ public final class HttpUtil {
     }
 
     @Nullable
-    public static MediaType getMediaType(@NonNull String mimeType, @NonNull String encode) {
+    public static MediaType getMediaType(@Nullable String mimeType, @Nullable String encode) {
         if (StringUtil.isEmpty(mimeType) || StringUtil.isEmpty(encode)) return null;
         return MediaType.parse(mimeType + "; charset=" + encode);
     }
@@ -245,4 +251,6 @@ public final class HttpUtil {
         if (!TextUtils.isEmpty(id)) sb.append(" Build/").append(id);
         return String.format(webUserAgent, sb, "Mobile ");
     }
+
+
 }

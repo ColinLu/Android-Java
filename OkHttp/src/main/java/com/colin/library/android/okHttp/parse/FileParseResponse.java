@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresPermission;
+import androidx.annotation.WorkerThread;
 
 import com.colin.library.android.okHttp.OkHttp;
 import com.colin.library.android.okHttp.bean.HttpException;
@@ -37,13 +38,11 @@ import okhttp3.internal.Util;
  */
 public class FileParseResponse implements IParseResponse<File> {
     @Nullable
-    private final File mFolder;                       //目标文件存储的文件夹路径
+    private final File mDir;                            //目标文件存储的文件夹路径
     @Nullable
-    private final String mFileName;                   //目标文件存储的文件名 eg : app.apk
+    private final String mFileName;                     //目标文件存储的文件名 eg : app.apk
     @Nullable
-    private String mEncode;
-    @Nullable
-    private IProgress mProgress;
+    private final IProgress mProgress;
 
     public FileParseResponse() {
         this(null, null);
@@ -51,97 +50,68 @@ public class FileParseResponse implements IParseResponse<File> {
 
 
     public FileParseResponse(@Nullable String fileName) {
-        this(null, fileName);
+        this(null, fileName, null);
     }
 
 
-    public FileParseResponse(@Nullable File folder, @Nullable String fileName) {
-        this.mFolder = folder;
+    public FileParseResponse(@Nullable File dir, @Nullable String fileName) {
+        this(dir, fileName, null);
+    }
+
+    public FileParseResponse(@Nullable File dir, @Nullable String fileName, @Nullable IProgress progress) {
+        this.mDir = dir;
         this.mFileName = fileName;
-    }
-
-    public FileParseResponse setEncode(@Nullable String encode) {
-        this.mEncode = encode;
-        return this;
-    }
-
-    public FileParseResponse setProgress(@Nullable IProgress progress) {
         this.mProgress = progress;
-        return this;
     }
 
-    @Override
     @Nullable
+    @Override
+    @WorkerThread
     public File parse(@NonNull Response response) throws Throwable {
         final ResponseBody body = response.body();
-        final long total = null == body ? -1 : body.contentLength();
-        final File file = getDownloadFile(response);
-        InputStream bodyStream = null;
+        final long total = null == body ? 0 : body.contentLength();
+        if (total == 0) return null;
+        final File file = FileUtil.getFile(getDir(), getFileName(response));
+        final boolean exists = FileUtil.createFile(file, true);
+        if (!exists) return null;
+        InputStream is = null;
         final byte[] buffer = new byte[1024 * 8];
         int len;
-        FileOutputStream fileOutputStream = null;
+        FileOutputStream out = null;
         try {
-            bodyStream = body.byteStream();
-            fileOutputStream = new FileOutputStream(file);
+            is = body.byteStream();
+            out = new FileOutputStream(file);
             long sum = 0;
-            while ((len = bodyStream.read(buffer)) != -1) {
+            while ((len = is.read(buffer)) != -1) {
                 sum += len;
-                fileOutputStream.write(buffer, 0, len);
-                progress(total, sum * 1.0D / total);
+                out.write(buffer, 0, len);
+                progress(total, (sum * 1.0F / total));
             }
-            fileOutputStream.flush();
+            out.flush();
             return file;
         } finally {
-            if (bodyStream != null) Util.closeQuietly(bodyStream);
-            if (fileOutputStream != null) Util.closeQuietly(fileOutputStream);
+            if (is != null) Util.closeQuietly(is);
+            if (out != null) Util.closeQuietly(out);
         }
     }
 
     @Override
-    public void progress(double total, double progress) {
-        if (mProgress != null) ThreadUtil.runOnUiThread(() -> mProgress.progress(total, progress));
-    }
-
-    private File getDownloadFile(@NonNull final Response response) throws IOException {
-        return FileUtil.createFile(getFolder(), getFileName(response), true);
+    @WorkerThread
+    public void progress(float total, float progress) {
+        if (mProgress != null) ThreadUtil.runUI(() -> mProgress.progress(total, progress));
     }
 
     @NonNull
-    @RequiresPermission(READ_EXTERNAL_STORAGE)
-    private File getFolder() {
-        if (mFolder != null && mFolder.isDirectory()) return mFolder;
-        return PathUtil.getExternalAppFolder(Environment.DIRECTORY_DOWNLOADS);
+    private File getDir() {
+        return mDir != null && mDir.isDirectory() ? mDir : PathUtil.getDownloadCache();
     }
 
     @NonNull
     private String getFileName(@NonNull final Response response) {
-        if (!StringUtil.isEmpty(mFileName)) return mFileName;
-        final String name = getFileNameByHeader(response);
-        if (StringUtil.isEmpty(name)) return getFileNameByUrl(response.request().url());
-        return name;
+        if (!TextUtils.isEmpty(mFileName)) return mFileName;
+        String fileName = HttpUtil.head(response.header(OkHttp.HEAD_KEY_CONTENT_DISPOSITION), "filename", null);
+        if (!TextUtils.isEmpty(fileName)) return fileName;
+        fileName = HttpUtil.getFileName(response.request().url());
+        return TextUtils.isEmpty(fileName) ? FileUtil.getFileNameDef(null) : fileName;
     }
-
-    @Nullable
-    private String getFileNameByHeader(@NonNull final Response response) {
-        final String disposition = response.header(OkHttp.HEAD_KEY_CONTENT_DISPOSITION);
-        String fileName = HttpUtil.value(disposition, "filename", null);
-        fileName = EncodeUtil.decode(fileName, mEncode);
-        if (!StringUtil.isEmpty(fileName) && fileName.startsWith("\"") && fileName.endsWith("\"")) {
-            fileName = fileName.substring(1, fileName.length() - 1);
-        }
-        return fileName;
-    }
-
-    @NonNull
-    private String getFileNameByUrl(@NonNull final HttpUrl url) {
-        final URI uri = url.uri();
-        final String path = uri.getPath();
-        if (TextUtils.isEmpty(path)) {
-            return Integer.toString(url.hashCode());
-        } else {
-            final String[] split = path.split("/");
-            return split[split.length - 1];
-        }
-    }
-
 }

@@ -5,9 +5,15 @@ import android.content.Context;
 import androidx.annotation.NonNull;
 
 import com.colin.library.android.okHttp.bean.HttpConfig;
+import com.colin.library.android.okHttp.request.DeleteRequest;
 import com.colin.library.android.okHttp.request.GetRequest;
+import com.colin.library.android.okHttp.request.HeadRequest;
+import com.colin.library.android.okHttp.request.OptionsRequest;
+import com.colin.library.android.okHttp.request.PatchRequest;
+import com.colin.library.android.okHttp.request.PostRequest;
+import com.colin.library.android.okHttp.request.PutRequest;
+import com.colin.library.android.okHttp.request.TraceRequest;
 import com.colin.library.android.utils.annotation.Encode;
-import com.colin.library.android.utils.data.Constants;
 
 /**
  * 作者： ColinLu
@@ -83,8 +89,44 @@ public final class OkHttp {
         return mHttpConfig.getContext();
     }
 
+    @NonNull
+    public DeleteRequest delete(@NonNull String url) {
+        return new DeleteRequest(url);
+    }
+
+    @NonNull
     public GetRequest get(@NonNull String url) {
         return new GetRequest(url);
     }
 
+    @NonNull
+    public HeadRequest head(@NonNull String url) {
+        return new HeadRequest(url);
+    }
+
+    @NonNull
+    public OptionsRequest options(@NonNull String url) {
+        return new OptionsRequest(url);
+    }
+
+    @NonNull
+    public PatchRequest patch(@NonNull String url) {
+        return new PatchRequest(url);
+    }
+
+    @NonNull
+    public PutRequest put(@NonNull String url) {
+        return new PutRequest(url);
+    }
+
+    @NonNull
+    public PostRequest post(@NonNull String url) {
+        return new PostRequest(url);
+    }
+
+    @NonNull
+    public TraceRequest trace(@NonNull String url) {
+        return new TraceRequest(url);
+    }
 }
+
