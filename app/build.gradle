@@ -119,6 +119,8 @@ dependencies {
     implementation dependency.widget_viewpager2
     implementation dependency.rx_java
     implementation dependency.rx_android
+    implementation dependency.g_son
+    implementation dependency.ok_http
 
     testImplementation dependency.test_android_junit
     androidTestImplementation dependency.test_androidx_junit

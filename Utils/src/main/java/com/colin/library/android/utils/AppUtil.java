@@ -202,4 +202,8 @@ public final class AppUtil {
     public static UserManager getUserManager() {
         return ContextCompat.getSystemService(UtilHelper.getInstance().getContext(), UserManager.class);
     }
+
+    public static <T> T getService(@NonNull Context context, @NonNull Class<T> clazz) {
+        return ContextCompat.getSystemService(context, clazz);
+    }
 }

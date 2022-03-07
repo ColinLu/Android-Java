@@ -2,13 +2,17 @@ package com.colin.android.demo.java.app;
 
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.viewbinding.ViewBinding;
 
 import com.colin.library.android.base.BaseActivity;
 import com.colin.library.android.utils.LogUtil;
+import com.colin.library.android.utils.NetUtil;
+import com.colin.library.android.utils.annotation.NetType;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -20,7 +24,8 @@ import java.lang.reflect.ParameterizedType;
  * <p>
  * 描述： TODO
  */
-public abstract class AppActivity<Bind extends ViewBinding> extends BaseActivity {
+public abstract class AppActivity<Bind extends ViewBinding> extends BaseActivity implements
+        ScreenReceiver.OnScreenBroadcastListener, NetBroadReceiver.OnNetListener {
     protected Bind mBinding;
 
     @Override
@@ -37,6 +42,8 @@ public abstract class AppActivity<Bind extends ViewBinding> extends BaseActivity
         }
         initView(savedInstanceState);
         initData(getIntent().getExtras());
+        ScreenReceiver.bind(this);
+        NetBroadReceiver.bind(this);
     }
 
 
@@ -49,5 +56,15 @@ public abstract class AppActivity<Bind extends ViewBinding> extends BaseActivity
     @Override
     public int layoutRes() {
         return Resources.ID_NULL;
+    }
+
+    @Override
+    public void network(@NetType int type) {
+        LogUtil.i(NetUtil.getNetType(type));
+    }
+
+    @Override
+    public void screen(@NonNull String action) {
+        LogUtil.i(action);
     }
 }

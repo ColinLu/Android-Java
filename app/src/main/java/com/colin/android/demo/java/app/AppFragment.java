@@ -12,6 +12,9 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.viewbinding.ViewBinding;
 
 import com.colin.library.android.base.BaseFragment;
+import com.colin.library.android.utils.LogUtil;
+import com.colin.library.android.utils.NetUtil;
+import com.colin.library.android.utils.annotation.NetType;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -23,7 +26,8 @@ import java.lang.reflect.ParameterizedType;
  * <p>
  * 描述： TODO
  */
-public abstract class AppFragment<Bind extends ViewBinding> extends BaseFragment {
+public abstract class AppFragment<Bind extends ViewBinding> extends BaseFragment implements
+        ScreenReceiver.OnScreenBroadcastListener, NetBroadReceiver.OnNetListener {
     protected Bind mBinding;
 
     @Nullable
@@ -44,6 +48,8 @@ public abstract class AppFragment<Bind extends ViewBinding> extends BaseFragment
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         initView(savedInstanceState);
         initData(getArguments());
+        ScreenReceiver.bind(this);
+        NetBroadReceiver.bind(this);
     }
 
     @Override
@@ -61,4 +67,13 @@ public abstract class AppFragment<Bind extends ViewBinding> extends BaseFragment
         NavHostFragment.findNavController(this).navigate(action);
     }
 
+    @Override
+    public void network(@NetType int type) {
+        LogUtil.i(NetUtil.getNetType(type));
+    }
+
+    @Override
+    public void screen(@NonNull String action) {
+        LogUtil.i(action);
+    }
 }

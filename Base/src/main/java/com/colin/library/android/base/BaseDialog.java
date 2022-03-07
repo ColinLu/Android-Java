@@ -27,7 +27,8 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.colin.library.android.base.def.IView;
+import com.colin.library.android.base.def.IInitView;
+import com.colin.library.android.base.def.ILife;
 import com.colin.library.android.utils.data.Constants;
 
 import java.lang.reflect.Field;
@@ -38,7 +39,7 @@ import java.lang.reflect.Field;
  * <p>
  * 描述： 弹框基类
  */
-public abstract class BaseDialog<Returner> extends DialogFragment implements IView {
+public abstract class BaseDialog<Returner> extends DialogFragment implements IInitView, ILife {
     protected boolean mRefresh = true;
 
     /*Dialog标题*/
