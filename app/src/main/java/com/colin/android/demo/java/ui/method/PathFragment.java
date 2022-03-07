@@ -76,47 +76,46 @@ public class PathFragment extends AppFragment<LayoutListBinding> implements OnIt
         LogUtil.e(getAbsolutePath());
         switch (title) {
             case "root system":
-                path = PathUtil.getRootSystem().getAbsolutePath();
+                path = PathUtil.getPath(PathUtil.getRootSystem());
                 break;
             case "root data":
-                path = PathUtil.getRootData().getAbsolutePath();
+                path = PathUtil.getPath(PathUtil.getRootData());
                 break;
             case "root storage":
-                final File rootStorage = PathUtil.getRootStorage();
-                path = rootStorage == null ? "rootStorage==null" : PathUtil.getRootStorage().getAbsolutePath();
-                break;
-            case "data app":
-                path = PathUtil.getInternalApp().getAbsolutePath();
+                path = PathUtil.getPath(PathUtil.getRootStorage());
                 break;
             case "External":
-                path = PathUtil.getExternalStorage().getAbsolutePath();
+                path = PathUtil.getPath(PathUtil.getExternalStorage());
                 break;
             case "external music":
-                path = PathUtil.getExternalFile(Environment.DIRECTORY_MUSIC).getAbsolutePath();
+                path = PathUtil.getPath(PathUtil.getExternalFile(Environment.DIRECTORY_MUSIC));
                 break;
             case "external dcim":
-                path = PathUtil.getExternalFile(Environment.DIRECTORY_DCIM).getAbsolutePath();
+                path = PathUtil.getPath(PathUtil.getExternalFile(Environment.DIRECTORY_DCIM));
                 break;
             case "external picture":
-                path = PathUtil.getExternalFile(Environment.DIRECTORY_PICTURES).getAbsolutePath();
+                path = PathUtil.getPath(PathUtil.getExternalFile(Environment.DIRECTORY_PICTURES));
                 break;
             case "external download":
-                path = PathUtil.getExternalFile(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath();
+                path = PathUtil.getPath(PathUtil.getExternalFile(Environment.DIRECTORY_DOWNLOADS));
                 break;
             case "external custom":
-                path = PathUtil.getExternalFile("custom").getAbsolutePath();
+                path = PathUtil.getPath(PathUtil.getExternalFile("custom"));
+                break;
+            case "data app":
+                path = PathUtil.getPath(PathUtil.getInternalApp());
                 break;
             case "user data":
-                path = PathUtil.getUserData().getAbsolutePath();
+                path = PathUtil.getPath(PathUtil.getUserData());
                 break;
             case "user cache":
-                path = PathUtil.getUserCache().getAbsolutePath();
+                path = PathUtil.getPath(PathUtil.getUserCache());
                 break;
             case "user code cache":
-                path = PathUtil.getUserCodeCache().getAbsolutePath();
+                path = PathUtil.getPath(PathUtil.getUserCodeCache());
                 break;
             case "user files":
-                path = PathUtil.getUserFiles().getAbsolutePath();
+                path = PathUtil.getPath(PathUtil.getUserFiles());
                 break;
             default:
                 break;
