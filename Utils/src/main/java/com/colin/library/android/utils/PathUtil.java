@@ -164,11 +164,12 @@ public final class PathUtil {
         return getInternalAppPath() + Constants.FILE_SEP + "code_cache";
     }
 
-
+    @Nullable
     public static String getPath(@Nullable final File file) {
         return file == null ? null : file.getPath();
     }
 
+    @Nullable
     public static String getAbsolutePath(@Nullable final File file) {
         return file == null ? null : file.getAbsolutePath();
     }

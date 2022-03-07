@@ -62,7 +62,7 @@ public class TestGsonBean {
         String gsonString2 = "{\"name\":\"list null\",\"array\":[\"A1\",\"A2\"]}";
         System.out.println("-----------array is null------------");
         final TestGsonBean bean = gson.fromJson(gsonString, TestGsonBean.class);
-//        System.out.println(bean.toString());
+        System.out.println(bean.toString());
 
         System.out.println("-----------list is null-------------");
         final TestGsonBean bean2 = gson.fromJson(gsonString2, TestGsonBean.class);
@@ -70,7 +70,7 @@ public class TestGsonBean {
 
         System.out.println("---------------null-----------------");
         final TestGsonBean bean_null = gson.fromJson("{}", TestGsonBean.class);
-//        System.out.println(bean_null.toString());
+        System.out.println(bean_null.toString());
 
     }
 }

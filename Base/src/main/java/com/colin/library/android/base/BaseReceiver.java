@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleObserver;
@@ -23,8 +24,8 @@ import java.lang.ref.SoftReference;
 public abstract class BaseReceiver extends BroadcastReceiver implements LifecycleObserver {
     protected SoftReference<? extends OnReceiverListener> mOnBroadcastListenerRef;
 
-    public BaseReceiver(OnReceiverListener listener) {
-        mOnBroadcastListenerRef = new SoftReference<>(listener);
+    public BaseReceiver(@NonNull OnReceiverListener listener) {
+        this.mOnBroadcastListenerRef = new SoftReference<>(listener);
     }
 
     /*注册 广播*/

@@ -25,10 +25,10 @@ import okio.Sink;
  * 描述： 监听上传 进度
  */
 public class ProgressRequestBody extends RequestBody {
-    private final IProgress mProgress;
     private final RequestBody mRequestBody;
+    private final IProgress mProgress;
 
-    public ProgressRequestBody(@NonNull RequestBody requestBody, @Nullable IProgress progress) {
+    public ProgressRequestBody(@NonNull RequestBody requestBody, @NonNull IProgress progress) {
         this.mProgress = progress;
         this.mRequestBody = requestBody;
     }
@@ -86,7 +86,6 @@ public class ProgressRequestBody extends RequestBody {
     }
 
     private void callback(final long total, final float currentSize) {
-        if (null == mProgress) return;
         ThreadUtil.runUI(() -> mProgress.progress(total, currentSize));
     }
 }

@@ -17,6 +17,7 @@ import java.util.Locale;
 import java.util.Scanner;
 import java.util.StringTokenizer;
 
+import okhttp3.Cookie;
 import okhttp3.HttpUrl;
 import okhttp3.MediaType;
 
@@ -149,6 +150,9 @@ public final class HttpUtil {
         return null;
     }
 
+    public static boolean isCookieExpired(@NonNull Cookie cookie) {
+        return cookie.expiresAt() < System.currentTimeMillis();
+    }
 
     /**
      * A value of the header information.

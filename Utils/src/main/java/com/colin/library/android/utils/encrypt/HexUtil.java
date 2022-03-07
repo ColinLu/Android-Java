@@ -1,5 +1,7 @@
 package com.colin.library.android.utils.encrypt;
 
+import android.text.TextUtils;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -40,6 +42,16 @@ public final class HexUtil {
         return StringUtil.getString(getBytes(digits, bytes));
     }
 
+    @Nullable
+    public static byte[] getBytes(@Nullable final String hex) {
+        return getBytes(Constants.DIGITS_BYTE_LOWER, StringUtil.getBytes(hex));
+    }
+
+    @Nullable
+    public static byte[] getBytes(final boolean upper, @Nullable final String hex) {
+        return getBytes(upper ? Constants.DIGITS_BYTE_UPPER : Constants.DIGITS_BYTE_LOWER, StringUtil.getBytes(hex));
+    }
+
     /*普通字节数组->16进制数组*/
     @Nullable
     public static byte[] getBytes(@NonNull final byte[] digits, @Nullable final byte[] bytes) {
@@ -52,4 +64,6 @@ public final class HexUtil {
         }
         return values;
     }
+
+
 }

@@ -1,16 +1,12 @@
 package com.colin.android.demo.java.dialog;
 
-import android.net.Uri;
 import android.os.Bundle;
-import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.colin.android.demo.java.app.AppDialog;
-import com.colin.android.demo.java.databinding.DialogAppBinding;
 import com.colin.android.demo.java.databinding.DialogPathBinding;
-import com.colin.android.demo.java.def.bean.ContactBean;
 
 /**
  * 作者： ColinLu

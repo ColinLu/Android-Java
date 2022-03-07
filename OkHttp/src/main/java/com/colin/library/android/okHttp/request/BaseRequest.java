@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 
 import com.colin.library.android.okHttp.OkHttp;
 import com.colin.library.android.okHttp.annotation.Method;
+import com.colin.library.android.okHttp.bean.HttpConfig;
 import com.colin.library.android.okHttp.bean.HttpHeaders;
 import com.colin.library.android.okHttp.bean.HttpParams;
 import com.colin.library.android.okHttp.callback.IHttpCallback;
@@ -47,20 +48,21 @@ public class BaseRequest<Returner> implements IRequest<Returner> {
     protected transient HttpParams.Builder mParams;
 
     public BaseRequest(@NonNull String url, @Method @NonNull String method) {
+        final HttpConfig config = OkHttp.getInstance().getOkHttpConfig();
         this.mUrl = url;
         this.mMethod = method;
-        this.mOkHttpClient = OkHttp.getInstance().getOkHttpConfig().getOkHttpClient();
-        this.mEncode = OkHttp.getInstance().getOkHttpConfig().getEncode();
-        this.mReadTimeout = OkHttp.getInstance().getOkHttpConfig().getReadTimeout();
-        this.mWriteTimeout = OkHttp.getInstance().getOkHttpConfig().getWriteTimeout();
-        this.mConnectTimeout = OkHttp.getInstance().getOkHttpConfig().getConnectTimeout();
-        this.mRetryCall = OkHttp.getInstance().getOkHttpConfig().getRetryCall();
-        this.mHeader = OkHttp.getInstance().getOkHttpConfig().getHeaderBuilder();
-        this.mParams = OkHttp.getInstance().getOkHttpConfig().getParamsBuilder();
+        this.mOkHttpClient = config.getOkHttpClient();
+        this.mEncode = config.getEncode();
+        this.mReadTimeout = config.getReadTimeout();
+        this.mWriteTimeout = config.getWriteTimeout();
+        this.mConnectTimeout = config.getConnectTimeout();
+        this.mRetryCall = config.getRetryCall();
+        this.mHeader = config.getHeaderBuilder();
+        this.mParams = config.getParamsBuilder();
         this.mHeader.set(OkHttp.HEAD_KEY_ACCEPT, OkHttp.HEADER_ACCEPT_ALL);
         this.mHeader.set(OkHttp.HEAD_KEY_ACCEPT_ENCODING, OkHttp.ACCEPT_ENCODING_ZIP_DEFLATE);
-        this.mHeader.set(OkHttp.HEAD_KEY_ACCEPT_LANGUAGE, OkHttp.getInstance().getOkHttpConfig().getAcceptLanguage());
-        this.mHeader.set(OkHttp.HEAD_KEY_USER_AGENT, OkHttp.getInstance().getOkHttpConfig().getUserAgent());
+        this.mHeader.set(OkHttp.HEAD_KEY_ACCEPT_LANGUAGE, config.getAcceptLanguage());
+        this.mHeader.set(OkHttp.HEAD_KEY_USER_AGENT, config.getUserAgent());
     }
 
     @NonNull

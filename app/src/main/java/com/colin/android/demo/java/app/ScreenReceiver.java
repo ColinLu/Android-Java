@@ -30,10 +30,9 @@ public class ScreenReceiver extends BaseReceiver {
         void screen(@NonNull String action);
     }
 
-    public ScreenReceiver(@Nullable OnScreenBroadcastListener listener) {
+    public ScreenReceiver(@NonNull OnScreenBroadcastListener listener) {
         super(listener);
     }
-
 
     /*接受到通知*/
     @Override
@@ -44,7 +43,7 @@ public class ScreenReceiver extends BaseReceiver {
         listener.screen(action);
     }
 
-    @Nullable
+    @NonNull
     @Override
     public IntentFilter getIntentFilter() {
         final IntentFilter filter = new IntentFilter();

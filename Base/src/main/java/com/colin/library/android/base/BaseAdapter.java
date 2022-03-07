@@ -1,6 +1,7 @@
 package com.colin.library.android.base;
 
 import android.annotation.SuppressLint;
+import android.app.Service;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 

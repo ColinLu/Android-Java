@@ -281,7 +281,7 @@ public final class SpUtil {
 
 
     @NonNull
-    private static SharedPreferences getSp(@NonNull final String spName, final int mode) {
+    public static SharedPreferences getSp(@NonNull final String spName, final int mode) {
         SparseArray<SharedPreferences> sparseArray = SP_MAP.get(spName);
         if (sparseArray == null) {
             sparseArray = new SparseArray<>();

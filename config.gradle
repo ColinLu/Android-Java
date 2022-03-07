@@ -2,7 +2,7 @@
  * APP版本号、插件版本、编译相关版本管理
  */
 def build_versions = [:]
-build_versions.android_gradle_plugin = '7.1.1'
+build_versions.android_gradle_plugin = '7.1.2'
 build_versions.application_id = "com.colin.android.demo.java"
 build_versions.min_sdk = 21
 build_versions.target_sdk = 31

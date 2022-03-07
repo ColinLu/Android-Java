@@ -14,6 +14,7 @@ import androidx.annotation.Nullable;
 import com.colin.android.demo.java.def.bean.ContactBean;
 import com.colin.library.android.utils.IOUtil;
 import com.colin.library.android.utils.LogUtil;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +44,7 @@ public final class ContactUtils {
         print(context, ContactsContract.RawContactsEntity.CONTENT_URI);
         final Cursor cursor = getCursor(context, Phone.CONTENT_URI, PROJECTION_CONTACT_LIST,
                 null, null, null);
+        LogUtil.e(new Gson().toJson(cursor));
         if (cursor == null) {
             return list;
         }
@@ -75,6 +77,7 @@ public final class ContactUtils {
     private static void print(Context context, Uri uri) {
         LogUtil.e(uri.toString());
         final Cursor cursor = getCursor(context, uri, null, null, null, null);
+        LogUtil.e(new Gson().toJson(cursor));
         if (cursor != null) {
             print(cursor);
             cursor.close();

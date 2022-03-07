@@ -239,7 +239,6 @@ public final class Edge {
             return mDirection;
         }
 
-
         public int getStartOffset() {
             return mStartOffset;
         }

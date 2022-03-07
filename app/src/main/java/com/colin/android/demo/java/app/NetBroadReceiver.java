@@ -39,7 +39,7 @@ public final class NetBroadReceiver extends BaseReceiver {
     @NetType
     private int mCurrentNetType = NetType.NETWORK_NONE;
 
-    public NetBroadReceiver(OnReceiverListener listener) {
+    public NetBroadReceiver(@NonNull OnReceiverListener listener) {
         super(listener);
     }
 

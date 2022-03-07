@@ -12,8 +12,8 @@ import androidx.annotation.StringDef;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
-@StringDef({Method.GET, Method.HEAD, Method.DELETE, Method.OPTIONS,
-        Method.POST, Method.PUT, Method.PATCH, Method.REPORT, Method.TRACE})
+@StringDef({Method.GET, Method.HEAD, Method.DELETE, Method.OPTIONS, Method.POST, Method.PUT,
+        Method.PATCH, Method.REPORT, Method.TRACE})
 @Retention(RetentionPolicy.SOURCE)
 public @interface Method {
     String GET = "GET";

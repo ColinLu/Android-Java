@@ -3,17 +3,25 @@ package com.colin.library.android.okHttp;
 import android.content.Context;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
+import com.colin.library.android.okHttp.annotation.Method;
 import com.colin.library.android.okHttp.bean.HttpConfig;
+import com.colin.library.android.okHttp.request.BaseRequest;
+import com.colin.library.android.okHttp.request.BodyRequest;
 import com.colin.library.android.okHttp.request.DeleteRequest;
 import com.colin.library.android.okHttp.request.GetRequest;
 import com.colin.library.android.okHttp.request.HeadRequest;
+import com.colin.library.android.okHttp.request.NoBodyRequest;
 import com.colin.library.android.okHttp.request.OptionsRequest;
 import com.colin.library.android.okHttp.request.PatchRequest;
 import com.colin.library.android.okHttp.request.PostRequest;
 import com.colin.library.android.okHttp.request.PutRequest;
 import com.colin.library.android.okHttp.request.TraceRequest;
 import com.colin.library.android.utils.annotation.Encode;
+
+import okhttp3.Call;
+import okhttp3.OkHttpClient;
 
 /**
  * 作者： ColinLu
@@ -89,6 +97,11 @@ public final class OkHttp {
         return mHttpConfig.getContext();
     }
 
+    public OkHttpClient getOkHttpClient() {
+        if (null == mHttpConfig) throw new NullPointerException("OkHttpConfig init first !");
+        return getOkHttpConfig().getOkHttpClient();
+    }
+
     @NonNull
     public DeleteRequest delete(@NonNull String url) {
         return new DeleteRequest(url);
@@ -127,6 +140,52 @@ public final class OkHttp {
     @NonNull
     public TraceRequest trace(@NonNull String url) {
         return new TraceRequest(url);
+    }
+
+    @NonNull
+    public NoBodyRequest noBody(@Method String method, @NonNull String url) {
+        return new NoBodyRequest(method, url);
+    }
+
+    @NonNull
+    public BodyRequest body(@Method String method, @NonNull String url) {
+        return new BodyRequest(method, url);
+    }
+
+    /**
+     * 根据Tag取消请求
+     */
+    public void cancelTag(@Nullable Object tag) {
+        cancelTag(getOkHttpClient(), tag);
+    }
+
+    /**
+     * 根据Tag取消请求
+     */
+    public void cancelTag(@Nullable OkHttpClient client, @Nullable Object tag) {
+        if (client == null || tag == null) return;
+        for (Call call : client.dispatcher().queuedCalls()) {
+            if (tag.equals(call.request().tag())) call.cancel();
+        }
+        for (Call call : client.dispatcher().runningCalls()) {
+            if (tag.equals(call.request().tag())) call.cancel();
+        }
+    }
+
+    /**
+     * 取消所有请求请求
+     */
+    public void cancelAll() {
+        cancelAll(getOkHttpClient());
+    }
+
+    /**
+     * 取消所有请求请求
+     */
+    public void cancelAll(@Nullable OkHttpClient client) {
+        if (client == null) return;
+        for (Call call : client.dispatcher().queuedCalls()) call.cancel();
+        for (Call call : client.dispatcher().runningCalls()) call.cancel();
     }
 }
 
