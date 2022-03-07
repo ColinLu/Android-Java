@@ -1,7 +1,5 @@
 package com.colin.library.android.utils;
 
-import android.text.TextUtils;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -24,9 +22,13 @@ public final class StringUtil {
         if (len == 0) return true;
         for (int i = 0; i < len; i++) {
             final CharSequence text = texts[i];
-            if (TextUtils.isEmpty(text)) return true;
+            if (isEmpty(text)) return true;
         }
         return false;
+    }
+
+    public static boolean isEmpty(@Nullable final CharSequence text) {
+        return text == null || text.length() == 0;
     }
 
 

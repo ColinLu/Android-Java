@@ -2,7 +2,6 @@ package com.colin.library.android.utils.encrypt;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.text.TextUtils;
 import android.util.Base64;
 
 import androidx.annotation.NonNull;
@@ -18,6 +17,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
+/**
+ * 作者： ColinLu
+ * 时间： 2022-03-16 21:44
+ * <p>
+ * 描述： Base64 加密
+ */
 public final class Base64Util {
     @NonNull
     private final static char[] ENCODE_BASE64_CHARS = new char[]{'A', 'B', 'C', 'D', 'E', 'F', 'G',
@@ -35,7 +40,7 @@ public final class Base64Util {
 
     @Nullable
     public static String getString(@Nullable final String data, final boolean isEncode) {
-        if (TextUtils.isEmpty(data)) return null;
+        if (StringUtil.isEmpty(data)) return null;
         final byte[] bytes = getBytes(data, Encode.UTF_8);
         if (null == bytes || bytes.length == 0) return null;
         final byte[] values = isEncode ? encode(bytes) : decode(bytes);
@@ -53,7 +58,7 @@ public final class Base64Util {
 
     @Nullable
     public static byte[] getBytes(@Nullable final String data, final boolean isEncode) {
-        if (TextUtils.isEmpty(data)) return null;
+        if (StringUtil.isEmpty(data)) return null;
         final byte[] bytes = getBytes(data, Encode.UTF_8);
         if (null == bytes || bytes.length == 0) return null;
         return isEncode ? encode(bytes) : decode(bytes);
@@ -87,17 +92,17 @@ public final class Base64Util {
                 break;
             }
             b2 = data[i++] & 0xff;
-            final int bb = ((b1 & 0x03) << 4) | ((b2 & 0xF0) >>> 4);
+            final int b4 = ((b1 & 0x03) << 4) | ((b2 & 0xF0) >>> 4);
             if (i == len) {
                 sb.append(ENCODE_BASE64_CHARS[b1 >>> 2]);
-                sb.append(ENCODE_BASE64_CHARS[bb]);
+                sb.append(ENCODE_BASE64_CHARS[b4]);
                 sb.append(ENCODE_BASE64_CHARS[(b2 & 0x0f) << 2]);
                 sb.append("=");
                 break;
             }
             b3 = data[i++] & 0xff;
             sb.append(ENCODE_BASE64_CHARS[b1 >>> 2]);
-            sb.append(ENCODE_BASE64_CHARS[bb]);
+            sb.append(ENCODE_BASE64_CHARS[b4]);
             sb.append(ENCODE_BASE64_CHARS[((b2 & 0x0f) << 2) | ((b3 & 0xC0) >>> 6)]);
             sb.append(ENCODE_BASE64_CHARS[b3 & 0x3f]);
         }
@@ -181,7 +186,7 @@ public final class Base64Util {
      */
     @Nullable
     public static Bitmap toBitmap(@Nullable final String string) {
-        if (TextUtils.isEmpty(string)) return null;
+        if (StringUtil.isEmpty(string)) return null;
         try {
             final String[] split = string.split(",");
             if (split.length == 0) return null;
@@ -201,7 +206,7 @@ public final class Base64Util {
      * @param path
      */
     public static void toFile(@Nullable final String base64Code, @Nullable final String path) {
-        if (TextUtils.isEmpty(base64Code) || StringUtil.isSpace(path)) return;
+        if (StringUtil.isEmpty(base64Code) || StringUtil.isSpace(path)) return;
         final byte[] buffer = Base64.decode(base64Code, Base64.DEFAULT);
         FileOutputStream out = null;
         try {

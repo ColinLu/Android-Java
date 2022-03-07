@@ -2,11 +2,11 @@ package com.colin.library.android.utils.encrypt;
 
 import android.os.Build;
 import android.text.Html;
-import android.text.TextUtils;
 
 import androidx.annotation.Nullable;
 
 import com.colin.library.android.utils.LogUtil;
+import com.colin.library.android.utils.StringUtil;
 import com.colin.library.android.utils.annotation.Encode;
 
 import java.io.UnsupportedEncodingException;
@@ -31,8 +31,8 @@ public final class EncodeUtil {
     /*加密 url*/
     @Nullable
     public static String encode(@Nullable final String url, @Nullable final String enc) {
-        if (TextUtils.isEmpty(enc)) return url;
-        if (TextUtils.isEmpty(url)) return null;
+        if (StringUtil.isEmpty(enc)) return url;
+        if (StringUtil.isEmpty(url)) return null;
         try {
             return URLEncoder.encode(url, enc);
         } catch (UnsupportedEncodingException e) {
@@ -50,8 +50,8 @@ public final class EncodeUtil {
     /*解密 url*/
     @Nullable
     public static String decode(@Nullable final String url, @Nullable final String enc) {
-        if (TextUtils.isEmpty(enc)) return url;
-        if (TextUtils.isEmpty(url)) return null;
+        if (StringUtil.isEmpty(enc)) return url;
+        if (StringUtil.isEmpty(url)) return null;
         try {
             return URLDecoder.decode(url, enc);
         } catch (UnsupportedEncodingException e) {
@@ -124,7 +124,7 @@ public final class EncodeUtil {
      */
     @Nullable
     public static String binEncode(@Nullable final String input) {
-        if (TextUtils.isEmpty(input)) return null;
+        if (StringUtil.isEmpty(input)) return null;
         final StringBuilder stringBuilder = new StringBuilder();
         for (char i : input.toCharArray()) {
             stringBuilder.append(Integer.toBinaryString(i));
@@ -141,7 +141,7 @@ public final class EncodeUtil {
      */
     @Nullable
     public static String binDecode(@Nullable final String input) {
-        if (TextUtils.isEmpty(input)) return null;
+        if (StringUtil.isEmpty(input)) return null;
         final String[] array = input.split(" ");
         StringBuilder sb = new StringBuilder();
         for (String i : array) {

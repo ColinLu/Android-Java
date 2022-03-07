@@ -158,10 +158,9 @@ public final class NetUtil {
     }
 
     @NetType
-    private static int getNetType(@Nullable final String subTypeName) {
-        if ("TD-SCDMA".equalsIgnoreCase(subTypeName)
-                || "WCDMA".equalsIgnoreCase(subTypeName)
-                || "CDMA2000".equalsIgnoreCase(subTypeName)
+    private static int getNetType(@Nullable final String subType) {
+        if ("TD-SCDMA".equalsIgnoreCase(subType) || "WCDMA".equalsIgnoreCase(subType)
+                || "CDMA2000".equalsIgnoreCase(subType)
         ) return NetType.NETWORK_3G;
         return NetType.NETWORK_MOBILE;
     }
@@ -183,6 +182,7 @@ public final class NetUtil {
                 return "4G";
             case NetType.NETWORK_5G:
                 return "5G";
+            case NetType.NETWORK_MOBILE:
             default:
                 return "未知网络";
         }
