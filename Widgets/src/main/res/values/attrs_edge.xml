@@ -2,13 +2,12 @@
 <resources>
     <!--自定义控件 方向-->
     <attr name="direction">
-        <enum name="none" value="0" />
-        <enum name="left" value="1" />
-        <enum name="top" value="2" />
-        <enum name="right" value="4" />
-        <enum name="bottom" value="8" />
+        <enum name="none" value="1" />
+        <enum name="left" value="2" />
+        <enum name="top" value="4" />
+        <enum name="right" value="8" />
+        <enum name="bottom" value="16" />
     </attr>
-
     <dimen name="load_size_default">32dp</dimen>
     <dimen name="load_more_height_default">56dp</dimen>
 
@@ -22,19 +21,19 @@
     <attr name="EdgeLayoutStyle" format="reference" />
 
     <declare-styleable name="EdgeLayout_Layout">
-        <attr name="edgeIsTarget" format="boolean" />
+        <attr name="target" format="boolean" />
         <attr name="direction" />
-        <attr name="edgeStartOffset" format="dimension" />
+        <attr name="edgeOver" format="boolean" />
+        <attr name="edgeFlingFromTarget" format="boolean" />
+        <attr name="edgeScrollTouchUp" format="boolean" />
+        <attr name="edgeScrollOffset" format="boolean" />
         <attr name="edgeTargetOffset" format="dimension|enum">
             <enum name="wrap" value="-2" />
         </attr>
-        <attr name="edgeOver" format="boolean" />
+        <attr name="edgeStartOffset" format="dimension" />
+        <attr name="edgeScrollSpeed" format="integer" />
         <attr name="edgeRate" format="float" />
         <attr name="edgeFlingFraction" format="float" />
-        <attr name="edgeFlingFromTarget" format="boolean" />
-        <attr name="edgeScrollSpeed" format="integer" />
-        <attr name="edgeScrollOffset" format="boolean" />
-        <attr name="edgeScrollTouchUp" format="boolean" />
     </declare-styleable>
 
     <declare-styleable name="LoadingView">

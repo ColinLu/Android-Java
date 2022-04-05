@@ -1,7 +1,8 @@
-package com.colin.library.android.widgets.edge;
+package com.colin.library.android.widgets.progress;
 
 import android.animation.ValueAnimator;
 import android.content.Context;
+import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Paint;
@@ -29,11 +30,11 @@ public class LoadingView extends View {
     private static final int DEGREE_PER_LINE = 360 / LINE_COUNT;
 
     public LoadingView(@NonNull Context context) {
-        this(context, null);
+        this(context, null, Resources.ID_NULL);
     }
 
     public LoadingView(@NonNull Context context, @Nullable AttributeSet attrs) {
-        this(context, attrs, 0);
+        this(context, attrs, Resources.ID_NULL);
     }
 
     public LoadingView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
@@ -53,7 +54,7 @@ public class LoadingView extends View {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        setMeasuredDimension(Utils.getSize(widthMeasureSpec,mSize), Utils.getSize(heightMeasureSpec,mSize));
+        setMeasuredDimension(Utils.getSize(widthMeasureSpec, mSize), Utils.getSize(heightMeasureSpec, mSize));
     }
 
     @Override

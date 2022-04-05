@@ -3,14 +3,10 @@ package com.colin.android.demo.java.adapter;
 import android.view.Gravity;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import com.colin.android.demo.java.R;
 import com.colin.library.android.base.BaseAdapter;
-import com.colin.library.android.base.BaseViewHolder;
-import com.colin.library.android.utils.LogUtil;
-
-import java.util.List;
+import com.colin.library.android.base.ViewHolder;
 
 /**
  * 作者： ColinLu
@@ -30,7 +26,7 @@ public class StringAdapter extends BaseAdapter<String> {
     }
 
     @Override
-    public void onBindViewHolder(@NonNull BaseViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         final String text = mItemList.get(position);
         holder.setText(R.id.button_title, text)
                 .setOnClickListener(R.id.button_title, v -> {

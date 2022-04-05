@@ -18,6 +18,7 @@ import androidx.core.content.ContextCompat;
 import androidx.core.widget.ImageViewCompat;
 
 import com.colin.library.android.widgets.R;
+import com.colin.library.android.widgets.progress.LoadingView;
 
 
 public class LoadMoreView extends ConstraintLayout implements EdgeWatcher {

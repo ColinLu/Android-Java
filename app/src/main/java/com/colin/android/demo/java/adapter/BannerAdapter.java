@@ -6,7 +6,7 @@ import androidx.annotation.Nullable;
 
 import com.colin.android.demo.java.R;
 import com.colin.library.android.base.BaseAdapter;
-import com.colin.library.android.base.BaseViewHolder;
+import com.colin.library.android.base.ViewHolder;
 
 import java.util.List;
 
@@ -28,7 +28,7 @@ public class BannerAdapter extends BaseAdapter<Integer> {
     }
 
     @Override
-    public void onBindViewHolder(@NonNull BaseViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         final Integer res = mItemList.get(position);
         holder.setImageResource(R.id.image_banner, res)
                 .setOnClickListener(R.id.image_banner, v -> {

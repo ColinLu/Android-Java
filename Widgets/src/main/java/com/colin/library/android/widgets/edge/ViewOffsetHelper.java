@@ -2,8 +2,12 @@ package com.colin.library.android.widgets.edge;
 
 import android.view.View;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Px;
 import androidx.core.view.ViewCompat;
+import androidx.customview.widget.ViewDragHelper;
+
+import com.colin.library.android.widgets.annotation.Direction;
 
 /**
  * Utility helper for moving a {@link View} around using
@@ -14,9 +18,7 @@ import androidx.core.view.ViewCompat;
  * offsets.
  */
 public final class ViewOffsetHelper {
-
     private final View mView;
-
     private int mLayoutTop;
     private int mLayoutLeft;
     private int mOffsetTop;
@@ -25,7 +27,7 @@ public final class ViewOffsetHelper {
     private boolean mVerticalOffsetEnabled = true;
     private boolean mHorizontalOffsetEnabled = true;
 
-    public ViewOffsetHelper(View view) {
+    public ViewOffsetHelper(@NonNull View view) {
         mView = view;
     }
 
@@ -39,9 +41,34 @@ public final class ViewOffsetHelper {
         if (applyOffset) applyOffsets();
     }
 
-    public void applyOffsets() {
-        ViewCompat.offsetTopAndBottom(mView, mOffsetTop - (mView.getTop() - mLayoutTop));
-        ViewCompat.offsetLeftAndRight(mView, mOffsetLeft - (mView.getLeft() - mLayoutLeft));
+
+    public boolean setDirection(@Direction int direction, @Px int offset) {
+        switch (direction) {
+            case Direction.LEFT:
+                return setLeftAndRightOffset(offset);
+            case Direction.TOP:
+                return setTopAndBottomOffset(offset);
+            case Direction.RIGHT:
+                return setLeftAndRightOffset(-offset);
+            case Direction.BOTTOM:
+                return setTopAndBottomOffset(-offset);
+            default:
+                return false;
+        }
+    }
+
+    public boolean setOffset(@Px int leftOffset, @Px int topOffset) {
+        if (!mHorizontalOffsetEnabled && !mVerticalOffsetEnabled) return false;
+        if (mHorizontalOffsetEnabled && mVerticalOffsetEnabled) {
+            if (mOffsetLeft != leftOffset || mOffsetTop != topOffset) {
+                mOffsetLeft = leftOffset;
+                mOffsetTop = topOffset;
+                applyOffsets();
+                return true;
+            }
+            return false;
+        } else if (mHorizontalOffsetEnabled) return setLeftAndRightOffset(leftOffset);
+        else return setTopAndBottomOffset(topOffset);
     }
 
     /***
@@ -57,6 +84,7 @@ public final class ViewOffsetHelper {
         return false;
     }
 
+
     /***
      * @param offset the offset in px.
      * @return true if the offset has changed
@@ -68,20 +96,6 @@ public final class ViewOffsetHelper {
             return true;
         }
         return false;
-    }
-
-    public boolean setOffset(@Px int leftOffset, @Px int topOffset) {
-        if (!mHorizontalOffsetEnabled && !mVerticalOffsetEnabled) return false;
-        if (mHorizontalOffsetEnabled && mVerticalOffsetEnabled) {
-            if (mOffsetLeft != leftOffset || mOffsetTop != topOffset) {
-                mOffsetLeft = leftOffset;
-                mOffsetTop = topOffset;
-                applyOffsets();
-                return true;
-            }
-            return false;
-        } else if (mHorizontalOffsetEnabled) return setLeftAndRightOffset(leftOffset);
-        else return setTopAndBottomOffset(topOffset);
     }
 
     public int getTopAndBottomOffset() {
@@ -100,19 +114,24 @@ public final class ViewOffsetHelper {
         return mLayoutLeft;
     }
 
-    public void setHorizontalOffsetEnabled(boolean horizontalOffsetEnabled) {
-        mHorizontalOffsetEnabled = horizontalOffsetEnabled;
+    public void setHorizontalOffsetEnabled(boolean enabled) {
+        mHorizontalOffsetEnabled = enabled;
     }
 
     public boolean isHorizontalOffsetEnabled() {
         return mHorizontalOffsetEnabled;
     }
 
-    public void setVerticalOffsetEnabled(boolean verticalOffsetEnabled) {
-        mVerticalOffsetEnabled = verticalOffsetEnabled;
+    public void setVerticalOffsetEnabled(boolean enabled) {
+        mVerticalOffsetEnabled = enabled;
     }
 
     public boolean isVerticalOffsetEnabled() {
         return mVerticalOffsetEnabled;
+    }
+
+    public void applyOffsets() {
+        ViewCompat.offsetTopAndBottom(mView, mOffsetTop - (mView.getTop() - mLayoutTop));
+        ViewCompat.offsetLeftAndRight(mView, mOffsetLeft - (mView.getLeft() - mLayoutLeft));
     }
 }

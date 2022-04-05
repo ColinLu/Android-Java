@@ -51,7 +51,7 @@ public class EdgeFragment extends AppFragment<LayoutEdgeBinding> implements OnIt
 
     private void loadData(@LoadState int state) {
         if (state == LoadState.SUCCESS || state == LoadState.ERROR) {
-            mBinding.mEdgeList.edgeFinish();
+//            mBinding.mEdgeList.edgeFinish();
         }
     }
 

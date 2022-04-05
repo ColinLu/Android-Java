@@ -1,7 +1,9 @@
-package com.colin.library.android.widgets.edge;
+package com.colin.library.android.widgets.edge.offset;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Px;
+
+import com.colin.library.android.widgets.edge.Edge;
 
 public class FixToTargetOffsetCalculator implements IEdgeOffsetCalculator {
     @Override

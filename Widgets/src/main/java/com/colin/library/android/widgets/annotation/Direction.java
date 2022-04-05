@@ -18,9 +18,9 @@ import java.lang.annotation.RetentionPolicy;
 @Retention(RetentionPolicy.SOURCE)
 @IntDef({Direction.NONE, Direction.LEFT, Direction.TOP, Direction.RIGHT, Direction.BOTTOM})
 public @interface Direction {
-    int NONE = 0;
-    int LEFT = 1;
-    int TOP = 2;
-    int RIGHT = 4;
-    int BOTTOM = 8;
+    int NONE = 1;
+    int LEFT = 2;
+    int TOP = 4;
+    int RIGHT = 8;
+    int BOTTOM = 16;
 }

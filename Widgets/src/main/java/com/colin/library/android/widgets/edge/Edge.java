@@ -8,6 +8,8 @@ import androidx.annotation.Px;
 
 import com.colin.library.android.widgets.Constants;
 import com.colin.library.android.widgets.annotation.Direction;
+import com.colin.library.android.widgets.edge.offset.AlwaysFollowOffsetCalculator;
+import com.colin.library.android.widgets.edge.offset.IEdgeOffsetCalculator;
 
 
 /**
@@ -34,6 +36,7 @@ public final class Edge {
     private final IEdgeOffsetCalculator mOffsetCalculator;
     private final ViewOffsetHelper mViewOffsetHelper;
     private volatile boolean mRunning = false;
+
 
     public Edge(@NonNull Builder builder) {
         mView = builder.getView();
@@ -92,6 +95,7 @@ public final class Edge {
         return mScrollSpeed;
     }
 
+
     public boolean isFlingFromTarget() {
         return mFlingFromTarget;
     }
@@ -122,29 +126,38 @@ public final class Edge {
         return Math.min(getEdgeRate(), Math.max(getEdgeRate() - (offset - getTargetOffset()) * getScrollFling(), 0));
     }
 
-    public void onLayout(final int width, final int height, final int left, final int top, final int right, final int bottom) {
-        if (mDirection == Direction.LEFT) {
-            int vw = mView.getMeasuredWidth(), vh = mView.getMeasuredHeight(), vc = (height - vh) >> 1;
-            mView.layout(-vw, vc, 0, vc + vh);
-            mViewOffsetHelper.onViewLayout();
-        }
-        if (mDirection == Direction.TOP) {
-            int vw = mView.getMeasuredWidth(), vh = mView.getMeasuredHeight(), vc = (width - vw) >> 1;
-            mView.layout(vc, -vh, vc + vw, 0);
-            mViewOffsetHelper.onViewLayout();
+    public int getScrollOffset(int offset) {
+        return (int) (mScrollSpeed * offset);
+    }
+
+    public void onLayout(final int width, final int height) {
+        final int vw = mView.getMeasuredWidth(), vh = mView.getMeasuredHeight();
+        int vc = 0;
+        switch (mDirection) {
+            case Direction.LEFT:
+                vc = (height - vh) >> 1;
+                mView.layout(-vw, vc, 0, vc + vh);
+                mViewOffsetHelper.onViewLayout();
+                break;
+            case Direction.TOP:
+                vc = (width - vw) >> 1;
+                mView.layout(vc, -vh, vc + vw, 0);
+                mViewOffsetHelper.onViewLayout();
+                break;
+            case Direction.RIGHT:
+                vc = (height - vh) >> 1;
+                mView.layout(width, vc, width + vw, vc + vh);
+                mViewOffsetHelper.onViewLayout();
+                break;
+            case Direction.BOTTOM:
+                vc = (width - vw) >> 1;
+                mView.layout(vc, height, vc + vw, height + vh);
+                mViewOffsetHelper.onViewLayout();
+                break;
+            default:
+                break;
         }
 
-        if (mDirection == Direction.RIGHT) {
-            int vw = mView.getMeasuredWidth(), vh = mView.getMeasuredHeight(), vc = (height - vh) >> 1;
-            mView.layout(width, vc, width + vw, vc + vh);
-            mViewOffsetHelper.onViewLayout();
-        }
-
-        if (mDirection == Direction.BOTTOM) {
-            int vw = mView.getMeasuredWidth(), vh = mView.getMeasuredHeight(), vc = (width - vw) >> 1;
-            mView.layout(vc, height, vc + vw, height + vh);
-            mViewOffsetHelper.onViewLayout();
-        }
     }
 
     public void onTargetMoved(int targetOffset) {
@@ -152,11 +165,28 @@ public final class Edge {
     }
 
     public void updateOffset(int offset) {
-        if (mDirection == Direction.LEFT) mViewOffsetHelper.setLeftAndRightOffset(offset);
-        else if (mDirection == Direction.TOP) mViewOffsetHelper.setTopAndBottomOffset(offset);
-        else if (mDirection == Direction.RIGHT) mViewOffsetHelper.setLeftAndRightOffset(-offset);
-        else if (mDirection == Direction.BOTTOM) mViewOffsetHelper.setTopAndBottomOffset(-offset);
+        mViewOffsetHelper.setDirection(mDirection, offset);
     }
+
+    public ViewOffsetHelper getViewOffsetHelper() {
+        return mViewOffsetHelper;
+    }
+
+    public boolean getScrollFinal(int finalX, int finalY) {
+        switch (mDirection) {
+            case Direction.LEFT:
+                return finalX == mTargetOffset;
+            case Direction.TOP:
+                return finalY == mTargetOffset;
+            case Direction.RIGHT:
+                return finalX == -mTargetOffset;
+            case Direction.BOTTOM:
+                return finalY == -mTargetOffset;
+            default:
+                return false;
+        }
+    }
+
 
     public static class Builder {
         @NonNull
@@ -175,57 +205,57 @@ public final class Edge {
         private IEdgeOffsetCalculator mOffsetCalculator;
 
         public Builder(@NonNull View view, @Direction int direction) {
-            mView = view;
-            mDirection = direction;
+            this.mView = view;
+            this.mDirection = direction;
         }
 
-        public Builder setStartOffset(int startOffset) {
-            mStartOffset = startOffset;
+        public Builder setStartOffset(@Px int startOffset) {
+            this.mStartOffset = startOffset;
             return this;
         }
 
-        public Builder setTargetOffset(int targetOffset) {
-            mTargetOffset = targetOffset;
+        public Builder setTargetOffset(@Px int targetOffset) {
+            this.mTargetOffset = targetOffset;
             return this;
         }
 
         public Builder setEdgeRate(float rate) {
-            mEdgeRate = rate;
+            this.mEdgeRate = rate;
             return this;
         }
 
         public Builder setScrollFling(float scrollFling) {
-            mScrollFling = scrollFling;
+            this.mScrollFling = scrollFling;
             return this;
         }
 
         public Builder setScrollSpeed(float scrollSpeed) {
-            mScrollSpeed = scrollSpeed;
+            this.mScrollSpeed = scrollSpeed;
             return this;
         }
 
         public Builder setEdgeOver(boolean edgeOver) {
-            mEdgeOver = edgeOver;
+            this.mEdgeOver = edgeOver;
             return this;
         }
 
         public Builder setFlingFromTarget(boolean flingFromTarget) {
-            mFlingFromTarget = flingFromTarget;
+            this.mFlingFromTarget = flingFromTarget;
             return this;
         }
 
         public Builder setScrollOffset(boolean scrollOffset) {
-            mScrollOffset = scrollOffset;
+            this.mScrollOffset = scrollOffset;
             return this;
         }
 
         public Builder setScrollTouchUp(boolean scrollTouchUp) {
-            mScrollTouchUp = scrollTouchUp;
+            this.mScrollTouchUp = scrollTouchUp;
             return this;
         }
 
-        public Builder setOffsetCalculator(IEdgeOffsetCalculator offsetCalculator) {
-            mOffsetCalculator = offsetCalculator;
+        public Builder setOffsetCalculator(@NonNull IEdgeOffsetCalculator offsetCalculator) {
+            this.mOffsetCalculator = offsetCalculator;
             return this;
         }
 

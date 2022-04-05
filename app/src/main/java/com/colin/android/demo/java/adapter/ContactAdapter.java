@@ -7,7 +7,7 @@ import androidx.annotation.NonNull;
 import com.colin.android.demo.java.R;
 import com.colin.android.demo.java.def.bean.ContactBean;
 import com.colin.library.android.base.BaseAdapter;
-import com.colin.library.android.base.BaseViewHolder;
+import com.colin.library.android.base.ViewHolder;
 
 /**
  * 作者： ColinLu
@@ -26,7 +26,7 @@ public class ContactAdapter extends BaseAdapter<ContactBean> {
     }
 
     @Override
-    public void onBindViewHolder(@NonNull BaseViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         final ContactBean bean = mItemList.get(position);
         holder.setImageURI(R.id.mContactPhoto, bean.photo == null ? null : Uri.parse(bean.photo))
                 .setText(R.id.mContactName, bean.name)

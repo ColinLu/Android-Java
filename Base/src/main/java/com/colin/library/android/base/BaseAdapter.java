@@ -1,7 +1,6 @@
 package com.colin.library.android.base;
 
 import android.annotation.SuppressLint;
-import android.app.Service;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
@@ -21,7 +20,7 @@ import java.util.List;
  * <p>
  * 描述： TODO
  */
-public abstract class BaseAdapter<ITEM> extends RecyclerView.Adapter<BaseViewHolder> {
+public abstract class BaseAdapter<ITEM> extends RecyclerView.Adapter<ViewHolder> {
     protected final List<ITEM> mItemList;
     protected OnItemClickListener mItemClickListener;
 
@@ -45,8 +44,8 @@ public abstract class BaseAdapter<ITEM> extends RecyclerView.Adapter<BaseViewHol
 
     @NonNull
     @Override
-    public BaseViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new BaseViewHolder(LayoutInflater.from(parent.getContext()).inflate(layoutRes(viewType), parent, false));
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(layoutRes(viewType), parent, false));
     }
 
 

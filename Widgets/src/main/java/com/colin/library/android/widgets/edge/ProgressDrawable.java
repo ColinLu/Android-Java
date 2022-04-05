@@ -72,10 +72,10 @@ public class ProgressDrawable extends Drawable implements Animatable {
 
     private final Ring mRing;
     private final float mDensity;
-    private Animator mAnimator;
     private float mRotation;
     private float mRotationCount;
     private boolean mFinishing;
+    private Animator mAnimator;
 
 
     public ProgressDrawable(@NonNull Context context) {
@@ -467,14 +467,11 @@ public class ProgressDrawable extends Drawable implements Animatable {
     private void setupAnimators() {
         final Ring ring = mRing;
         final ValueAnimator animator = ValueAnimator.ofFloat(0f, 1f);
-        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                float interpolatedTime = (float) animation.getAnimatedValue();
-                updateRingColor(interpolatedTime, ring);
-                applyTransformation(interpolatedTime, ring, false);
-                invalidateSelf();
-            }
+        animator.addUpdateListener(animation -> {
+            float interpolatedTime = (float) animation.getAnimatedValue();
+            updateRingColor(interpolatedTime, ring);
+            applyTransformation(interpolatedTime, ring, false);
+            invalidateSelf();
         });
         animator.setRepeatCount(ValueAnimator.INFINITE);
         animator.setRepeatMode(ValueAnimator.RESTART);
