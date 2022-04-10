@@ -18,6 +18,8 @@ import com.colin.android.demo.java.utils.DemoUtils;
 import com.colin.library.android.utils.ToastUtil;
 import com.colin.library.android.widgets.annotation.Direction;
 import com.colin.library.android.widgets.def.OnItemClickListener;
+import com.colin.library.android.widgets.edge.Edge;
+import com.colin.library.android.widgets.edge.EdgeLayout;
 
 /**
  * 作者： ColinLu
@@ -38,7 +40,12 @@ public class EdgeFragment extends AppFragment<LayoutEdgeBinding> implements OnIt
 
     @Override
     public void initView(@Nullable Bundle bundle) {
-        mBinding.mEdgeList.setOnEdgeListener(edge -> loadData(edge.getDirection() == Direction.TOP));
+        mBinding.mEdgeList.setEdgeListener(new EdgeLayout.OnEdgeListener() {
+            @Override
+            public void start(@NonNull Edge edge) {
+                loadData(edge.getDirection() == Direction.TOP);
+            }
+        });
         initRecyclerView(getActivity());
     }
 
@@ -51,7 +58,7 @@ public class EdgeFragment extends AppFragment<LayoutEdgeBinding> implements OnIt
 
     private void loadData(@LoadState int state) {
         if (state == LoadState.SUCCESS || state == LoadState.ERROR) {
-//            mBinding.mEdgeList.edgeFinish();
+            mBinding.mEdgeList.edgeFinish();
         }
     }
 

@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.colin.library.android.widgets.Constants;
 import com.colin.library.android.widgets.R;
 import com.colin.library.android.widgets.annotation.Direction;
+import com.colin.library.android.widgets.annotation.Orientation;
 
 
 public class EdgeLayout extends FrameLayout implements NestedScrollingParent3 {
@@ -39,7 +40,7 @@ public class EdgeLayout extends FrameLayout implements NestedScrollingParent3 {
 
     private final int[] mNestedScrollingV2ConsumedCompat = new int[2];
 
-    private int mEnabledEdges;
+    private int mDirectionEnabled;
     private View mTargetView;
     private Edge mEdgeLeft = null;
     private Edge mEdgeTop = null;
@@ -67,24 +68,10 @@ public class EdgeLayout extends FrameLayout implements NestedScrollingParent3 {
     public EdgeLayout(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         final TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.EdgeLayout, defStyleAttr, 0);
-        mEnabledEdges = array.getInt(R.styleable.EdgeLayout_direction, Direction.LEFT | Direction.TOP | Direction.RIGHT | Direction.BOTTOM);
+        mDirectionEnabled = array.getInt(R.styleable.EdgeLayout_direction, Direction.LEFT | Direction.TOP | Direction.RIGHT | Direction.BOTTOM);
         array.recycle();
         mNestedScrollingParentHelper = new NestedScrollingParentHelper(this);
         mScroller = new OverScroller(context, INTERPOLATOR);
-    }
-
-    @Override
-    protected void onLayout(boolean changed, int l, int t, int r, int b) {
-        final int w = r - l;
-        final int h = b - t;
-        if (mTargetView != null) {
-            mTargetView.layout(0, 0, w, h);
-            mViewOffsetHelper.onViewLayout();
-        }
-        if (mEdgeLeft != null) mEdgeLeft.onLayout(w, h);
-        if (mEdgeTop != null) mEdgeTop.onLayout(w, h);
-        if (mEdgeRight != null) mEdgeRight.onLayout(w, h);
-        if (mEdgeBottom != null) mEdgeBottom.onLayout(w, h);
     }
 
     @Override
@@ -105,29 +92,53 @@ public class EdgeLayout extends FrameLayout implements NestedScrollingParent3 {
                 if ((edgesSet & lp.mDirection) != 0)
                     throw new RuntimeException("same direction edge view more than one");
                 edgesSet |= lp.mDirection;
-                setActionView(child, lp);
+                setEdgeView(child, lp);
             }
         }
     }
 
     @Override
+    protected void onLayout(boolean changed, int l, int t, int r, int b) {
+        final int w = r - l;
+        final int h = b - t;
+        if (mTargetView != null) {
+            mTargetView.layout(0, 0, w, h);
+            mViewOffsetHelper.onViewLayout();
+        }
+        if (mEdgeLeft != null) mEdgeLeft.onLayout(w, h);
+        if (mEdgeTop != null) mEdgeTop.onLayout(w, h);
+        if (mEdgeRight != null) mEdgeRight.onLayout(w, h);
+        if (mEdgeBottom != null) mEdgeBottom.onLayout(w, h);
+    }
+
+
+    @Override
     public void computeScroll() {
         if (!mScroller.computeScrollOffset()) return;
-        if (!mScroller.isFinished()) {
-            updateOffset(mScroller.getCurrX(), mScroller.getCurrY());
-            postInvalidateOnAnimation();
-            return;
-        }
+        if (mState == STATE_TRIGGERING) return;
         if (mState == STATE_SETTLING_TO_INIT_OFFSET) {
             mState = STATE_IDLE;
             return;
         }
-        if (mState == STATE_TRIGGERING) return;
-
         if (mState == STATE_SETTLING_FLING) {
-            checkScrollToTargetOffset();
+            scrollToTargetOffset();
             return;
         }
+        final Edge left = getDirectionEdge(Direction.LEFT);
+        final Edge top = getDirectionEdge(Direction.TOP);
+        final Edge right = getDirectionEdge(Direction.RIGHT);
+        final Edge bottom = getDirectionEdge(Direction.BOTTOM);
+        if (!mScroller.isFinished()) {
+            final int offsetX = mScroller.getCurrX();
+            final int offsetY = mScroller.getCurrY();
+            setOffsetToTargetOffsetHelper(getDirectionEdge(Direction.LEFT), Orientation.HORIZONTAL, -1, offsetX);
+            setOffsetToTargetOffsetHelper(getDirectionEdge(Direction.TOP), Orientation.VERTICAL, -1, offsetY);
+            setOffsetToTargetOffsetHelper(getDirectionEdge(Direction.RIGHT), Orientation.HORIZONTAL, 1, offsetX);
+            setOffsetToTargetOffsetHelper(getDirectionEdge(Direction.BOTTOM), Orientation.VERTICAL, 1, offsetY);
+            postInvalidateOnAnimation();
+            return;
+        }
+
         if (mState == STATE_SETTLING_TO_TRIGGER_OFFSET) {
             final int finalX = mScroller.getFinalX();
             final int finalY = mScroller.getFinalY();
@@ -140,19 +151,25 @@ public class EdgeLayout extends FrameLayout implements NestedScrollingParent3 {
     }
 
     @Override
-    public boolean onStartNestedScroll(@NonNull View child, @NonNull View target, int axes, int type) {
+    public boolean onStartNestedScroll(@NonNull View child, @NonNull View target, @ViewCompat.ScrollAxis int axes) {
+        return onStartNestedScroll(child, target, axes, ViewCompat.TYPE_TOUCH);
+    }
+
+    @Override
+    public boolean onStartNestedScroll(@NonNull View child, @NonNull View target, @ViewCompat.ScrollAxis int axes, @ViewCompat.NestedScrollType int type) {
         return mTargetView == target
-                && (axes == ViewCompat.SCROLL_AXIS_HORIZONTAL && (isDirectionEnabled(Direction.LEFT) || isEdgeEnabled(Direction.RIGHT))) ||
-                (axes == ViewCompat.SCROLL_AXIS_VERTICAL && (isEdgeEnabled(Direction.TOP) || isEdgeEnabled(Direction.BOTTOM)));
+                && (axes == ViewCompat.SCROLL_AXIS_HORIZONTAL && (isDirectionEnabled(Direction.LEFT) || isDirectionEnabled(Direction.RIGHT))) ||
+                (axes == ViewCompat.SCROLL_AXIS_VERTICAL && (isDirectionEnabled(Direction.TOP) || isDirectionEnabled(Direction.BOTTOM)));
+    }
+
+
+    @Override
+    public void onNestedScrollAccepted(@NonNull View child, @NonNull View target, @ViewCompat.ScrollAxis int axes) {
+        onNestedScrollAccepted(child, target, axes, ViewCompat.TYPE_TOUCH);
     }
 
     @Override
-    public boolean onStartNestedScroll(@NonNull View child, @NonNull View target, int nestedScrollAxes) {
-        return onStartNestedScroll(child, target, nestedScrollAxes, ViewCompat.TYPE_TOUCH);
-    }
-
-    @Override
-    public void onNestedScrollAccepted(@NonNull View child, @NonNull View target, int axes, @ViewCompat.NestedScrollType int type) {
+    public void onNestedScrollAccepted(@NonNull View child, @NonNull View target, @ViewCompat.ScrollAxis int axes, @ViewCompat.NestedScrollType int type) {
         if (type == ViewCompat.TYPE_TOUCH) {
             removeStopTargetFlingRunnable();
             mScroller.abortAnimation();
@@ -162,26 +179,41 @@ public class EdgeLayout extends FrameLayout implements NestedScrollingParent3 {
     }
 
     @Override
-    public void onNestedScrollAccepted(@NonNull View child, @NonNull View target, int axes) {
-        onNestedScrollAccepted(child, target, axes, ViewCompat.TYPE_TOUCH);
+    public void onStopNestedScroll(@NonNull View target, @ViewCompat.NestedScrollType int type) {
+        if (mState == STATE_PULLING) {
+            scrollToTargetOffset();
+        } else if (mState == STATE_SETTLING_DELIVER && type != ViewCompat.TYPE_TOUCH) {
+            removeStopTargetFlingRunnable();
+            scrollToTargetOffset();
+        }
     }
 
+    @Override
+    public void onNestedScroll(@NonNull View target, int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed) {
+        onNestedScroll(target, dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed, ViewCompat.TYPE_TOUCH, mNestedScrollingV2ConsumedCompat);
+    }
 
     @Override
-    public void onNestedPreScroll(@NonNull final View target, @Px int dx, @Px int dy, @NonNull int[] consumed, int type) {
-        final int originDx = dx, originDy = dy;
-        dy = checkEdgeTopScrollDown(dy, consumed, type);
-        dy = checkEdgeBottomScrollDown(dy, consumed, type);
-        dy = checkEdgeTopScrollUp(dy, consumed, type);
-        dy = checkEdgeBottomScrollUp(dy, consumed, type);
+    public void onNestedScroll(@NonNull View target, int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed, @ViewCompat.NestedScrollType int type) {
+        onNestedScroll(target, dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed, type, mNestedScrollingV2ConsumedCompat);
+    }
 
-        dx = checkEdgeLeftScrollRight(dx, consumed, type);
-        dx = checkEdgeRightScrollRight(dx, consumed, type);
-        dx = checkEdgeLeftScrollLeft(dx, consumed, type);
-        dx = checkEdgeRightScrollLeft(dx, consumed, type);
+    @Override
+    public void onNestedScroll(@NonNull View target, int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed, @ViewCompat.NestedScrollType int type, @NonNull int[] consumed) {
+        final int srcDx = dxUnconsumed, srcDy = dyUnconsumed;
+        dxUnconsumed = getScroll(getDirectionEdge(Direction.LEFT), Orientation.HORIZONTAL, -1, dxUnconsumed, consumed, type);
+        dxUnconsumed = getFling(getDirectionEdge(Direction.RIGHT), Orientation.HORIZONTAL, 1, dxUnconsumed, consumed, type);
+        dxUnconsumed = getFling(getDirectionEdge(Direction.LEFT), Orientation.HORIZONTAL, -1, dxUnconsumed, consumed, type);
+        dxUnconsumed = getScroll(getDirectionEdge(Direction.RIGHT), Orientation.HORIZONTAL, 1, dxUnconsumed, consumed, type);
 
-        if (originDx == dx && originDy == dy && mState == STATE_SETTLING_DELIVER) {
-            checkStopTargetFling(target, dx, dy, type);
+        dyUnconsumed = getScroll(getDirectionEdge(Direction.TOP), Orientation.VERTICAL, -1, dyUnconsumed, consumed, type);
+        dyUnconsumed = getFling(getDirectionEdge(Direction.BOTTOM), Orientation.VERTICAL, 1, dyUnconsumed, consumed, type);
+        dyUnconsumed = getFling(getDirectionEdge(Direction.TOP), Orientation.VERTICAL, -1, dyUnconsumed, consumed, type);
+        dyUnconsumed = getScroll(getDirectionEdge(Direction.BOTTOM), Orientation.VERTICAL, 1, dyUnconsumed, consumed, type);
+
+
+        if (dyUnconsumed == srcDy && dxUnconsumed == srcDx && mState == STATE_SETTLING_DELIVER) {
+            stopTargetFling(target, dxUnconsumed, dyUnconsumed, type);
         }
     }
 
@@ -191,129 +223,66 @@ public class EdgeLayout extends FrameLayout implements NestedScrollingParent3 {
     }
 
     @Override
-    public void onNestedScroll(@NonNull View target, int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed, @ViewCompat.NestedScrollType int type, @NonNull int[] consumed) {
-        final int originDxUnconsumed = dxUnconsumed, originDyUnconsumed = dyUnconsumed;
-        dyUnconsumed = checkEdgeTopScrollDown(dyUnconsumed, consumed, type);
-        dyUnconsumed = checkEdgeBottomScrollDown(dyUnconsumed, consumed, type);
-        dyUnconsumed = checkEdgeTopScrollUp(dyUnconsumed, consumed, type);
-        dyUnconsumed = checkEdgeBottomScrollUp(dyUnconsumed, consumed, type);
+    public void onNestedPreScroll(@NonNull final View target, @Px int dx, @Px int dy, @NonNull int[] consumed, @ViewCompat.NestedScrollType int type) {
+        final int srcDx = dx, srcDy = dy;
+        dx = getScroll(getDirectionEdge(Direction.LEFT), Orientation.HORIZONTAL, -1, dx, consumed, type);
+        dx = getFling(getDirectionEdge(Direction.RIGHT), Orientation.HORIZONTAL, 1, dx, consumed, type);
+        dx = getFling(getDirectionEdge(Direction.LEFT), Orientation.HORIZONTAL, -1, dx, consumed, type);
+        dx = getScroll(getDirectionEdge(Direction.RIGHT), Orientation.HORIZONTAL, 1, dx, consumed, type);
 
-        dxUnconsumed = checkEdgeLeftScrollRight(dxUnconsumed, consumed, type);
-        dxUnconsumed = checkEdgeRightScrollRight(dxUnconsumed, consumed, type);
-        dxUnconsumed = checkEdgeLeftScrollLeft(dxUnconsumed, consumed, type);
-        dxUnconsumed = checkEdgeRightScrollLeft(dxUnconsumed, consumed, type);
-        if (dyUnconsumed == originDyUnconsumed && dxUnconsumed == originDxUnconsumed && mState == STATE_SETTLING_DELIVER) {
-            checkStopTargetFling(target, dxUnconsumed, dyUnconsumed, type);
+        dy = getScroll(getDirectionEdge(Direction.TOP), Orientation.VERTICAL, -1, dy, consumed, type);
+        dy = getFling(getDirectionEdge(Direction.BOTTOM), Orientation.VERTICAL, 1, dy, consumed, type);
+        dy = getFling(getDirectionEdge(Direction.TOP), Orientation.VERTICAL, -1, dy, consumed, type);
+        dy = getScroll(getDirectionEdge(Direction.BOTTOM), Orientation.VERTICAL, 1, dy, consumed, type);
+
+        if (srcDx == dx && srcDy == dy && mState == STATE_SETTLING_DELIVER) {
+            stopTargetFling(target, dx, dy, type);
         }
-    }
-
-    @Override
-    public void onNestedScroll(@NonNull View target, int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed, int type) {
-        onNestedScroll(target, dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed, type, mNestedScrollingV2ConsumedCompat);
-    }
-
-    @Override
-    public void onNestedScroll(@NonNull View target, int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed) {
-        onNestedScroll(target, dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed, ViewCompat.TYPE_TOUCH);
     }
 
     @Override
     public boolean onNestedPreFling(@NonNull View target, float velocityX, float velocityY) {
         final int hOffset = mViewOffsetHelper.getLeftAndRightOffset();
         final int vOffset = mViewOffsetHelper.getTopAndBottomOffset();
-
         // if the targetView is RecyclerView and we set OnFlingListener for RecyclerView.
         // then the targetView can not deliver fling consume to NestedScrollParent
         // so we intercept the fling if the target view can not consume the fling.
-        if (mEdgeLeft != null && isEdgeEnabled(Direction.LEFT)) {
-            if (velocityX < 0 && !mTargetView.canScrollHorizontally(-1)) {
-                mState = STATE_SETTLING_FLING;
-                velocityX /= mNestedPreFlingVelocityScaleDown;
-                int maxX = mEdgeLeft.isEdgeOver() ? Integer.MAX_VALUE : mEdgeLeft.getTargetOffset();
-                mScroller.fling(hOffset, vOffset, (int) -velocityX, 0, 0, maxX, vOffset, vOffset);
-                postInvalidateOnAnimation();
-                return true;
-            } else if (velocityX > 0 && hOffset > 0) {
-                mState = STATE_SETTLING_TO_INIT_OFFSET;
-                mScroller.startScroll(hOffset, vOffset, -hOffset, 0, scrollDuration(mEdgeLeft, hOffset));
-                postInvalidateOnAnimation();
-                return true;
-            }
+        if (onNestedPreFlingHorizontally(getDirectionEdge(Direction.LEFT), -1, velocityX, velocityY, hOffset, vOffset)) {
+            return true;
         }
-        if (mEdgeRight != null && isEdgeEnabled(Direction.RIGHT)) {
-            if (velocityX > 0 && !mTargetView.canScrollHorizontally(1)) {
-                mState = STATE_SETTLING_FLING;
-                velocityX /= mNestedPreFlingVelocityScaleDown;
-                int minX = mEdgeRight.isEdgeOver() ? Integer.MIN_VALUE : -mEdgeRight.getTargetOffset();
-                mScroller.fling(hOffset, vOffset, (int) -velocityX, 0, minX, 0, vOffset, vOffset);
-                postInvalidateOnAnimation();
-                return true;
-            } else if (velocityX < 0 && hOffset < 0) {
-                mState = STATE_SETTLING_TO_INIT_OFFSET;
-                mScroller.startScroll(hOffset, vOffset, -hOffset, 0, scrollDuration(mEdgeRight, hOffset));
-                postInvalidateOnAnimation();
-                return true;
-            }
+        if (onNestedPreFlingHorizontally(getDirectionEdge(Direction.RIGHT), 1, velocityX, velocityY, hOffset, vOffset)) {
+            return true;
         }
-
-        if (mEdgeTop != null && isEdgeEnabled(Direction.TOP)) {
-            if (velocityY < 0 && !mTargetView.canScrollVertically(-1)) {
-                mState = STATE_SETTLING_FLING;
-                velocityY /= mNestedPreFlingVelocityScaleDown;
-                int maxY = mEdgeTop.isEdgeOver() ? Integer.MAX_VALUE : mEdgeTop.getTargetOffset();
-                mScroller.fling(hOffset, vOffset, 0, (int) -velocityY, hOffset, hOffset, 0, maxY);
-                postInvalidateOnAnimation();
-                return true;
-            } else if (velocityY > 0 && vOffset > 0) {
-                mState = STATE_SETTLING_TO_INIT_OFFSET;
-                mScroller.startScroll(hOffset, vOffset, 0, -vOffset, scrollDuration(mEdgeTop, vOffset));
-                postInvalidateOnAnimation();
-                return true;
-            }
+        if (onNestedPreFlingVertically(getDirectionEdge(Direction.TOP), -1, velocityX, velocityY, hOffset, vOffset)) {
+            return true;
         }
-
-
-        if (mEdgeBottom != null && isEdgeEnabled(Direction.BOTTOM)) {
-            if (velocityY > 0 && !mTargetView.canScrollVertically(1)) {
-                mState = STATE_SETTLING_FLING;
-                velocityY /= mNestedPreFlingVelocityScaleDown;
-                int minY = mEdgeBottom.isEdgeOver() ? Integer.MIN_VALUE : -mEdgeBottom.getTargetOffset();
-                mScroller.fling(hOffset, vOffset, 0, (int) -velocityY, hOffset, hOffset, minY, 0);
-                postInvalidateOnAnimation();
-                return true;
-            } else if (velocityY < 0 && vOffset < 0) {
-                mState = STATE_SETTLING_TO_INIT_OFFSET;
-                mScroller.startScroll(hOffset, vOffset, 0, -vOffset, scrollDuration(mEdgeBottom, vOffset));
-                postInvalidateOnAnimation();
-                return true;
-            }
+        if (onNestedPreFlingVertically(getDirectionEdge(Direction.BOTTOM), 1, velocityX, velocityY, hOffset, vOffset)) {
+            return true;
         }
         mState = STATE_SETTLING_DELIVER;
         return super.onNestedPreFling(target, velocityX, velocityY);
     }
 
     @Override
-    public void onStopNestedScroll(@NonNull View target, @ViewCompat.NestedScrollType int type) {
-        if (mState == STATE_PULLING) {
-            checkScrollToTargetOffset();
-        } else if (mState == STATE_SETTLING_DELIVER && type != ViewCompat.TYPE_TOUCH) {
-            removeStopTargetFlingRunnable();
-            checkScrollToTargetOffset();
-        }
+    protected FrameLayout.LayoutParams generateLayoutParams(@NonNull ViewGroup.LayoutParams lp) {
+        return new LayoutParams(lp);
     }
 
-    private void updateOffset(int offsetX, int offsetY) {
-        setHorOffsetToTargetOffsetHelper(offsetX);
-        setVerOffsetToTargetOffsetHelper(offsetY);
+    @Override
+    public FrameLayout.LayoutParams generateLayoutParams(@NonNull AttributeSet attrs) {
+        return new LayoutParams(getContext(), attrs);
     }
 
-    public void setStopTargetViewFlingImpl(@NonNull StopTargetViewFlingImpl stopTargetViewFlingImpl) {
-        mStopTargetViewFlingImpl = stopTargetViewFlingImpl;
+    @Override
+    protected FrameLayout.LayoutParams generateDefaultLayoutParams() {
+        return new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
     }
 
-    public void setMinScrollDuration(int minScrollDuration) {
-        mMinScrollDuration = minScrollDuration;
+    @Override
+    protected boolean checkLayoutParams(ViewGroup.LayoutParams p) {
+        return p instanceof LayoutParams && super.checkLayoutParams(p);
     }
+
 
     public void setTargetView(@NonNull View view) {
         if (view.getParent() != this) {
@@ -324,15 +293,11 @@ public class EdgeLayout extends FrameLayout implements NestedScrollingParent3 {
             final LayoutParams lp = new LayoutParams(match, match);
             addView(view, lp);
         }
-        innerSetTargetView(view);
-    }
-
-    private void innerSetTargetView(@NonNull View view) {
         mTargetView = view;
         mViewOffsetHelper = new ViewOffsetHelper(view);
     }
 
-    public void setActionView(@NonNull View view, @NonNull LayoutParams params) {
+    public void setEdgeView(@NonNull View view, @NonNull LayoutParams params) {
         final Edge.Builder builder = new Edge.Builder(view, params.mDirection)
                 .setEdgeOver(params.mEdgeOver)
                 .setFlingFromTarget(params.mFlingFromTarget)
@@ -344,10 +309,10 @@ public class EdgeLayout extends FrameLayout implements NestedScrollingParent3 {
                 .setScrollFling(params.mScrollSpeed)
                 .setScrollSpeed(params.mScrollSpeed);
         view.setLayoutParams(params);
-        setActionView(builder);
+        setEdgeView(builder);
     }
 
-    public void setActionView(@NonNull Edge.Builder builder) {
+    public void setEdgeView(@NonNull Edge.Builder builder) {
         if (builder.getView().getParent() != this) {
             throw new RuntimeException("Action view already exists other parent view.");
         }
@@ -369,39 +334,29 @@ public class EdgeLayout extends FrameLayout implements NestedScrollingParent3 {
         }
     }
 
-    public void setEdgeListener(OnEdgeListener edgeListener) {
-        this.mOnEdgeListener = edgeListener;
+    public void setDirectionEnabled(@Direction int direction) {
+        mDirectionEnabled = direction;
     }
 
-    public Edge getDirectionEdge(@Direction int direction) {
-        return isDirectionEnabled(direction) ? getEdge(direction) : null;
+    public int getDirectionEnabled() {
+        return mDirectionEnabled;
     }
-
-    public void setEnabledEdges(@Direction int direction) {
-        mEnabledEdges = direction;
-    }
-
-    @Deprecated
-    public boolean isEdgeEnabled(@Direction int direction) {
-        return (mEnabledEdges & direction) == direction && getEdge(direction) != null;
-    }
-
 
     public boolean isDirectionEnabled(@Direction int direction) {
-        return (mEnabledEdges & direction) == direction;
+        return (mDirectionEnabled & direction) == direction;
     }
 
     @Nullable
-    private Edge getEdge(@Direction int direction) {
-        if (direction == Direction.LEFT) {
-            return mEdgeLeft;
-        } else if (direction == Direction.TOP) {
-            return mEdgeTop;
-        } else if (direction == Direction.RIGHT) {
-            return mEdgeRight;
-        } else if (direction == Direction.BOTTOM) {
-            return mEdgeBottom;
-        }
+    public Edge getDirectionEdge(@Direction int direction) {
+        return isDirectionEnabled(direction) ? getEdgeView(direction) : null;
+    }
+
+    @Nullable
+    private Edge getEdgeView(@Direction int direction) {
+        if (direction == Direction.LEFT) return mEdgeLeft;
+        if (direction == Direction.TOP) return mEdgeTop;
+        if (direction == Direction.RIGHT) return mEdgeRight;
+        if (direction == Direction.BOTTOM) return mEdgeBottom;
         return null;
     }
 
@@ -410,8 +365,17 @@ public class EdgeLayout extends FrameLayout implements NestedScrollingParent3 {
         this.mNestedPreFlingVelocityScaleDown = nestedPreFlingVelocityScaleDown;
     }
 
-    private int scrollDuration(@NonNull Edge edge, @Px int offset) {
-        return Math.max(mMinScrollDuration, Math.abs(edge.getScrollOffset(offset)));
+
+    public void setEdgeListener(@Nullable OnEdgeListener edgeListener) {
+        this.mOnEdgeListener = edgeListener;
+    }
+
+    public void setStopTargetViewFlingImpl(@Nullable StopTargetViewFlingImpl stopTargetViewFlingImpl) {
+        mStopTargetViewFlingImpl = stopTargetViewFlingImpl;
+    }
+
+    public void setMinScrollDuration(int minScrollDuration) {
+        mMinScrollDuration = minScrollDuration;
     }
 
     private void edgeStart(@Nullable Edge edge, int finalX, int finalY) {
@@ -421,12 +385,17 @@ public class EdgeLayout extends FrameLayout implements NestedScrollingParent3 {
     }
 
     private void edgeStart(@NonNull Edge edge, int state) {
-        if (edge.isRunning()) return;
         this.mState = state;
+        edgeStart(edge);
+    }
+
+    public void edgeStart(@NonNull Edge edge) {
+        if (edge.isRunning()) return;
         edge.setRunning(true);
         if (mOnEdgeListener != null) mOnEdgeListener.start(edge);
         if (edge.getView() instanceof EdgeWatcher) ((EdgeWatcher) edge.getView()).start();
     }
+
 
     public void edgeFinish() {
         if (mEdgeLeft != null && mEdgeLeft.isRunning()) edgeFinish(mEdgeLeft, true);
@@ -445,12 +414,11 @@ public class EdgeLayout extends FrameLayout implements NestedScrollingParent3 {
         if (mState == STATE_PULLING) return;
         if (!animate) {
             mState = STATE_IDLE;
-            setVerOffsetToTargetOffsetHelper(0);
-            setHorOffsetToTargetOffsetHelper(0);
+            updateOffset(0, 0);
             return;
         }
         mState = STATE_SETTLING_TO_INIT_OFFSET;
-        @Direction final int direction = edge.getDirection();
+        final int direction = edge.getDirection();
         final int vOffset = mViewOffsetHelper.getTopAndBottomOffset();
         final int hOffset = mViewOffsetHelper.getLeftAndRightOffset();
         if (direction == Direction.TOP && vOffset > 0) {
@@ -469,123 +437,71 @@ public class EdgeLayout extends FrameLayout implements NestedScrollingParent3 {
     }
 
 
-    private void checkScrollToTargetOffset() {
+    private void scrollToTargetOffset() {
         if (mTargetView == null) return;
         mScroller.abortAnimation();
         final int hOffset = mViewOffsetHelper.getLeftAndRightOffset();
         final int vOffset = mViewOffsetHelper.getTopAndBottomOffset();
-        int hTarget = 0, vTarget = 0;
-        if (mEdgeLeft != null && isDirectionEnabled(Direction.LEFT) && hOffset > 0) {
-            int targetOffset = mEdgeLeft.getTargetOffset();
-            if (hOffset == targetOffset) {
-                edgeStart(mEdgeLeft, STATE_TRIGGERING);
-                return;
-            }
-            if (hOffset > targetOffset) {
-                if (!mEdgeLeft.isScrollTouchUp()) {
-                    edgeStart(mEdgeLeft, STATE_TRIGGERING);
-                    return;
-                }
-                if (!mEdgeLeft.isScrollOffset()) {
-                    edgeStart(mEdgeLeft, STATE_TRIGGERING);
-                } else {
-                    mState = STATE_SETTLING_TO_TRIGGER_OFFSET;
-                }
-                hTarget = targetOffset;
-            } else {
-                mState = STATE_SETTLING_TO_INIT_OFFSET;
-            }
-            int dx = hTarget - hOffset;
-            mScroller.startScroll(hOffset, vOffset, dx, 0, scrollDuration(mEdgeLeft, dx));
-            postInvalidateOnAnimation();
+        if (scrollToTargetOffsetHorizontally(getDirectionEdge(Direction.LEFT), -1, hOffset, vOffset)) {
             return;
         }
-
-        if (mEdgeRight != null && isDirectionEnabled(Direction.RIGHT) && hOffset < 0) {
-            int targetOffset = mEdgeRight.getTargetOffset();
-            if (hOffset == -targetOffset) {
-                edgeStart(mEdgeRight, STATE_TRIGGERING);
-                return;
-            }
-            if (hOffset < -targetOffset) {
-                if (!mEdgeRight.isScrollTouchUp()) {
-                    edgeStart(mEdgeRight, STATE_TRIGGERING);
-                    return;
-                }
-
-                if (!mEdgeRight.isScrollOffset()) {
-                    edgeStart(mEdgeRight, STATE_TRIGGERING);
-                } else {
-                    mState = STATE_SETTLING_TO_TRIGGER_OFFSET;
-                }
-                hTarget = -targetOffset;
-            } else {
-                mState = STATE_SETTLING_TO_INIT_OFFSET;
-            }
-            int dx = hTarget - hOffset;
-            mScroller.startScroll(hOffset, vOffset, dx, 0, scrollDuration(mEdgeRight, dx));
-            postInvalidateOnAnimation();
+        if (scrollToTargetOffsetHorizontally(getDirectionEdge(Direction.RIGHT), 1, hOffset, vOffset)) {
             return;
         }
-
-        if (mEdgeTop != null && isDirectionEnabled(Direction.TOP) && vOffset > 0) {
-            mState = STATE_SETTLING_TO_INIT_OFFSET;
-            int targetOffset = mEdgeTop.getTargetOffset();
-            if (vOffset == targetOffset) {
-                edgeStart(mEdgeTop, STATE_TRIGGERING);
-                return;
-            }
-            if (vOffset > targetOffset) {
-                if (!mEdgeTop.isScrollTouchUp()) {
-                    edgeStart(mEdgeTop, STATE_TRIGGERING);
-                    return;
-                }
-
-                if (!mEdgeTop.isScrollOffset()) {
-                    edgeStart(mEdgeTop, STATE_TRIGGERING);
-                } else {
-                    mState = STATE_SETTLING_TO_TRIGGER_OFFSET;
-                }
-                vTarget = targetOffset;
-            } else {
-                mState = STATE_SETTLING_TO_INIT_OFFSET;
-            }
-            int dy = vTarget - vOffset;
-            mScroller.startScroll(hOffset, vOffset, hOffset, dy, scrollDuration(mEdgeTop, dy));
-            postInvalidateOnAnimation();
+        if (scrollToTargetOffsetVertically(getDirectionEdge(Direction.TOP), -1, hOffset, vOffset)) {
             return;
         }
-
-        if (mEdgeBottom != null && isDirectionEnabled(Direction.BOTTOM) && vOffset < 0) {
-            int targetOffset = mEdgeBottom.getTargetOffset();
-            if (vOffset == -targetOffset) {
-                edgeStart(mEdgeBottom, STATE_TRIGGERING);
-                return;
-            }
-            if (vOffset < -targetOffset) {
-                if (!mEdgeBottom.isScrollTouchUp()) {
-                    edgeStart(mEdgeBottom, STATE_TRIGGERING);
-                    return;
-                }
-
-                if (!mEdgeBottom.isScrollOffset()) {
-                    edgeStart(mEdgeBottom, STATE_TRIGGERING);
-                } else {
-                    mState = STATE_SETTLING_TO_TRIGGER_OFFSET;
-                }
-                vTarget = -targetOffset;
-            } else {
-                mState = STATE_SETTLING_TO_INIT_OFFSET;
-            }
-            int dy = vTarget - vOffset;
-            mScroller.startScroll(hOffset, vOffset, hOffset, dy, scrollDuration(mEdgeBottom, dy));
-            postInvalidateOnAnimation();
+        if (scrollToTargetOffsetVertically(getDirectionEdge(Direction.BOTTOM), 1, hOffset, vOffset)) {
             return;
         }
-
         mState = STATE_IDLE;
     }
 
+    private boolean scrollToTargetOffsetHorizontally(@Nullable final Edge edge, final int direction, final int offsetH, final int offsetV) {
+        if (edge == null || offsetH * direction >= 0) return false;
+        final int targetOffset = edge.getTargetOffset();
+        if (targetOffset == offsetH) {
+            edgeStart(edge, STATE_TRIGGERING);
+            return true;
+        }
+        int scrollTarget = 0;
+        if (Math.abs(offsetH) > targetOffset) {
+            if (!edge.isScrollTouchUp()) {
+                edgeStart(edge, STATE_TRIGGERING);
+                return true;
+            }
+            if (!edge.isScrollOffset()) edgeStart(edge, STATE_TRIGGERING);
+            else mState = STATE_SETTLING_TO_TRIGGER_OFFSET;
+            scrollTarget = -targetOffset * direction;
+        } else mState = STATE_SETTLING_TO_INIT_OFFSET;
+        int dx = scrollTarget - offsetH;
+        mScroller.startScroll(offsetH, offsetV, dx, 0, scrollDuration(edge, dx));
+        postInvalidateOnAnimation();
+        return true;
+    }
+
+    private boolean scrollToTargetOffsetVertically(@Nullable final Edge edge, final int direction, final int offsetH, final int offsetV) {
+        if (edge == null || offsetV * direction >= 0) return false;
+        final int targetOffset = edge.getTargetOffset();
+        if (targetOffset == offsetV) {
+            edgeStart(edge, STATE_TRIGGERING);
+            return true;
+        }
+        int scrollTarget = 0;
+        if (Math.abs(offsetV) > targetOffset) {
+            if (!edge.isScrollTouchUp()) {
+                edgeStart(edge, STATE_TRIGGERING);
+                return true;
+            }
+            if (!edge.isScrollOffset()) edgeStart(edge, STATE_TRIGGERING);
+            else mState = STATE_SETTLING_TO_TRIGGER_OFFSET;
+            scrollTarget = -targetOffset * direction;
+        } else mState = STATE_SETTLING_TO_INIT_OFFSET;
+        int dy = scrollTarget - offsetV;
+        mScroller.startScroll(offsetH, offsetV, offsetH, dy, scrollDuration(edge, dy));
+        postInvalidateOnAnimation();
+        return true;
+    }
 
     private void removeStopTargetFlingRunnable() {
         if (mStopTargetFlingRunnable != null) {
@@ -594,271 +510,121 @@ public class EdgeLayout extends FrameLayout implements NestedScrollingParent3 {
         }
     }
 
-    private void checkStopTargetFling(@NonNull final View targetView, int dx, int dy, int type) {
+    private void stopTargetFling(@NonNull final View targetView, int dx, int dy, @ViewCompat.NestedScrollType int type) {
         if (mStopTargetFlingRunnable != null || type == ViewCompat.TYPE_TOUCH) return;
-        if ((dy < 0 && !mTargetView.canScrollVertically(-1)) ||
-                (dy > 0 && !mTargetView.canScrollVertically(1)) ||
-                (dx < 0 && !mTargetView.canScrollHorizontally(-1)) ||
-                (dx > 0 && !mTargetView.canScrollHorizontally(1))) {
+        if ((dy < 0 && !mTargetView.canScrollVertically(-1)) || (dy > 0 && !mTargetView.canScrollVertically(1)) ||
+                (dx < 0 && !mTargetView.canScrollHorizontally(-1)) || (dx > 0 && !mTargetView.canScrollHorizontally(1))) {
             mStopTargetFlingRunnable = () -> {
                 mStopTargetViewFlingImpl.stopFling(targetView);
                 mStopTargetFlingRunnable = null;
-                checkScrollToTargetOffset();
+                scrollToTargetOffset();
             };
             post(mStopTargetFlingRunnable);
         }
     }
 
-    private void setHorOffsetToTargetOffsetHelper(int hOffset) {
-        mViewOffsetHelper.setLeftAndRightOffset(hOffset);
-        onTargetViewLeftAndRightOffsetChanged(hOffset);
-        if (mEdgeLeft != null) {
-            mEdgeLeft.onTargetMoved(hOffset);
-            if (mEdgeLeft.getView() instanceof EdgeWatcher) {
-                ((EdgeWatcher) mEdgeLeft.getView()).offset(mEdgeLeft, hOffset);
-            }
-
-        }
-        if (mEdgeRight != null) {
-            mEdgeRight.onTargetMoved(-hOffset);
-            if (mEdgeRight.getView() instanceof EdgeWatcher) {
-                ((EdgeWatcher) mEdgeRight.getView()).offset(mEdgeRight, -hOffset);
-            }
-        }
-    }
-
-    private void setVerOffsetToTargetOffsetHelper(int vOffset) {
-        mViewOffsetHelper.setTopAndBottomOffset(vOffset);
-        onTargetViewTopAndBottomOffsetChanged(vOffset);
-        if (mEdgeTop != null) {
-            mEdgeTop.onTargetMoved(vOffset);
-            if (mEdgeTop.getView() instanceof EdgeWatcher) {
-                ((EdgeWatcher) mEdgeTop.getView()).offset(mEdgeTop, vOffset);
-            }
-
-        }
-        if (mEdgeBottom != null) {
-            mEdgeBottom.onTargetMoved(-vOffset);
-            if (mEdgeBottom.getView() instanceof EdgeWatcher) {
-                ((EdgeWatcher) mEdgeBottom.getView()).offset(mEdgeBottom, -vOffset);
-            }
-        }
-    }
-
-    protected void onTargetViewTopAndBottomOffsetChanged(int vOffset) {
-
-    }
-
-    protected void onTargetViewLeftAndRightOffsetChanged(int hOffset) {
-
-    }
-
-    private int checkEdgeTopScrollDown(int dy, int[] consumed, @ViewCompat.NestedScrollType int type) {
-        int vOffset = mViewOffsetHelper.getTopAndBottomOffset();
-        if (dy > 0 && isEdgeEnabled(Direction.TOP) && vOffset > 0) {
-            float pullRate = type == ViewCompat.TYPE_TOUCH ? mEdgeTop.getEdgeRate() : 1f;
-            int ry = (int) (dy * pullRate);
-            if (ry == 0) {
-                return dy;
-            }
-            if (vOffset >= ry) {
-                consumed[1] += dy;
-                vOffset -= ry;
-                dy = 0;
+    private int getScroll(@Nullable Edge edge, @Orientation int orientation, int direction, @Px int scroll, @NonNull int[] consumed, @ViewCompat.NestedScrollType int type) {
+        if (edge == null) return scroll;
+        int offset = mViewOffsetHelper.getOffset(orientation);
+        if (scroll * direction < 0 && offset * direction < 0) {
+            final float edgeRate = edge.getEdgeRate(type);
+            int edgeScroll = (int) (scroll * edgeRate);
+            if (edgeScroll == 0) return scroll;
+            if (Math.abs(offset) >= Math.abs(edgeScroll)) {
+                consumed[orientation] += scroll;
+                offset -= edgeScroll;
+                scroll = 0;
             } else {
-                int yConsumed = (int) (vOffset / pullRate);
-                consumed[1] += yConsumed;
-                dy -= yConsumed;
-                vOffset = 0;
+                edgeScroll = (int) (offset / edgeRate);
+                consumed[orientation] += edgeScroll;
+                scroll -= edgeScroll;
+                offset = 0;
             }
-            setVerOffsetToTargetOffsetHelper(vOffset);
+            setOffsetToTargetOffsetHelper(edge, orientation, direction, offset);
         }
-        return dy;
+        return scroll;
     }
 
-    private int checkEdgeTopScrollUp(int dy, int[] consumed, @ViewCompat.NestedScrollType int type) {
-        if (dy < 0 && isEdgeEnabled(Direction.TOP) && !mTargetView.canScrollVertically(-1) &&
-                (type == ViewCompat.TYPE_TOUCH || mEdgeTop.isFlingFromTarget())) {
-            int vOffset = mViewOffsetHelper.getTopAndBottomOffset();
-            float pullRate = type == ViewCompat.TYPE_TOUCH ? mEdgeTop.getEdgeRate() : mEdgeTop.getFlingRate(vOffset);
-            int ry = (int) (dy * pullRate);
-            if (ry == 0) {
-                return dy;
-            }
-            if (mEdgeTop.isEdgeOver() || -ry <= mEdgeTop.getTargetOffset() - vOffset) {
-                vOffset -= ry;
-                consumed[1] += dy;
-                dy = 0;
+    private int getFling(@Nullable Edge edge, @Orientation int orientation, int direction, @Px int fling, int[] consumed, @ViewCompat.NestedScrollType int type) {
+        if (edge == null) return fling;
+        if (fling * direction > 0 && edge.isFlingFromTarget(type) && !mTargetView.canScrollVertically(direction)) {
+            int offset = mViewOffsetHelper.getOffset(orientation);
+            final float rate = edge.getFlingRate(type, offset);
+            int edgeFling = (int) (fling * rate);
+            if (edgeFling == 0) return fling;
+            if (edge.isEdgeOver() || edgeFling * direction <= edge.getTargetOffset() - offset) {
+                offset -= edgeFling;
+                consumed[orientation] += fling;
+                fling = 0;
             } else {
-                int yConsumed = (int) ((vOffset - mEdgeTop.getTargetOffset()) / pullRate);
-                consumed[1] += yConsumed;
-                dy -= yConsumed;
-                vOffset = mEdgeBottom.getTargetOffset();
+                edgeFling = (int) ((offset - edge.getTargetOffset()) / rate);
+                consumed[orientation] += edgeFling;
+                fling -= edgeFling;
+                offset = edge.getTargetOffset();
             }
-            setVerOffsetToTargetOffsetHelper(vOffset);
+            setOffsetToTargetOffsetHelper(edge, orientation, direction, offset);
         }
-        return dy;
+        return fling;
     }
 
-    private int checkEdgeBottomScrollDown(int dy, int[] consumed, @ViewCompat.NestedScrollType int type) {
-        if (dy > 0 && isEdgeEnabled(Direction.BOTTOM) && !mTargetView.canScrollVertically(1) &&
-                (type == ViewCompat.TYPE_TOUCH || mEdgeBottom.isFlingFromTarget())) {
-            int vOffset = mViewOffsetHelper.getTopAndBottomOffset();
-            float pullRate = type == ViewCompat.TYPE_TOUCH ? mEdgeBottom.getEdgeRate() : mEdgeBottom.getFlingRate(-vOffset);
-            int ry = (int) (dy * pullRate);
-            if (ry == 0) {
-                return dy;
-            }
-            if (mEdgeBottom.isEdgeOver() || vOffset - ry >= -mEdgeBottom.getTargetOffset()) {
-                vOffset -= ry;
-                consumed[1] += dy;
-                dy = 0;
-            } else {
-                int yConsumed = (int) ((-mEdgeBottom.getTargetOffset() - vOffset) / pullRate);
-                consumed[1] += yConsumed;
-                dy -= yConsumed;
-                vOffset = -mEdgeBottom.getTargetOffset();
-            }
-            setVerOffsetToTargetOffsetHelper(vOffset);
+    private void updateOffset(int offsetX, int offsetY) {
+        setOffsetToTargetOffsetHelper(getDirectionEdge(Direction.LEFT), Orientation.HORIZONTAL, -1, offsetX);
+        setOffsetToTargetOffsetHelper(getDirectionEdge(Direction.TOP), Orientation.VERTICAL, -1, offsetY);
+        setOffsetToTargetOffsetHelper(getDirectionEdge(Direction.RIGHT), Orientation.HORIZONTAL, 1, offsetX);
+        setOffsetToTargetOffsetHelper(getDirectionEdge(Direction.BOTTOM), Orientation.VERTICAL, 1, offsetY);
+    }
+
+    private void setOffsetToTargetOffsetHelper(@Nullable Edge edge, @Orientation int orientation, int direction, int offset) {
+        if (edge == null) return;
+        mViewOffsetHelper.setOrientationOffset(orientation, offset);
+        if (orientation == Orientation.VERTICAL) mViewOffsetHelper.setTopAndBottomOffset(offset);
+        else mViewOffsetHelper.setLeftAndRightOffset(offset);
+        edge.onTargetMoved(-direction * offset);
+        if (edge.getView() instanceof EdgeWatcher) {
+            ((EdgeWatcher) edge.getView()).offset(edge, offset);
         }
-        return dy;
     }
 
-    private int checkEdgeBottomScrollUp(int dy, int[] consumed, @ViewCompat.NestedScrollType int type) {
-        int vOffset = mViewOffsetHelper.getTopAndBottomOffset();
-        if (dy < 0 && isEdgeEnabled(Direction.BOTTOM) && vOffset < 0) {
-            float pullRate = type == ViewCompat.TYPE_TOUCH ? mEdgeBottom.getEdgeRate() : 1f;
-            int ry = (int) (dy * pullRate);
-            if (ry == 0) {
-                return dy;
-            }
-            if (vOffset <= ry) {
-                consumed[1] += dy;
-                vOffset -= ry;
-                dy = 0;
-            } else {
-                int yConsumed = (int) (vOffset / pullRate);
-                consumed[1] += yConsumed;
-                dy -= yConsumed;
-                vOffset = 0;
-            }
-            setVerOffsetToTargetOffsetHelper(vOffset);
+    private boolean onNestedPreFlingHorizontally(@Nullable Edge edge, int direction, float velocityX, float velocityY, int offsetH, int offsetV) {
+        if (edge == null) return false;
+        if (velocityX * direction > 0 && !mTargetView.canScrollHorizontally(direction)) {
+            mState = STATE_SETTLING_FLING;
+            velocityX /= mNestedPreFlingVelocityScaleDown;
+            final int maxH = edge.getTargetOffsetMax();
+            final int minH = edge.getTargetOffsetMin();
+            mScroller.fling(offsetH, offsetV, (int) -velocityX, (int) velocityY, minH, maxH, offsetV, offsetV);
+            postInvalidateOnAnimation();
+            return true;
+        } else if (velocityX * direction < 0 && offsetH > 0) {
+            mState = STATE_SETTLING_TO_INIT_OFFSET;
+            mScroller.startScroll(offsetH, offsetV, -offsetH, (int) velocityY, scrollDuration(edge, offsetH));
+            postInvalidateOnAnimation();
+            return true;
         }
-        return dy;
+        return false;
     }
 
-    private int checkEdgeLeftScrollRight(int dx, int[] consumed, @ViewCompat.NestedScrollType int type) {
-        int hOffset = mViewOffsetHelper.getLeftAndRightOffset();
-        if (dx > 0 && isEdgeEnabled(Direction.LEFT) && hOffset > 0) {
-            float pullRate = type == ViewCompat.TYPE_TOUCH ? mEdgeLeft.getEdgeRate() : 1f;
-            int rx = (int) (dx * pullRate);
-            if (rx == 0) {
-                return dx;
-            }
-            if (hOffset >= rx) {
-                consumed[0] += dx;
-                hOffset -= rx;
-                dx = 0;
-            } else {
-                int xConsumed = (int) (hOffset / pullRate);
-                consumed[0] += xConsumed;
-                dx -= xConsumed;
-                hOffset = 0;
-            }
-            setHorOffsetToTargetOffsetHelper(hOffset);
+    private boolean onNestedPreFlingVertically(@Nullable Edge edge, int direction, float velocityX, float velocityY, int offsetH, int offsetV) {
+        if (edge == null) return false;
+        if (velocityY * direction > 0 && !mTargetView.canScrollVertically(direction)) {
+            mState = STATE_SETTLING_FLING;
+            velocityY /= mNestedPreFlingVelocityScaleDown;
+            final int maxV = edge.getTargetOffsetMax();
+            final int minV = edge.getTargetOffsetMin();
+            mScroller.fling(offsetH, offsetV, 0, (int) -velocityY, offsetH, offsetH, minV, maxV);
+            postInvalidateOnAnimation();
+            return true;
+        } else if (velocityY * direction < 0 && offsetV > 0) {
+            mState = STATE_SETTLING_TO_INIT_OFFSET;
+            mScroller.startScroll(offsetH, offsetV, 0, -offsetV, scrollDuration(edge, offsetV));
+            postInvalidateOnAnimation();
+            return true;
         }
-        return dx;
+        return false;
     }
 
-    private int checkEdgeLeftScrollLeft(int dx, int[] consumed, @ViewCompat.NestedScrollType int type) {
-        int hOffset = mViewOffsetHelper.getLeftAndRightOffset();
-        if (dx < 0 && isEdgeEnabled(Direction.LEFT) && !mTargetView.canScrollHorizontally(-1) &&
-                (type == ViewCompat.TYPE_TOUCH || mEdgeLeft.isFlingFromTarget())) {
-            float pullRate = type == ViewCompat.TYPE_TOUCH ? mEdgeLeft.getEdgeRate() : mEdgeLeft.getFlingRate(hOffset);
-            int rx = (int) (dx * pullRate);
-            if (rx == 0) {
-                return dx;
-            }
-            if (mEdgeLeft.isEdgeOver() || -rx <= mEdgeLeft.getTargetOffset() - hOffset) {
-                hOffset -= rx;
-                consumed[0] += dx;
-                dx = 0;
-            } else {
-                int xConsumed = (int) ((hOffset - mEdgeLeft.getTargetOffset()) / pullRate);
-                consumed[0] += xConsumed;
-                dx -= xConsumed;
-                hOffset = mEdgeLeft.getTargetOffset();
-            }
-            setHorOffsetToTargetOffsetHelper(hOffset);
-        }
-        return dx;
-    }
-
-    private int checkEdgeRightScrollRight(int dx, int[] consumed, @ViewCompat.NestedScrollType int type) {
-        if (dx > 0 && isEdgeEnabled(Direction.RIGHT) && !mTargetView.canScrollHorizontally(1) &&
-                (type == ViewCompat.TYPE_TOUCH || mEdgeRight.isFlingFromTarget())) {
-            int hOffset = mViewOffsetHelper.getLeftAndRightOffset();
-            float pullRate = type == ViewCompat.TYPE_TOUCH ? mEdgeRight.getEdgeRate() : mEdgeRight.getFlingRate(-hOffset);
-            int rx = (int) (dx * pullRate);
-            if (rx == 0) {
-                return dx;
-            }
-            if (mEdgeRight.isEdgeOver() || hOffset - rx >= -mEdgeRight.getTargetOffset()) {
-                hOffset -= rx;
-                consumed[0] += dx;
-                dx = 0;
-            } else {
-                int xConsumed = (int) ((-mEdgeRight.getTargetOffset() - hOffset) / pullRate);
-                consumed[0] += xConsumed;
-                dx -= xConsumed;
-                hOffset = -mEdgeRight.getTargetOffset();
-            }
-            setHorOffsetToTargetOffsetHelper(hOffset);
-        }
-        return dx;
-    }
-
-    private int checkEdgeRightScrollLeft(int dx, int[] consumed, @ViewCompat.NestedScrollType int type) {
-        int hOffset = mViewOffsetHelper.getLeftAndRightOffset();
-        if (dx < 0 && isEdgeEnabled(Direction.RIGHT) && hOffset < 0) {
-            float pullRate = type == ViewCompat.TYPE_TOUCH ? mEdgeRight.getEdgeRate() : 1f;
-            int rx = (int) (dx * pullRate);
-            if (rx == 0) {
-                return dx;
-            }
-            if (hOffset <= dx) {
-                consumed[0] += dx;
-                hOffset -= rx;
-                dx = 0;
-            } else {
-                int xConsumed = (int) (hOffset / pullRate);
-                consumed[0] += xConsumed;
-                dx -= xConsumed;
-                hOffset = 0;
-            }
-            setHorOffsetToTargetOffsetHelper(hOffset);
-        }
-        return dx;
-    }
-
-    @Override
-    protected FrameLayout.LayoutParams generateLayoutParams(ViewGroup.LayoutParams lp) {
-        return new LayoutParams(lp);
-    }
-
-    @Override
-    public FrameLayout.LayoutParams generateLayoutParams(AttributeSet attrs) {
-        return new LayoutParams(getContext(), attrs);
-    }
-
-    @Override
-    protected FrameLayout.LayoutParams generateDefaultLayoutParams() {
-        return new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-    }
-
-    @Override
-    protected boolean checkLayoutParams(ViewGroup.LayoutParams p) {
-        return p instanceof LayoutParams && super.checkLayoutParams(p);
+    private int scrollDuration(@NonNull Edge edge, @Px int offset) {
+        return Math.max(mMinScrollDuration, Math.abs(edge.getScrollOffset(offset)));
     }
 
     public static class LayoutParams extends FrameLayout.LayoutParams {

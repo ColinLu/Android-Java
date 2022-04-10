@@ -5,6 +5,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Px;
+import androidx.core.view.ViewCompat;
 
 import com.colin.library.android.widgets.Constants;
 import com.colin.library.android.widgets.annotation.Direction;
@@ -83,6 +84,10 @@ public final class Edge {
         return mEdgeRate;
     }
 
+    public float getEdgeRate(@ViewCompat.NestedScrollType int type) {
+        return type == ViewCompat.TYPE_TOUCH ? mEdgeRate : 1.0F;
+    }
+
     public boolean isEdgeOver() {
         return mEdgeOver;
     }
@@ -95,6 +100,9 @@ public final class Edge {
         return mScrollSpeed;
     }
 
+    public boolean isFlingFromTarget(@ViewCompat.NestedScrollType int type) {
+        return type == ViewCompat.TYPE_TOUCH || mFlingFromTarget;
+    }
 
     public boolean isFlingFromTarget() {
         return mFlingFromTarget;
@@ -120,6 +128,11 @@ public final class Edge {
     public int getTargetOffset() {
         if (mTargetOffset != ViewGroup.LayoutParams.WRAP_CONTENT) return mTargetOffset;
         return getEdgeSize() - getStartOffset() * 2;
+    }
+
+    public float getFlingRate(@ViewCompat.NestedScrollType int type, @Px int offset) {
+        if (type == ViewCompat.TYPE_TOUCH) return mEdgeRate;
+        return Math.min(mEdgeRate, Math.max(mEdgeRate - (offset - getTargetOffset()) * getScrollFling(), 0));
     }
 
     public float getFlingRate(@Px int offset) {
@@ -187,6 +200,15 @@ public final class Edge {
         }
     }
 
+    public int getTargetOffsetMax() {
+        if (mDirection == Direction.RIGHT || mDirection == Direction.BOTTOM) return 0;
+        else return mEdgeOver ? Integer.MAX_VALUE : mTargetOffset;
+    }
+
+    public int getTargetOffsetMin() {
+        if (mDirection == Direction.LEFT || mDirection == Direction.TOP) return 0;
+        else return mEdgeOver ? Integer.MIN_VALUE : -mTargetOffset;
+    }
 
     public static class Builder {
         @NonNull

@@ -25,6 +25,8 @@ import androidx.annotation.Px;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.core.content.ContextCompat;
 
+import com.colin.library.android.widgets.annotation.Direction;
+
 /**
  * 作者： ColinLu
  * 时间： 2021-08-22 16:45
@@ -32,8 +34,22 @@ import androidx.core.content.ContextCompat;
  * 描述： Widgets辅助类
  */
 public final class Utils {
+    private static int sDirection = Direction.LEFT | Direction.TOP;
+
+    public static void main(String[] args) {
+        System.out.println("LEFT+RIGHT" + support(Direction.LEFT | Direction.RIGHT));
+        System.out.println("TOP+BOTTOM" + support(Direction.TOP | Direction.BOTTOM));
+        System.out.println("LEFT+TOP" + support(Direction.TOP | Direction.LEFT));
+        System.out.println("LEFT" + support(Direction.LEFT));
+    }
+
+    public static boolean support(int direction) {
+        return (sDirection & direction) == direction;
+    }
+
     private static final float DENSITY_OFFSET = 0.5F;
     private static TypedValue sTmpValue;
+
     /*资源 颜色*/
     @ColorInt
     public static int getAttrColor(@NonNull Context context, @AttrRes int attrRes) {

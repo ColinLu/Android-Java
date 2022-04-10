@@ -8,6 +8,7 @@ import androidx.core.view.ViewCompat;
 import androidx.customview.widget.ViewDragHelper;
 
 import com.colin.library.android.widgets.annotation.Direction;
+import com.colin.library.android.widgets.annotation.Orientation;
 
 /**
  * Utility helper for moving a {@link View} around using
@@ -57,6 +58,11 @@ public final class ViewOffsetHelper {
         }
     }
 
+    public boolean setOrientationOffset(@Orientation int orientation, @Px int offset) {
+        if (orientation == Orientation.HORIZONTAL) return setLeftAndRightOffset(offset);
+        return setTopAndBottomOffset(offset);
+    }
+
     public boolean setOffset(@Px int leftOffset, @Px int topOffset) {
         if (!mHorizontalOffsetEnabled && !mVerticalOffsetEnabled) return false;
         if (mHorizontalOffsetEnabled && mVerticalOffsetEnabled) {
@@ -104,6 +110,10 @@ public final class ViewOffsetHelper {
 
     public int getLeftAndRightOffset() {
         return mOffsetLeft;
+    }
+
+    public int getOffset(@Orientation int orientation) {
+        return orientation == Orientation.HORIZONTAL ? mOffsetLeft : mOffsetTop;
     }
 
     public int getLayoutTop() {
