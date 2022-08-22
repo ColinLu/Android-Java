@@ -49,14 +49,6 @@ public final class NetBroadReceiver extends BaseReceiver {
         network(NetUtil.getNetType());
     }
 
-    @NonNull
-    @Override
-    public IntentFilter getIntentFilter() {
-        final IntentFilter filter = new IntentFilter();
-        filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
-        filter.setPriority(Integer.MAX_VALUE);
-        return filter;
-    }
 
     /*接受到通知*/
     @Override
@@ -65,6 +57,15 @@ public final class NetBroadReceiver extends BaseReceiver {
         if (ConnectivityManager.CONNECTIVITY_ACTION.equals(intent.getAction())) {
             network(NetUtil.getNetType());
         }
+    }
+
+    @NonNull
+    @Override
+    public IntentFilter getIntentFilter() {
+        final IntentFilter filter = new IntentFilter();
+        filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
+        filter.setPriority(Integer.MAX_VALUE);
+        return filter;
     }
 
     private void network(@NetType int netType) {

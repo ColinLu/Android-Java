@@ -12,6 +12,7 @@ import androidx.annotation.Nullable;
  * 描述： 界面实现定义
  */
 public interface IInitView {
+
     @LayoutRes
     int layoutRes();
 
@@ -19,6 +20,7 @@ public interface IInitView {
 
     void initData(@Nullable Bundle bundle);
 
+    /*local sqlite net*/
     void loadData(boolean refresh);
 
 }

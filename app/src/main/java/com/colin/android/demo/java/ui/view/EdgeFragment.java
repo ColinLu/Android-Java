@@ -20,6 +20,7 @@ import com.colin.library.android.widgets.annotation.Direction;
 import com.colin.library.android.widgets.def.OnItemClickListener;
 import com.colin.library.android.widgets.edge.Edge;
 import com.colin.library.android.widgets.edge.EdgeLayout;
+import com.colin.library.android.widgets.edge.OnEdgeListener;
 
 /**
  * 作者： ColinLu
@@ -40,7 +41,7 @@ public class EdgeFragment extends AppFragment<LayoutEdgeBinding> implements OnIt
 
     @Override
     public void initView(@Nullable Bundle bundle) {
-        mBinding.mEdgeList.setEdgeListener(new EdgeLayout.OnEdgeListener() {
+        mBinding.mEdgeList.setEdgeListener(new OnEdgeListener() {
             @Override
             public void start(@NonNull Edge edge) {
                 loadData(edge.getDirection() == Direction.TOP);

@@ -2,11 +2,15 @@ package com.colin.library.android.utils;
 
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.util.DisplayMetrics;
+import android.util.TypedValue;
 
+import androidx.annotation.AttrRes;
 import androidx.annotation.ColorInt;
 import androidx.annotation.ColorRes;
 import androidx.annotation.DimenRes;
@@ -36,8 +40,87 @@ import com.colin.library.android.utils.data.UtilHelper;
  * xxxhdpi(2K) 	    480 ~ 640 	1440 × 2560 	1dp=4px 	192 * 192
  */
 public final class ResourceUtil {
+    private static TypedValue sTmpValue;
+
     private ResourceUtil() {
         throw new UnsupportedOperationException("don't instantiate");
+    }
+
+    @NonNull
+    public static Resources getResources() {
+        return getResources(UtilHelper.getInstance().getContext());
+    }
+
+    @NonNull
+    public static Resources getResources(@NonNull Context context) {
+        return context.getResources();
+    }
+
+    @NonNull
+    public static DisplayMetrics getDisplayMetrics() {
+        return getResources().getDisplayMetrics();
+    }
+
+    @NonNull
+    public static DisplayMetrics getDisplayMetrics(@NonNull Context context) {
+        return getResources(context).getDisplayMetrics();
+    }
+
+    public static float getDensity() {
+        return getDisplayMetrics().density;
+    }
+
+    public static float getDensity(@NonNull Context context) {
+        return getDisplayMetrics(context).density;
+    }
+
+
+    public static float getScaled() {
+        return Resources.getSystem().getDisplayMetrics().scaledDensity;
+    }
+
+    public static float getScaled(@NonNull Context context) {
+        return getDisplayMetrics(context).scaledDensity;
+    }
+
+    public static float getAttrFloatValue(@NonNull Context context,@AttrRes int resId) {
+        return getAttrFloatValue(context.getTheme(), resId);
+    }
+
+    public static float getAttrFloatValue(@NonNull Resources.Theme theme,@AttrRes  int resId) {
+        if (sTmpValue == null) sTmpValue = new TypedValue();
+        if (!theme.resolveAttribute(resId, sTmpValue, true)) return 0F;
+        return sTmpValue.getFloat();
+    }
+
+    public static int getAttrColor(@NonNull Context context,@AttrRes  int resId) {
+        return getAttrColor(context.getTheme(), resId);
+    }
+
+    public static int getAttrColor(@NonNull Resources.Theme theme, @AttrRes  int resId) {
+        if (sTmpValue == null) sTmpValue = new TypedValue();
+        if (!theme.resolveAttribute(attr, sTmpValue, true)) return 0;
+        if (sTmpValue.type == TypedValue.TYPE_ATTRIBUTE) return getAttrColor(theme, sTmpValue.data);
+        return sTmpValue.data;
+    }
+
+    @Nullable
+    public static ColorStateList getAttrColorStateList(@NonNull Context context, @AttrRes  int resId) {
+        return getAttrColorStateList(context, context.getTheme(), resId);
+    }
+
+    @Nullable
+    public static ColorStateList getAttrColorStateList(@NonNull Context context, @NonNull Resources.Theme theme, @AttrRes  int resId) {
+        if (attr == Resources.ID_NULL) return null;
+        if (sTmpValue == null) sTmpValue = new TypedValue();
+        if (!theme.resolveAttribute(resId, sTmpValue, true)) return null;
+        if (sTmpValue.type >= TypedValue.TYPE_FIRST_COLOR_INT && sTmpValue.type <= TypedValue.TYPE_LAST_COLOR_INT) {
+            return ColorStateList.valueOf(sTmpValue.data);
+        }
+        if (sTmpValue.type == TypedValue.TYPE_ATTRIBUTE)
+            return getAttrColorStateList(context, theme, sTmpValue.data);
+        if (sTmpValue.resourceId == Resources.ID_NULL) return null;
+        return ContextCompat.getColorStateList(context, sTmpValue.resourceId);
     }
 
     public static Uri getUri(@DrawableRes int id) {
@@ -117,16 +200,6 @@ public final class ResourceUtil {
     }
 
 
-    @NonNull
-    public static Resources getResources() {
-        return UtilHelper.getInstance().getContext().getResources();
-    }
-
-    @NonNull
-    public static Resources getResources(@Nullable Context context) {
-        return context == null ? getResources() : context.getResources();
-    }
-
     @Nullable
     public static String getString(@StringRes final int res) {
         return getString(UtilHelper.getInstance().getContext(), res);
@@ -159,4 +232,94 @@ public final class ResourceUtil {
         if (context == null || res == Resources.ID_NULL) return null;
         return ContextCompat.getDrawable(context, res);
     }
+
+    /**
+     * Value of dp to value of px.
+     *
+     * @param dp The value of dp.
+     * @return value of px
+     */
+    public static int dp2px(final float dp) {
+        final float density = getDensity();
+        return (int) (dp * density + 0.5f);
+    }
+
+
+    /**
+     * Value of px to value of dp.
+     *
+     * @param px The value of px.
+     * @return value of dp
+     */
+    public static int px2dp(final int px) {
+        final float density = getDensity();
+        return (int) (px / density + 0.5f);
+    }
+
+    public static float px2dp(final float px) {
+        final float density = getDensity();
+        return (px / density + 0.5f);
+    }
+
+    /**
+     * Value of sp to value of px.
+     *
+     * @param sp The value of sp.
+     * @return value of px
+     */
+    public static int sp2px(final int sp) {
+        final float scaled = getScaled();
+        return (int) (sp * scaled + 0.5f);
+    }
+
+    public static float sp2px(final float sp) {
+        final float scaled = getScaled();
+        return (sp * scaled + 0.5f);
+    }
+
+    /**
+     * Value of px to value of sp.
+     *
+     * @param px The value of px.
+     * @return value of sp
+     */
+    public static int px2sp(final int px) {
+        final float scaled = getScaled();
+        return (int) (px / scaled + 0.5f);
+    }
+
+    public static float px2sp(final float px) {
+        final float scaled = getScaled();
+        return (px / scaled + 0.5f);
+    }
+
+    /**
+     * Converts an unpacked complex data value holding a dimension to its final floating
+     * point value. The two parameters <var>unit</var> and <var>value</var>
+     * are as in {@link TypedValue#TYPE_DIMENSION}.
+     *
+     * @param value The value to apply the unit to.
+     * @param unit  The unit to convert from.
+     * @return The complex floating point value multiplied by the appropriate
+     * metrics depending on its unit.
+     */
+    public static float applyDimension(final float value, final int unit) {
+        DisplayMetrics metrics = Resources.getSystem().getDisplayMetrics();
+        switch (unit) {
+            case TypedValue.COMPLEX_UNIT_PX:
+                return value;
+            case TypedValue.COMPLEX_UNIT_DIP:
+                return value * metrics.density;
+            case TypedValue.COMPLEX_UNIT_SP:
+                return value * metrics.scaledDensity;
+            case TypedValue.COMPLEX_UNIT_PT:
+                return value * metrics.xdpi * (1.0f / 72);
+            case TypedValue.COMPLEX_UNIT_IN:
+                return value * metrics.xdpi;
+            case TypedValue.COMPLEX_UNIT_MM:
+                return value * metrics.xdpi * (1.0f / 25.4f);
+        }
+        return 0;
+    }
+
 }

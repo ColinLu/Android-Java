@@ -173,19 +173,28 @@ public final class Edge {
 
     }
 
+    public void scrollToTarget(int offset) {
+        if (mDirection == Direction.LEFT || mDirection == Direction.TOP) {
+            updateOffset(getOffsetCalculator().calculator(this, offset));
+        } else {
+            updateOffset(getOffsetCalculator().calculator(this, -offset));
+        }
+    }
+
     public void onTargetMoved(int targetOffset) {
         updateOffset(getOffsetCalculator().calculator(this, targetOffset));
     }
 
     public void updateOffset(int offset) {
         mViewOffsetHelper.setDirection(mDirection, offset);
+        if (mView instanceof EdgeWatcher) ((EdgeWatcher) mView).offset(mView, offset);
     }
 
     public ViewOffsetHelper getViewOffsetHelper() {
         return mViewOffsetHelper;
     }
 
-    public boolean getScrollFinal(int finalX, int finalY) {
+    public boolean isScrollFinal(int finalX, int finalY) {
         switch (mDirection) {
             case Direction.LEFT:
                 return finalX == mTargetOffset;
@@ -208,6 +217,10 @@ public final class Edge {
     public int getTargetOffsetMin() {
         if (mDirection == Direction.LEFT || mDirection == Direction.TOP) return 0;
         else return mEdgeOver ? Integer.MIN_VALUE : -mTargetOffset;
+    }
+
+    public void scrollToTargetOffset(int offset) {
+
     }
 
     public static class Builder {

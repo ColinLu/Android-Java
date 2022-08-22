@@ -9,4 +9,10 @@
 
     <attr name="GradientTextViewStyle" format="reference" />
 
+    <declare-styleable name="AutoFitTextView">
+        <attr name="minSize" format="reference|dimension" />
+        <attr name="maxSize" format="reference|dimension" />
+    </declare-styleable>
+    <declare-styleable name="TextListLayout"></declare-styleable>
+
 </resources>
