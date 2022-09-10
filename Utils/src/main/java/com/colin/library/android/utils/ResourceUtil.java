@@ -97,7 +97,7 @@ public final class ResourceUtil {
         return getAttrColor(context.getTheme(), resId);
     }
 
-    public static int getAttrColor(@NonNull Resources.Theme theme, @AttrRes  int resId) {
+    public static int getAttrColor(@NonNull Resources.Theme theme, @AttrRes  int attr) {
         if (sTmpValue == null) sTmpValue = new TypedValue();
         if (!theme.resolveAttribute(attr, sTmpValue, true)) return 0;
         if (sTmpValue.type == TypedValue.TYPE_ATTRIBUTE) return getAttrColor(theme, sTmpValue.data);
@@ -110,10 +110,10 @@ public final class ResourceUtil {
     }
 
     @Nullable
-    public static ColorStateList getAttrColorStateList(@NonNull Context context, @NonNull Resources.Theme theme, @AttrRes  int resId) {
+    public static ColorStateList getAttrColorStateList(@NonNull Context context, @NonNull Resources.Theme theme, @AttrRes  int attr) {
         if (attr == Resources.ID_NULL) return null;
         if (sTmpValue == null) sTmpValue = new TypedValue();
-        if (!theme.resolveAttribute(resId, sTmpValue, true)) return null;
+        if (!theme.resolveAttribute(attr, sTmpValue, true)) return null;
         if (sTmpValue.type >= TypedValue.TYPE_FIRST_COLOR_INT && sTmpValue.type <= TypedValue.TYPE_LAST_COLOR_INT) {
             return ColorStateList.valueOf(sTmpValue.data);
         }
