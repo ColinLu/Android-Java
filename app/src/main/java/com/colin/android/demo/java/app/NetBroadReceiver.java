@@ -25,15 +25,11 @@ import com.colin.library.android.utils.annotation.NetType;
  * 描述： 网络状态监听
  */
 public final class NetBroadReceiver extends BaseReceiver {
+
     /*Activity 绑定广播*/
     public static void bind(@Nullable final OnNetListener listener) {
         if (null == listener) return;
         listener.getLifecycle().addObserver(new NetBroadReceiver(listener));
-    }
-
-
-    public interface OnNetListener extends OnReceiverListener {
-        void network(@NetType int type);
     }
 
     @NetType
@@ -77,5 +73,12 @@ public final class NetBroadReceiver extends BaseReceiver {
         if (listener != null && listener.getContext() != null) {
             listener.network(netType);
         }
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+    // 网络状态变化接口
+    ///////////////////////////////////////////////////////////////////////////
+    public interface OnNetListener extends OnReceiverListener {
+        void network(@NetType int type);
     }
 }

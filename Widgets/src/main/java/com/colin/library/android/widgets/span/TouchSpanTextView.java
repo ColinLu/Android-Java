@@ -8,6 +8,7 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.widget.TextView;
 
+import androidx.annotation.AttrRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatTextView;
@@ -58,7 +59,7 @@ public class TouchSpanTextView extends AppCompatTextView implements ITouchSpan {
         super(context, attrs, Resources.ID_NULL);
     }
 
-    public TouchSpanTextView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public TouchSpanTextView(@NonNull Context context, @Nullable AttributeSet attrs, @AttrRes int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         setHighlightColor(Color.TRANSPARENT);
     }

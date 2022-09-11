@@ -19,28 +19,27 @@ public class ScaleInTransformer implements ViewPager2.PageTransformer {
 
     @Override
     public void transformPage(@NonNull View view, float position) {
-        int pageWidth = view.getWidth();
-        int pageHeight = view.getHeight();
-
-        view.setPivotY(pageHeight / 2);
-        view.setPivotX(pageWidth / 2);
+        final int w = view.getWidth();
+        final int h = view.getHeight();
+        view.setPivotY(h >> 1);
+        view.setPivotX(w >> 1);
         if (position < -1) {
             // This page is way off-screen to the left.
             view.setScaleX(mMinScale);
             view.setScaleY(mMinScale);
-            view.setPivotX(pageWidth);
+            view.setPivotX(w);
         } else if (position <= 1) {
             // Modify the default slide transition to shrink the page as well
             if (position < 0) {
                 float scaleFactor = (1 + position) * (1 - mMinScale) + mMinScale;
                 view.setScaleX(scaleFactor);
                 view.setScaleY(scaleFactor);
-                view.setPivotX(pageWidth * (DEFAULT_CENTER + (DEFAULT_CENTER * -position)));
+                view.setPivotX(w * (DEFAULT_CENTER + (DEFAULT_CENTER * -position)));
             } else {
                 float scaleFactor = (1 - position) * (1 - mMinScale) + mMinScale;
                 view.setScaleX(scaleFactor);
                 view.setScaleY(scaleFactor);
-                view.setPivotX(pageWidth * ((1 - position) * DEFAULT_CENTER));
+                view.setPivotX(w * ((1 - position) * DEFAULT_CENTER));
             }
         } else {
             view.setPivotX(0);
