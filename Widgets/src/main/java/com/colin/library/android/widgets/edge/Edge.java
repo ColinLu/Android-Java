@@ -145,26 +145,26 @@ public final class Edge {
 
     public void onLayout(final int width, final int height) {
         final int vw = mView.getMeasuredWidth(), vh = mView.getMeasuredHeight();
-        int vc = 0;
+        int center = 0;
         switch (mDirection) {
             case Direction.LEFT:
-                vc = (height - vh) >> 1;
-                mView.layout(-vw, vc, 0, vc + vh);
+                center = (height - vh) >> 1;
+                mView.layout(-vw, center, 0, center + vh);
                 mViewOffsetHelper.onViewLayout();
                 break;
             case Direction.TOP:
-                vc = (width - vw) >> 1;
-                mView.layout(vc, -vh, vc + vw, 0);
+                center = (width - vw) >> 1;
+                mView.layout(center, -vh, center + vw, 0);
                 mViewOffsetHelper.onViewLayout();
                 break;
             case Direction.RIGHT:
-                vc = (height - vh) >> 1;
-                mView.layout(width, vc, width + vw, vc + vh);
+                center = (height - vh) >> 1;
+                mView.layout(width, center, width + vw, center + vh);
                 mViewOffsetHelper.onViewLayout();
                 break;
             case Direction.BOTTOM:
-                vc = (width - vw) >> 1;
-                mView.layout(vc, height, vc + vw, height + vh);
+                center = (width - vw) >> 1;
+                mView.layout(center, height, center + vw, height + vh);
                 mViewOffsetHelper.onViewLayout();
                 break;
             default:
@@ -187,7 +187,7 @@ public final class Edge {
 
     public void updateOffset(int offset) {
         mViewOffsetHelper.setDirection(mDirection, offset);
-        if (mView instanceof EdgeWatcher) ((EdgeWatcher) mView).offset(mView, offset);
+        if (mView instanceof EdgeWatcher) ((EdgeWatcher) mView).offset(this, offset);
     }
 
     public ViewOffsetHelper getViewOffsetHelper() {

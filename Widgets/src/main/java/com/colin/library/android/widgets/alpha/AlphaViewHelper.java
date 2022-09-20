@@ -3,6 +3,7 @@ package com.colin.library.android.widgets.alpha;
 import android.content.Context;
 import android.view.View;
 
+import androidx.annotation.FloatRange;
 import androidx.annotation.NonNull;
 
 import com.colin.library.android.utils.ResourceUtil;
@@ -29,21 +30,21 @@ public final class AlphaViewHelper {
      */
     private boolean mChangedWhenDisable = true;
 
-    private float mNormalAlpha = 1.0f;
-    private float mPressedAlpha = 0.5f;
-    private float mDisabledAlpha = 0.5f;
+    private final float mNormalAlpha = 1.0f;
+    private final float mPressedAlpha;
+    private final float mDisabledAlpha;
 
     public AlphaViewHelper(@NonNull View view) {
         final Context context = view.getContext();
-        mViewRef = new WeakReference<>(view);
-        mPressedAlpha = ResourceUtil.getAttrFloatValue(context, R.attr.alpha_pressed);
-        mDisabledAlpha = ResourceUtil.getAttrFloatValue(context, R.attr.alpha_disabled);
+        this.mViewRef = new WeakReference<>(view);
+        this.mPressedAlpha = ResourceUtil.getAttrFloatValue(context, R.attr.alpha_pressed);
+        this.mDisabledAlpha = ResourceUtil.getAttrFloatValue(context, R.attr.alpha_disabled);
     }
 
-    public AlphaViewHelper(@NonNull View view, float pressed, float disabled) {
-        mViewRef = new WeakReference<>(view);
-        mPressedAlpha = pressed;
-        mDisabledAlpha = disabled;
+    public AlphaViewHelper(@NonNull View view, @FloatRange(from = 0.0F, to = 1.0F) float pressed, @FloatRange(from = 0.0F, to = 1.0F) float disabled) {
+        this.mViewRef = new WeakReference<>(view);
+        this.mPressedAlpha = pressed;
+        this.mDisabledAlpha = disabled;
     }
 
     /**

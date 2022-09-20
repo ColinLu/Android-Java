@@ -3,5 +3,4 @@
     <!--点击按钮透明度-->
     <attr name="alpha_pressed" format="float" />
     <attr name="alpha_disabled" format="float" />
-
 </resources>

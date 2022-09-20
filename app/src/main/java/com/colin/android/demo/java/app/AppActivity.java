@@ -22,7 +22,7 @@ import java.lang.reflect.ParameterizedType;
  * 作者： ColinLu
  * 时间： 2021-12-24 23:11
  * <p>
- * 描述： TODO
+ * 描述： 构建App基本逻辑
  */
 public abstract class AppActivity<Bind extends ViewBinding> extends BaseActivity implements
         ScreenReceiver.OnScreenBroadcastListener, NetBroadReceiver.OnNetListener {

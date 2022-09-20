@@ -22,13 +22,13 @@ import com.colin.library.android.widgets.progress.LoadingView;
 
 
 public class LoadMoreView extends ConstraintLayout implements EdgeWatcher {
-    private boolean mRunning = false;
     private final LoadingView mLoadingView;
     private final AppCompatImageView mArrowView;
     private final AppCompatTextView mTextView;
     private final int mHeight;
     private CharSequence mPullText;
     private CharSequence mReleaseText;
+    private boolean mRunning = false;
     private boolean mIsRelease = false;
 
     public LoadMoreView(Context context) {

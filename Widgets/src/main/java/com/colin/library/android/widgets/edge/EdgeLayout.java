@@ -47,7 +47,7 @@ public class EdgeLayout extends FrameLayout implements NestedScrollingParent3 {
     private Edge mEdgeRight = null;
     private Edge mEdgeBottom = null;
     private OnEdgeListener mOnEdgeListener;
-    private ViewOffsetHelper mViewOffsetHelper;
+    private ViewOffsetHelper mTargetViewOffsetHelper;
     private StopTargetViewFlingImpl mStopTargetViewFlingImpl = DefaultStopTargetViewFlingImpl.getInstance();
     private Runnable mStopTargetFlingRunnable = null;
     private float mNestedPreFlingVelocityScaleDown = 10;
@@ -83,16 +83,16 @@ public class EdgeLayout extends FrameLayout implements NestedScrollingParent3 {
         int edgesSet = 0;
         for (int i = 0; i < count; i++) {
             final View child = getChildAt(i);
-            final LayoutParams lp = (LayoutParams) child.getLayoutParams();
-            if (lp.mTarget) {
+            final LayoutParams params = (LayoutParams) child.getLayoutParams();
+            if (params.mTarget) {
                 if (isTargetSet) throw new RuntimeException("target view more than one");
                 isTargetSet = true;
                 setTargetView(child);
             } else {
-                if ((edgesSet & lp.mDirection) != 0)
+                if ((edgesSet & params.mDirection) != 0)
                     throw new RuntimeException("same direction edge view more than one");
-                edgesSet |= lp.mDirection;
-                setEdgeView(child, lp);
+                edgesSet |= params.mDirection;
+                setEdgeView(child, params);
             }
         }
     }
@@ -103,7 +103,7 @@ public class EdgeLayout extends FrameLayout implements NestedScrollingParent3 {
         final int h = b - t;
         if (mTargetView != null) {
             mTargetView.layout(0, 0, w, h);
-            mViewOffsetHelper.onViewLayout();
+            mTargetViewOffsetHelper.onViewLayout();
         }
         if (mEdgeLeft != null) mEdgeLeft.onLayout(w, h);
         if (mEdgeTop != null) mEdgeTop.onLayout(w, h);
@@ -133,13 +133,18 @@ public class EdgeLayout extends FrameLayout implements NestedScrollingParent3 {
         if (mState == STATE_SETTLING_TO_TRIGGER_OFFSET) {
             final int finalX = mScroller.getFinalX();
             final int finalY = mScroller.getFinalY();
-            scrollFinal(getDirectionEdge(Direction.LEFT), Orientation.HORIZONTAL, finalX, finalY, finalX);
-            scrollFinal(getDirectionEdge(Direction.TOP), Orientation.VERTICAL, finalX, finalY, finalY);
-            scrollFinal(getDirectionEdge(Direction.RIGHT), Orientation.HORIZONTAL, finalX, finalY, finalX);
-            scrollFinal(getDirectionEdge(Direction.BOTTOM), Orientation.VERTICAL, finalX, finalY, finalY);
+            computeScroll(getDirectionEdge(Direction.LEFT), Orientation.HORIZONTAL, finalX, finalY, finalX);
+            computeScroll(getDirectionEdge(Direction.TOP), Orientation.VERTICAL, finalX, finalY, finalY);
+            computeScroll(getDirectionEdge(Direction.RIGHT), Orientation.HORIZONTAL, finalX, finalY, finalX);
+            computeScroll(getDirectionEdge(Direction.BOTTOM), Orientation.VERTICAL, finalX, finalY, finalY);
         }
     }
 
+    protected void computeScroll(@Nullable Edge edge, @Orientation int orientation, int finalX, int finalY, int offset) {
+        if (edge == null) return;
+        if (edge.isScrollFinal(finalX, finalY)) edgeStart(edge, STATE_TRIGGERING);
+        scrollToTargetOffset(edge, orientation, offset);
+    }
 
     @Override
     public boolean onStartNestedScroll(@NonNull View child, @NonNull View target, @ViewCompat.ScrollAxis int axes) {
@@ -148,11 +153,16 @@ public class EdgeLayout extends FrameLayout implements NestedScrollingParent3 {
 
     @Override
     public boolean onStartNestedScroll(@NonNull View child, @NonNull View target, @ViewCompat.ScrollAxis int axes, @ViewCompat.NestedScrollType int type) {
-        return mTargetView == target
-                && (axes == ViewCompat.SCROLL_AXIS_HORIZONTAL && (isDirectionEnabled(Direction.LEFT) || isDirectionEnabled(Direction.RIGHT))) ||
-                (axes == ViewCompat.SCROLL_AXIS_VERTICAL && (isDirectionEnabled(Direction.TOP) || isDirectionEnabled(Direction.BOTTOM)));
+        return mTargetView == target && (isStartNestedScrollHorizontal(axes) || isStartNestedScrollVertical(axes));
     }
 
+    protected boolean isStartNestedScrollHorizontal(@ViewCompat.ScrollAxis int axes) {
+        return axes == ViewCompat.SCROLL_AXIS_HORIZONTAL && (isDirectionEnabled(Direction.LEFT) || isDirectionEnabled(Direction.RIGHT));
+    }
+
+    protected boolean isStartNestedScrollVertical(@ViewCompat.ScrollAxis int axes) {
+        return axes == ViewCompat.SCROLL_AXIS_VERTICAL && (isDirectionEnabled(Direction.TOP) || isDirectionEnabled(Direction.BOTTOM));
+    }
 
     @Override
     public void onNestedScrollAccepted(@NonNull View child, @NonNull View target, @ViewCompat.ScrollAxis int axes) {
@@ -238,8 +248,8 @@ public class EdgeLayout extends FrameLayout implements NestedScrollingParent3 {
 
     @Override
     public boolean onNestedPreFling(@NonNull View target, float velocityX, float velocityY) {
-        final int offsetX = mViewOffsetHelper.getLeftAndRightOffset();
-        final int offsetY = mViewOffsetHelper.getTopAndBottomOffset();
+        final int offsetX = mTargetViewOffsetHelper.getLeftAndRightOffset();
+        final int offsetY = mTargetViewOffsetHelper.getTopAndBottomOffset();
         // if the targetView is RecyclerView and we set OnFlingListener for RecyclerView.
         // then the targetView can not deliver fling consume to NestedScrollParent
         // so we intercept the fling if the target view can not consume the fling.
@@ -290,7 +300,7 @@ public class EdgeLayout extends FrameLayout implements NestedScrollingParent3 {
             addView(view, lp);
         }
         mTargetView = view;
-        mViewOffsetHelper = new ViewOffsetHelper(view);
+        mTargetViewOffsetHelper = new ViewOffsetHelper(view);
     }
 
     public void setEdgeView(@NonNull View view, @NonNull LayoutParams params) {
@@ -298,7 +308,7 @@ public class EdgeLayout extends FrameLayout implements NestedScrollingParent3 {
                 .setEdgeOver(params.mEdgeOver).setFlingFromTarget(params.mFlingFromTarget)
                 .setScrollOffset(params.mScrollOffset).setScrollTouchUp(params.mScrollTouchUp)
                 .setStartOffset(params.mStartOffset).setTargetOffset(params.mTargetOffset)
-                .setEdgeRate(params.mScrollSpeed).setScrollFling(params.mScrollSpeed)
+                .setEdgeRate(params.mEdgeRate).setScrollFling(params.mScrollFling)
                 .setScrollSpeed(params.mScrollSpeed);
         view.setLayoutParams(params);
         setEdgeView(builder);
@@ -400,14 +410,14 @@ public class EdgeLayout extends FrameLayout implements NestedScrollingParent3 {
         if (mState == STATE_PULLING) return;
         if (!animate) {
             mState = STATE_IDLE;
-            mViewOffsetHelper.setOrientationOffset(orientation, 0);
+            mTargetViewOffsetHelper.setOrientationOffset(orientation, 0);
             edge.scrollToTarget(0);
             return;
         }
         mState = STATE_SETTLING_TO_INIT_OFFSET;
         final int direction = edge.getDirection();
-        final int offsetX = mViewOffsetHelper.getLeftAndRightOffset();
-        final int offsetY = mViewOffsetHelper.getTopAndBottomOffset();
+        final int offsetX = mTargetViewOffsetHelper.getLeftAndRightOffset();
+        final int offsetY = mTargetViewOffsetHelper.getTopAndBottomOffset();
         if (direction == Direction.LEFT && offsetX > 0) {
             mScroller.startScroll(offsetX, offsetY, -offsetX, 0, scrollDuration(edge, offsetX));
             postInvalidateOnAnimation();
@@ -433,8 +443,8 @@ public class EdgeLayout extends FrameLayout implements NestedScrollingParent3 {
     private void scrollToTargetOffset() {
         if (mTargetView == null) return;
         mScroller.abortAnimation();
-        final int offsetX = mViewOffsetHelper.getLeftAndRightOffset();
-        final int offsetY = mViewOffsetHelper.getTopAndBottomOffset();
+        final int offsetX = mTargetViewOffsetHelper.getLeftAndRightOffset();
+        final int offsetY = mTargetViewOffsetHelper.getTopAndBottomOffset();
         if (scrollToTargetOffsetHorizontally(getDirectionEdge(Direction.LEFT), -1, offsetX, offsetY)) {
             return;
         }
@@ -466,15 +476,10 @@ public class EdgeLayout extends FrameLayout implements NestedScrollingParent3 {
     }
 
     private void scrollToTargetOffset(@NonNull Edge edge, @Orientation int orientation, int offset) {
-        mViewOffsetHelper.setOrientationOffset(orientation, offset);
+        mTargetViewOffsetHelper.setOrientationOffset(orientation, offset);
         edge.scrollToTarget(offset);
     }
 
-    private void scrollFinal(@Nullable Edge edge, @Orientation int orientation, int finalX, int finalY, int offset) {
-        if (edge == null) return;
-        if (edge.isScrollFinal(finalX, finalY)) edgeStart(edge, STATE_TRIGGERING);
-        scrollToTargetOffset(edge, orientation, offset);
-    }
 
     private boolean scrollToTargetOffsetHorizontally(@Nullable final Edge edge, final int direction, final int offsetH, final int offsetV) {
         if (edge == null || offsetH * direction >= 0) return false;
@@ -544,7 +549,7 @@ public class EdgeLayout extends FrameLayout implements NestedScrollingParent3 {
 
     private int getScroll(@Nullable Edge edge, @Orientation int orientation, int direction, @Px int scroll, @NonNull int[] consumed, @ViewCompat.NestedScrollType int type) {
         if (edge == null) return scroll;
-        int offset = mViewOffsetHelper.getOffset(orientation);
+        int offset = mTargetViewOffsetHelper.getOffset(orientation);
         if (scroll * direction < 0 && offset * direction < 0) {
             final float edgeRate = edge.getEdgeRate(type);
             int edgeScroll = (int) (scroll * edgeRate);
@@ -567,7 +572,7 @@ public class EdgeLayout extends FrameLayout implements NestedScrollingParent3 {
     private int getFling(@Nullable Edge edge, @Orientation int orientation, int direction, @Px int fling, int[] consumed, @ViewCompat.NestedScrollType int type) {
         if (edge == null) return fling;
         if (fling * direction > 0 && edge.isFlingFromTarget(type) && !mTargetView.canScrollVertically(direction)) {
-            int offset = mViewOffsetHelper.getOffset(orientation);
+            int offset = mTargetViewOffsetHelper.getOffset(orientation);
             final float rate = edge.getFlingRate(type, offset);
             int edgeFling = (int) (fling * rate);
             if (edgeFling == 0) return fling;

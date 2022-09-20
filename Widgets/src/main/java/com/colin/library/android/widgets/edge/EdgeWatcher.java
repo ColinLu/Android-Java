@@ -1,7 +1,5 @@
 package com.colin.library.android.widgets.edge;
 
-import android.view.View;
-
 import androidx.annotation.NonNull;
 
 /**
@@ -13,7 +11,7 @@ import androidx.annotation.NonNull;
 public interface EdgeWatcher {
     void start();
 
-    void offset(@NonNull View view, int offset);
+    void offset(@NonNull Edge edge, int offset);
 
     void finish();
 }
