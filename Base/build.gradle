@@ -40,3 +40,31 @@ dependencies {
     testImplementation dependency.test_androidx_junit
     testImplementation dependency.test_androidx_espresso
 }
+
+
+//group 'com.colin.library.android'
+//version '0.0.1'
+//def artifactId = 'OkHttp'
+//
+//apply plugin: 'maven'
+//uploadArchives {
+//    repositories {
+//        mavenDeployer {
+//            repository(url: 'https://packages.aliyun.com/maven/repository/2188588-release-hTVplo/') {
+//                authentication(
+//                        userName: '620d1dc29d2642b5b41ce77d',
+//                        password: 'ptWrnQ=kts]S'
+//                )
+//            }
+//            snapshotRepository(url: 'https://packages.aliyun.com/maven/repository/2188588-snapshot-u3krPQ/') {
+//                authentication(
+//                        userName: '620d1dc29d2642b5b41ce77d',
+//                        password: 'ptWrnQ=kts]S'
+//                )
+//            }
+//            pom.groupId = '$project.group'
+//            pom.artifactId = '$artifactId'
+//            pom.version = '$project.version'
+//        }
+//    }
+//}

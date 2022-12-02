@@ -2,11 +2,10 @@ package com.colin.library.android.okHttp.request;
 
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
+import com.colin.library.android.helper.ThreadHelper;
 import com.colin.library.android.okHttp.progress.IProgress;
 import com.colin.library.android.utils.LogUtil;
-import com.colin.library.android.utils.thread.ThreadUtil;
 
 import java.io.IOException;
 
@@ -86,6 +85,6 @@ public class ProgressRequestBody extends RequestBody {
     }
 
     private void callback(final long total, final float currentSize) {
-        ThreadUtil.runUI(() -> mProgress.progress(total, currentSize));
+        ThreadHelper.getInstance().post(() -> mProgress.progress(total, currentSize));
     }
 }

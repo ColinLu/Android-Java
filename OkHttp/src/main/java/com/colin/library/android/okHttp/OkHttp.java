@@ -26,7 +26,7 @@ import okhttp3.OkHttpClient;
  * 作者： ColinLu
  * 时间： 2022-02-17 00:21
  * <p>
- * 描述： TODO
+ * 描述： 网络请求辅助类，对外调用入口
  */
 public final class OkHttp {
     public static final int RETRY_CALL_DEFAULT = 3;

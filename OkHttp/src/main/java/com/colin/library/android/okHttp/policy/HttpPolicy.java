@@ -4,10 +4,11 @@ package com.colin.library.android.okHttp.policy;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.colin.library.android.helper.ThreadHelper;
 import com.colin.library.android.okHttp.bean.HttpException;
 import com.colin.library.android.okHttp.callback.IHttpCallback;
+import com.colin.library.android.utils.IOUtil;
 import com.colin.library.android.utils.LogUtil;
-import com.colin.library.android.utils.thread.ThreadUtil;
 
 import java.io.IOException;
 import java.net.SocketTimeoutException;
@@ -18,7 +19,6 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
-import okhttp3.internal.Util;
 
 /**
  * 作者： ColinLu
@@ -51,14 +51,14 @@ public class HttpPolicy<Result> implements IPolicy<Result> {
         } catch (Throwable e) {
             e.printStackTrace();
         } finally {
-            if (response != null) Util.closeQuietly(response);
+            if (response != null) IOUtil.close(response);
         }
         return response;
     }
 
     @Override
     public void execute(@NonNull IHttpCallback<Result> callback) {
-        ThreadUtil.runUI(() -> {
+        ThreadHelper.getInstance().post(() -> {
             try {
                 //开始
                 callback.start(mRequest);
@@ -93,7 +93,7 @@ public class HttpPolicy<Result> implements IPolicy<Result> {
 
     @Override
     public void success(@NonNull IHttpCallback<Result> callback, @Nullable Result result) {
-        ThreadUtil.runUI(() -> {
+        ThreadHelper.getInstance().post(() -> {
             callback.success(result);
             callback.finish(true);
         });
@@ -101,7 +101,7 @@ public class HttpPolicy<Result> implements IPolicy<Result> {
 
     @Override
     public void fail(@NonNull IHttpCallback<Result> callback, @NonNull HttpException exception) {
-        ThreadUtil.runUI(() -> {
+        ThreadHelper.getInstance().post(() -> {
             callback.fail(exception);
             callback.finish(false);
         });
@@ -144,7 +144,7 @@ public class HttpPolicy<Result> implements IPolicy<Result> {
                     }
                     responseBody = response.body();
                     //服务器问题 请求失败  或者没有请求体
-                    if (!response.isSuccessful() || null == responseBody || code == 404 || code >= 500) {
+                    if (!response.isSuccessful() || code == 404 || code >= 500) {
                         fail(callback, new HttpException(code, mRequest.url().toString(), response.message()));
                         return;
                     }
@@ -154,8 +154,7 @@ public class HttpPolicy<Result> implements IPolicy<Result> {
                 } catch (Throwable e) {
                     fail(callback, new HttpException(code, mRequest.url().toString(), e));
                 } finally {
-                    if (responseBody != null) Util.closeQuietly(responseBody);
-                    Util.closeQuietly(response);
+                    IOUtil.close(responseBody, response);
                 }
             }
         });
