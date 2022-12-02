@@ -16,11 +16,15 @@ import java.lang.annotation.RetentionPolicy;
  */
 @RestrictTo(LIBRARY_GROUP_PREFIX)
 @Retention(RetentionPolicy.SOURCE)
-@IntDef({Direction.NONE, Direction.LEFT, Direction.TOP, Direction.RIGHT, Direction.BOTTOM})
+@IntDef({Direction.NONE, Direction.LEFT, Direction.TOP, Direction.RIGHT, Direction.BOTTOM,
+        Direction.HORIZONTAL, Direction.VERTICAL, Direction.ALL})
 public @interface Direction {
     int NONE = 1;
     int LEFT = 2;
     int TOP = 4;
     int RIGHT = 8;
     int BOTTOM = 16;
+    int HORIZONTAL = LEFT | RIGHT;
+    int VERTICAL = TOP | BOTTOM;
+    int ALL = HORIZONTAL | VERTICAL;
 }

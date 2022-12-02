@@ -4,8 +4,7 @@ import android.app.Application;
 
 import com.colin.library.android.utils.CrashUtil;
 import com.colin.library.android.utils.LogUtil;
-import com.colin.library.android.utils.data.UtilConfig;
-import com.colin.library.android.utils.data.UtilHelper;
+import com.colin.library.android.helper.UtilHelper;
 
 
 /**

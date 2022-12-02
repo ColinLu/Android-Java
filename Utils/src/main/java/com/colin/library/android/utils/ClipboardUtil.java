@@ -5,8 +5,8 @@ import android.content.ClipboardManager;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.net.Uri;
-import android.text.TextUtils;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.colin.library.android.utils.data.Constants;
@@ -29,10 +29,8 @@ public final class ClipboardUtil {
      * @param text
      */
     public static void copy(@Nullable final CharSequence text) {
-        if (TextUtils.isEmpty(text)) return;
-        final ClipboardManager manager = AppUtil.getClipboardManager();
-        if (null == manager) return;
-        manager.setPrimaryClip(ClipData.newPlainText(Constants.CLIP_LABEL_TEXT, text));
+        if (StringUtil.isEmpty(text)) return;
+        setClipData(ClipData.newPlainText(Constants.CLIP_LABEL_TEXT, text));
     }
 
     /**
@@ -41,11 +39,9 @@ public final class ClipboardUtil {
      * @param uri uri
      */
     public static void copy(@Nullable final Uri uri) {
-        if (null == uri) return;
-        final ClipboardManager manager = AppUtil.getClipboardManager();
-        final ContentResolver contentResolver = AppUtil.getContentResolver();
-        if (null == manager || null == contentResolver) return;
-        manager.setPrimaryClip(ClipData.newUri(contentResolver, Constants.CLIP_LABEL_URI, uri));
+        final ContentResolver resolver = AppUtil.getContentResolver();
+        if (uri == null || resolver == null) return;
+        setClipData(ClipData.newUri(resolver, Constants.CLIP_LABEL_URI, uri));
     }
 
     /**
@@ -55,10 +51,12 @@ public final class ClipboardUtil {
      */
     public static void copy(@Nullable final Intent intent) {
         if (null == intent) return;
+        setClipData(ClipData.newIntent(Constants.CLIP_LABEL_INTENT, intent));
+    }
+
+    public static void setClipData(@NonNull final ClipData clip) {
         final ClipboardManager manager = AppUtil.getClipboardManager();
-        if (manager != null) {
-            manager.setPrimaryClip(ClipData.newIntent(Constants.CLIP_LABEL_INTENT, intent));
-        }
+        if (manager != null) manager.setPrimaryClip(clip);
     }
 
     /**
@@ -69,8 +67,8 @@ public final class ClipboardUtil {
      */
     @Nullable
     public static ClipData.Item getItem(int position) {
-        ClipboardManager clipboardManager = AppUtil.getClipboardManager();
-        ClipData clip = null == clipboardManager ? null : clipboardManager.getPrimaryClip();
+        final ClipboardManager manager = AppUtil.getClipboardManager();
+        ClipData clip = null == manager ? null : manager.getPrimaryClip();
         if (null == clip || clip.getItemCount() <= position) return null;
         return clip.getItemAt(position);
     }

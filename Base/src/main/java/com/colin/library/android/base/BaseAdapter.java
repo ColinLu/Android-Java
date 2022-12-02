@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.colin.library.android.widgets.def.OnItemClickListener;
@@ -17,8 +18,7 @@ import java.util.List;
 /**
  * 作者： ColinLu
  * 时间： 2022-01-15 11:30
- * <p>
- * 描述： TODO
+ * 描述： 基类 Adapter
  */
 public abstract class BaseAdapter<ITEM> extends RecyclerView.Adapter<ViewHolder> {
     protected final List<ITEM> mItemList;
@@ -49,21 +49,21 @@ public abstract class BaseAdapter<ITEM> extends RecyclerView.Adapter<ViewHolder>
     }
 
 
-    @LayoutRes
-    public abstract int layoutRes(int viewType);
-
-    public void setData(List<ITEM> items) {
+    public void setData(@Nullable List<ITEM> items) {
         mItemList.clear();
         if (items != null && items.size() > 0) mItemList.addAll(items);
         notifyDataSetChanged();
     }
 
 
-    @SuppressLint("NotifyDataSetChanged")
-    public void addData(List<ITEM> items) {
+    public void addData(@Nullable List<ITEM> items) {
         if (items != null && items.size() > 0) {
             mItemList.addAll(items);
             notifyDataSetChanged();
         }
     }
+
+    @LayoutRes
+    public abstract int layoutRes(int viewType);
+
 }

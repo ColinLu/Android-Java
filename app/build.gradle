@@ -102,6 +102,8 @@ dependencies {
     implementation project(path: ':Widgets')
     implementation project(path: ':OkHttp')
 
+    implementation 'androidx.core:core-splashscreen:1.0.0-beta02'
+
     implementation dependency.android_material
     implementation dependency.androidx_appcompat
     implementation dependency.androidx_legacy

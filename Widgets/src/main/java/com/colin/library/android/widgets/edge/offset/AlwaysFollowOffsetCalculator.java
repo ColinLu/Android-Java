@@ -8,6 +8,6 @@ import com.colin.library.android.widgets.edge.Edge;
 public class AlwaysFollowOffsetCalculator implements IEdgeOffsetCalculator {
     @Override
     public int calculator(@NonNull Edge edge, @Px int offset) {
-        return edge.getStartOffset() + offset;
+        return edge.getStartOffset() + Math.abs(offset);
     }
 }

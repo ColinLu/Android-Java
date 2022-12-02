@@ -16,7 +16,7 @@ import androidx.lifecycle.OnLifecycleEvent;
 import com.colin.library.android.base.BaseReceiver;
 import com.colin.library.android.base.def.OnReceiverListener;
 import com.colin.library.android.utils.NetUtil;
-import com.colin.library.android.utils.annotation.NetType;
+import com.colin.library.android.annotation.NetType;
 
 /**
  * 作者： ColinLu

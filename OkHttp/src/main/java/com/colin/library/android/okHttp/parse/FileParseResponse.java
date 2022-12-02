@@ -7,12 +7,15 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
 
+import com.colin.library.android.helper.ThreadHelper;
 import com.colin.library.android.okHttp.OkHttp;
 import com.colin.library.android.okHttp.progress.IProgress;
 import com.colin.library.android.utils.FileUtil;
 import com.colin.library.android.utils.HttpUtil;
+import com.colin.library.android.utils.IOUtil;
 import com.colin.library.android.utils.PathUtil;
-import com.colin.library.android.utils.thread.ThreadUtil;
+import com.colin.library.android.utils.StringUtil;
+import com.colin.library.android.utils.TimeUtil;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -20,7 +23,7 @@ import java.io.InputStream;
 
 import okhttp3.Response;
 import okhttp3.ResponseBody;
-import okhttp3.internal.Util;
+
 
 /**
  * 作者： ColinLu
@@ -50,7 +53,8 @@ public class FileParseResponse implements IParseResponse<File> {
         this(dir, fileName, null);
     }
 
-    public FileParseResponse(@Nullable File dir, @Nullable String fileName, @Nullable IProgress progress) {
+    public FileParseResponse(@Nullable File dir, @Nullable String fileName,
+                             @Nullable IProgress progress) {
         this.mDir = dir;
         this.mFileName = fileName;
         this.mProgress = progress;
@@ -79,16 +83,16 @@ public class FileParseResponse implements IParseResponse<File> {
                 out.write(buffer, 0, len);
                 progress(total, (sum * 1.0F / total));
             }
-            out.flush();
+            IOUtil.flush(out);
             return file;
         } finally {
-            if (is != null) Util.closeQuietly(is);
-            if (out != null) Util.closeQuietly(out);
+            IOUtil.close(is, out);
         }
     }
 
     public void progress(long total, float progress) {
-        if (mProgress != null) ThreadUtil.runUI(() -> mProgress.progress(total, progress));
+        if (mProgress != null)
+            ThreadHelper.getInstance().post(() -> mProgress.progress(total, progress));
     }
 
     @NonNull
@@ -98,10 +102,10 @@ public class FileParseResponse implements IParseResponse<File> {
 
     @NonNull
     private String getFileName(@NonNull final Response response) {
-        if (!TextUtils.isEmpty(mFileName)) return mFileName;
+        if (!StringUtil.isEmpty(mFileName)) return mFileName;
         String fileName = HttpUtil.head(response.header(OkHttp.HEAD_KEY_CONTENT_DISPOSITION), "filename", null);
-        if (!TextUtils.isEmpty(fileName)) return fileName;
+        if (!StringUtil.isEmpty(fileName)) return fileName;
         fileName = HttpUtil.getFileName(response.request().url());
-        return TextUtils.isEmpty(fileName) ? FileUtil.getFileNameDef(null) : fileName;
+        return StringUtil.isEmpty(fileName) ? TimeUtil.getTimeString() : fileName;
     }
 }

@@ -65,6 +65,10 @@ public final class OSUtil {
         return Build.BRAND.toUpperCase();
     }
 
+    private OSUtil() {
+        throw new UnsupportedOperationException("don't instantiate");
+    }
+
     public static String getName() {
         if (null == sName) check("");
         return sName;

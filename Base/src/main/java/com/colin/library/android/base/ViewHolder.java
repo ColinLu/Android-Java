@@ -62,8 +62,11 @@ public class ViewHolder extends RecyclerView.ViewHolder {
         return (T) view;
     }
 
+    ///////////////////////////////////////////////////////////////////////////
+    // View  重用属性
+    ///////////////////////////////////////////////////////////////////////////
     @NonNull
-    public ViewHolder setContentDescription(@IdRes int idRes, @Nullable CharSequence text) {
+    public ViewHolder setDescription(@IdRes int idRes, @Nullable CharSequence text) {
         final View view = getView(idRes);
         view.setContentDescription(text);
         return this;
@@ -161,6 +164,9 @@ public class ViewHolder extends RecyclerView.ViewHolder {
         return this;
     }
 
+    ///////////////////////////////////////////////////////////////////////////
+    // TextView
+    ///////////////////////////////////////////////////////////////////////////
     @NonNull
     public ViewHolder setText(@IdRes int idRes, @StringRes int stringRes) {
         final TextView view = getView(idRes);
@@ -221,6 +227,24 @@ public class ViewHolder extends RecyclerView.ViewHolder {
     }
 
     @NonNull
+    public ViewHolder linkify(@IdRes int idRes) {
+        final TextView view = getView(idRes);
+        Linkify.addLinks(view, Linkify.ALL);
+        return this;
+    }
+
+    @NonNull
+    public ViewHolder setTypeface(@IdRes int idRes, @NonNull Typeface typeface) {
+        final TextView view = getView(idRes);
+        view.setTypeface(typeface);
+        view.setPaintFlags(view.getPaintFlags() | Paint.SUBPIXEL_TEXT_FLAG);
+        return this;
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+    // ImageView
+    ///////////////////////////////////////////////////////////////////////////
+    @NonNull
     public ViewHolder setImageResource(@IdRes int idRes, @DrawableRes int drawableRes) {
         final ImageView view = getView(idRes);
         view.setImageResource(drawableRes);
@@ -249,19 +273,17 @@ public class ViewHolder extends RecyclerView.ViewHolder {
         return this;
     }
 
-
     @NonNull
-    public ViewHolder linkify(@IdRes int idRes) {
-        final TextView view = getView(idRes);
-        Linkify.addLinks(view, Linkify.ALL);
+    public ViewHolder setChecked(@IdRes int idRes, boolean checked) {
+        final CompoundButton view = getView(idRes);
+        view.setChecked(checked);
         return this;
     }
 
     @NonNull
-    public ViewHolder setTypeface(@IdRes int idRes, @NonNull Typeface typeface) {
-        final TextView view = getView(idRes);
-        view.setTypeface(typeface);
-        view.setPaintFlags(view.getPaintFlags() | Paint.SUBPIXEL_TEXT_FLAG);
+    public ViewHolder setOnCheckedChangeListener(@IdRes int idRes, @Nullable CompoundButton.OnCheckedChangeListener listener) {
+        final CompoundButton view = getView(idRes);
+        view.setOnCheckedChangeListener(listener);
         return this;
     }
 
@@ -304,19 +326,6 @@ public class ViewHolder extends RecyclerView.ViewHolder {
         return this;
     }
 
-    @NonNull
-    public ViewHolder setChecked(@IdRes int idRes, boolean checked) {
-        final CompoundButton view = getView(idRes);
-        view.setChecked(checked);
-        return this;
-    }
-
-    @NonNull
-    public ViewHolder setOnCheckedChangeListener(@IdRes int idRes, @Nullable CompoundButton.OnCheckedChangeListener listener) {
-        final CompoundButton view = getView(idRes);
-        view.setOnCheckedChangeListener(listener);
-        return this;
-    }
 
     @NonNull
     public ViewHolder setVisible(boolean show) {

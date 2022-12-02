@@ -10,10 +10,11 @@ import com.colin.library.android.widgets.edge.Edge;
 public class CenterOffsetCalculator implements IEdgeOffsetCalculator {
     @Override
     public int calculator(@NonNull Edge edge, @Px int offset) {
-        if (offset < edge.getTargetOffset()) return edge.getStartOffset() + offset;
+        final int abs = Math.abs(offset);
+        if (abs < edge.getTargetOffset()) return edge.getStartOffset() + abs;
         if (edge.getDirection() == Direction.LEFT || edge.getDirection() == Direction.RIGHT) {
-            return offset - edge.getView().getWidth() >> 1;
-        } else return offset - edge.getView().getHeight() >> 1;
+            return abs - edge.getView().getWidth() >> 1;
+        } else return abs - edge.getView().getHeight() >> 1;
 
     }
 }

@@ -1,4 +1,4 @@
-package com.colin.library.android.base;
+package com.colin.library.android.provider;
 
 import android.content.Context;
 import android.net.Uri;
@@ -11,7 +11,7 @@ import java.io.File;
 ///////////////////////////////////////////////////////////////////////////
 //    manifest 配置
 //     <provider
-//            android:name="com.colin.library.android.base.provider.AppFileProvider"
+//            android:name="com.colin.library.android.provider.AppFileProvider"
 //            android:authorities="${applicationId}.provider"
 //            android:exported="false"
 //            android:grantUriPermissions="true"

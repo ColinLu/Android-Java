@@ -44,7 +44,7 @@ import java.util.concurrent.TimeUnit;
  */
 public final class TimeUtil {
     private TimeUtil() {
-        throw new UnsupportedOperationException("工具类全是静态类不需要构建函数实现");
+        throw new UnsupportedOperationException("don't instantiate");
     }
 
     private static final Object mLockObj = new Object();

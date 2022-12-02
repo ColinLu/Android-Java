@@ -4,6 +4,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.Size;
 
+import com.colin.library.android.utils.data.Constants;
+
+import org.jetbrains.annotations.Contract;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
@@ -12,8 +16,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.CharArrayWriter;
 import java.io.Closeable;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.Flushable;
 import java.io.IOException;
 import java.io.InputStream;
@@ -42,22 +44,22 @@ public final class IOUtil {
     ///////////////////////////////////////////////////////////////////////////
     @Nullable
     public static byte[] getBytes(@Nullable final CharSequence input) {
-        return input == null || input.length() == 0 ? null : getBytes(input.toString(), Charset.defaultCharset());
+        return StringUtil.isEmpty(input) ? null : getBytes(input.toString(), Charset.defaultCharset());
     }
 
     @Nullable
     public static byte[] getBytes(@Nullable final CharSequence input, @NonNull final Charset charset) {
-        return input == null || input.length() == 0 ? null : getBytes(input.toString(), charset);
+        return StringUtil.isEmpty(input) ? null : getBytes(input.toString(), charset);
     }
 
     @Nullable
     public static byte[] getBytes(@Nullable final String input) {
-        return input == null || input.length() == 0 ? null : getBytes(input, Charset.defaultCharset());
+        return StringUtil.isEmpty(input) ? null : getBytes(input, Charset.defaultCharset());
     }
 
     @Nullable
     public static byte[] getBytes(@Nullable final String input, @NonNull final Charset charset) {
-        return input == null || input.length() == 0 ? null : input.getBytes(charset);
+        return StringUtil.isEmpty(input) ? null : input.getBytes(charset);
     }
 
     @Nullable
@@ -70,7 +72,7 @@ public final class IOUtil {
             write(input, output);
             bytes = output.toByteArray();
         } catch (IOException e) {
-            LogUtil.log(e);
+            e.printStackTrace();
         } finally {
             close(input, output);
         }
@@ -88,7 +90,7 @@ public final class IOUtil {
             write(input, output);
             bytes = output.toByteArray();
         } catch (IOException e) {
-            LogUtil.log(e);
+            e.printStackTrace();
         } finally {
             close(input, output);
         }
@@ -105,7 +107,7 @@ public final class IOUtil {
             write(input, output, charset);
             bytes = output.toByteArray();
         } catch (IOException e) {
-            LogUtil.log(e);
+            e.printStackTrace();
         } finally {
             close(input, output);
         }
@@ -123,7 +125,7 @@ public final class IOUtil {
                 offset += byteCount;
             if (offset != size) return null;
         } catch (IOException e) {
-            LogUtil.log(e);
+            e.printStackTrace();
         }
         return data;
     }
@@ -133,7 +135,7 @@ public final class IOUtil {
     ///////////////////////////////////////////////////////////////////////////
     @Nullable
     public static char[] getChars(@Nullable final CharSequence input) {
-        if (input == null || input.length() == 0) return null;
+        if (StringUtil.isEmpty(input)) return null;
         CharArrayWriter output = null;
         char[] chars = null;
         try {
@@ -203,12 +205,12 @@ public final class IOUtil {
     ///////////////////////////////////////////////////////////////////////////
     @Nullable
     public static String getString(@Nullable final byte[] bytes) {
-        return bytes == null || bytes.length == 0 ? null : new String(bytes);
+        return ArrayUtil.isEmpty(bytes) ? null : new String(bytes);
     }
 
     @Nullable
     public static String getString(@Nullable final byte[] bytes, @NonNull final Charset charset) {
-        return bytes == null || bytes.length == 0 ? null : new String(bytes, charset);
+        return ArrayUtil.isEmpty(bytes) ? null : new String(bytes, charset);
     }
 
     @Nullable
@@ -232,14 +234,15 @@ public final class IOUtil {
         return getString(getBytes(input), charset);
     }
 
-    @Nullable
-    public static List<String> readLines(@Nullable final InputStream input, @NonNull final Charset charset) {
-        return input == null ? null : readLines(new InputStreamReader(input, charset));
-    }
 
     @Nullable
     public static List<String> readLines(@Nullable final InputStream input) {
         return input == null ? null : readLines(new InputStreamReader(input));
+    }
+
+    @Nullable
+    public static List<String> readLines(@Nullable final InputStream input, @NonNull final Charset charset) {
+        return input == null ? null : readLines(new InputStreamReader(input, charset));
     }
 
     @Nullable
@@ -266,34 +269,46 @@ public final class IOUtil {
     ///////////////////////////////////////////////////////////////////////////
     // IO/OS 转化
     ///////////////////////////////////////////////////////////////////////////
+    @NonNull
     public static BufferedInputStream toBufferedInputStream(@NonNull final InputStream is) {
         return is instanceof BufferedInputStream ? (BufferedInputStream) is : new BufferedInputStream(is);
     }
 
+    @NonNull
     public static BufferedOutputStream toBufferedOutputStream(@NonNull final OutputStream os) {
         return os instanceof BufferedOutputStream ? (BufferedOutputStream) os : new BufferedOutputStream(os);
     }
 
+    @NonNull
     public static BufferedReader toBufferedReader(@NonNull final Reader reader) {
         return reader instanceof BufferedReader ? (BufferedReader) reader : new BufferedReader(reader);
     }
 
+    @NonNull
     public static BufferedWriter toBufferedWriter(@NonNull final Writer writer) {
         return writer instanceof BufferedWriter ? (BufferedWriter) writer : new BufferedWriter(writer);
     }
 
+    @NonNull
+    @Contract("_ -> new")
     public static InputStream toInputStream(@NonNull final CharSequence input) {
         return new ByteArrayInputStream(getBytes(input));
     }
 
+    @NonNull
+    @Contract("_, _ -> new")
     public static InputStream toInputStream(@NonNull final CharSequence input, @NonNull final Charset charset) {
         return new ByteArrayInputStream(getBytes(input, charset));
     }
 
+    @NonNull
+    @Contract("_ -> new")
     public static InputStream toInputStream(@NonNull final String input) {
         return new ByteArrayInputStream(getBytes(input));
     }
 
+    @NonNull
+    @Contract("_, _ -> new")
     public static InputStream toInputStream(@NonNull final String input, @NonNull final Charset charset) {
         return new ByteArrayInputStream(getBytes(input, charset));
     }
@@ -309,31 +324,31 @@ public final class IOUtil {
         output.write(new String(data));
     }
 
-    public static void write(@NonNull @Size(min = 0) byte[] data, Writer output, @NonNull final Charset charset) throws IOException {
+    public static void write(@NonNull @Size(min = 0) byte[] data, @NonNull Writer output, @NonNull final Charset charset) throws IOException {
         output.write(new String(data, charset));
     }
 
-    public static void write(@NonNull @Size(min = 0) char[] data, Writer output) throws IOException {
+    public static void write(@NonNull @Size(min = 0) char[] data, @NonNull Writer output) throws IOException {
         output.write(data);
     }
 
-    public static void write(@NonNull @Size(min = 0) char[] data, OutputStream output) throws IOException {
+    public static void write(@NonNull @Size(min = 0) char[] data, @NonNull OutputStream output) throws IOException {
         output.write(new String(data).getBytes());
     }
 
-    public static void write(@NonNull @Size(min = 0) char[] data, OutputStream output, @NonNull final Charset charset) throws IOException {
+    public static void write(@NonNull @Size(min = 0) char[] data, @NonNull OutputStream output, @NonNull final Charset charset) throws IOException {
         output.write(new String(data).getBytes(charset));
     }
 
-    public static void write(@NonNull CharSequence data, Writer output) throws IOException {
+    public static void write(@NonNull CharSequence data, @NonNull Writer output) throws IOException {
         output.write(data.toString());
     }
 
-    public static void write(@NonNull CharSequence data, OutputStream output) throws IOException {
+    public static void write(@NonNull CharSequence data, @NonNull OutputStream output) throws IOException {
         output.write(data.toString().getBytes());
     }
 
-    public static void write(@NonNull CharSequence data, OutputStream output, @NonNull final Charset charset) throws IOException {
+    public static void write(@NonNull CharSequence data, @NonNull OutputStream output, @NonNull final Charset charset) throws IOException {
         output.write(data.toString().getBytes(charset));
     }
 
@@ -352,20 +367,19 @@ public final class IOUtil {
     }
 
     public static void write(@NonNull final Reader input, @NonNull final Writer output) throws IOException {
-        final char[] buffer = new char[4096];
+        final char[] buffer = new char[Constants.BUFFER_STREAM_SIZE];
         int len;
         while (-1 != (len = input.read(buffer))) output.write(buffer, 0, len);
     }
 
 
     public static void write(@NonNull final InputStream is, @NonNull final OutputStream os) throws IOException {
-        final byte[] buffer = new byte[4096];
+        final byte[] buffer = new byte[Constants.BUFFER_STREAM_SIZE];
         int len;
         while ((len = is.read(buffer)) != -1) os.write(buffer, 0, len);
     }
 
     public static void write(@NonNull final Reader input, @NonNull final OutputStream output) throws IOException {
-        ;
         final Writer out = new OutputStreamWriter(output);
         write(input, out);
         out.flush();

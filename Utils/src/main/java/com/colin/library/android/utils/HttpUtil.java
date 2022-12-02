@@ -8,10 +8,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import java.io.DataOutputStream;
+import java.io.File;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.util.Locale;
 import java.util.Scanner;
@@ -34,8 +36,8 @@ public final class HttpUtil {
     }
 
 
-    private static final int CONNECT_TIMEOUT_TIME = 15000;
-    private static final int READ_TIMEOUT_TIME = 19000;
+    private static final int CONNECT_TIMEOUT_TIME = 15_000;
+    private static final int READ_TIMEOUT_TIME = 19_000;
 
     /**
      * POST + JSON
@@ -45,8 +47,8 @@ public final class HttpUtil {
      * @return data receive from server
      * @author MilkZS
      */
-    public static String postJson(@NonNull String url, @NonNull String json) {
-        return doHttpAction(url, true, json, true);
+    public static String postJson(@NonNull final String url, @NonNull final String json) {
+        return http(url, true, json, true);
     }
 
     /**
@@ -57,8 +59,8 @@ public final class HttpUtil {
      * @return data receive from serv
      * @author MilkZS
      */
-    public static String postForm(@NonNull String url, @NonNull String form) {
-        return doHttpAction(url, true, form, false);
+    public static String postForm(@NonNull final String url, @NonNull final String form) {
+        return http(url, true, form, false);
     }
 
     /**
@@ -69,8 +71,8 @@ public final class HttpUtil {
      * @return data receive from server
      * @author MilkZS
      */
-    public static String getJson(@NonNull String url, @NonNull String json) {
-        return doHttpAction(url, false, json, false);
+    public static String getJson(@NonNull final String url, @NonNull final String json) {
+        return http(url, false, json, false);
     }
 
     /**
@@ -81,11 +83,11 @@ public final class HttpUtil {
      * @return data receive from server
      * @author MilkZS
      */
-    public static String getForm(@NonNull String url, @NonNull String form) {
-        return doHttpAction(url, false, form, false);
+    public static String getForm(@NonNull final String url, @NonNull final String form) {
+        return http(url, false, form, false);
     }
 
-    private static String doHttpAction(String url, boolean post, String data, boolean json) {
+    private static String http(@NonNull final String url, final boolean post, @NonNull final String data, final boolean json) {
         HttpURLConnection connection = null;
         DataOutputStream os = null;
         InputStream is = null;
@@ -138,8 +140,8 @@ public final class HttpUtil {
     /*解析URL地址 获取文件名字 带后缀 eg:  xxx.txt*/
     @Nullable
     public static String getFileName(@Nullable final String url) {
-        if (null == url || url.length() == 0) return null;
-        String[] strings = url.split("/");
+        if (StringUtil.isEmpty(url)) return null;
+        final String[] strings = url.split("/");
         for (String string : strings) {
             if (string.contains("?")) {
                 int endIndex = string.indexOf("?");
@@ -208,14 +210,14 @@ public final class HttpUtil {
         if (StringUtil.isEmpty(mimeType) || StringUtil.isEmpty(encode)) return null;
         return MediaType.parse(mimeType + "; charset=" + encode);
     }
-
-    /*多媒体类型*/
+    /*文件名 xxx.mp3*/
     @Nullable
-    public static String getMimeType(@Nullable String fileName) {
-        if (StringUtil.isEmpty(fileName)) return null;
-        final String extension = MimeTypeMap.getFileExtensionFromUrl(fileName);
-        return MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
+    public static String getMimeType(@Nullable final String fileName) {
+        if (StringUtil.isSpace(fileName)) return null;
+        return URLConnection.getFileNameMap().getContentTypeFor(fileName.toLowerCase(Locale.US));
     }
+
+
 
     @NonNull
     public static String getAcceptLanguage() {

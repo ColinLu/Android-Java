@@ -4,6 +4,8 @@ import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.colin.library.android.helper.ThreadHelper;
+
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
@@ -26,7 +28,7 @@ public abstract class Task<Result> implements Runnable {
 
     private volatile int mState = State.NEW;
 
-    private Callback<Result> mCallback;
+    private final Callback<Result> mCallback;
 
     public Task(@Nullable final Callback<Result> callback) {
         mCallback = callback;
@@ -38,7 +40,7 @@ public abstract class Task<Result> implements Runnable {
             final Result t = doInBackground();
             if (mState != State.NEW) return;
             mState = State.COMPLETING;
-            ThreadUtil.runUI(() -> {
+            ThreadHelper.getInstance().post(() -> {
                 if (null != mCallback) mCallback.onCall(t);
             });
         } catch (Exception th) {
@@ -77,7 +79,7 @@ public abstract class Task<Result> implements Runnable {
      * @return
      */
     public static <T> Task<T> doAsync(@NonNull final Task<T> task) {
-        ThreadUtil.doAsync(task);
+        ThreadHelper.getInstance().doAsync(task);
         return task;
     }
 
@@ -88,7 +90,7 @@ public abstract class Task<Result> implements Runnable {
      * @param runnable
      * @param delayMillis 毫秒
      */
-    public static void runUIDelayed(@NonNull final Runnable runnable, long delayMillis) {
-        ThreadUtil.runUIDelayed(runnable, delayMillis);
+    public static void postDelayed(@NonNull final Runnable runnable, long delayMillis) {
+        ThreadHelper.getInstance().postDelayed(runnable, delayMillis);
     }
 }

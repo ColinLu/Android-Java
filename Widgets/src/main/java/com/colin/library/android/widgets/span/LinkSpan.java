@@ -18,7 +18,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.colin.library.android.utils.annotation.Encode;
+import com.colin.library.android.annotation.Encode;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;

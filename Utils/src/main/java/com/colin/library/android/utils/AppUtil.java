@@ -24,7 +24,7 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 
 import com.colin.library.android.utils.data.Constants;
-import com.colin.library.android.utils.data.UtilHelper;
+import com.colin.library.android.helper.UtilHelper;
 
 /**
  * 作者： ColinLu

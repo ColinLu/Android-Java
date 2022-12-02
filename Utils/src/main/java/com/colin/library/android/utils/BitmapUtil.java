@@ -34,16 +34,12 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 
 import com.colin.library.android.utils.data.Constants;
-import com.colin.library.android.utils.data.UtilHelper;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.colin.library.android.helper.UtilHelper;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStream;
-
-import okhttp3.Response;
 
 /**
  * 作者： ColinLu

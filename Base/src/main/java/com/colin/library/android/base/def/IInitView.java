@@ -18,6 +18,7 @@ public interface IInitView {
 
     void initView(@Nullable Bundle bundle);
 
+    /*Previous interface data*/
     void initData(@Nullable Bundle bundle);
 
     /*local sqlite net*/

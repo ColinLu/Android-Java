@@ -6,7 +6,7 @@ import androidx.annotation.Nullable;
 import com.colin.library.android.utils.ArrayUtil;
 import com.colin.library.android.utils.FileUtil;
 import com.colin.library.android.utils.StringUtil;
-import com.colin.library.android.utils.annotation.Algorithm;
+import com.colin.library.android.annotation.Algorithm;
 
 import java.io.File;
 

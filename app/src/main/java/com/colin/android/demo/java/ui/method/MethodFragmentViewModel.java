@@ -7,10 +7,8 @@ import com.colin.android.demo.java.R;
 import com.colin.android.demo.java.def.Constants;
 import com.colin.android.demo.java.def.LoadState;
 import com.colin.android.demo.java.utils.DemoUtils;
-import com.colin.library.android.utils.data.UtilHelper;
-import com.colin.library.android.utils.thread.ThreadUtil;
+import com.colin.library.android.helper.ThreadHelper;
 
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -30,8 +28,10 @@ public class MethodFragmentViewModel extends ViewModel {
 
     public void refresh(boolean refresh) {
         mLoadState.setValue(LoadState.ING);
-        ThreadUtil.doAsync(() -> mList.postValue(DemoUtils.getStringList(R.array.method_list)));
-        ThreadUtil.runUIDelayed(() -> mLoadState.setValue(LoadState.SUCCESS), Constants.DURATION_DELAYED);
+        ThreadHelper.getInstance().doAsync(
+                () -> mList.postValue(DemoUtils.getStringList(R.array.method_list)));
+        ThreadHelper.getInstance().postDelayed(() -> mLoadState.setValue(LoadState.SUCCESS),
+                                               Constants.DURATION_DELAYED);
     }
 
     public MutableLiveData<List<String>> getList() {

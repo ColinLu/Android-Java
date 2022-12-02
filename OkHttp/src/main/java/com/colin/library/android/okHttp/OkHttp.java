@@ -7,7 +7,6 @@ import androidx.annotation.Nullable;
 
 import com.colin.library.android.okHttp.annotation.Method;
 import com.colin.library.android.okHttp.bean.HttpConfig;
-import com.colin.library.android.okHttp.request.BaseRequest;
 import com.colin.library.android.okHttp.request.BodyRequest;
 import com.colin.library.android.okHttp.request.DeleteRequest;
 import com.colin.library.android.okHttp.request.GetRequest;
@@ -18,7 +17,7 @@ import com.colin.library.android.okHttp.request.PatchRequest;
 import com.colin.library.android.okHttp.request.PostRequest;
 import com.colin.library.android.okHttp.request.PutRequest;
 import com.colin.library.android.okHttp.request.TraceRequest;
-import com.colin.library.android.utils.annotation.Encode;
+import com.colin.library.android.annotation.Encode;
 
 import okhttp3.Call;
 import okhttp3.OkHttpClient;

@@ -18,41 +18,32 @@ import com.colin.library.android.utils.data.Constants;
 public final class HexUtil {
 
 
-    /*普通字节数组-> 16进制字符串*/
+    /*normal to  hex*/
     @Nullable
     public static String getString(@Nullable final String text) {
         return getString(Constants.DIGITS_BYTE_LOWER, StringUtil.getBytes(text));
     }
 
-    /*普通字节数组-> 16进制字符串*/
+    /*normal to hex*/
     @Nullable
     public static String getString(@Nullable final byte[] bytes) {
         return getString(Constants.DIGITS_BYTE_LOWER, bytes);
     }
 
-    /*普通字节数组-> 16进制字符串*/
+    /*normal to hex*/
     @Nullable
     public static String getString(final boolean upper, @Nullable final byte[] bytes) {
         return getString(upper ? Constants.DIGITS_BYTE_UPPER : Constants.DIGITS_BYTE_LOWER, bytes);
     }
 
-    /*普通字节数组-> 16进制字符串*/
+    /*normal to hex*/
     @Nullable
     public static String getString(@NonNull final byte[] digits, @Nullable final byte[] bytes) {
         return StringUtil.getString(getBytes(digits, bytes));
     }
 
-    @Nullable
-    public static byte[] getBytes(@Nullable final String hex) {
-        return getBytes(Constants.DIGITS_BYTE_LOWER, StringUtil.getBytes(hex));
-    }
 
-    @Nullable
-    public static byte[] getBytes(final boolean upper, @Nullable final String hex) {
-        return getBytes(upper ? Constants.DIGITS_BYTE_UPPER : Constants.DIGITS_BYTE_LOWER, StringUtil.getBytes(hex));
-    }
-
-    /*普通字节数组->16进制数组*/
+    /*normal to hex*/
     @Nullable
     public static byte[] getBytes(@NonNull final byte[] digits, @Nullable final byte[] bytes) {
         final int len = null == bytes ? 0 : bytes.length;
@@ -63,6 +54,18 @@ public final class HexUtil {
             values[j++] = digits[bytes[i] & 0X0F];
         }
         return values;
+    }
+
+    /*hex to normal*/
+    @Nullable
+    public static byte[] getBytes(@Nullable final String hex) {
+        return getBytes(Constants.DIGITS_BYTE_LOWER, StringUtil.getBytes(hex));
+    }
+
+    /*hex to normal*/
+    @Nullable
+    public static byte[] getBytes(final boolean upper, @Nullable final String hex) {
+        return getBytes(upper ? Constants.DIGITS_BYTE_UPPER : Constants.DIGITS_BYTE_LOWER, StringUtil.getBytes(hex));
     }
 
 

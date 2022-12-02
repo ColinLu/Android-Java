@@ -16,7 +16,7 @@ import java.lang.ref.WeakReference;
  * 描述： 防止内存泄漏
  */
 public final class WeakHandler extends Handler {
-    private WeakReference<Activity> mContextRef;
+    private final WeakReference<Activity> mContextRef;
 
     public WeakHandler(@NonNull Activity activity) {
         mContextRef = new WeakReference<>(activity);
@@ -25,7 +25,7 @@ public final class WeakHandler extends Handler {
     @CallSuper
     @Override
     public void dispatchMessage(@NonNull Message msg) {
-        final Activity activity = mContextRef == null ? null : mContextRef.get();
+        final Activity activity = mContextRef.get();
         if (activity == null || activity.isFinishing() || activity.isDestroyed()) {
             return;
         }

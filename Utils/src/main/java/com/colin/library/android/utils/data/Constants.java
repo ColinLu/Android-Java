@@ -20,10 +20,13 @@ public interface Constants {
     int INVALID = -1;
     //文件读写缓冲区大小
     int FILE_BUFFER_SIZE = 10 * 1024;
+    int BUFFER_FILE_SIZE = 10 * 1024;
+    int BUFFER_STREAM_SIZE = 4 * 1024;
     ///////////////////////////////////////////////////////////////////////////
     // time of format
     ///////////////////////////////////////////////////////////////////////////
     TimeZone TIME_ZONE_GMT = TimeZone.getTimeZone("GMT");
+    String FORMAT_DAY_PATTERN = "yyyy-MM-dd";
     String FORMAT_TIME_PATTERN = "yyyy-MM-dd HH:mm:ss:SSS";
     String FORMAT_TIME_HTTP = "EEE, dd MMM y HH:mm:ss 'GMT'";
 
@@ -133,4 +136,7 @@ public interface Constants {
     String REGEX_IP_V6 = "^[0-9a-fA-F]{1,4}(:[0-9a-fA-F]{1,4}){7}$";
     //压缩过
     String REGEX_IP_V6_HEX = "^(([0-9A-Fa-f]{1,4}(:[0-9A-Fa-f]{1,4}){0,5})?)::(([0-9A-Fa-f]{1,4}(:[0-9A-Fa-f]{1,4}){0,5})?)$";
+
+    int BITMAP_QUALITY_HEIGHT = 100;
+    int BITMAP_QUALITY_LOW = 0;
 }

@@ -5,8 +5,9 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.colin.library.android.annotation.LogLevel;
 import com.colin.library.android.utils.data.Constants;
-import com.colin.library.android.utils.data.UtilHelper;
+import com.colin.library.android.helper.UtilHelper;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -30,6 +31,7 @@ import javax.xml.transform.stream.StreamSource;
  * 描述： 日志工具类
  */
 public final class LogUtil {
+    private static final String XML_PROPERTY_NAME = "{http://xml.apache.org/xslt}indent-amount";
     private static final String PLACEHOLDER = " ";
     private static final int INDENT_SPACES = 4;
     private static final String NULL = "null";
@@ -42,75 +44,72 @@ public final class LogUtil {
     }
 
     public static void v(Object... args) {
-        print(Log.VERBOSE, null, format(args));
+        print(LogLevel.V, null, format(args));
     }
 
     public static void vTag(@NonNull String tag, @Nullable Object... args) {
-        print(Log.VERBOSE, tag, format(args));
+        print(LogLevel.V, tag, format(args));
     }
 
     public static void d(@Nullable Object... args) {
-        print(Log.DEBUG, null, format(args));
+        print(LogLevel.D, null, format(args));
     }
 
     public static void dTag(@NonNull String tag, Object... args) {
-        print(Log.DEBUG, tag, format(args));
+        print(LogLevel.D, tag, format(args));
     }
 
     public static void i(@Nullable Object... args) {
-        print(Log.INFO, null, format(args));
+        print(LogLevel.I, null, format(args));
     }
 
     public static void iTag(@NonNull String tag, @Nullable Object... args) {
-        print(Log.INFO, tag, format(args));
+        print(LogLevel.I, tag, format(args));
     }
 
     public static void w(@Nullable Object... args) {
-        print(Log.WARN, null, format(args));
+        print(LogLevel.W, null, format(args));
     }
 
     public static void wTag(@NonNull String tag, @Nullable Object... args) {
-        print(Log.WARN, tag, format(args));
+        print(LogLevel.W, tag, format(args));
     }
 
     public static void e(@Nullable Object... args) {
-        print(Log.ERROR, null, format(args));
+        print(LogLevel.E, null, format(args));
     }
 
     public static void eTag(@NonNull String tag, @Nullable Object... args) {
-        print(Log.ERROR, tag, format(args));
+        print(LogLevel.E, tag, format(args));
     }
 
     public static void a(@Nullable Object... args) {
-        print(Log.ASSERT, null, format(args));
+        print(LogLevel.A, null, format(args));
     }
 
     public static void aTag(@NonNull String tag, @Nullable Object... args) {
-        print(Log.ASSERT, tag, format(args));
+        print(LogLevel.A, tag, format(args));
     }
 
     public static void log(@NonNull Throwable e) {
-        print(Log.ERROR, null, format(e));
+        print(LogLevel.E, null, format(e));
     }
 
     public static void logTag(@NonNull String tag, @NonNull Throwable e) {
-        print(Log.ERROR, tag, format(e));
+        print(LogLevel.E, tag, format(e));
     }
 
-    private static void print(int priority, @Nullable String tag, @Nullable String msg) {
-        if (!UtilHelper.getInstance().showLog(priority)) return;
+    private static void print(@LogLevel int level, @Nullable String tag, @Nullable String msg) {
+        if (!UtilHelper.getInstance().showLog(level)) return;
         final StackTraceElement traceElement = getStackTrace(3);
         final String fileName = getFileName(traceElement);
-        print(priority, tag == null ? fileName : tag, getHead(fileName, traceElement), msg);
+        print(level, tag == null ? fileName : tag, getHead(fileName, traceElement), msg);
     }
 
-    private static void print(int priority, @NonNull String tag, @NonNull String head, @Nullable String msg) {
+    private static void print(@LogLevel int level, @NonNull String tag, @NonNull String head, @Nullable String msg) {
         final StringBuilder sb = new StringBuilder(PLACEHOLDER);
-        sb.append(Constants.LINE_SEP).append(BORDER_TOP).append(Constants.LINE_SEP)
-                .append(head).append(Constants.LINE_SEP)
-                .append(msg).append(Constants.LINE_SEP)
-                .append(BORDER_BOTTOM);
-        Log.println(priority, tag, sb.toString());
+        sb.append(Constants.LINE_SEP).append(BORDER_TOP).append(Constants.LINE_SEP).append(head).append(Constants.LINE_SEP).append(msg).append(Constants.LINE_SEP).append(BORDER_BOTTOM);
+        Log.println(level, tag, sb.toString());
     }
 
     @NonNull
@@ -187,13 +186,13 @@ public final class LogUtil {
         return json;
     }
 
-    private static String formatXml(@NonNull final String xml) {
+    public static String formatXml(@NonNull final String xml) {
         try {
             Source xmlInput = new StreamSource(new StringReader(xml));
             StreamResult xmlOutput = new StreamResult(new StringWriter());
             Transformer transformer = TransformerFactory.newInstance().newTransformer();
             transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-            transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
+            transformer.setOutputProperty(XML_PROPERTY_NAME, "4");
             transformer.transform(xmlInput, xmlOutput);
             return xmlOutput.getWriter().toString().replaceFirst(">", ">" + Constants.LINE_SEP);
         } catch (Exception e) {

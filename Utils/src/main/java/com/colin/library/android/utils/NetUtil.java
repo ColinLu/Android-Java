@@ -11,7 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresPermission;
 
-import com.colin.library.android.utils.annotation.NetType;
+import com.colin.library.android.annotation.NetType;
 
 import java.lang.reflect.Method;
 import java.net.InetAddress;

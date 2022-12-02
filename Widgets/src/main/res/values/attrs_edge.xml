@@ -7,6 +7,9 @@
         <enum name="top" value="4" />
         <enum name="right" value="8" />
         <enum name="bottom" value="16" />
+        <enum name="horizontal" value="10" />
+        <enum name="vertical" value="20" />
+        <enum name="all" value="30" />
     </attr>
     <dimen name="load_size_default">32dp</dimen>
     <dimen name="load_more_height_default">56dp</dimen>

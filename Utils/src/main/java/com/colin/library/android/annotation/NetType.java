@@ -1,4 +1,4 @@
-package com.colin.library.android.utils.annotation;
+package com.colin.library.android.annotation;
 
 import androidx.annotation.IntDef;
 

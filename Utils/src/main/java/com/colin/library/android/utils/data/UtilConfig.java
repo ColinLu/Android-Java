@@ -1,11 +1,10 @@
 package com.colin.library.android.utils.data;
 
 import android.app.Application;
-import android.content.Context;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.colin.library.android.annotation.LogLevel;
 import com.colin.library.android.utils.BuildConfig;
 
 
@@ -16,9 +15,13 @@ import com.colin.library.android.utils.BuildConfig;
  * 描述： Util 配置
  */
 public final class UtilConfig {
+    /*全局上下文*/
     private final Application mApplication;
+    /*环境*/
     private final boolean mDebug;
+    /*Log*/
     private final boolean mShowLog;
+    @LogLevel
     private final int mLogLevel;
 
     private UtilConfig(@NonNull Builder builder) {
@@ -30,7 +33,7 @@ public final class UtilConfig {
 
 
     @NonNull
-    public Context getApplication() {
+    public Application getApplication() {
         return mApplication;
     }
 
@@ -42,20 +45,19 @@ public final class UtilConfig {
         return mShowLog;
     }
 
+    @LogLevel
     public int getLogLevel() {
         return mLogLevel;
     }
 
     public static class Builder {
-        ///////////////////////////////////////////////////////////////////////////
-        // 全局
-        ///////////////////////////////////////////////////////////////////////////
+        /*全局上下文*/
         private final Application mApplication;
+        /*环境*/
         private final boolean mDebug;
-        ///////////////////////////////////////////////////////////////////////////
-        // Log
-        ///////////////////////////////////////////////////////////////////////////
+        /*Log*/
         private boolean mShowLog;
+        @LogLevel
         private int mLogLevel;
 
         public Builder(@NonNull Application application) {
@@ -68,16 +70,19 @@ public final class UtilConfig {
             this.mShowLog = debug;
         }
 
+        @NonNull
         public Builder setShowLog(boolean showLog) {
             this.mShowLog = showLog;
             return this;
         }
 
-        public Builder setLogLevel(int logLevel) {
+        @NonNull
+        public Builder setLogLevel(@LogLevel int logLevel) {
             this.mLogLevel = logLevel;
             return this;
         }
 
+        @NonNull
         public UtilConfig build() {
             return new UtilConfig(this);
         }

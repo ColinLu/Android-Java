@@ -6,7 +6,7 @@ import android.os.Build;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.colin.library.android.utils.data.UtilHelper;
+import com.colin.library.android.helper.UtilHelper;
 
 import java.io.File;
 
@@ -96,7 +96,7 @@ public final class CrashUtil {
             if (StringUtil.isEmpty(mFileName)) mFileName = getDefaultName(time);
             final File file = new File(mFolder, mFileName);
             LogUtil.e(file.getAbsolutePath());
-            FileIOUtil.toFile(crashInfo, file, true);
+            FileUtil.toFile(crashInfo, file, true);
         }
     }
 

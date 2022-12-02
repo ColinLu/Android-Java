@@ -1,5 +1,6 @@
 package com.colin.library.android.widgets.edge;
 
+import android.animation.Animator;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
@@ -17,6 +18,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.core.widget.ImageViewCompat;
 
+import com.colin.library.android.utils.LogUtil;
 import com.colin.library.android.widgets.R;
 import com.colin.library.android.widgets.progress.LoadingView;
 
@@ -110,13 +112,57 @@ public class LoadMoreView extends ConstraintLayout implements EdgeWatcher {
             if (edge.getTargetOffset() > offset) {
                 mIsRelease = false;
                 mTextView.setText(mPullText);
-                mArrowView.animate().rotation(180).start();
+                mArrowView.animate().rotation(180)
+                        .setListener(new Animator.AnimatorListener() {
+                            @Override
+                            public void onAnimationStart(Animator animation) {
+                                LogUtil.e("onAnimationStart");
+                            }
+
+                            @Override
+                            public void onAnimationEnd(Animator animation) {
+                                LogUtil.e("onAnimationEnd");
+                            }
+
+                            @Override
+                            public void onAnimationCancel(Animator animation) {
+                                LogUtil.e("onAnimationCancel");
+                            }
+
+                            @Override
+                            public void onAnimationRepeat(Animator animation) {
+                                LogUtil.e("onAnimationRepeat");
+                            }
+                        })
+                        .start();
             }
         } else {
             if (edge.getTargetOffset() <= offset) {
                 mIsRelease = true;
                 mTextView.setText(mReleaseText);
-                mArrowView.animate().rotation(0).start();
+                mArrowView.animate().rotation(0)
+                        .setListener(new Animator.AnimatorListener() {
+                            @Override
+                            public void onAnimationStart(Animator animation) {
+                                LogUtil.e("onAnimationStart");
+                            }
+
+                            @Override
+                            public void onAnimationEnd(Animator animation) {
+                                LogUtil.e("onAnimationEnd");
+                            }
+
+                            @Override
+                            public void onAnimationCancel(Animator animation) {
+                                LogUtil.e("onAnimationCancel");
+                            }
+
+                            @Override
+                            public void onAnimationRepeat(Animator animation) {
+                                LogUtil.e("onAnimationRepeat");
+                            }
+                        })
+                        .start();
             }
         }
     }

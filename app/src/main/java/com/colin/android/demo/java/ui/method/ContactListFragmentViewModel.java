@@ -7,8 +7,8 @@ import com.colin.android.demo.java.def.Constants;
 import com.colin.android.demo.java.def.LoadState;
 import com.colin.android.demo.java.def.bean.ContactBean;
 import com.colin.android.demo.java.utils.ContactUtils;
-import com.colin.library.android.utils.data.UtilHelper;
-import com.colin.library.android.utils.thread.ThreadUtil;
+import com.colin.library.android.helper.ThreadHelper;
+import com.colin.library.android.helper.UtilHelper;
 
 import java.util.List;
 
@@ -29,8 +29,10 @@ public class ContactListFragmentViewModel extends ViewModel {
 
     public void refresh(boolean refresh) {
         mLoadState.setValue(LoadState.ING);
-        ThreadUtil.doAsync(() -> mList.postValue(ContactUtils.getContactList(UtilHelper.getInstance().getContext())));
-        ThreadUtil.runUIDelayed(() -> mLoadState.setValue(LoadState.SUCCESS), Constants.DURATION_DELAYED);
+        ThreadHelper.getInstance().doAsync(() -> mList.postValue(
+                ContactUtils.getContactList(UtilHelper.getInstance().getContext())));
+        ThreadHelper.getInstance().postDelayed(() -> mLoadState.setValue(LoadState.SUCCESS),
+                                               Constants.DURATION_DELAYED);
     }
 
     public MutableLiveData<List<ContactBean>> getList() {

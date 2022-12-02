@@ -7,7 +7,7 @@ import androidx.annotation.Nullable;
 
 import com.colin.library.android.utils.LogUtil;
 import com.colin.library.android.utils.StringUtil;
-import com.colin.library.android.utils.annotation.Encode;
+import com.colin.library.android.annotation.Encode;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;

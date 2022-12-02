@@ -2,7 +2,6 @@ package com.colin.android.demo.java.app;
 
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 
 import androidx.annotation.NonNull;
@@ -12,7 +11,7 @@ import androidx.viewbinding.ViewBinding;
 import com.colin.library.android.base.BaseActivity;
 import com.colin.library.android.utils.LogUtil;
 import com.colin.library.android.utils.NetUtil;
-import com.colin.library.android.utils.annotation.NetType;
+import com.colin.library.android.annotation.NetType;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

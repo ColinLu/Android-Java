@@ -2,12 +2,12 @@ package com.colin.library.android.utils.encrypt;
 
 import androidx.annotation.Nullable;
 
+import com.colin.library.android.annotation.Algorithm;
 import com.colin.library.android.utils.ArrayUtil;
 import com.colin.library.android.utils.FileUtil;
 import com.colin.library.android.utils.IOUtil;
 import com.colin.library.android.utils.LogUtil;
 import com.colin.library.android.utils.StringUtil;
-import com.colin.library.android.utils.annotation.Algorithm;
 import com.colin.library.android.utils.data.Constants;
 
 import java.io.File;
@@ -486,7 +486,7 @@ public final class EncryptUtil {
             fis = new FileInputStream(file);
             MessageDigest md = MessageDigest.getInstance(algorithm);
             is = new DigestInputStream(fis, md);
-            final byte[] buffer = new byte[Constants.FILE_BUFFER_SIZE];
+            final byte[] buffer = new byte[Constants.BUFFER_FILE_SIZE];
             while (true) if (!(is.read(buffer) > 0)) break;
             md = is.getMessageDigest();
             return md.digest();

@@ -42,12 +42,13 @@ public class LoadingView extends View {
         mSize = context.getResources().getDimensionPixelSize(R.dimen.load_size_default);
         mColor = ContextCompat.getColor(context, R.color.colorAccent);
         if (attrs != null) {
-            final TypedArray array = context.getTheme().obtainStyledAttributes(attrs, R.styleable.LoadingView, defStyleAttr, 0);
+            final TypedArray array = context.getTheme().obtainStyledAttributes(attrs, R.styleable.LoadingView, defStyleAttr, Resources.ID_NULL);
             mSize = array.getDimensionPixelSize(R.styleable.LoadingView_loadSize, mSize);
             mColor = array.getColor(R.styleable.LoadingView_loadColor, mColor);
             array.recycle();
         }
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        mPaint.setAntiAlias(true);
         mPaint.setStrokeCap(Paint.Cap.ROUND);
         mPaint.setColor(mColor);
     }
@@ -97,13 +98,12 @@ public class LoadingView extends View {
         if (mSize != size) {
             mSize = size;
             requestLayout();
-            invalidate();
         }
         return this;
     }
 
 
-    public LoadingView start() {
+    public void start() {
         if (mAnimator == null) {
             mAnimator = ValueAnimator.ofInt(0, LINE_COUNT - 1);
             mAnimator.addUpdateListener(mUpdateListener);
@@ -113,17 +113,15 @@ public class LoadingView extends View {
             mAnimator.setInterpolator(new LinearInterpolator());
             mAnimator.start();
         } else if (!mAnimator.isStarted()) mAnimator.start();
-        return this;
     }
 
-    public LoadingView stop() {
+    public void stop() {
         if (mAnimator != null) {
             mAnimator.removeUpdateListener(mUpdateListener);
             mAnimator.removeAllUpdateListeners();
             mAnimator.cancel();
             mAnimator = null;
         }
-        return this;
     }
 
 

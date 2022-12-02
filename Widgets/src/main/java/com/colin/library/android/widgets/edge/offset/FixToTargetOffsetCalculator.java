@@ -8,7 +8,8 @@ import com.colin.library.android.widgets.edge.Edge;
 public class FixToTargetOffsetCalculator implements IEdgeOffsetCalculator {
     @Override
     public int calculator(@NonNull Edge edge, @Px int offset) {
-        if (offset < edge.getTargetOffset()) return offset + edge.getStartOffset();
+        final int abs = Math.abs(offset);
+        if (abs < edge.getTargetOffset()) return abs + edge.getStartOffset();
         return edge.getTargetOffset() + edge.getStartOffset();
     }
 }

@@ -88,6 +88,10 @@ public final class Edge {
         return type == ViewCompat.TYPE_TOUCH ? mEdgeRate : 1.0F;
     }
 
+    public float getScrollRate(@ViewCompat.NestedScrollType int type, @Px int offset) {
+        return type == ViewCompat.TYPE_TOUCH ? mEdgeRate : getFlingRate(offset);
+    }
+
     public boolean isEdgeOver() {
         return mEdgeOver;
     }
@@ -185,9 +189,14 @@ public final class Edge {
         updateOffset(getOffsetCalculator().calculator(this, targetOffset));
     }
 
+    public int getCalculatorOffset(@Px int offset) {
+        return getOffsetCalculator().calculator(this, offset);
+    }
+
     public void updateOffset(int offset) {
-        mViewOffsetHelper.setDirection(mDirection, offset);
-        if (mView instanceof EdgeWatcher) ((EdgeWatcher) mView).offset(this, offset);
+        final int updateOffset = getCalculatorOffset(offset);
+        this.mViewOffsetHelper.setDirection(mDirection, updateOffset);
+        if (mView instanceof EdgeWatcher) ((EdgeWatcher) mView).offset(this, updateOffset);
     }
 
     public ViewOffsetHelper getViewOffsetHelper() {
@@ -211,16 +220,20 @@ public final class Edge {
 
     public int getTargetOffsetMax() {
         if (mDirection == Direction.RIGHT || mDirection == Direction.BOTTOM) return 0;
-        else return mEdgeOver ? Integer.MAX_VALUE : mTargetOffset;
+        else return mEdgeOver ? Integer.MAX_VALUE : getTargetOffset();
     }
 
     public int getTargetOffsetMin() {
         if (mDirection == Direction.LEFT || mDirection == Direction.TOP) return 0;
-        else return mEdgeOver ? Integer.MIN_VALUE : -mTargetOffset;
+        else return mEdgeOver ? Integer.MIN_VALUE : -getTargetOffset();
     }
 
     public void scrollToTargetOffset(int offset) {
 
+    }
+
+    public boolean isTargetOffset(int offset) {
+        return getTargetOffset() == Math.abs(offset);
     }
 
     public static class Builder {

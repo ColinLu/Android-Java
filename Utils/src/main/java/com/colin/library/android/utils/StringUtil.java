@@ -1,5 +1,7 @@
 package com.colin.library.android.utils;
 
+import android.text.TextUtils;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -31,16 +33,6 @@ public final class StringUtil {
         return text == null || text.length() == 0;
     }
 
-
-    /*是空白*/
-    public static boolean isSpace(@Nullable final CharSequence text) {
-        if (null == text || text.length() == 0) return true;
-        for (int i = 0; i < text.length(); i++) {
-            if (!Character.isWhitespace(text.charAt(i))) return false;
-        }
-        return true;
-    }
-
     /*是空白*/
     public static boolean isSpace(@Nullable final CharSequence... texts) {
         final int len = texts == null ? 0 : texts.length;
@@ -51,6 +43,16 @@ public final class StringUtil {
         }
         return false;
     }
+
+    /*是空白*/
+    public static boolean isSpace(@Nullable final CharSequence text) {
+        if (null == text || text.length() == 0) return true;
+        for (int i = 0; i < text.length(); i++) {
+            if (!Character.isWhitespace(text.charAt(i))) return false;
+        }
+        return true;
+    }
+
 
     /*是否相同*/
     public static boolean equals(@Nullable final CharSequence a, @Nullable final CharSequence b) {
@@ -132,13 +134,7 @@ public final class StringUtil {
     /*根据Unicode编码判断中文汉字和符号*/
     public static boolean isChinese(final char c) {
         final Character.UnicodeBlock ub = Character.UnicodeBlock.of(c);
-        return ub == Character.UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS
-                || ub == Character.UnicodeBlock.CJK_COMPATIBILITY_IDEOGRAPHS
-                || ub == Character.UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS_EXTENSION_A
-                || ub == Character.UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS_EXTENSION_B
-                || ub == Character.UnicodeBlock.CJK_SYMBOLS_AND_PUNCTUATION
-                || ub == Character.UnicodeBlock.HALFWIDTH_AND_FULLWIDTH_FORMS
-                || ub == Character.UnicodeBlock.GENERAL_PUNCTUATION;
+        return ub == Character.UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS || ub == Character.UnicodeBlock.CJK_COMPATIBILITY_IDEOGRAPHS || ub == Character.UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS_EXTENSION_A || ub == Character.UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS_EXTENSION_B || ub == Character.UnicodeBlock.CJK_SYMBOLS_AND_PUNCTUATION || ub == Character.UnicodeBlock.HALFWIDTH_AND_FULLWIDTH_FORMS || ub == Character.UnicodeBlock.GENERAL_PUNCTUATION;
     }
 
 

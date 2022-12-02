@@ -1,8 +1,7 @@
-package com.colin.library.android.utils.annotation;
+package com.colin.library.android.annotation;
 
 import static androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP_PREFIX;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.RestrictTo;
 import androidx.annotation.StringDef;
 
