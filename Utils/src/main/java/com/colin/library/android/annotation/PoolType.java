@@ -1,9 +1,7 @@
 package com.colin.library.android.annotation;
 
-import static androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP_PREFIX;
 
 import androidx.annotation.IntDef;
-import androidx.annotation.RestrictTo;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -14,7 +12,6 @@ import java.lang.annotation.RetentionPolicy;
  * <p>
  * 描述： 线程池类型
  */
-@RestrictTo(LIBRARY_GROUP_PREFIX)
 @IntDef({PoolType.CUSTOM, PoolType.SINGLE, PoolType.FIXED, PoolType.CACHED, PoolType.SCHEDULED, PoolType.IO, PoolType.CPU})
 @Retention(RetentionPolicy.SOURCE)
 public @interface PoolType {

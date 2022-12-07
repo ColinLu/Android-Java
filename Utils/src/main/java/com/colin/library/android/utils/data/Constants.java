@@ -15,6 +15,7 @@ public interface Constants {
     // 分隔符
     ///////////////////////////////////////////////////////////////////////////
     String FILE_SEP = System.getProperty("file.separator");
+    @NonNull
     String LINE_SEP = System.getProperty("line.separator");
 
     int INVALID = -1;

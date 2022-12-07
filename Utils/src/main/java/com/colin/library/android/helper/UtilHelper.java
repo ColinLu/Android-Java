@@ -3,11 +3,13 @@ package com.colin.library.android.helper;
 import android.app.Application;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.colin.library.android.Utils;
 import com.colin.library.android.annotation.LogLevel;
 import com.colin.library.android.utils.ActivityUtil;
 import com.colin.library.android.utils.BuildConfig;
+import com.colin.library.android.utils.StringUtil;
 import com.colin.library.android.utils.data.UtilConfig;
 
 /**
@@ -48,9 +50,29 @@ public final class UtilHelper {
         return sConfig.getApplication();
     }
 
-    public boolean showLog(@LogLevel int level) {
+    public boolean showLog(@LogLevel final int level, @Nullable String showTag) {
         Utils.notNull(sConfig, "UtilHelper init first !");
-        return level >= sConfig.getLogLevel() && sConfig.isShowLog();
+        return level >= sConfig.getLogLevel() && sConfig.isShowLog(showTag);
     }
 
+    @LogLevel
+    public int getLogLevel() {
+        Utils.notNull(sConfig, "UtilHelper init first !");
+        return sConfig.getLogLevel();
+    }
+
+    public int getLogMethodOffset() {
+        Utils.notNull(sConfig, "UtilHelper init first !");
+        return sConfig.getLogMethodOffset();
+    }
+
+    public int getLogMethodCount() {
+        Utils.notNull(sConfig, "UtilHelper init first !");
+        return sConfig.getLogMethodCount();
+    }
+
+    public boolean isLogShowThread() {
+        Utils.notNull(sConfig, "UtilHelper init first !");
+        return sConfig.isLogShowThread();
+    }
 }

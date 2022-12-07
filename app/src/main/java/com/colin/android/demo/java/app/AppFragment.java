@@ -11,10 +11,10 @@ import androidx.annotation.Nullable;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.viewbinding.ViewBinding;
 
+import com.colin.library.android.annotation.NetType;
 import com.colin.library.android.base.BaseFragment;
 import com.colin.library.android.utils.LogUtil;
 import com.colin.library.android.utils.NetUtil;
-import com.colin.library.android.annotation.NetType;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

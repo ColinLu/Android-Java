@@ -1,8 +1,6 @@
 package com.colin.library.android.annotation;
 
-import static androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP_PREFIX;
 
-import androidx.annotation.RestrictTo;
 import androidx.annotation.StringDef;
 
 import java.lang.annotation.Retention;
@@ -14,7 +12,6 @@ import java.lang.annotation.RetentionPolicy;
  * <p>
  * 描述： 编码方式
  */
-@RestrictTo(LIBRARY_GROUP_PREFIX)
 @Retention(RetentionPolicy.SOURCE)
 @StringDef({Encode.UTF_8, Encode.UTF_16, Encode.UTF_32, Encode.UTF_16BE, Encode.UTF_16LE,
         Encode.GB_2312, Encode.GBK, Encode.UNICODE, Encode.ISO_8859_1, Encode.US_ASCII})

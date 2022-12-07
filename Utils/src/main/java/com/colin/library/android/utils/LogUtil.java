@@ -6,15 +6,17 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.colin.library.android.annotation.LogLevel;
-import com.colin.library.android.utils.data.Constants;
 import com.colin.library.android.helper.UtilHelper;
+import com.colin.library.android.utils.data.Constants;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.PrintWriter;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.net.UnknownHostException;
 import java.util.Formatter;
 
 import javax.xml.transform.OutputKeys;
@@ -31,19 +33,31 @@ import javax.xml.transform.stream.StreamSource;
  * 描述： 日志工具类
  */
 public final class LogUtil {
+    private static final char TOP_LEFT_CORNER = '┌';
+    private static final char BOTTOM_LEFT_CORNER = '└';
+    private static final char MIDDLE_CORNER = '├';
+    private static final char HORIZONTAL_LINE = '│';
+    private static final String DOUBLE_DIVIDER = "────────────────────────────────────────────────────────";
+    private static final String SINGLE_DIVIDER = "┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄";
+    private static final String TOP_BORDER = TOP_LEFT_CORNER + DOUBLE_DIVIDER + DOUBLE_DIVIDER;
+    private static final String BOTTOM_BORDER = BOTTOM_LEFT_CORNER + DOUBLE_DIVIDER + DOUBLE_DIVIDER;
+    private static final String MIDDLE_BORDER = MIDDLE_CORNER + SINGLE_DIVIDER + SINGLE_DIVIDER;
+    private static final String TAB_SPACE = "    ";
+    private static final String POINT = ".";
+    private static final String MSG = "value";
+    private static final String LOG_EMPTY = "log is null";
     private static final String XML_PROPERTY_NAME = "{http://xml.apache.org/xslt}indent-amount";
-    private static final String PLACEHOLDER = " ";
     private static final int INDENT_SPACES = 4;
-    private static final String NULL = "null";
-    private static final String MSG = "Msg";
-    private static final String BORDER_TOP = "|———————————————————————————————————————————————————————————————————————————————————————————|";
-    private static final String BORDER_BOTTOM = "|___________________________________________________________________________________________|";
+    private static final int LOG_COUNT = 4000;
 
     private LogUtil() {
         throw new UnsupportedOperationException("don't instantiate");
     }
 
-    public static void v(Object... args) {
+    ///////////////////////////////////////////////////////////////////////////
+    // 对外公开api
+    ///////////////////////////////////////////////////////////////////////////
+    public static void v(@Nullable Object... args) {
         print(LogLevel.V, null, format(args));
     }
 
@@ -55,7 +69,7 @@ public final class LogUtil {
         print(LogLevel.D, null, format(args));
     }
 
-    public static void dTag(@NonNull String tag, Object... args) {
+    public static void dTag(@NonNull String tag, @Nullable Object... args) {
         print(LogLevel.D, tag, format(args));
     }
 
@@ -91,113 +105,188 @@ public final class LogUtil {
         print(LogLevel.A, tag, format(args));
     }
 
-    public static void log(@NonNull Throwable e) {
-        print(LogLevel.E, null, format(e));
+    public static void log(@Nullable Throwable error) {
+        print(LogLevel.E, null, format(error));
     }
 
-    public static void logTag(@NonNull String tag, @NonNull Throwable e) {
-        print(LogLevel.E, tag, format(e));
+    public static void log(@LogLevel int level, @Nullable Throwable error) {
+        print(level, null, format(error));
     }
 
-    private static void print(@LogLevel int level, @Nullable String tag, @Nullable String msg) {
-        if (!UtilHelper.getInstance().showLog(level)) return;
-        final StackTraceElement traceElement = getStackTrace(3);
-        final String fileName = getFileName(traceElement);
-        print(level, tag == null ? fileName : tag, getHead(fileName, traceElement), msg);
+    public static void log(@NonNull String tag, @Nullable Throwable error) {
+        print(LogLevel.E, tag, format(error));
     }
 
-    private static void print(@LogLevel int level, @NonNull String tag, @NonNull String head, @Nullable String msg) {
-        final StringBuilder sb = new StringBuilder(PLACEHOLDER);
-        sb.append(Constants.LINE_SEP).append(BORDER_TOP).append(Constants.LINE_SEP).append(head).append(Constants.LINE_SEP).append(msg).append(Constants.LINE_SEP).append(BORDER_BOTTOM);
-        Log.println(level, tag, sb.toString());
+    public static void log(@Nullable Object obj) {
+        print(UtilHelper.getInstance().getLogLevel(), null, StringUtil.toString(obj));
     }
+
+    public static void log(@LogLevel int level, @Nullable Object obj) {
+        print(level, null, StringUtil.toString(obj));
+    }
+
+    public static void log(@NonNull String tag, @Nullable Object obj) {
+        print(UtilHelper.getInstance().getLogLevel(), tag, StringUtil.toString(obj));
+    }
+
+    public static void json(@Nullable Object obj) {
+        print(UtilHelper.getInstance().getLogLevel(), null, formatJson(obj));
+    }
+
+    public static void json(@LogLevel int level, @Nullable Object obj) {
+        print(level, null, formatJson(obj));
+    }
+
+    public static void json(@NonNull String tag, @Nullable Object obj) {
+        print(UtilHelper.getInstance().getLogLevel(), tag, formatJson(obj));
+    }
+
+    public static void xml(@Nullable String xml) {
+        print(UtilHelper.getInstance().getLogLevel(), null, formatXml(xml));
+    }
+
+    public static void xml(@LogLevel int level, @Nullable String xml) {
+        print(level, null, formatXml(xml));
+    }
+
+    public static void xml(@NonNull String tag, @Nullable String xml) {
+        print(UtilHelper.getInstance().getLogLevel(), tag, formatXml(xml));
+    }
+
 
     @NonNull
-    private static StackTraceElement getStackTrace(int index) {
-        final StackTraceElement[] traceElements = new Throwable().getStackTrace();
-        return traceElements[index];
-    }
-
-    @NonNull
-    private static String getFileName(@NonNull final StackTraceElement targetElement) {
-        String fileName = targetElement.getFileName();
-        if (fileName != null) return fileName;
-        String className = targetElement.getClassName();
-        String[] classNameInfo = className.split("\\.");
-        if (classNameInfo.length > 0) className = classNameInfo[classNameInfo.length - 1];
-        int index = className.indexOf('$');
-        if (index != -1) className = className.substring(0, index);
-        return className + ".java";
-    }
-
-    @NonNull
-    private static String getHead(@NonNull String fileName, @NonNull final StackTraceElement element) {
-        return new Formatter().format("%s.%s(%s:%d)", element.getClassName(), element.getMethodName(), fileName, element.getLineNumber()).toString();
-    }
-
     private static String format(@Nullable Object... args) {
         final int len = args == null ? 0 : args.length;
-        if (len == 0) return NULL;
-        if (len == 1) return format(args[0]);
+        if (len == 0) return LOG_EMPTY;
+        if (len == 1) return StringUtil.toString(args[0]);
         final StringBuilder sb = new StringBuilder();
         for (int i = 0; i < len; i++) {
-            final Object obj = args[i];
-            sb.append(MSG).append('[').append(i).append(']').append(" = ").append(format(obj)).append(Constants.LINE_SEP);
+            sb.append(MSG).append('[').append(i).append(']').append(" = ").append(StringUtil.toString(args[i])).append(Constants.LINE_SEP);
         }
         return sb.toString().trim();
     }
 
-    private static String format(@Nullable final Object obj) {
-        final String msg = obj == null ? null : obj.toString();
-        if (obj == null) return NULL;
-        if ((msg.startsWith("[") && msg.endsWith("]")) || (msg.startsWith("{") && msg.endsWith("}")))
-            return formatJson(msg);
-        else if (msg.startsWith("<?xml")) return formatXml(msg);
-        return msg;
-    }
-
-    public static String format(@NonNull final Throwable error) {
-        final StringBuilder sb = new StringBuilder();
-        sb.append(Constants.LINE_SEP).append("reason:");
-        if (error.getMessage() != null) sb.append(error.getMessage()).append('\n');
-        if (error.getCause() != null) sb.append(error.getCause().toString()).append('\n');
-        StackTraceElement[] traceElements = error.getStackTrace();
-        for (StackTraceElement traceElement : traceElements) {
-            sb.append("at ").append(traceElement.toString()).append('\n');
+    @NonNull
+    public static String format(@Nullable final Throwable error) {
+        if (error == null) return "exception is null";
+        Throwable t = error;
+        while (t != null) {
+            if (t instanceof UnknownHostException) return "UnknownHostException";
+            t = t.getCause();
         }
-        return sb.toString().trim();
+        StringWriter sw = new StringWriter();
+        PrintWriter pw = new PrintWriter(sw);
+        error.printStackTrace(pw);
+        pw.flush();
+        return sw.toString();
     }
 
-    public static String formatJson(@NonNull final String json) {
+    @NonNull
+    public static String formatJson(@Nullable final Object obj) {
+        if (obj == null) return "json is null";
         try {
+            if (obj instanceof JSONObject) return ((JSONObject) obj).toString(INDENT_SPACES);
+            if (obj instanceof JSONArray) return ((JSONArray) obj).toString(INDENT_SPACES);
+            final String json = obj.toString();
             for (int i = 0, len = json.length(); i < len; i++) {
-                char c = json.charAt(i);
-                if (c == '{') {
-                    return new JSONObject(json).toString(INDENT_SPACES);
-                } else if (c == '[') {
-                    return new JSONArray(json).toString(INDENT_SPACES);
-                } else if (!Character.isWhitespace(c)) {
-                    return json;
-                }
+                final char c = json.charAt(i);
+                if (c == '{') return new JSONObject(json).toString(INDENT_SPACES);
+                else if (c == '[') return new JSONArray(json).toString(INDENT_SPACES);
+                else if (!Character.isWhitespace(c)) return json;
             }
         } catch (JSONException e) {
-            e.printStackTrace();
+            return format(e);
         }
-        return json;
+        return StringUtil.toString(obj);
     }
 
-    public static String formatXml(@NonNull final String xml) {
+    @NonNull
+    public static String formatXml(@Nullable final String xml) {
+        if (StringUtil.isEmpty(xml)) return "xml is null";
         try {
-            Source xmlInput = new StreamSource(new StringReader(xml));
-            StreamResult xmlOutput = new StreamResult(new StringWriter());
-            Transformer transformer = TransformerFactory.newInstance().newTransformer();
+            final Source xmlInput = new StreamSource(new StringReader(xml));
+            final StreamResult xmlOutput = new StreamResult(new StringWriter());
+            final Transformer transformer = TransformerFactory.newInstance().newTransformer();
             transformer.setOutputProperty(OutputKeys.INDENT, "yes");
             transformer.setOutputProperty(XML_PROPERTY_NAME, "4");
             transformer.transform(xmlInput, xmlOutput);
             return xmlOutput.getWriter().toString().replaceFirst(">", ">" + Constants.LINE_SEP);
         } catch (Exception e) {
-            e.printStackTrace();
+            return format(e);
         }
-        return xml;
     }
+
+    private static synchronized void print(@LogLevel int level, @Nullable String tag, @NonNull String msg) {
+        //判断是否输出
+        if (!UtilHelper.getInstance().showLog(level, tag)) return;
+        //Java栈信息
+        final StackTraceElement[] traces = Thread.currentThread().getStackTrace();
+        //print tag
+        tag = StringUtil.isEmpty(tag) ? getFileName(traces[4]) : tag;
+        //Top Border
+        Log.println(level, tag, TOP_BORDER);
+        //Head
+        printlnHead(level, tag, traces);
+        //Message
+        final byte[] bytes = msg.getBytes();
+        final int length = bytes.length;
+        //single
+        if (length <= LOG_COUNT) {
+            final String[] lines = msg.split(Constants.LINE_SEP);
+            for (String line : lines) Log.println(level, tag, HORIZONTAL_LINE + line);
+            Log.println(level, tag, BOTTOM_BORDER);
+            return;
+        }
+        //
+        for (int i = 0; i < length; i += LOG_COUNT) {
+            final int count = Math.min(length - i, LOG_COUNT);
+            final String[] lines = new String(bytes, i, count).split(Constants.LINE_SEP);
+            for (String line : lines) Log.println(level, tag, HORIZONTAL_LINE + line);
+        }
+        //Bottom Border
+        Log.println(level, tag, BOTTOM_BORDER);
+    }
+
+    private static void printlnHead(int level, @NonNull String tag, @NonNull StackTraceElement[] traces) {
+        //thread
+        if (UtilHelper.getInstance().isLogShowThread()) {
+            Log.println(level, tag, HORIZONTAL_LINE + "thread:" + Thread.currentThread().getName());
+            Log.println(level, tag, MIDDLE_BORDER);
+        }
+        //method
+        final int count = UtilHelper.getInstance().getLogMethodCount();
+        if (count == 0) return;
+        final int offset = getStackOffset(traces) + UtilHelper.getInstance().getLogMethodOffset();
+        final StringBuilder space = new StringBuilder();
+        Formatter formatter;
+        for (int i = count; i > 0; i--) {
+            final int stackIndex = i + offset;
+            if (stackIndex >= traces.length) continue;
+            final StackTraceElement trace = traces[stackIndex];
+            formatter = new Formatter().format("%s%s.%s(%s:%d)", HORIZONTAL_LINE + space.toString(),
+                    trace.getClassName(), trace.getMethodName(), trace.getFileName(), trace.getLineNumber());
+            Log.println(level, tag, formatter.toString());
+            space.append(TAB_SPACE);
+        }
+        if (count > 0) Log.println(level, tag, MIDDLE_BORDER);
+    }
+
+
+    private static int getStackOffset(@NonNull final StackTraceElement[] trace) {
+        for (int i = 4; i < trace.length; i++) {
+            final StackTraceElement e = trace[i];
+            String name = e.getClassName();
+            if (!name.equals(LogUtil.class.getName())) return --i;
+        }
+        return -1;
+    }
+
+    /*for tag*/
+    @NonNull
+    private static String getFileName(@NonNull final StackTraceElement element) {
+        final String fileName = element.getFileName();
+        if (fileName.contains(POINT)) return fileName.substring(0, fileName.lastIndexOf(POINT));
+        return element.getMethodName();
+    }
+
 }

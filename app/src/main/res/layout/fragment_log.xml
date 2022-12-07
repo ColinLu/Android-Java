@@ -70,6 +70,28 @@
         app:layout_constraintTop_toBottomOf="@+id/mButtonLogA" />
 
     <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/mButtonLogJson"
+        style="@style/Theme.App.Button"
+        android:layout_width="@dimen/dp_0"
+        android:layout_height="@dimen/button_height"
+        android:layout_marginTop="@dimen/margin_default"
+        android:text="Log Json"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/mButtonLogE" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/mButtonLogXml"
+        style="@style/Theme.App.Button"
+        android:layout_width="@dimen/dp_0"
+        android:layout_height="@dimen/button_height"
+        android:layout_marginTop="@dimen/margin_default"
+        android:text="Log XML"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/mButtonLogJson" />
+
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/mButtonLogThrowable"
         style="@style/Theme.App.Button"
         android:layout_width="@dimen/dp_0"
@@ -78,5 +100,5 @@
         android:text="Log Throwable"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/mButtonLogA" />
+        app:layout_constraintTop_toBottomOf="@+id/mButtonLogXml" />
 </androidx.constraintlayout.widget.ConstraintLayout>

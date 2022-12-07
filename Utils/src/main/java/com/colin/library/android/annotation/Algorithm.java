@@ -1,8 +1,6 @@
 package com.colin.library.android.annotation;
 
-import static androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP_PREFIX;
 
-import androidx.annotation.RestrictTo;
 import androidx.annotation.StringDef;
 
 import java.lang.annotation.Retention;
@@ -14,7 +12,6 @@ import java.lang.annotation.RetentionPolicy;
  * <p>
  * 描述： 加密方式
  */
-@RestrictTo(LIBRARY_GROUP_PREFIX)
 @Retention(RetentionPolicy.SOURCE)
 @StringDef({Algorithm.MD_2, Algorithm.MD_5, Algorithm.SHA_1, Algorithm.SHA_224, Algorithm.SHA_256,
         Algorithm.SHA_384, Algorithm.SHA_512, Algorithm.HMAC_MD_5, Algorithm.HMAC_SHA_1, Algorithm.HMAC_SHA_224
