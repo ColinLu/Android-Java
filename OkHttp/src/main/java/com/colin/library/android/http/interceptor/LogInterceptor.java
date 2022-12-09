@@ -1,10 +1,12 @@
 package com.colin.library.android.http.interceptor;
 
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.colin.library.android.http.BuildConfig;
 import com.colin.library.android.http.request.ProgressRequestBody;
 import com.colin.library.android.utils.LogUtil;
+import com.colin.library.android.utils.data.Constants;
 import com.colin.library.android.utils.encrypt.EncodeUtil;
 
 import org.jetbrains.annotations.NotNull;
@@ -39,7 +41,7 @@ import okio.BufferedSource;
  * 如果看到okhttp的流程分析的知道：应用拦截器是在网络拦截器前执行的。
  */
 public final class LogInterceptor implements Interceptor {
-    private static final String LABEL = "-----------------";
+    private static final String LABEL = "----------------------------------";
     private static final int KEY_LENGTH = 20;
     private static final String SPACE = " ";
     private boolean mDebug = BuildConfig.DEBUG;
@@ -61,20 +63,18 @@ public final class LogInterceptor implements Interceptor {
         try {
             sb.append(LABEL).append("Start:").append(startTime).append(LABEL).append('\n');
             Request request = chain.request();
-            sb.append("url").append(space("url")).append(":").append(request.url().toString())
-                    .append('\n').append("method").append(space("method"))
-                    .append(":").append(request.method()).append('\n').append("isHttps")
-                    .append(space("isHttps")).append(":").append(request.isHttps())
-                    .append('\n').append("Protocol").append(space("Protocol"))
-                    .append(":").append(getProtocol(chain)).append('\n');
-            sb.append(LABEL).append("Header").append(LABEL).append('\n');
+            sb.append("url").append(space("url")).append(":").append(request.url().toString()).append(Constants.LINE_SEP)
+                    .append("method").append(space("method")).append(":").append(request.method()).append(Constants.LINE_SEP)
+                    .append("isHttps").append(space("isHttps")).append(":").append(request.isHttps()).append(Constants.LINE_SEP)
+                    .append("Protocol").append(space("Protocol")).append(":").append(getProtocol(chain)).append(Constants.LINE_SEP)
+                    .append(LABEL).append("Header").append(LABEL).append(Constants.LINE_SEP);
             Headers headers = request.headers().newBuilder().build();
             Map<String, List<String>> headMap = headers.toMultimap();
             for (Map.Entry<String, List<String>> stringListEntry : headMap.entrySet()) {
                 List<String> list = stringListEntry.getValue();
                 String key = stringListEntry.getKey();
                 for (String value : list) {
-                    sb.append(key).append(space(key)).append(":").append(EncodeUtil.decode(value)).append('\n');
+                    sb.append(key).append(space(key)).append(":").append(value).append(Constants.LINE_SEP);
                 }
             }
             sb.append(LABEL).append("Header").append(LABEL).append('\n');
@@ -94,19 +94,19 @@ public final class LogInterceptor implements Interceptor {
             Response clone = response.newBuilder().build();
             sb.append("code      :").append(clone.code()).append('\t').append("message   :").append(clone.message()).append('\n');
             ResponseBody body = clone.body();
-            if (clone.isSuccessful() && null != body && isPlaintext(body.contentType())) {
+            if (clone.isSuccessful() && isPlaintext(body.contentType())) {
                 if (!isPlaintext(body.contentType())) sb.append("not text").append('\n');
                 else {
-                    BufferedSource source = clone.body().source();
-                    source.request(Long.MAX_VALUE); // request the entire body.
-                    Buffer buffer = source.getBuffer();
-                    String readString = buffer.clone().readString(Charset.defaultCharset());
-                    if (TextUtils.isEmpty(readString)) sb.append("parse fail").append('\n');
-                    else if ((readString.startsWith("[") && readString.endsWith("]")) || (readString.startsWith("{") && readString.endsWith("}")))
-                        sb.append(LogUtil.formatJson(readString)).append('\n');
-                    else if (readString.startsWith("<?xml"))
-                        sb.append(LogUtil.formatXml(readString)).append('\n');
-                    else sb.append(readString).append('\n');
+//                    BufferedSource source = clone.body().source();
+//                    source.request(Long.MAX_VALUE); // request the entire body.
+//                    Buffer buffer = source.getBuffer();
+//                    String readString = buffer.clone().readString(Charset.defaultCharset());
+//                    if (TextUtils.isEmpty(readString)) sb.append("parse fail").append('\n');
+//                    else if ((readString.startsWith("[") && readString.endsWith("]")) || (readString.startsWith("{") && readString.endsWith("}")))
+//                        sb.append(LogUtil.formatJson(readString)).append('\n');
+//                    else if (readString.startsWith("<?xml"))
+//                        sb.append(LogUtil.formatXml(readString)).append('\n');
+//                    else sb.append(readString).append('\n');
                 }
             }
             sb.append(LABEL).append("Result").append(LABEL).append('\n');
@@ -143,7 +143,7 @@ public final class LogInterceptor implements Interceptor {
     }
 
     private String getProtocol(Chain chain) {
-        return null == chain || null == chain.connection() || null == chain.connection().protocol() ? Protocol.HTTP_1_1.toString() : chain.connection().protocol().toString();
+        return null == chain || null == chain.connection() ? Protocol.HTTP_1_1.toString() : chain.connection().protocol().toString();
     }
 
 
@@ -153,16 +153,12 @@ public final class LogInterceptor implements Interceptor {
      */
     private static boolean isPlaintext(MediaType mediaType) {
         if (mediaType == null) return false;
-        if (mediaType.type() != null && mediaType.type().equals("text")) {
-            return true;
-        }
+        LogUtil.log(mediaType.toString());
+        mediaType.type();
+        if (mediaType.type().equals("text")) return true;
         String subtype = mediaType.subtype();
-        if (subtype != null) {
-            subtype = subtype.toLowerCase();
-            if (subtype.contains("x-www-form-urlencoded") || subtype.contains("json") || subtype.contains("xml") || subtype.contains("html")) //
-                return true;
-        }
-        return false;
+        subtype = subtype.toLowerCase();
+        return subtype.contains("x-www-form-urlencoded") || subtype.contains("json") || subtype.contains("xml") || subtype.contains("html");
     }
 
 }

@@ -3,7 +3,6 @@ package com.colin.android.demo.java.ui.method;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.colin.android.demo.java.app.AppFragment;
@@ -11,9 +10,11 @@ import com.colin.android.demo.java.databinding.FragmentHttpBinding;
 import com.colin.android.demo.java.utils.DialogManager;
 import com.colin.library.android.http.OkHttp;
 import com.colin.library.android.http.callback.BitmapHttpCallback;
+import com.colin.library.android.http.callback.FileHttpCallback;
 import com.colin.library.android.http.callback.StringHttpCallback;
+import com.colin.library.android.utils.LogUtil;
 
-import okhttp3.Request;
+import java.io.File;
 
 /**
  * 作者： ColinLu
@@ -22,13 +23,11 @@ import okhttp3.Request;
  * 描述： TODO
  */
 public class HttpFragment extends AppFragment<FragmentHttpBinding> {
-    public static final String DOWN_APP = "http://rongxiaoliu.oss-cn-hangzhou.aliyuncs.com/fenfa/109_yinxingfenqi/81_doudoufenqi/2_4_59/doudoufenqi_2459_17538_sign.apk";
-    public static final String DOWN_IMAGE = "https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1163419914,1588199831&fm=26&gp=0.jpg";
-    public static final String DOWN_SHARE_SHARE = "http://inews.gtimg.com/newsapp_bt/0/876781763/1000";
+    public static final String DOWN_TEXT = "https://down.xbaoshu.com/d/file/down/2020/11/24/%E5%AE%8C%E7%BE%8E%E4%B8%96%E7%95%8C.txt";
+    public static final String DOWN_IMAGE = "http://inews.gtimg.com/newsapp_bt/0/876781763/1000";
 
-    public static final String HTTP_BASE = "https://echo.getpostman.com/";
-    public static final String HTTP_METHOD_GET = HTTP_BASE + "status/200";
-    //    public static final String HTTP_METHOD_GET = "https://autodev.openspeech.cn/csp/api/v2.1/weather?openId=aiuicus&clientType=android&sign=android&city=上海&latitude=39.902895&longitude=116.427915&needMoreData=true&pageNo=1&pageSize=7";
+    public static final String HTTP_BASE = "https://postman-echo.com/";
+    public static final String HTTP_METHOD_GET = HTTP_BASE + "get?test=123";
     public static final String HTTP_METHOD_DELETE = HTTP_BASE + "delete";
     public static final String HTTP_METHOD_HEAD = HTTP_BASE + "head";
     public static final String HTTP_METHOD_OPTIONS = HTTP_BASE + "options";
@@ -39,7 +38,6 @@ public class HttpFragment extends AppFragment<FragmentHttpBinding> {
 
 
     public static final String[] IMAGE_URL_ARRAY = {
-            DOWN_SHARE_SHARE,
             DOWN_IMAGE,
             "http://img6.16fan.com/201510/11/005258wdngg6rv0tpn8z9z.jpg",
             "http://img6.16fan.com/201510/11/013553aj3kp9u6iuz6k9uj.jpg",
@@ -62,6 +60,13 @@ public class HttpFragment extends AppFragment<FragmentHttpBinding> {
     public void initView(@Nullable Bundle bundle) {
         mBinding.mButtonGet.setOnClickListener(v -> httpGet());
         mBinding.mButtonPost.setOnClickListener(v -> httpPost());
+        mBinding.mButtonDelete.setOnClickListener(v -> httpDelete());
+        mBinding.mButtonHead.setOnClickListener(v -> httpHead());
+        mBinding.mButtonOption.setOnClickListener(v -> httpOption());
+        mBinding.mButtonPatch.setOnClickListener(v -> httpPatch());
+        mBinding.mButtonPut.setOnClickListener(v -> httpPut());
+        mBinding.mButtonTrace.setOnClickListener(v -> httpTrace());
+        mBinding.mButtonDownload.setOnClickListener(v -> httpDownload());
     }
 
 
@@ -77,26 +82,90 @@ public class HttpFragment extends AppFragment<FragmentHttpBinding> {
 
 
     private void httpGet() {
-        OkHttp.getInstance().get(DOWN_SHARE_SHARE).execute(new StringHttpCallback() {
+        OkHttp.getInstance().get(HTTP_METHOD_GET).execute(new StringHttpCallback() {
             @Override
             public void success(@Nullable String tips) {
                 DialogManager.getInstance().showTip(getChildFragmentManager(), tips);
             }
         });
-
-/*        OkHttp.getInstance().get(DOWN_SHARE_SHARE).execute(new BitmapHttpCallback(){
-            @Override
-            public void success(@Nullable Bitmap bitmap) {
-                super.success(bitmap);
-            }
-        });*/
-//        ThreadHelper.getInstance().doAsync(() -> {
-//            final String result = HttpUtil.getForm(HTTP_METHOD_GET, "");
-//            DialogManager.getInstance().showTip(getChildFragmentManager(), result);
-//        });
     }
 
     private void httpPost() {
-
+        OkHttp.getInstance().post(HTTP_METHOD_POST).execute(new StringHttpCallback() {
+            @Override
+            public void success(@Nullable String tips) {
+                DialogManager.getInstance().showTip(getChildFragmentManager(), tips);
+            }
+        });
     }
+
+    private void httpDelete() {
+        OkHttp.getInstance().delete(HTTP_METHOD_DELETE).execute(new StringHttpCallback() {
+            @Override
+            public void success(@Nullable String tips) {
+                DialogManager.getInstance().showTip(getChildFragmentManager(), tips);
+            }
+        });
+    }
+
+    private void httpHead() {
+        OkHttp.getInstance().head(HTTP_METHOD_HEAD).execute(new StringHttpCallback() {
+            @Override
+            public void success(@Nullable String tips) {
+                DialogManager.getInstance().showTip(getChildFragmentManager(), tips);
+            }
+        });
+    }
+
+    private void httpOption() {
+        OkHttp.getInstance().options(HTTP_METHOD_OPTIONS).execute(new StringHttpCallback() {
+            @Override
+            public void success(@Nullable String tips) {
+                DialogManager.getInstance().showTip(getChildFragmentManager(), tips);
+            }
+        });
+    }
+
+    private void httpPatch() {
+        OkHttp.getInstance().patch(HTTP_METHOD_PATCH).execute(new StringHttpCallback() {
+            @Override
+            public void success(@Nullable String tips) {
+                DialogManager.getInstance().showTip(getChildFragmentManager(), tips);
+            }
+        });
+    }
+
+    private void httpPut() {
+        OkHttp.getInstance().put(HTTP_METHOD_PUT).execute(new StringHttpCallback() {
+            @Override
+            public void success(@Nullable String tips) {
+                DialogManager.getInstance().showTip(getChildFragmentManager(), tips);
+            }
+        });
+    }
+
+    private void httpTrace() {
+        OkHttp.getInstance().trace(HTTP_METHOD_TRACE).execute(new StringHttpCallback() {
+            @Override
+            public void success(@Nullable String tips) {
+                DialogManager.getInstance().showTip(getChildFragmentManager(), tips);
+            }
+        });
+    }
+
+    private void httpDownload() {
+        OkHttp.getInstance().get(DOWN_TEXT).execute(new FileHttpCallback() {
+            @Override
+            public void success(@Nullable File file) {
+                DialogManager.getInstance().showTip(getChildFragmentManager(), file.getName(), file.getAbsolutePath());
+            }
+
+            @Override
+            public void progress(float total, float progress) {
+                LogUtil.d(total, progress);
+            }
+        });
+    }
+
+
 }

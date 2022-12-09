@@ -1,15 +1,13 @@
 package com.colin.android.demo.java.dialog;
 
-import android.net.Uri;
 import android.os.Bundle;
-import android.text.TextUtils;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.colin.android.demo.java.app.AppDialog;
-import com.colin.android.demo.java.databinding.DialogAppBinding;
-import com.colin.android.demo.java.def.bean.ContactBean;
+import com.colin.android.demo.java.databinding.DialogTipsBinding;
 import com.colin.library.android.utils.StringUtil;
 
 /**
@@ -18,8 +16,8 @@ import com.colin.library.android.utils.StringUtil;
  * <p>
  * 描述： TODO
  */
-public final class TipsDialog extends AppDialog<DialogAppBinding> {
-    private ContactBean mContactBean;
+public final class TipsDialog extends AppDialog<DialogTipsBinding> {
+    private String mTitle;
     private String mTips;
 
     @Override
@@ -29,38 +27,26 @@ public final class TipsDialog extends AppDialog<DialogAppBinding> {
 
     @Override
     public void initData(@Nullable Bundle bundle) {
-        if (mContactBean != null) {
-            contactToView(mContactBean);
-        }
-        if (!StringUtil.isEmpty(mTips)) {
-            contactToView(mTips);
-        }
+        if (mBinding == null) return;
+        if (!StringUtil.isEmpty(mTitle)) {
+            mBinding.textDialogTitle.setText(mTitle);
+            mBinding.textDialogTitle.setVisibility(View.VISIBLE);
+        } else mBinding.textDialogTitle.setVisibility(View.GONE);
+        mBinding.textDialogMessage.setText(mTips);
     }
 
     public void setTips(@NonNull String tips) {
-        if (!tips.equals(mTips)) contactToView(tips);
-        this.mTips = tips;
-    }
-
-    public void setContact(@NonNull ContactBean bean) {
-        if (!bean.equals(mContactBean)) contactToView(bean);
-        this.mContactBean = bean;
-    }
-
-
-    private void contactToView(@NonNull ContactBean bean) {
-        if (mBinding == null) return;
-        if (TextUtils.isEmpty(bean.photo)) {
-            mBinding.imageDialog.setImageURI(null);
-        } else {
-            mBinding.imageDialog.setImageURI(Uri.parse(bean.photo));
+        if (!tips.equals(mTips)) {
+            this.mTips = tips;
+            initData(null);
         }
-        mBinding.textDialogMessage.setText(bean.toString());
     }
 
-
-    private void contactToView(@NonNull String tips) {
-        if (mBinding == null) return;
-        mBinding.textDialogMessage.setText(tips);
+    public void setTips(@NonNull String title, @NonNull String tips) {
+        if (!tips.equals(mTitle) || !tips.equals(mTips)) {
+            this.mTitle = title;
+            this.mTips = tips;
+            initData(null);
+        }
     }
 }

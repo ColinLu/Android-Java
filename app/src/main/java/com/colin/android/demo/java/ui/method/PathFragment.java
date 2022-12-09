@@ -120,7 +120,8 @@ public class PathFragment extends AppFragment<LayoutListBinding> implements OnIt
             default:
                 break;
         }
-        DialogManager.getInstance().showPath(getChildFragmentManager(), title, path);
+        LogUtil.i(title, path);
+        DialogManager.getInstance().showTip(getChildFragmentManager(), title, path);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.R)
@@ -162,8 +163,7 @@ public class PathFragment extends AppFragment<LayoutListBinding> implements OnIt
                     return requireContext().getExternalFilesDir("Colin");
             }
         } catch (Exception e) {
-            LogUtil.i(title);
-            LogUtil.log(e);
+            LogUtil.e(title, LogUtil.format(e));
         }
         return null;
 

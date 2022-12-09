@@ -3,10 +3,8 @@ package com.colin.library.android.http.callback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.colin.library.android.http.bean.HttpException;
 import com.colin.library.android.http.parse.FileParseResponse;
 import com.colin.library.android.http.parse.IParseResponse;
-import com.colin.library.android.http.progress.IProgress;
 
 import java.io.File;
 import java.io.IOException;
@@ -19,25 +17,21 @@ import okhttp3.Response;
  * <p>
  * 描述： 下载文件，支持进度监听
  */
-public final class FileHttpCallback implements IHttpCallback<File> {
+public class FileHttpCallback implements IHttpCallback<File> {
     @NonNull
     protected final IParseResponse<File> mParseResponse;
 
     public FileHttpCallback() {
-        this(null, null, null);
+        this(new FileParseResponse(null, null));
     }
 
     public FileHttpCallback(@Nullable String fileName) {
-        this(null, fileName, null);
+        this(new FileParseResponse(null, fileName));
     }
 
 
     public FileHttpCallback(@Nullable File dir, @Nullable String fileName) {
-        this(dir, fileName, null);
-    }
-
-    public FileHttpCallback(@Nullable File dir, @Nullable String fileName, @Nullable IProgress progress) {
-        this(new FileParseResponse(dir, fileName, progress));
+        this(new FileParseResponse(dir, fileName));
     }
 
     public FileHttpCallback(@NonNull IParseResponse<File> parseResponse) {

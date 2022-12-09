@@ -90,7 +90,7 @@ public final class UtilConfig {
         private String mLogShowTag;
         private boolean mLogShowThread = true;
         private int mLogMethodOffset = 0;
-        private int mLogMethodCount = 1;
+        private int mLogMethodCount = 3;
 
         public Builder(@NonNull Application application) {
             this(application, BuildConfig.DEBUG);

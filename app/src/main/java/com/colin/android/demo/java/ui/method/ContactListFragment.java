@@ -76,7 +76,7 @@ public class ContactListFragment extends AppFragment<LayoutListBinding> implemen
     @Override
     public void item(@NonNull View view, int position, @Nullable Object object) {
         if (object instanceof ContactBean) {
-            DialogManager.getInstance().show(getChildFragmentManager(), (ContactBean) object);
+//            DialogManager.getInstance().show(getChildFragmentManager(), (ContactBean) object);
         }
     }
 }

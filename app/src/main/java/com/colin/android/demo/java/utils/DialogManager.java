@@ -1,13 +1,17 @@
 package com.colin.android.demo.java.utils;
 
+import android.graphics.Bitmap;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import com.colin.android.demo.java.def.bean.ContactBean;
+import com.colin.android.demo.java.dialog.ImageDialog;
 import com.colin.android.demo.java.dialog.PathDialog;
 import com.colin.android.demo.java.dialog.TipsDialog;
+import com.colin.library.android.utils.BitmapUtil;
 import com.colin.library.android.utils.LogUtil;
 import com.colin.library.android.utils.StringUtil;
 
@@ -37,22 +41,27 @@ public final class DialogManager {
 
     public void show(@Nullable FragmentManager manager, @Nullable ContactBean bean) {
         if (manager == null || bean == null) return;
-        final TipsDialog dialog = getTipsDialog(manager, TAG);
-        dialog.setContact(bean);
-        dialog.show(manager, TAG);
+
     }
 
-    public void showTip(@Nullable FragmentManager manager, @NonNull String msg) {
+    public void showTip(@Nullable FragmentManager manager, @Nullable String msg) {
         if (manager == null || StringUtil.isEmpty(msg)) return;
         final TipsDialog dialog = getTipsDialog(manager, TAG);
         dialog.setTips(msg);
         dialog.show(manager, TAG);
     }
 
-    public void showPath(@Nullable FragmentManager manager, String title, @NonNull String msg) {
-        if (manager == null) return;
-        final PathDialog dialog = getPathDialog(manager, TAG);
-        dialog.setPath(title, msg);
+    public void showImage(@Nullable FragmentManager manager, @Nullable Bitmap bitmap) {
+        if (manager == null || BitmapUtil.isEmpty(bitmap)) return;
+        final ImageDialog dialog = getImageDialog(manager, TAG);
+        dialog.setImage(bitmap);
+        dialog.show(manager, TAG);
+    }
+
+    public void showTip(@Nullable FragmentManager manager, @Nullable String title, @Nullable String msg) {
+        if (manager == null || StringUtil.isEmpty(title, msg)) return;
+        final TipsDialog dialog = getTipsDialog(manager, TAG);
+        dialog.setTips(title, msg);
         dialog.show(manager, TAG);
     }
 
@@ -68,6 +77,22 @@ public final class DialogManager {
             return (TipsDialog) fragment;
         }
         final TipsDialog dialog = new TipsDialog();
+        mDialogRef = new WeakReference<>(dialog);
+        return dialog;
+    }
+
+    private ImageDialog getImageDialog(@NonNull FragmentManager manager, @NonNull String tag) {
+        Fragment fragment = mDialogRef == null ? null : mDialogRef.get();
+        if (fragment instanceof ImageDialog) {
+            LogUtil.i("dialog mDialogRef");
+            return (ImageDialog) fragment;
+        }
+        fragment = manager.findFragmentByTag(tag);
+        if (fragment instanceof ImageDialog) {
+            LogUtil.i("dialog findFragmentByTag");
+            return (ImageDialog) fragment;
+        }
+        final ImageDialog dialog = new ImageDialog();
         mDialogRef = new WeakReference<>(dialog);
         return dialog;
     }
