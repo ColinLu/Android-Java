@@ -13,10 +13,21 @@ import com.colin.library.android.utils.LogUtil;
  * 作者： ColinLu
  * 时间： 2022-01-18 22:33
  * <p>
- * 描述： TODO
+ * 描述： Log 用例
  */
 public class LogFragment extends AppFragment<FragmentLogBinding> {
     public static final String TAG = "LogFragment";
+    public static final String JSON = "{\"l1\":{\"l1_1\":[\"l1_1_1\",\"l1_1_2\"],\"l1_2\":{\"l1_2_1\":121}},\"l2\":{\"l2_1\":null,\"l2_2\":true,\"l2_3\":{}}}";
+    public static final String XML = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" +
+            "<resources>\n" +
+            "    <color name=\"purple_200\">#FFBB86FC</color>\n" +
+            "    <color name=\"purple_500\">#FF6200EE</color>\n" +
+            "    <color name=\"purple_700\">#FF3700B3</color>\n" +
+            "    <color name=\"teal_200\">#FF03DAC5</color>\n" +
+            "    <color name=\"teal_700\">#FF018786</color>\n" +
+            "    <color name=\"black\">#FF000000</color>\n" +
+            "    <color name=\"white\">#FFFFFFFF</color>\n" +
+            "</resources>";
 
     @Override
     public void initView(@Nullable Bundle bundle) {
@@ -26,17 +37,8 @@ public class LogFragment extends AppFragment<FragmentLogBinding> {
         mBinding.mButtonLogW.setOnClickListener(v -> LogUtil.w("log w"));
         mBinding.mButtonLogA.setOnClickListener(v -> LogUtil.a("log a", "log a"));
         mBinding.mButtonLogE.setOnClickListener(v -> LogUtil.e(TAG, "log e", "log e"));
-        mBinding.mButtonLogJson.setOnClickListener(v -> LogUtil.json(LogLevel.D, "{\"l1\":{\"l1_1\":[\"l1_1_1\",\"l1_1_2\"],\"l1_2\":{\"l1_2_1\":121}},\"l2\":{\"l2_1\":null,\"l2_2\":true,\"l2_3\":{}}}"));
-        mBinding.mButtonLogXml.setOnClickListener(v -> LogUtil.xml(LogLevel.E, "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" +
-                "<resources>\n" +
-                "    <color name=\"purple_200\">#FFBB86FC</color>\n" +
-                "    <color name=\"purple_500\">#FF6200EE</color>\n" +
-                "    <color name=\"purple_700\">#FF3700B3</color>\n" +
-                "    <color name=\"teal_200\">#FF03DAC5</color>\n" +
-                "    <color name=\"teal_700\">#FF018786</color>\n" +
-                "    <color name=\"black\">#FF000000</color>\n" +
-                "    <color name=\"white\">#FFFFFFFF</color>\n" +
-                "</resources>"));
+        mBinding.mButtonLogJson.setOnClickListener(v -> LogUtil.json(LogLevel.D, JSON));
+        mBinding.mButtonLogXml.setOnClickListener(v -> LogUtil.xml(LogLevel.E, XML));
         mBinding.mButtonLogThrowable.setOnClickListener(v -> LogUtil.log(new NullPointerException("log throwable")));
     }
 

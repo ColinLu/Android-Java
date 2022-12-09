@@ -440,47 +440,47 @@ public final class FileUtil {
     /**
      * 将输入流写入文件
      *
+     * @param path 文件
      * @param is   输入流
-     * @param path 路径
      * @return {@code true}: 写入成功<br>{@code false}: 写入失败
      */
-    public static boolean toFile(@Nullable final InputStream is, @Nullable final String path) {
-        return toFile(is, FileUtil.getFile(path), false);
+    public static boolean toFile(@Nullable final String path, @Nullable final InputStream is) {
+        return toFile(FileUtil.getFile(path), is, false);
     }
 
     /**
      * 将输入流写入文件
      *
+     * @param path   文件
      * @param is     输入流
-     * @param path   路径
      * @param append 是否追加在文件末
      * @return {@code true}: 写入成功<br>{@code false}: 写入失败
      */
-    public static boolean toFile(@Nullable final InputStream is, @Nullable final String path, final boolean append) {
-        return toFile(is, FileUtil.getFile(path), append);
+    public static boolean toFile(@Nullable final String path, @Nullable final InputStream is, final boolean append) {
+        return toFile(FileUtil.getFile(path), is, append);
     }
 
     /**
      * 将输入流写入文件
      *
-     * @param is   输入流
      * @param file 文件
+     * @param is   输入流
      * @return {@code true}: 写入成功<br>{@code false}: 写入失败
      */
-    public static boolean toFile(@Nullable final InputStream is, @Nullable final File file) {
-        return toFile(is, file, false);
+    public static boolean toFile(@Nullable final File file, @Nullable final InputStream is) {
+        return toFile(file, is, false);
     }
 
     /**
      * 将输入流写入文件
      *
-     * @param is     输入流
      * @param file   文件
+     * @param is     输入流
      * @param append 是否追加在文件末
      * @return {@code true}: 写入成功<br>{@code false}: 写入失败
      */
-    public static boolean toFile(@Nullable final InputStream is, @Nullable final File file, final boolean append) {
-        if (null == is || !FileUtil.createOrExistsFile(file)) return false;
+    public static boolean toFile(@Nullable final File file, @Nullable final InputStream is, final boolean append) {
+        if (is == null || !FileUtil.createOrExistsFile(file)) return false;
         BufferedOutputStream os = null;
         try {
             os = new BufferedOutputStream(new FileOutputStream(file, append));
@@ -489,12 +489,12 @@ public final class FileUtil {
             while ((len = is.read(data, 0, sBufferSize)) != Constants.INVALID) {
                 os.write(data, 0, len);
             }
+            IOUtil.flush(os);
             return true;
         } catch (IOException e) {
-            e.printStackTrace();
+            LogUtil.e(e);
             return false;
         } finally {
-            IOUtil.flush(os);
             IOUtil.close(is, os);
         }
     }
@@ -502,24 +502,24 @@ public final class FileUtil {
     /**
      * 将字节数组写入文件
      *
-     * @param bytes 字节数组
-     * @param path  文件路径
+     * @param bytes 字节
+     * @param path  文件
      * @return {@code true}: 写入成功<br>{@code false}: 写入失败
      */
-    public static boolean toFile(@Nullable final byte[] bytes, @Nullable final String path) {
-        return toFile(bytes, FileUtil.getFile(path), false);
+    public static boolean toFile(@Nullable final String path, @Nullable final byte[] bytes) {
+        return toFile(FileUtil.getFile(path), bytes, false);
     }
 
     /**
      * 将字节数组写入文件
      *
-     * @param bytes  字节数组
-     * @param path   文件路径
+     * @param path   文件
+     * @param bytes
      * @param append 是否追加在文件末
      * @return {@code true}: 写入成功<br>{@code false}: 写入失败
      */
-    public static boolean toFile(@Nullable final byte[] bytes, @Nullable final String path, final boolean append) {
-        return toFile(bytes, FileUtil.getFile(path), append);
+    public static boolean toFile(@Nullable final String path, @Nullable final byte[] bytes, final boolean append) {
+        return toFile(FileUtil.getFile(path), bytes, append);
     }
 
     /**
@@ -529,8 +529,8 @@ public final class FileUtil {
      * @param bytes 字节数组
      * @return {@code true}: 写入成功<br>{@code false}: 写入失败
      */
-    public static boolean toFile(@Nullable final byte[] bytes, @Nullable final File file) {
-        return toFile(bytes, file, false);
+    public static boolean toFile(@Nullable final File file, @Nullable final byte[] bytes) {
+        return toFile(file, bytes, false);
     }
 
     /**
@@ -541,18 +541,18 @@ public final class FileUtil {
      * @param append 是否追加在文件末
      * @return {@code true}: 写入成功<br>{@code false}: 写入失败
      */
-    public static boolean toFile(@Nullable final byte[] bytes, @Nullable final File file, final boolean append) {
+    public static boolean toFile(@Nullable final File file, @Nullable final byte[] bytes, final boolean append) {
         if (ArrayUtil.isEmpty(bytes) || FileUtil.createOrExistsFile(file)) return false;
         BufferedOutputStream bos = null;
         try {
             bos = new BufferedOutputStream(new FileOutputStream(file, append));
             bos.write(bytes);
+            IOUtil.flush(bos);
             return true;
         } catch (IOException e) {
             e.printStackTrace();
             return false;
         } finally {
-            IOUtil.flush(bos);
             IOUtil.close(bos);
         }
     }
@@ -564,8 +564,8 @@ public final class FileUtil {
      * @param path    文件路径
      * @return {@code true}: 写入成功<br>{@code false}: 写入失败
      */
-    public static boolean toFile(@Nullable final String content, @Nullable final String path) {
-        return toFile(content, FileUtil.getFile(path), false);
+    public static boolean toFile(@Nullable final String path, @Nullable final CharSequence content) {
+        return toFile(FileUtil.getFile(path), content, false);
     }
 
     /**
@@ -576,8 +576,8 @@ public final class FileUtil {
      * @param append  是否追加在文件末
      * @return {@code true}: 写入成功<br>{@code false}: 写入失败
      */
-    public static boolean toFile(@Nullable final String content, @Nullable final String path, final boolean append) {
-        return toFile(content, FileUtil.getFile(path), append);
+    public static boolean toFile(@Nullable final String path, @Nullable final CharSequence content, final boolean append) {
+        return toFile(FileUtil.getFile(path), content, append);
     }
 
     /**
@@ -587,8 +587,8 @@ public final class FileUtil {
      * @param file    文件
      * @return {@code true}: 写入成功<br>{@code false}: 写入失败
      */
-    public static boolean toFile(@Nullable final String content, @Nullable final File file) {
-        return toFile(content, file, false);
+    public static boolean toFile(@Nullable final File file, @Nullable final CharSequence content) {
+        return toFile(file, content, false);
     }
 
     /**
@@ -599,18 +599,18 @@ public final class FileUtil {
      * @param append  是否追加在文件末
      * @return {@code true}: 写入成功<br>{@code false}: 写入失败
      */
-    public static boolean toFile(@Nullable final CharSequence content, @Nullable final File file, final boolean append) {
+    public static boolean toFile(@Nullable final File file, @Nullable final CharSequence content, final boolean append) {
         if (StringUtil.isEmpty(content) || !FileUtil.createOrExistsFile(file)) return false;
         BufferedWriter bw = null;
         try {
             bw = new BufferedWriter(new FileWriter(file, append));
             bw.write(content.toString());
+            IOUtil.flush(bw);
             return true;
         } catch (IOException e) {
             e.printStackTrace();
             return false;
         } finally {
-            IOUtil.flush(bw);
             IOUtil.close(bw);
         }
     }
@@ -930,6 +930,7 @@ public final class FileUtil {
             IOUtil.close(reader);
         }
     }
+
     /**
      * 读取文件到字节数组中
      *
@@ -1067,8 +1068,8 @@ public final class FileUtil {
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
-            IOUtil.close(out);
             if (recycle) BitmapUtil.recycle(bitmap);
+            IOUtil.close(out);
         }
         return path;
     }

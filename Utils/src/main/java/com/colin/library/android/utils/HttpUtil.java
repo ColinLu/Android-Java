@@ -2,13 +2,11 @@ package com.colin.library.android.utils;
 
 import android.os.Build;
 import android.text.TextUtils;
-import android.webkit.MimeTypeMap;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import java.io.DataOutputStream;
-import java.io.File;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
@@ -27,7 +25,7 @@ import okhttp3.MediaType;
  * 作者： ColinLu
  * 时间： 2022-01-16 20:23
  * <p>
- * 描述： TODO
+ * 描述： Http
  */
 public final class HttpUtil {
 
@@ -210,13 +208,13 @@ public final class HttpUtil {
         if (StringUtil.isEmpty(mimeType) || StringUtil.isEmpty(encode)) return null;
         return MediaType.parse(mimeType + "; charset=" + encode);
     }
+
     /*文件名 xxx.mp3*/
     @Nullable
     public static String getMimeType(@Nullable final String fileName) {
         if (StringUtil.isSpace(fileName)) return null;
         return URLConnection.getFileNameMap().getContentTypeFor(fileName.toLowerCase(Locale.US));
     }
-
 
 
     @NonNull

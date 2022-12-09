@@ -7,9 +7,7 @@ import androidx.annotation.Nullable;
 
 import com.colin.library.android.Utils;
 import com.colin.library.android.annotation.LogLevel;
-import com.colin.library.android.utils.ActivityUtil;
 import com.colin.library.android.utils.BuildConfig;
-import com.colin.library.android.utils.StringUtil;
 import com.colin.library.android.utils.data.UtilConfig;
 
 /**

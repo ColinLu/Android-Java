@@ -136,6 +136,18 @@
                       </LayoutPositions>
                     </value>
                   </entry>
+                  <entry key="Fragment">
+                    <value>
+                      <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="12" />
+                            <option name="y" value="12" />
+                          </Point>
+                        </option>
+                      </LayoutPositions>
+                    </value>
+                  </entry>
                   <entry key="GradientTextFragment">
                     <value>
                       <LayoutPositions>
@@ -169,6 +181,11 @@
                                 <LayoutPositions />
                               </value>
                             </entry>
+                            <entry key="action_Home_to_Web">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
                           </map>
                         </option>
                       </LayoutPositions>
@@ -198,6 +215,11 @@
                         <option name="myPositions">
                           <map>
                             <entry key="action_Method_to_ContactList">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
+                            <entry key="action_Method_to_Http">
                               <value>
                                 <LayoutPositions />
                               </value>
@@ -286,24 +308,17 @@
                             <option name="y" value="12" />
                           </Point>
                         </option>
-                        <option name="myPositions">
-                          <map>
-                            <entry key="action_Method_to_ContactList">
-                              <value>
-                                <LayoutPositions />
-                              </value>
-                            </entry>
-                            <entry key="action_Method_to_Log">
-                              <value>
-                                <LayoutPositions />
-                              </value>
-                            </entry>
-                            <entry key="action_Method_to_Path">
-                              <value>
-                                <LayoutPositions />
-                              </value>
-                            </entry>
-                          </map>
+                      </LayoutPositions>
+                    </value>
+                  </entry>
+                  <entry key="navigation">
+                    <value>
+                      <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="12" />
+                            <option name="y" value="12" />
+                          </Point>
                         </option>
                       </LayoutPositions>
                     </value>

@@ -74,6 +74,9 @@ public class MethodFragment extends AppFragment<LayoutListBinding> implements On
             case "Path":
                 toNavigate(R.id.action_Method_to_Path);
                 break;
+            case "Http":
+                toNavigate(R.id.action_Method_to_Http);
+                break;
             default:
                 break;
         }

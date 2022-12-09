@@ -35,6 +35,7 @@
     <string name="search">Search</string>
     <string name="web">Web</string>
 
+    <string name="http">Http</string>
     <string name="http_get">Get</string>
     <string name="http_post">Post</string>
     <string name="http_put">Put</string>
@@ -72,6 +73,7 @@
     <string-array name="method_list">
         <item>@string/log</item>
         <item>@string/permission</item>
+        <item>@string/http</item>
         <item>@string/contact</item>
         <item>@string/path</item>
         <item>@string/path</item>

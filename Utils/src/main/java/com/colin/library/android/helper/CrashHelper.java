@@ -6,7 +6,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.colin.library.android.utils.AppUtil;
-import com.colin.library.android.utils.CrashUtil;
 import com.colin.library.android.utils.FileUtil;
 import com.colin.library.android.utils.LogUtil;
 import com.colin.library.android.utils.OSUtil;
@@ -39,21 +38,32 @@ public final class CrashHelper {
         return sHelper;
     }
 
+    public void init(@NonNull final OnCrashListener onCrashListener) {
+        Thread.setDefaultUncaughtExceptionHandler(new CrashHandler(null, null, onCrashListener));
+    }
 
-    public void init(@NonNull File folder, @NonNull String fileName, @NonNull final CrashUtil.OnCrashListener onCrashListener) {
+    public void init(@NonNull String fileName, @NonNull final OnCrashListener onCrashListener) {
+        Thread.setDefaultUncaughtExceptionHandler(new CrashHandler(null, fileName, onCrashListener));
+    }
+
+    public void init(@NonNull File folder, @NonNull String fileName, @NonNull final OnCrashListener onCrashListener) {
         Thread.setDefaultUncaughtExceptionHandler(new CrashHandler(folder, fileName, onCrashListener));
     }
 
+    public File getFile() {
+        return PathUtil.getExternalCache();
+    }
+
     public String getFileName() {
-        return UtilHelper.getInstance().getContext().getPackageName() + TimeUtil.getDateFormat(Constants.FORMAT_DAY_PATTERN) + ".txt";
+        return UtilHelper.getInstance().getContext().getPackageName() + "_" + TimeUtil.getTimeString(Constants.FORMAT_DAY_PATTERN) + ".txt";
     }
 
     private static class CrashHandler implements Thread.UncaughtExceptionHandler {
         private File mFolder;
         private String mFileName;
-        private CrashUtil.OnCrashListener mOnCrashListener;
+        private OnCrashListener mOnCrashListener;
 
-        public CrashHandler(@Nullable File folder, @Nullable String fileName, @Nullable CrashUtil.OnCrashListener onCrashListener) {
+        public CrashHandler(@Nullable File folder, @Nullable String fileName, @Nullable OnCrashListener onCrashListener) {
             this.mFolder = folder;
             this.mFileName = fileName;
             this.mOnCrashListener = onCrashListener;
@@ -61,26 +71,25 @@ public final class CrashHelper {
 
         @Override
         public void uncaughtException(@NonNull Thread t, @NonNull Throwable e) {
-            final String time = TimeUtil.getTimeString("yyyy-MM-dd_HH:mm:ss:SSS");
             final StringBuilder sb = new StringBuilder();
-            final String head = "*************** Log Start ***************" +
-                    "\nTime Of Crash      : " + time +
-                    "\nOS name            : " + OSUtil.getName() +
-                    "\nOS version         : " + OSUtil.getVersion() +
-                    "\nDevice Manufacturer: " + Build.MANUFACTURER +
-                    "\nDevice Model       : " + Build.MODEL +
-                    "\nAndroid Version    : " + Build.VERSION.RELEASE +
-                    "\nAndroid SDK        : " + Build.VERSION.SDK_INT +
-                    "\nApp VersionName    : " + AppUtil.getVersionName() +
-                    "\nApp VersionCode    : " + AppUtil.getVersionCode() +
-                    "\n*************** Log End ***************\n\n";
-            sb.append(head).append(LogUtil.format(e));
-            if (mOnCrashListener != null) mOnCrashListener.onCrash(sb.toString(), e);
-            if (null == mFolder) mFolder = PathUtil.getInternalCache();
+            sb.append("****************************** Log Start ******************************").append(Constants.LINE_SEP)
+                    .append("Time Of Crash      : ").append(TimeUtil.getTimeString()).append(Constants.LINE_SEP)
+                    .append("OS name            : ").append(OSUtil.getName()).append(Constants.LINE_SEP)
+                    .append("OS version         : ").append(OSUtil.getVersion()).append(Constants.LINE_SEP)
+                    .append("Device Manufacturer: ").append(Build.MANUFACTURER).append(Constants.LINE_SEP)
+                    .append("Device Model       : ").append(Build.MODEL).append(Constants.LINE_SEP)
+                    .append("Android Version    : ").append(Build.VERSION.RELEASE).append(Constants.LINE_SEP)
+                    .append("Android SDK        : ").append(Build.VERSION.SDK_INT).append(Constants.LINE_SEP)
+                    .append("App VersionName    : ").append(AppUtil.getVersionName()).append(Constants.LINE_SEP)
+                    .append("App VersionCode    : ").append(AppUtil.getVersionCode()).append(Constants.LINE_SEP)
+                    .append(Constants.LINE_SEP).append(LogUtil.format(e)).append(Constants.LINE_SEP)
+                    .append("****************************** Log End ******************************").append(Constants.LINE_SEP);
+            if (mOnCrashListener != null) mOnCrashListener.crash(e, sb.toString());
+            if (null == mFolder) mFolder = getInstance().getFile();
             if (StringUtil.isEmpty(mFileName)) mFileName = getInstance().getFileName();
             final File file = new File(mFolder, mFileName);
             LogUtil.e(file.getAbsolutePath());
-            FileUtil.toFile(sb, file, true);
+            ThreadHelper.getInstance().doAsync(() -> FileUtil.toFile(file, sb, true));
         }
     }
 
@@ -89,6 +98,6 @@ public final class CrashHelper {
     ///////////////////////////////////////////////////////////////////////////
 
     public interface OnCrashListener {
-        void onCrash(String crashInfo, Throwable e);
+        void crash(Throwable error, String info);
     }
 }

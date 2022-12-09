@@ -31,7 +31,6 @@ android {
 
 dependencies {
     compileOnly project(path: ':Utils')
-
     compileOnly dependency.android_material
     compileOnly dependency.ok_http
     compileOnly dependency.g_son

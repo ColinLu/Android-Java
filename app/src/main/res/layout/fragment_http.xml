@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.method.HttpFragment">
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/mButtonGet"
+        style="@style/Theme.App.Button"
+        android:layout_width="@dimen/dp_0"
+        android:layout_marginTop="@dimen/item_title_height"
+        android:text="@string/http_get"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/mButtonPost"
+        style="@style/Theme.App.Button"
+        android:layout_width="@dimen/dp_0"
+        android:layout_marginTop="@dimen/margin_default"
+        android:text="@string/http_post"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/mButtonGet" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/mButtonDelete"
+        style="@style/Theme.App.Button"
+        android:layout_width="@dimen/dp_0"
+        android:layout_marginTop="@dimen/margin_default"
+        android:text="Delete"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/mButtonPost" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/mButtonHead"
+        style="@style/Theme.App.Button"
+        android:layout_width="@dimen/dp_0"
+        android:layout_height="@dimen/button_height"
+        android:layout_marginTop="@dimen/margin_default"
+        android:text="Head"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/mButtonDelete" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/mButtonOption"
+        style="@style/Theme.App.Button"
+        android:layout_width="@dimen/dp_0"
+        android:layout_height="@dimen/button_height"
+        android:layout_marginTop="@dimen/margin_default"
+        android:text="Option"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/mButtonHead" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/mButtonPatch"
+        style="@style/Theme.App.Button"
+        android:layout_width="@dimen/dp_0"
+        android:layout_height="@dimen/button_height"
+        android:layout_marginTop="@dimen/margin_default"
+        android:text="Patch"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/mButtonOption" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/mButtonPut"
+        style="@style/Theme.App.Button"
+        android:layout_width="@dimen/dp_0"
+        android:layout_height="@dimen/button_height"
+        android:layout_marginTop="@dimen/margin_default"
+        android:text="Put"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/mButtonPatch" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/mButtonTrace"
+        style="@style/Theme.App.Button"
+        android:layout_width="@dimen/dp_0"
+        android:layout_height="@dimen/button_height"
+        android:layout_marginTop="@dimen/margin_default"
+        android:text="Trace"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/mButtonPut" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/mButtonDownload"
+        style="@style/Theme.App.Button"
+        android:layout_width="@dimen/dp_0"
+        android:layout_height="@dimen/button_height"
+        android:layout_marginTop="@dimen/margin_default"
+        android:text="Download"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/mButtonTrace" />
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -2,9 +2,10 @@ package com.colin.android.demo.java;
 
 import android.app.Application;
 
-import com.colin.library.android.utils.CrashUtil;
-import com.colin.library.android.utils.LogUtil;
+import com.colin.library.android.helper.CrashHelper;
 import com.colin.library.android.helper.UtilHelper;
+import com.colin.library.android.http.OkHttp;
+import com.colin.library.android.utils.LogUtil;
 
 
 /**
@@ -19,7 +20,7 @@ public final class JavaApp extends Application {
         super.onCreate();
         //初始化
         UtilHelper.init(this);
-        //异常输出
-        CrashUtil.init((crashInfo, e) -> LogUtil.e(crashInfo));
+        CrashHelper.getInstance().init((error, crashInfo) -> LogUtil.e(crashInfo));
+        OkHttp.getInstance().init(this);
     }
 }

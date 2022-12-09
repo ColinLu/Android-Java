@@ -9,6 +9,7 @@ import com.colin.android.demo.java.def.bean.ContactBean;
 import com.colin.android.demo.java.dialog.PathDialog;
 import com.colin.android.demo.java.dialog.TipsDialog;
 import com.colin.library.android.utils.LogUtil;
+import com.colin.library.android.utils.StringUtil;
 
 import java.lang.ref.WeakReference;
 
@@ -41,22 +42,29 @@ public final class DialogManager {
         dialog.show(manager, TAG);
     }
 
-    public void showPath(@Nullable FragmentManager manager, @NonNull String title, @Nullable String path) {
-        if (manager == null || path == null) return;
+    public void showTip(@Nullable FragmentManager manager, @NonNull String msg) {
+        if (manager == null || StringUtil.isEmpty(msg)) return;
+        final TipsDialog dialog = getTipsDialog(manager, TAG);
+        dialog.setTips(msg);
+        dialog.show(manager, TAG);
+    }
+
+    public void showPath(@Nullable FragmentManager manager, String title, @NonNull String msg) {
+        if (manager == null) return;
         final PathDialog dialog = getPathDialog(manager, TAG);
-        dialog.setPath(title, path);
+        dialog.setPath(title, msg);
         dialog.show(manager, TAG);
     }
 
     private TipsDialog getTipsDialog(@NonNull FragmentManager manager, @NonNull String tag) {
         Fragment fragment = mDialogRef == null ? null : mDialogRef.get();
         if (fragment instanceof TipsDialog) {
-            LogUtil.i(TAG, "dialog mDialogRef");
+            LogUtil.i("dialog mDialogRef");
             return (TipsDialog) fragment;
         }
         fragment = manager.findFragmentByTag(tag);
         if (fragment instanceof TipsDialog) {
-            LogUtil.i(TAG, "dialog findFragmentByTag");
+            LogUtil.i("dialog findFragmentByTag");
             return (TipsDialog) fragment;
         }
         final TipsDialog dialog = new TipsDialog();
@@ -67,12 +75,12 @@ public final class DialogManager {
     private PathDialog getPathDialog(@NonNull FragmentManager manager, @NonNull String tag) {
         Fragment fragment = mDialogRef == null ? null : mDialogRef.get();
         if (fragment instanceof PathDialog) {
-            LogUtil.i(TAG, "dialog mDialogRef");
+            LogUtil.i("dialog mDialogRef");
             return (PathDialog) fragment;
         }
         fragment = manager.findFragmentByTag(tag);
         if (fragment instanceof PathDialog) {
-            LogUtil.i(TAG, "dialog findFragmentByTag");
+            LogUtil.i("dialog findFragmentByTag");
             return (PathDialog) fragment;
         }
         final PathDialog dialog = new PathDialog();

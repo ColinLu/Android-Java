@@ -35,6 +35,4 @@ dependencies {
     compileOnly dependency.androidx_appcompat
     compileOnly dependency.ok_http
     compileOnly dependency.g_son
-    implementation 'com.orhanobut:logger:2.2.0'
-
 }

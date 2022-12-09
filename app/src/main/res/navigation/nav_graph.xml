@@ -14,7 +14,7 @@
             app:destination="@+id/ViewFragment" />
         <action
             android:id="@+id/action_Home_to_Method"
-            app:destination="@+id/MethodFragment" />
+            app:destination="@id/navigation" />
         <action
             android:id="@+id/action_Home_to_Web"
             app:destination="@+id/WebIndexFragment" />
@@ -23,24 +23,7 @@
         android:id="@+id/WebIndexFragment"
         android:name="com.colin.android.demo.java.ui.web.WebIndexFragment"
         android:label="@string/web"
-        tools:layout="@layout/fragment_web_index">
-    </fragment>
-    <fragment
-        android:id="@+id/MethodFragment"
-        android:name="com.colin.android.demo.java.ui.method.MethodFragment"
-        android:label="@string/method"
-        tools:layout="@layout/layout_list">
-        <action
-            android:id="@+id/action_Method_to_Log"
-            app:destination="@+id/LogFragment" />
-
-        <action
-            android:id="@+id/action_Method_to_ContactList"
-            app:destination="@+id/ContactListFragment" />
-        <action
-            android:id="@+id/action_Method_to_Path"
-            app:destination="@+id/PathFragment" />
-    </fragment>
+        tools:layout="@layout/fragment_web_index"></fragment>
     <fragment
         android:id="@+id/ViewFragment"
         android:name="com.colin.android.demo.java.ui.view.ViewFragment"
@@ -64,6 +47,11 @@
         android:name="com.colin.android.demo.java.ui.method.LogFragment"
         android:label="@string/log"
         tools:layout="@layout/fragment_log" />
+    <fragment
+        android:id="@+id/HttpFragment"
+        android:name="com.colin.android.demo.java.ui.method.HttpFragment"
+        android:label="@string/http"
+        tools:layout="@layout/fragment_http" />
     <fragment
         android:id="@+id/PathFragment"
         android:name="com.colin.android.demo.java.ui.method.PathFragment"
@@ -97,4 +85,26 @@
         android:name="com.colin.android.demo.java.ui.view.CircleImageFragment"
         android:label="@string/circle"
         tools:layout="@layout/fragment_circle_image" />
+    <navigation android:id="@+id/navigation"
+        app:startDestination="@id/MethodFragment">
+        <fragment
+            android:id="@+id/MethodFragment"
+            android:name="com.colin.android.demo.java.ui.method.MethodFragment"
+            android:label="@string/method"
+            tools:layout="@layout/layout_list">
+            <action
+                android:id="@+id/action_Method_to_Log"
+                app:destination="@+id/LogFragment" />
+
+            <action
+                android:id="@+id/action_Method_to_ContactList"
+                app:destination="@+id/ContactListFragment" />
+            <action
+                android:id="@+id/action_Method_to_Path"
+                app:destination="@+id/PathFragment" />
+            <action
+                android:id="@+id/action_Method_to_Http"
+                app:destination="@+id/HttpFragment" />
+        </fragment>
+    </navigation>
 </navigation>
