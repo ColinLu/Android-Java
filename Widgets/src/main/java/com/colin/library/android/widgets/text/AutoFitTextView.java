@@ -18,7 +18,7 @@ import com.colin.library.android.widgets.R;
  * 作者： ColinLu
  * 时间： 2022-05-02 21:28
  * <p>
- * 描述： TODO
+ * 描述： 自动适配字体 size
  */
 public class AutoFitTextView extends AppCompatTextView {
     private Paint mTestPaint;

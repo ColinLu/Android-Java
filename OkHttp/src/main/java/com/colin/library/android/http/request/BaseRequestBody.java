@@ -41,7 +41,6 @@ public class BaseRequestBody<Returner> extends BaseRequest<Returner> implements 
     protected transient RequestBody mRequestBody;           //请求体
     protected transient final HashMap<String, IRequestBody> mRequestBodyMap;
     protected transient final List<FileBody> mFileBodyList;
-    protected transient IProgress mProgress;
 
     public BaseRequestBody(@NonNull String url, @NonNull @Method String method) {
         super(url, method);
@@ -64,9 +63,9 @@ public class BaseRequestBody<Returner> extends BaseRequest<Returner> implements 
 
     @NonNull
     @Override
-    public RequestBody getRequestBody() {
+    public RequestBody getRequestBody(@Nullable IProgress progress) {
         final RequestBody requestBody = isMultipart() ? getMultipartBody(getEncode()) : getSingleRequestBody(getEncode());
-        return mProgress != null ? new ProgressRequestBody(requestBody, mProgress) : requestBody;
+        return progress != null ? new ProgressRequestBody(requestBody, progress) : requestBody;
     }
 
     @Override
@@ -243,11 +242,6 @@ public class BaseRequestBody<Returner> extends BaseRequest<Returner> implements 
         return (Returner) this;
     }
 
-    @Override
-    public Returner setProgress(@Nullable IProgress progress) {
-        this.mProgress = progress;
-        return (Returner) this;
-    }
 
     ///////////////////////////////////////////////////////////////////////////
     // 辅助方法

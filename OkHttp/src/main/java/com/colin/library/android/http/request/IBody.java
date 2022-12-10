@@ -23,7 +23,7 @@ import okhttp3.RequestBody;
  */
 public interface IBody<Returner> extends IRequest<Returner> {
     @NonNull
-    RequestBody getRequestBody();
+    RequestBody getRequestBody(@Nullable IProgress progress);
 
     /*是否拼接网址*/
     Returner splice(boolean url);
@@ -87,8 +87,5 @@ public interface IBody<Returner> extends IRequest<Returner> {
     Returner body(@Nullable RequestBody requestBody);
 
     Returner body(@Nullable String contentType, @Nullable IRequestBody requestBody);
-
-    Returner setProgress(@Nullable IProgress progress);
-
 
 }

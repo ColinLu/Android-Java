@@ -15,23 +15,24 @@ public class CookieJarImpl implements CookieJar {
         return new CookieJarImpl(store);
     }
 
-    private final CookieStore cookieStore;
+    private final CookieStore mCookieStore;
 
     public CookieJarImpl(@NonNull CookieStore cookieStore) {
-        this.cookieStore = cookieStore;
+        this.mCookieStore = cookieStore;
     }
 
     @Override
     public synchronized void saveFromResponse(@NonNull HttpUrl url, @NonNull List<Cookie> cookies) {
-        cookieStore.save(url, cookies);
+        mCookieStore.save(url, cookies);
     }
 
+    @NonNull
     @Override
     public synchronized List<Cookie> loadForRequest(@NonNull HttpUrl url) {
-        return cookieStore.load(url);
+        return mCookieStore.load(url);
     }
 
     public CookieStore getCookieStore() {
-        return cookieStore;
+        return mCookieStore;
     }
 }

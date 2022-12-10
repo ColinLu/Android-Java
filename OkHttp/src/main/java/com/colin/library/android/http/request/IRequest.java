@@ -7,6 +7,7 @@ import androidx.annotation.WorkerThread;
 
 import com.colin.library.android.http.annotation.Method;
 import com.colin.library.android.http.callback.IHttpCallback;
+import com.colin.library.android.http.progress.IProgress;
 
 import java.util.List;
 import java.util.Map;
@@ -33,6 +34,15 @@ public interface IRequest<Returner> {
     String getMethod();
 
     @NonNull
+    OkHttpClient getOkHttpClient();
+
+    @NonNull
+    Request getRequest(@Nullable IProgress progress);
+
+    @Nullable
+    RequestBody getRequestBody(@Nullable IProgress progress);
+
+    @NonNull
     String getEncode();
 
     @NonNull
@@ -41,14 +51,6 @@ public interface IRequest<Returner> {
     @NonNull
     String getContentType();
 
-    @Nullable
-    RequestBody getRequestBody();
-
-    @NonNull
-    Request getRequest();
-
-    @NonNull
-    OkHttpClient getOkHttpClient();
 
     int getRetryCall();
 
@@ -115,7 +117,6 @@ public interface IRequest<Returner> {
 
     @NonNull
     Returner removeParamAll();
-
 
     @Nullable
     @WorkerThread

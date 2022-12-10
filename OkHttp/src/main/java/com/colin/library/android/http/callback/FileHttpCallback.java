@@ -22,16 +22,16 @@ public class FileHttpCallback implements IHttpCallback<File> {
     protected final IParseResponse<File> mParseResponse;
 
     public FileHttpCallback() {
-        this(new FileParseResponse(null, null));
+        this(null, null);
     }
 
     public FileHttpCallback(@Nullable String fileName) {
-        this(new FileParseResponse(null, fileName));
+        this(null, fileName);
     }
 
 
     public FileHttpCallback(@Nullable File dir, @Nullable String fileName) {
-        this(new FileParseResponse(dir, fileName));
+        this.mParseResponse = new FileParseResponse(dir, fileName).setProgress(this);
     }
 
     public FileHttpCallback(@NonNull IParseResponse<File> parseResponse) {

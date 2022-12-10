@@ -10,6 +10,7 @@ import com.colin.library.android.http.bean.HttpHeaders;
 import com.colin.library.android.http.bean.HttpParams;
 import com.colin.library.android.http.callback.IHttpCallback;
 import com.colin.library.android.http.policy.HttpPolicy;
+import com.colin.library.android.http.progress.IProgress;
 import com.colin.library.android.utils.HttpUtil;
 import com.colin.library.android.utils.StringUtil;
 
@@ -78,6 +79,33 @@ public class BaseRequest<Returner> implements IRequest<Returner> {
 
     @NonNull
     @Override
+    public OkHttpClient getOkHttpClient() {
+        return mOkHttpClient.newBuilder()
+                .readTimeout(mReadTimeout, TimeUnit.SECONDS)
+                .writeTimeout(mWriteTimeout, TimeUnit.SECONDS)
+                .connectTimeout(mConnectTimeout, TimeUnit.SECONDS)
+                .build();
+    }
+
+    @NonNull
+    @Override
+    public Request getRequest(@Nullable IProgress progress) {
+        return new Request.Builder()
+                .tag(mTag)
+                .url(getUrl())
+                .method(getMethod(), getRequestBody(progress))
+                .headers(getHeaders())
+                .build();
+    }
+
+    @Nullable
+    @Override
+    public RequestBody getRequestBody(@Nullable IProgress progress) {
+        return null;
+    }
+
+    @NonNull
+    @Override
     public Headers getHeaders() {
         return mHeader.build().getHeader();
     }
@@ -89,32 +117,6 @@ public class BaseRequest<Returner> implements IRequest<Returner> {
         return StringUtil.isEmpty(contentType) ? OkHttp.CONTENT_TYPE_DEFAULT : contentType;
     }
 
-    @Nullable
-    @Override
-    public RequestBody getRequestBody() {
-        return null;
-    }
-
-    @NonNull
-    @Override
-    public Request getRequest() {
-        return new Request.Builder()
-                .tag(mTag)
-                .url(getUrl())
-                .method(getMethod(), getRequestBody())
-                .headers(getHeaders())
-                .build();
-    }
-
-    @NonNull
-    @Override
-    public OkHttpClient getOkHttpClient() {
-        return mOkHttpClient.newBuilder()
-                .readTimeout(mReadTimeout, TimeUnit.SECONDS)
-                .writeTimeout(mWriteTimeout, TimeUnit.SECONDS)
-                .connectTimeout(mConnectTimeout, TimeUnit.SECONDS)
-                .build();
-    }
 
     @Override
     public int getRetryCall() {
@@ -277,11 +279,11 @@ public class BaseRequest<Returner> implements IRequest<Returner> {
     @Nullable
     @Override
     public Response execute() {
-        return new HttpPolicy<Response>(getOkHttpClient(), getRequest(), getRetryCall()).execute();
+        return new HttpPolicy<Response>(getOkHttpClient(), getRequest(null), getRetryCall()).execute();
     }
 
     @Override
     public <Result> void execute(@NonNull IHttpCallback<Result> callback) {
-        new HttpPolicy<Result>(getOkHttpClient(), getRequest(), getRetryCall()).execute(callback);
+        new HttpPolicy<Result>(getOkHttpClient(), getRequest(callback), getRetryCall()).execute(callback);
     }
 }

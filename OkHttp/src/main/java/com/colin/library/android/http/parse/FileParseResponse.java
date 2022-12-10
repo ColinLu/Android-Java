@@ -7,6 +7,7 @@ import androidx.annotation.WorkerThread;
 
 import com.colin.library.android.helper.ThreadHelper;
 import com.colin.library.android.http.OkHttp;
+import com.colin.library.android.http.progress.IProgress;
 import com.colin.library.android.utils.FileUtil;
 import com.colin.library.android.utils.HttpUtil;
 import com.colin.library.android.utils.IOUtil;
@@ -36,6 +37,8 @@ public class FileParseResponse implements IParseResponse<File> {
     private final File mDir;                            //目标文件存储的文件夹路径
     @Nullable
     private final String mFileName;                     //目标文件存储的文件名 eg : app.apk
+    @Nullable
+    private IProgress mProgress;
 
     public FileParseResponse() {
         this(null, null);
@@ -50,6 +53,11 @@ public class FileParseResponse implements IParseResponse<File> {
     public FileParseResponse(@Nullable File dir, @Nullable String fileName) {
         this.mDir = dir;
         this.mFileName = fileName;
+    }
+
+    public FileParseResponse setProgress(@Nullable IProgress progress) {
+        this.mProgress = progress;
+        return this;
     }
 
     @Nullable
@@ -73,9 +81,12 @@ public class FileParseResponse implements IParseResponse<File> {
             out = new FileOutputStream(file);
             long sum = 0;
             while ((len = is.read(buffer)) != -1) {
-                final long progeress = sum + len;
                 out.write(buffer, 0, len);
-                ThreadHelper.getInstance().post(() -> progress(total * 1.0F, (progeress * 1.0F / total)));
+                if (mProgress != null) {
+                    final long progress = sum + len;
+                    ThreadHelper.getInstance().post(() -> progress(total, progress));
+                }
+
             }
             IOUtil.flush(out);
             return file;

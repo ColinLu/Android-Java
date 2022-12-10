@@ -44,7 +44,7 @@ public final class EncodeUtil {
     /*解密 url*/
     @Nullable
     public static String decode(@Nullable final String url) {
-        return encode(url, Encode.UTF_8);
+        return decode(url, Encode.UTF_8);
     }
 
     /*解密 url*/

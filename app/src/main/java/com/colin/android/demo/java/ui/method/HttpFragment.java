@@ -161,7 +161,7 @@ public class HttpFragment extends AppFragment<FragmentHttpBinding> {
             }
 
             @Override
-            public void progress(float total, float progress) {
+            public void progress(long total, long progress) {
                 LogUtil.d(total, progress);
             }
         });
