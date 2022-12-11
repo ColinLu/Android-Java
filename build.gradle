@@ -8,26 +8,22 @@ buildscript {
         google()
         mavenCentral()
         maven {
-            allowInsecureProtocol = true
-            url 'http://maven.aliyun.com/nexus/content/groups/public/'
+            url 'https://maven.aliyun.com/nexus/content/groups/public/'
         }
-//        maven {
-//            url 'https://maven.aliyun.com/repository/public'
-//        }
-//        maven {
-//            credentials {
-//                username '620d1dc29d2642b5b41ce77d'
-//                password 'ptWrnQ=kts]S'
-//            }
-//            url 'https://packages.aliyun.com/maven/repository/2188588-release-hTVplo/'
-//        }
-//        maven {
-//            credentials {
-//                username '620d1dc29d2642b5b41ce77d'
-//                password 'ptWrnQ=kts]S'
-//            }
-//            url 'https://packages.aliyun.com/maven/repository/2188588-snapshot-u3krPQ/'
-//        }
+        maven {
+            credentials {
+                username '620d1dc29d2642b5b41ce77d'
+                password 'ptWrnQ=kts]S'
+            }
+            url 'https://packages.aliyun.com/maven/repository/2188588-release-hTVplo/'
+        }
+        maven {
+            credentials {
+                username '620d1dc29d2642b5b41ce77d'
+                password 'ptWrnQ=kts]S'
+            }
+            url 'https://packages.aliyun.com/maven/repository/2188588-snapshot-u3krPQ/'
+        }
     }
 
     dependencies {

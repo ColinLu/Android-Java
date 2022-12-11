@@ -1,0 +1,15 @@
+//publishing {
+//    publications {
+//        maven(MavenPublication) {
+//            //指定aar 文件路径
+//            artifact "/Users/colinlu/Program/Android/Demo_2021/DemoJava/Base/build/outputs/aar/Base-release.aar"
+//            groupId "com.colin.library.android"
+//            artifactId "Base"
+//            version build_versions.app_version_name
+//        }
+//    }
+//    //配置仓库地址 ，可为本地仓库地址
+//    repositories {
+//        mavenLocal()//本地仓库地址 ，默认仓库：.m2\repository
+//    }
+//}

@@ -102,8 +102,9 @@ dependencies {
     implementation project(path: ':Widgets')
     implementation project(path: ':OkHttp')
 
-    implementation 'androidx.core:core-splashscreen:1.0.0-beta02'
+//    implementation 'com.colin.library.android:Base:0.0.1'
 
+//    implementation dependency.base
     implementation dependency.android_material
     implementation dependency.androidx_appcompat
     implementation dependency.androidx_legacy
