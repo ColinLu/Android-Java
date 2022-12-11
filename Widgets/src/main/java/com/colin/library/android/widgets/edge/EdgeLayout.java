@@ -26,6 +26,15 @@ import com.colin.library.android.widgets.annotation.Orientation;
 
 
 public class EdgeLayout extends FrameLayout implements NestedScrollingParent3 {
+    ///////////////////////////////////////////////////////////////////////////
+    // 对外公开接口
+    ///////////////////////////////////////////////////////////////////////////
+
+    public interface StopTargetViewFlingImpl {
+        default void stopFling(View view) {
+        }
+    }
+
     public static final Interpolator INTERPOLATOR = t -> {
         t -= 1.0f;
         return t * t * t * t * t + 1.0f;
@@ -133,7 +142,6 @@ public class EdgeLayout extends FrameLayout implements NestedScrollingParent3 {
         if (mEdgeBottom != null) mEdgeBottom.onLayout(w, h);
     }
 
-
     @Override
     public void computeScroll() {
         if (!mScroller.computeScrollOffset()) return;
@@ -173,13 +181,6 @@ public class EdgeLayout extends FrameLayout implements NestedScrollingParent3 {
         return mTargetView == target && (isStartNestedScrollHorizontal(axes) || isStartNestedScrollVertical(axes));
     }
 
-    protected boolean isStartNestedScrollHorizontal(@ViewCompat.ScrollAxis int axes) {
-        return axes == ViewCompat.SCROLL_AXIS_HORIZONTAL && (isDirectionEnabled(Direction.LEFT) || isDirectionEnabled(Direction.RIGHT));
-    }
-
-    protected boolean isStartNestedScrollVertical(@ViewCompat.ScrollAxis int axes) {
-        return axes == ViewCompat.SCROLL_AXIS_VERTICAL && (isDirectionEnabled(Direction.TOP) || isDirectionEnabled(Direction.BOTTOM));
-    }
 
     @Override
     public void onNestedScrollAccepted(@NonNull View child, @NonNull View target, @ViewCompat.ScrollAxis int axes) {
@@ -203,9 +204,8 @@ public class EdgeLayout extends FrameLayout implements NestedScrollingParent3 {
 
     @Override
     public void onStopNestedScroll(@NonNull View target, @ViewCompat.NestedScrollType int type) {
-        if (mState == STATE_PULLING) {
-            checkScroll();
-        } else if (mState == STATE_SETTLING_DELIVER && type != ViewCompat.TYPE_TOUCH) {
+        if (mState == STATE_PULLING) checkScroll();
+        else if (mState == STATE_SETTLING_DELIVER && type != ViewCompat.TYPE_TOUCH) {
             removeStopTargetFlingRunnable();
             checkScroll();
         }
@@ -233,7 +233,6 @@ public class EdgeLayout extends FrameLayout implements NestedScrollingParent3 {
         dyUnconsumed = getFling(getDirectionEdge(Direction.BOTTOM), Orientation.VERTICAL, 1, dyUnconsumed, consumed, type);
         dyUnconsumed = getFling(getDirectionEdge(Direction.TOP), Orientation.VERTICAL, -1, dyUnconsumed, consumed, type);
         dyUnconsumed = getScroll(getDirectionEdge(Direction.BOTTOM), Orientation.VERTICAL, 1, dyUnconsumed, consumed, type);
-
 
         if (dyUnconsumed == srcDy && dxUnconsumed == srcDx && mState == STATE_SETTLING_DELIVER) {
             stopTargetFling(target, dxUnconsumed, dyUnconsumed, type);
@@ -435,6 +434,88 @@ public class EdgeLayout extends FrameLayout implements NestedScrollingParent3 {
         }
     }
 
+    ///////////////////////////////////////////////////////////////////////////
+    // 内部类
+    ///////////////////////////////////////////////////////////////////////////
+    public static class LayoutParams extends FrameLayout.LayoutParams {
+        public boolean mTarget = false;
+        public boolean mEdgeOver;
+        public boolean mFlingFromTarget = true;
+        public boolean mScrollOffset = false;
+        public boolean mScrollTouchUp = true;
+        @Direction
+        public int mDirection;
+        public int mStartOffset;
+        public int mTargetOffset = ViewGroup.LayoutParams.WRAP_CONTENT;
+        public float mEdgeRate = Edge.EDGE_RATE_DEFAULT;
+        public float mScrollFling = Constants.SCROLL_FLING_DEFAULT;
+        public float mScrollSpeed = Constants.SCROLL_SPEED_DEFAULT;
+
+
+        public LayoutParams(Context context, AttributeSet attrs) {
+            super(context, attrs);
+            final TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.EdgeLayout_Layout);
+            mTarget = array.getBoolean(R.styleable.EdgeLayout_Layout_target, mTarget);
+            if (!mTarget) {
+                mDirection = array.getInteger(R.styleable.EdgeLayout_Layout_direction, Direction.TOP);
+                mTargetOffset = array.getLayoutDimension(R.styleable.EdgeLayout_Layout_edgeTargetOffset, mTargetOffset);
+                mStartOffset = array.getDimensionPixelSize(R.styleable.EdgeLayout_Layout_edgeStartOffset, mStartOffset);
+                mEdgeOver = array.getBoolean(R.styleable.EdgeLayout_Layout_edgeOver, mEdgeOver);
+                mEdgeRate = array.getFloat(R.styleable.EdgeLayout_Layout_edgeRate, mEdgeRate);
+                mScrollFling = array.getFloat(R.styleable.EdgeLayout_Layout_edgeFlingFraction, mScrollFling);
+                mScrollSpeed = array.getFloat(R.styleable.EdgeLayout_Layout_edgeScrollSpeed, mScrollSpeed);
+                mFlingFromTarget = array.getBoolean(R.styleable.EdgeLayout_Layout_edgeFlingFromTarget, mFlingFromTarget);
+                mScrollOffset = array.getBoolean(R.styleable.EdgeLayout_Layout_edgeScrollOffset, mScrollOffset);
+                mScrollTouchUp = array.getBoolean(R.styleable.EdgeLayout_Layout_edgeScrollTouchUp, mScrollTouchUp);
+            }
+            array.recycle();
+        }
+
+        public LayoutParams(int width, int height) {
+            super(width, height);
+        }
+
+        public LayoutParams(ViewGroup.LayoutParams params) {
+            super(params);
+        }
+
+        public LayoutParams(MarginLayoutParams params) {
+            super(params);
+        }
+    }
+
+
+    public static class DefaultStopTargetViewFlingImpl implements StopTargetViewFlingImpl {
+
+        private static DefaultStopTargetViewFlingImpl sInstance;
+
+        public static DefaultStopTargetViewFlingImpl getInstance() {
+            if (sInstance == null) sInstance = new DefaultStopTargetViewFlingImpl();
+            return sInstance;
+        }
+
+        private DefaultStopTargetViewFlingImpl() {
+
+        }
+
+        @Override
+        public void stopFling(View view) {
+            if (view instanceof RecyclerView) ((RecyclerView) view).stopScroll();
+        }
+    }
+
+
+    ///////////////////////////////////////////////////////////////////////////
+    // 辅助方法
+    ///////////////////////////////////////////////////////////////////////////
+    private boolean isStartNestedScrollHorizontal(@ViewCompat.ScrollAxis int axes) {
+        return axes == ViewCompat.SCROLL_AXIS_HORIZONTAL && (isDirectionEnabled(Direction.LEFT) || isDirectionEnabled(Direction.RIGHT));
+    }
+
+    private boolean isStartNestedScrollVertical(@ViewCompat.ScrollAxis int axes) {
+        return axes == ViewCompat.SCROLL_AXIS_VERTICAL && (isDirectionEnabled(Direction.TOP) || isDirectionEnabled(Direction.BOTTOM));
+    }
+
     private void checkScroll() {
         if (mTargetView == null) return;
         mScroller.abortAnimation();
@@ -503,7 +584,7 @@ public class EdgeLayout extends FrameLayout implements NestedScrollingParent3 {
         return true;
     }
 
-    protected void checkFinal(@Nullable Edge edge, int finalX, int finalY) {
+    private void checkFinal(@Nullable Edge edge, int finalX, int finalY) {
         if (edge != null && edge.isScrollFinal(finalX, finalY)) edgeStart(edge);
     }
 
@@ -546,28 +627,6 @@ public class EdgeLayout extends FrameLayout implements NestedScrollingParent3 {
             };
             post(mStopTargetFlingRunnable);
         }
-    }
-
-    private int getScrollUp(@Nullable Edge edge, @Orientation int orientation, int direction, @Px int scroll, @NonNull int[] consumed, @ViewCompat.NestedScrollType int type) {
-        if (edge == null) return scroll;
-        int offset = mTargetViewOffsetHelper.getOffset(orientation);
-        if (scroll * direction < 0 && offset * direction < 0) {
-            final float edgeRate = edge.getScrollRate(type, offset);
-            int edgeScroll = (int) (scroll * edgeRate);
-            if (edgeScroll == 0) return scroll;
-            if (Math.abs(offset) >= Math.abs(edgeScroll)) {
-                consumed[orientation] += scroll;
-                offset -= edgeScroll;
-                scroll = 0;
-            } else {
-                edgeScroll = (int) (offset / edgeRate);
-                consumed[orientation] += edgeScroll;
-                scroll -= edgeScroll;
-                offset = 0;
-            }
-            scrollToTargetOffset(edge, orientation, offset);
-        }
-        return scroll;
     }
 
     private int getScroll(@Nullable Edge edge, @Orientation int orientation, int direction, @Px int scroll, @NonNull int[] consumed, @ViewCompat.NestedScrollType int type) {
@@ -655,84 +714,6 @@ public class EdgeLayout extends FrameLayout implements NestedScrollingParent3 {
 
     private int scrollDuration(@NonNull Edge edge, @Px int offset) {
         return Math.max(mMinScrollDuration, Math.abs(edge.getScrollOffset(offset)));
-    }
-
-    ///////////////////////////////////////////////////////////////////////////
-    // 对外公开接口
-    ///////////////////////////////////////////////////////////////////////////
-
-    public interface StopTargetViewFlingImpl {
-        default void stopFling(View view) {
-        }
-    }
-
-    public static class LayoutParams extends FrameLayout.LayoutParams {
-        public boolean mTarget = false;
-        public boolean mEdgeOver;
-        public boolean mFlingFromTarget = true;
-        public boolean mScrollOffset = false;
-        public boolean mScrollTouchUp = true;
-        @Direction
-        public int mDirection;
-        public int mStartOffset;
-        public int mTargetOffset = ViewGroup.LayoutParams.WRAP_CONTENT;
-        public float mEdgeRate = Edge.EDGE_RATE_DEFAULT;
-        public float mScrollFling = Constants.SCROLL_FLING_DEFAULT;
-        public float mScrollSpeed = Constants.SCROLL_SPEED_DEFAULT;
-
-
-        public LayoutParams(Context context, AttributeSet attrs) {
-            super(context, attrs);
-            final TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.EdgeLayout_Layout);
-            mTarget = array.getBoolean(R.styleable.EdgeLayout_Layout_target, mTarget);
-            if (!mTarget) {
-                mDirection = array.getInteger(R.styleable.EdgeLayout_Layout_direction, Direction.TOP);
-                mTargetOffset = array.getLayoutDimension(R.styleable.EdgeLayout_Layout_edgeTargetOffset, mTargetOffset);
-                mStartOffset = array.getDimensionPixelSize(R.styleable.EdgeLayout_Layout_edgeStartOffset, mStartOffset);
-                mEdgeOver = array.getBoolean(R.styleable.EdgeLayout_Layout_edgeOver, mEdgeOver);
-                mEdgeRate = array.getFloat(R.styleable.EdgeLayout_Layout_edgeRate, mEdgeRate);
-                mScrollFling = array.getFloat(R.styleable.EdgeLayout_Layout_edgeFlingFraction, mScrollFling);
-                mScrollSpeed = array.getFloat(R.styleable.EdgeLayout_Layout_edgeScrollSpeed, mScrollSpeed);
-                mFlingFromTarget = array.getBoolean(R.styleable.EdgeLayout_Layout_edgeFlingFromTarget, mFlingFromTarget);
-                mScrollOffset = array.getBoolean(R.styleable.EdgeLayout_Layout_edgeScrollOffset, mScrollOffset);
-                mScrollTouchUp = array.getBoolean(R.styleable.EdgeLayout_Layout_edgeScrollTouchUp, mScrollTouchUp);
-            }
-            array.recycle();
-        }
-
-        public LayoutParams(int width, int height) {
-            super(width, height);
-        }
-
-        public LayoutParams(ViewGroup.LayoutParams params) {
-            super(params);
-        }
-
-        public LayoutParams(MarginLayoutParams params) {
-            super(params);
-        }
-    }
-
-
-    public static class DefaultStopTargetViewFlingImpl implements StopTargetViewFlingImpl {
-
-        private static DefaultStopTargetViewFlingImpl sInstance;
-
-        public static DefaultStopTargetViewFlingImpl getInstance() {
-            if (sInstance == null) {
-                sInstance = new DefaultStopTargetViewFlingImpl();
-            }
-            return sInstance;
-        }
-
-        private DefaultStopTargetViewFlingImpl() {
-
-        }
-
-        @Override
-        public void stopFling(View view) {
-            if (view instanceof RecyclerView) ((RecyclerView) view).stopScroll();
-        }
     }
 
 
