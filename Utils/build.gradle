@@ -30,7 +30,6 @@ android {
 }
 
 dependencies {
-    testImplementation 'org.junit.jupiter:junit-jupiter'
     compileOnly dependency.android_material
     compileOnly dependency.androidx_appcompat
     compileOnly dependency.ok_http

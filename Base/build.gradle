@@ -30,21 +30,55 @@ android {
 }
 
 dependencies {
-
     compileOnly project(path: ':Utils')
     compileOnly project(path: ':Widgets')
-    compileOnly dependency.android_material
-    compileOnly dependency.androidx_appcompat
-
-    testImplementation dependency.test_android_junit
-    testImplementation dependency.test_androidx_junit
-    testImplementation dependency.test_androidx_espresso
+    implementation dependency.androidx_appcompat
+    implementation dependency.android_material
+}
+/**
+ * 之前从网上进行查找的时候，都说打包后的jar包地址是在from('build/intermediates/bundles/release/')下，
+ * 但是我发现怎么都找不到。原来是因为intermediates的结构发生了改变。from('build/intermediates/packaged-classes/release/')
+ */
+//jar名字
+def NAME = 'Base'
+//jar版本号
+def VERSION = "_v_" + version
+//jar包全名带后缀
+def JAR_NAME = NAME + VERSION + ".jar"
+//删除多余文件的路劲
+def DELETE = "build/libs/" + JAR_NAME
+/**
+ * 拷贝文件的路径
+ * 之前从网上进行查找的时候，都说打包后的jar包地址是在from('build/intermediates/bundles/release/')下，
+ * 但是我发现怎么都找不到。原来是因为intermediates的结构发生了改变。from('build/intermediates/packaged-classes/release/')
+ */
+def FROM = "build/intermediates/packaged-classes/release/"
+//保存文件路劲
+def INTO = "build/libs/"
+//jar开始文件名字带后缀
+def SOURCE_NAME = "classes.jar"
+// 生成jar包
+task makeJar(type: Copy) {
+    //删除存在的
+    delete DELETE
+    //设置拷贝的文件
+    from(FROM)
+    //打进jar包后的文件目录
+    into(INTO)
+    print(INTO)
+    //将classes.jar放入build/libs/目录下
+    //include ,exclude参数来设置过滤
+    //（我们只关心classes.jar这个文件）
+    include(SOURCE_NAME)
+    //重命名
+    rename(SOURCE_NAME, JAR_NAME)
 }
 
+//apply plugin: 'maven'
 
 //group 'com.colin.library.android'
 //version '0.0.1'
-//def artifactId = 'OkHttp'
+//def artifactId = 'Base'
 //
 //apply plugin: 'maven'
 //uploadArchives {

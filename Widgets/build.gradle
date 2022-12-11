@@ -30,12 +30,8 @@ android {
 }
 
 dependencies {
+    compileOnly project(path: ':Utils')
     compileOnly dependency.android_material
     compileOnly dependency.androidx_appcompat
     compileOnly dependency.widget_swiperefresh
-    compileOnly project(path: ':Utils')
-
-    testImplementation dependency.test_android_junit
-    androidTestImplementation dependency.test_androidx_junit
-    androidTestImplementation dependency.test_androidx_espresso
 }
