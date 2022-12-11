@@ -1,13 +1,11 @@
 package com.colin.library.android.http.interceptor;
 
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.colin.library.android.http.BuildConfig;
 import com.colin.library.android.http.request.ProgressRequestBody;
 import com.colin.library.android.utils.LogUtil;
 import com.colin.library.android.utils.data.Constants;
-import com.colin.library.android.utils.encrypt.EncodeUtil;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -45,18 +43,21 @@ public final class LogInterceptor implements Interceptor {
     private static final int KEY_LENGTH = 20;
     private static final String SPACE = " ";
     private boolean mDebug = BuildConfig.DEBUG;
+    private int mLimitSize = 1024;
 
     public LogInterceptor() {
-        this(true);
+        this(BuildConfig.DEBUG, 1024);
     }
 
-    public LogInterceptor(boolean debug) {
+    public LogInterceptor(boolean debug, int limit) {
         this.mDebug = debug;
+        this.mLimitSize = limit;
     }
 
     @NotNull
     @Override
     public Response intercept(@NotNull Chain chain) throws IOException {
+        if (!mDebug) return chain.proceed(chain.request());
         Response response = null;
         long startTime = System.currentTimeMillis();
         final StringBuffer sb = new StringBuffer();
@@ -92,23 +93,26 @@ public final class LogInterceptor implements Interceptor {
             sb.append(LABEL).append("Result").append(LABEL).append('\n');
             response = chain.proceed(chain.request());
             Response clone = response.newBuilder().build();
-            sb.append("code      :").append(clone.code()).append('\t').append("message   :").append(clone.message()).append('\n');
+            sb.append("code      :").append(clone.code()).append('\t').append("message   :").append(clone.message());
             ResponseBody body = clone.body();
-            if (clone.isSuccessful() && isPlaintext(body.contentType())) {
+            if (clone.isSuccessful()) {
                 if (!isPlaintext(body.contentType())) sb.append("not text").append('\n');
                 else {
-//                    BufferedSource source = clone.body().source();
-//                    source.request(Long.MAX_VALUE); // request the entire body.
-//                    Buffer buffer = source.getBuffer();
-//                    String readString = buffer.clone().readString(Charset.defaultCharset());
-//                    if (TextUtils.isEmpty(readString)) sb.append("parse fail").append('\n');
-//                    else if ((readString.startsWith("[") && readString.endsWith("]")) || (readString.startsWith("{") && readString.endsWith("}")))
-//                        sb.append(LogUtil.formatJson(readString)).append('\n');
-//                    else if (readString.startsWith("<?xml"))
-//                        sb.append(LogUtil.formatXml(readString)).append('\n');
-//                    else sb.append(readString).append('\n');
+                    BufferedSource source = clone.body().source();
+                    source.request(Long.MAX_VALUE); // request the entire body.
+                    Buffer buffer = source.getBuffer();
+                    String readString = buffer.clone().readString(Charset.defaultCharset());
+                    if (mLimitSize > 0 && readString.length() > mLimitSize)
+                        sb.append("too much text:").append(readString.length()).append('\n');
+                    else if (TextUtils.isEmpty(readString))
+                        sb.append('\n').append("parse fail").append('\n');
+                    else if ((readString.startsWith("[") && readString.endsWith("]")) || (readString.startsWith("{") && readString.endsWith("}")))
+                        sb.append('\n').append(LogUtil.formatJson(readString)).append('\n');
+                    else if (readString.startsWith("<?xml"))
+                        sb.append('\n').append(LogUtil.formatXml(readString)).append('\n');
+                    else sb.append('\n').append(readString).append('\n');
                 }
-            }
+            } else sb.append("request fail").append('\n');
             sb.append(LABEL).append("Result").append(LABEL).append('\n');
         } catch (Throwable e) {
             sb.append(LABEL).append("Exception").append(LABEL).append('\n');
@@ -153,7 +157,6 @@ public final class LogInterceptor implements Interceptor {
      */
     private static boolean isPlaintext(MediaType mediaType) {
         if (mediaType == null) return false;
-        LogUtil.log(mediaType.toString());
         mediaType.type();
         if (mediaType.type().equals("text")) return true;
         String subtype = mediaType.subtype();

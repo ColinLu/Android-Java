@@ -74,11 +74,9 @@ public final class OkHttp {
     public static final String CONTENT_TYPE_STREAM = "application/octet-stream";
     public static final String CONTENT_TYPE_JSON = "application/json";
     public static final String CONTENT_TYPE_XML = "application/xml";
-    private HttpConfig mHttpConfig;
 
     private OkHttp() {
     }
-
 
     private static class Holder {
         private static final OkHttp instance = new OkHttp();
@@ -86,29 +84,6 @@ public final class OkHttp {
 
     public static OkHttp getInstance() {
         return OkHttp.Holder.instance;
-    }
-
-    public void init(@NonNull Application application) {
-        init(HttpConfig.newBuilder(application).build());
-    }
-
-    public void init(@NonNull HttpConfig config) {
-        this.mHttpConfig = config;
-    }
-
-    public HttpConfig getOkHttpConfig() {
-        Utils.notNull(mHttpConfig, "OkHttpConfig init first !");
-        return mHttpConfig;
-    }
-
-    public Context getContext() {
-        Utils.notNull(mHttpConfig, "OkHttpConfig init first !");
-        return mHttpConfig.getContext();
-    }
-
-    public OkHttpClient getOkHttpClient() {
-        Utils.notNull(mHttpConfig, "OkHttpConfig init first !");
-        return getOkHttpConfig().getOkHttpClient();
     }
 
 
@@ -166,7 +141,7 @@ public final class OkHttp {
      * 根据Tag取消请求
      */
     public void cancelTag(@Nullable Object tag) {
-        cancelTag(getOkHttpClient(), tag);
+        cancelTag(OkHttpHelper.getInstance().getOkHttpClient(), tag);
     }
 
     /**
@@ -186,7 +161,7 @@ public final class OkHttp {
      * 取消所有请求请求
      */
     public void cancelAll() {
-        cancelAll(getOkHttpClient());
+        cancelAll(OkHttpHelper.getInstance().getOkHttpClient());
     }
 
     /**

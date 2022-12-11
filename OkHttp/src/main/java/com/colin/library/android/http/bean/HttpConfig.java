@@ -12,7 +12,6 @@ import com.colin.library.android.http.OkHttp;
 import com.colin.library.android.http.interceptor.LogInterceptor;
 import com.colin.library.android.utils.HttpUtil;
 
-import java.net.Proxy;
 import java.util.Map;
 
 import okhttp3.OkHttpClient;
@@ -128,11 +127,8 @@ public final class HttpConfig {
 
         public Builder(@NonNull Application application) {
             this.mApplication = application;
-            final OkHttpClient.Builder builder = new OkHttpClient.Builder();
-            this.mOkHttpClient = builder
-                    .addInterceptor(new LogInterceptor())
-                    .proxy(Proxy.NO_PROXY)
-                    .build();
+            this.mOkHttpClient = new OkHttpClient.Builder()
+                    .addInterceptor(new LogInterceptor()).build();
             this.mHeaderBuilder = new HttpHeaders.Builder();
             this.mParamsBuilder = new HttpParams.Builder();
         }

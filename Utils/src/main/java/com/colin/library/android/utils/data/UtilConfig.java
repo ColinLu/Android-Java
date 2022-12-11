@@ -81,7 +81,6 @@ public final class UtilConfig {
         private final Application mApplication;
         /*环境*/
         private final boolean mDebug;
-
         /*Log*/
         private boolean mShowLog;
         @LogLevel
@@ -90,7 +89,7 @@ public final class UtilConfig {
         private String mLogShowTag;
         private boolean mLogShowThread = true;
         private int mLogMethodOffset = 0;
-        private int mLogMethodCount = 3;
+        private int mLogMethodCount = 1;
 
         public Builder(@NonNull Application application) {
             this(application, BuildConfig.DEBUG);

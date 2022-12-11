@@ -5,6 +5,7 @@ import android.app.Application;
 import com.colin.library.android.helper.CrashHelper;
 import com.colin.library.android.helper.UtilHelper;
 import com.colin.library.android.http.OkHttp;
+import com.colin.library.android.http.OkHttpHelper;
 import com.colin.library.android.utils.LogUtil;
 
 
@@ -19,8 +20,8 @@ public final class JavaApp extends Application {
     public void onCreate() {
         super.onCreate();
         //初始化
-        UtilHelper.init(this);
+        UtilHelper.getInstance().init(this);
         CrashHelper.getInstance().init((error, crashInfo) -> LogUtil.e(crashInfo));
-        OkHttp.getInstance().init(this);
+        OkHttpHelper.getInstance().init(this);
     }
 }

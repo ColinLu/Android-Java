@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.colin.library.android.http.OkHttp;
+import com.colin.library.android.http.OkHttpHelper;
 import com.colin.library.android.http.annotation.Method;
 import com.colin.library.android.http.bean.HttpConfig;
 import com.colin.library.android.http.bean.HttpHeaders;
@@ -47,7 +48,7 @@ public class BaseRequest<Returner> implements IRequest<Returner> {
     protected transient HttpParams.Builder mParams;
 
     public BaseRequest(@NonNull String url, @Method @NonNull String method) {
-        final HttpConfig config = OkHttp.getInstance().getOkHttpConfig();
+        final HttpConfig config = OkHttpHelper.getInstance().getOkHttpConfig();
         this.mUrl = url;
         this.mMethod = method;
         this.mOkHttpClient = config.getOkHttpClient();
