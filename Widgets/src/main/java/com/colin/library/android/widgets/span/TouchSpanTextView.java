@@ -3,6 +3,7 @@ package com.colin.library.android.widgets.span;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Color;
+import android.text.Spannable;
 import android.text.method.MovementMethod;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -70,6 +71,18 @@ public class TouchSpanTextView extends AppCompatTextView implements ITouchSpan {
             mTouchSpan = touch;
             setPressed(mIsPressedRecord);
         }
+    }
+
+    @Override
+    public boolean onTouchEvent(@NonNull MotionEvent event) {
+        if (!(getText() instanceof Spannable) || !(getMovementMethod() instanceof TouchSpanMovementMethod)) {
+            mTouchSpan = false;
+            return super.onTouchEvent(event);
+        }
+        mTouchSpan = true;
+        // 调用super.onTouchEvent,会走到TouchSpanMovementMethod
+        // 会走到TouchSpanMovementMethod#onTouchEvent会修改mTouchSpan
+        return mNeedForceEventToParent ? mTouchSpan : super.onTouchEvent(event);
     }
 
     public void setNeedForceEventToParent(boolean needForceEventToParent) {

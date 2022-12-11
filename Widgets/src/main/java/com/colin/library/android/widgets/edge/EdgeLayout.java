@@ -405,7 +405,6 @@ public class EdgeLayout extends FrameLayout implements NestedScrollingParent3 {
         if (mState == STATE_PULLING) return;
         if (!animate) {
             mState = STATE_IDLE;
-
             mTargetViewOffsetHelper.setOrientationOffset(orientation, 0);
             edge.updateOffset(0);
             return;
@@ -520,7 +519,6 @@ public class EdgeLayout extends FrameLayout implements NestedScrollingParent3 {
 
     private void edgeUpdateOffset(@Nullable final Edge edge, final int offset) {
         if (edge == null) return;
-        mTargetViewOffsetHelper.setOrientationOffset(Orientation.HORIZONTAL, offset);
         edge.updateOffset(offset);
     }
 
@@ -733,9 +731,7 @@ public class EdgeLayout extends FrameLayout implements NestedScrollingParent3 {
 
         @Override
         public void stopFling(View view) {
-            if (view instanceof RecyclerView) {
-                ((RecyclerView) view).stopScroll();
-            }
+            if (view instanceof RecyclerView) ((RecyclerView) view).stopScroll();
         }
     }
 

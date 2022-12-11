@@ -13,7 +13,7 @@ import com.colin.library.android.widgets.span.TouchSpanTextView;
  * 作者： ColinLu
  * 时间： 2022-05-03 01:05
  * <p>
- * 描述： TODO
+ * 描述： 透明效果
  */
 public class AlphaTextView extends TouchSpanTextView implements IAlphaView {
     private AlphaViewHelper mAlphaViewHelper;

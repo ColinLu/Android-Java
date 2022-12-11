@@ -68,7 +68,7 @@ public class ProgressRequestBody extends RequestBody {
      * 包装
      */
     private final class CountingSink extends ForwardingSink {
-        private float mCurrentSize = 0F;
+        private long mCurrentSize = 0L;
         private final long mTotal;
 
         CountingSink(Sink sink, long total) {
@@ -84,7 +84,7 @@ public class ProgressRequestBody extends RequestBody {
         }
     }
 
-    private void callback(final long total, final float currentSize) {
+    private void callback(final long total, final long currentSize) {
         ThreadHelper.getInstance().post(() -> mProgress.progress(total, currentSize));
     }
 }
