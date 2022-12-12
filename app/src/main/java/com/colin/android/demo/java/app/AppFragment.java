@@ -69,7 +69,7 @@ public abstract class AppFragment<Bind extends ViewBinding> extends BaseFragment
 
     @Override
     public void network(@NetType int type) {
-        LogUtil.i(NetUtil.getNetType(type));
+        LogUtil.iTag(getClass().getSimpleName(), NetUtil.getNetType(type));
     }
 
     @Override

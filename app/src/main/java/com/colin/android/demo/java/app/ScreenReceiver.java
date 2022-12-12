@@ -8,7 +8,6 @@ import android.text.TextUtils;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.colin.android.demo.java.def.ScreenStatus;
 import com.colin.library.android.base.BaseReceiver;
 import com.colin.library.android.base.def.OnReceiverListener;
 

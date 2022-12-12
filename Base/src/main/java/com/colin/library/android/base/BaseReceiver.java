@@ -1,16 +1,12 @@
 package com.colin.library.android.base;
 
 import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
 import android.content.IntentFilter;
-import android.widget.RadioButton;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.lifecycle.Lifecycle;
-import androidx.lifecycle.LifecycleObserver;
-import androidx.lifecycle.OnLifecycleEvent;
+import androidx.lifecycle.DefaultLifecycleObserver;
+import androidx.lifecycle.LifecycleOwner;
 
 import com.colin.library.android.base.def.OnReceiverListener;
 
@@ -22,7 +18,7 @@ import java.lang.ref.SoftReference;
  * <p>
  * 描述： 广播基类
  */
-public abstract class BaseReceiver extends BroadcastReceiver implements LifecycleObserver {
+public abstract class BaseReceiver extends BroadcastReceiver implements DefaultLifecycleObserver {
     protected SoftReference<? extends OnReceiverListener> mOnBroadcastListenerRef;
 
     public BaseReceiver(@NonNull OnReceiverListener listener) {
@@ -30,8 +26,8 @@ public abstract class BaseReceiver extends BroadcastReceiver implements Lifecycl
     }
 
     /*注册 广播*/
-    @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
-    public void register() {
+    @Override
+    public void onCreate(@NonNull LifecycleOwner owner) {
         final OnReceiverListener listener = null == mOnBroadcastListenerRef ? null : mOnBroadcastListenerRef.get();
         if (listener != null && listener.getContext() != null) {
             listener.getContext().registerReceiver(this, getIntentFilter());
@@ -39,8 +35,8 @@ public abstract class BaseReceiver extends BroadcastReceiver implements Lifecycl
     }
 
     /*解绑 广播*/
-    @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
-    public void unregister() {
+    @Override
+    public void onDestroy(@NonNull LifecycleOwner owner) {
         final OnReceiverListener listener = null == mOnBroadcastListenerRef ? null : mOnBroadcastListenerRef.get();
         if (listener != null && listener.getContext() != null) {
             listener.getContext().unregisterReceiver(this);

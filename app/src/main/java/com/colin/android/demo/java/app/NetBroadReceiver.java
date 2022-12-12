@@ -10,13 +10,12 @@ import android.net.ConnectivityManager;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresPermission;
-import androidx.lifecycle.Lifecycle;
-import androidx.lifecycle.OnLifecycleEvent;
+import androidx.lifecycle.LifecycleOwner;
 
+import com.colin.library.android.annotation.NetType;
 import com.colin.library.android.base.BaseReceiver;
 import com.colin.library.android.base.def.OnReceiverListener;
 import com.colin.library.android.utils.NetUtil;
-import com.colin.library.android.annotation.NetType;
 
 /**
  * 作者： ColinLu
@@ -39,12 +38,13 @@ public final class NetBroadReceiver extends BaseReceiver {
         super(listener);
     }
 
-    @OnLifecycleEvent(Lifecycle.Event.ON_START)
+
     @RequiresPermission(ACCESS_NETWORK_STATE)
-    public void start() {
+    @Override
+    public void onStart(@NonNull LifecycleOwner owner) {
+        super.onStart(owner);
         network(NetUtil.getNetType());
     }
-
 
     /*接受到通知*/
     @Override

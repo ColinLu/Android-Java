@@ -59,7 +59,7 @@ public abstract class AppActivity<Bind extends ViewBinding> extends BaseActivity
 
     @Override
     public void network(@NetType int type) {
-        LogUtil.i(NetUtil.getNetType(type));
+        LogUtil.iTag(getClass().getSimpleName(), NetUtil.getNetType(type));
     }
 
     @Override
