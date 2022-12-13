@@ -109,6 +109,20 @@ public class EdgeLayout extends FrameLayout implements NestedScrollingParent3 {
     }
 
     @Override
+    protected void onLayout(boolean changed, int l, int t, int r, int b) {
+        final int w = r - l;
+        final int h = b - t;
+        if (mTargetView != null) {
+            mTargetView.layout(0, 0, w, h);
+            mTargetViewOffsetHelper.onViewLayout();
+        }
+        if (mEdgeLeft != null) mEdgeLeft.onLayout(w, h);
+        if (mEdgeTop != null) mEdgeTop.onLayout(w, h);
+        if (mEdgeRight != null) mEdgeRight.onLayout(w, h);
+        if (mEdgeBottom != null) mEdgeBottom.onLayout(w, h);
+    }
+
+    @Override
     protected FrameLayout.LayoutParams generateLayoutParams(@NonNull ViewGroup.LayoutParams lp) {
         return new LayoutParams(lp);
     }
@@ -129,21 +143,9 @@ public class EdgeLayout extends FrameLayout implements NestedScrollingParent3 {
     }
 
     @Override
-    protected void onLayout(boolean changed, int l, int t, int r, int b) {
-        final int w = r - l;
-        final int h = b - t;
-        if (mTargetView != null) {
-            mTargetView.layout(0, 0, w, h);
-            mTargetViewOffsetHelper.onViewLayout();
-        }
-        if (mEdgeLeft != null) mEdgeLeft.onLayout(w, h);
-        if (mEdgeTop != null) mEdgeTop.onLayout(w, h);
-        if (mEdgeRight != null) mEdgeRight.onLayout(w, h);
-        if (mEdgeBottom != null) mEdgeBottom.onLayout(w, h);
-    }
-
-    @Override
     public void computeScroll() {
+        LogUtil.eTag("computeScroll", String.format("state:%d currX:%d currY：%d finalX:%d finalY：%d",
+                mState, mScroller.getCurrX(), mScroller.getCurrY(), mScroller.getFinalX(), mScroller.getFinalY()));
         if (!mScroller.computeScrollOffset()) return;
         if (!mScroller.isFinished()) {
             edgeUpdateOffset(mScroller.getCurrX(), mScroller.getCurrY());
@@ -522,8 +524,8 @@ public class EdgeLayout extends FrameLayout implements NestedScrollingParent3 {
         final int offsetX = mTargetViewOffsetHelper.getLeftAndRightOffset();
         final int offsetY = mTargetViewOffsetHelper.getTopAndBottomOffset();
         if (checkScrollHorizontal(getDirectionEdge(Direction.LEFT), offsetX, offsetY, 1)) return;
-        if (checkScrollHorizontal(getDirectionEdge(Direction.RIGHT), offsetX, offsetY, -1)) return;
         if (checkScrollVertical(getDirectionEdge(Direction.TOP), offsetX, offsetY, 1)) return;
+        if (checkScrollHorizontal(getDirectionEdge(Direction.RIGHT), offsetX, offsetY, -1)) return;
         if (checkScrollVertical(getDirectionEdge(Direction.BOTTOM), offsetX, offsetY, -1)) return;
         mState = STATE_IDLE;
     }

@@ -107,33 +107,13 @@ public class LoadMoreView extends ConstraintLayout implements EdgeWatcher {
 
     @Override
     public void offset(@NonNull Edge edge, int offset) {
+        LogUtil.d(mRunning, mIsRelease, edge.getTargetOffset(), offset);
         if (mRunning) return;
         if (mIsRelease) {
             if (edge.getTargetOffset() > offset) {
                 mIsRelease = false;
                 mTextView.setText(mPullText);
                 mArrowView.animate().rotation(180)
-                        .setListener(new Animator.AnimatorListener() {
-                            @Override
-                            public void onAnimationStart(Animator animation) {
-                                LogUtil.e("onAnimationStart");
-                            }
-
-                            @Override
-                            public void onAnimationEnd(Animator animation) {
-                                LogUtil.e("onAnimationEnd");
-                            }
-
-                            @Override
-                            public void onAnimationCancel(Animator animation) {
-                                LogUtil.e("onAnimationCancel");
-                            }
-
-                            @Override
-                            public void onAnimationRepeat(Animator animation) {
-                                LogUtil.e("onAnimationRepeat");
-                            }
-                        })
                         .start();
             }
         } else {
@@ -141,27 +121,6 @@ public class LoadMoreView extends ConstraintLayout implements EdgeWatcher {
                 mIsRelease = true;
                 mTextView.setText(mReleaseText);
                 mArrowView.animate().rotation(0)
-                        .setListener(new Animator.AnimatorListener() {
-                            @Override
-                            public void onAnimationStart(Animator animation) {
-                                LogUtil.e("onAnimationStart");
-                            }
-
-                            @Override
-                            public void onAnimationEnd(Animator animation) {
-                                LogUtil.e("onAnimationEnd");
-                            }
-
-                            @Override
-                            public void onAnimationCancel(Animator animation) {
-                                LogUtil.e("onAnimationCancel");
-                            }
-
-                            @Override
-                            public void onAnimationRepeat(Animator animation) {
-                                LogUtil.e("onAnimationRepeat");
-                            }
-                        })
                         .start();
             }
         }

@@ -4,8 +4,8 @@ import android.app.Application;
 
 import com.colin.library.android.helper.CrashHelper;
 import com.colin.library.android.helper.UtilHelper;
-import com.colin.library.android.http.OkHttp;
 import com.colin.library.android.http.OkHttpHelper;
+import com.colin.library.android.http.bean.HttpConfig;
 import com.colin.library.android.utils.LogUtil;
 
 
@@ -22,6 +22,11 @@ public final class JavaApp extends Application {
         //初始化
         UtilHelper.getInstance().init(this);
         CrashHelper.getInstance().init((error, crashInfo) -> LogUtil.e(crashInfo));
-        OkHttpHelper.getInstance().init(this);
+        final HttpConfig config = HttpConfig.newBuilder(this)
+                .setHeader("GlobalHeader", "GlobalHeaderValue")
+                .setHeader("全局头部", "全局头部值")
+                .setParam("全局参数", "全局参数值")
+                .setParam("GlobalParam", "GlobalParamValue").build();
+        OkHttpHelper.getInstance().init(config);
     }
 }

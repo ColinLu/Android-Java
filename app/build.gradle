@@ -97,6 +97,7 @@ android {
 }
 
 dependencies {
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.7'
     implementation project(path: ':Base')
     implementation project(path: ':Utils')
     implementation project(path: ':Widgets')
@@ -124,9 +125,4 @@ dependencies {
     implementation dependency.rx_android
     implementation dependency.g_son
     implementation dependency.ok_http
-
-    testImplementation dependency.test_android_junit
-    androidTestImplementation dependency.test_androidx_junit
-    androidTestImplementation dependency.test_androidx_espresso
-
 }

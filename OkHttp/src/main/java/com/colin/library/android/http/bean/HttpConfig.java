@@ -8,7 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.Size;
 
-import com.colin.library.android.http.OkHttp;
+import com.colin.library.android.annotation.Encode;
 import com.colin.library.android.http.interceptor.LogInterceptor;
 import com.colin.library.android.utils.HttpUtil;
 
@@ -117,11 +117,11 @@ public final class HttpConfig {
         @NonNull
         private final Application mApplication;
         private OkHttpClient mOkHttpClient;
-        private String mEncode = OkHttp.ENCODE_DEFAULT;
-        private long mReadTimeout = OkHttp.TIME_OUT_DEFAULT;
-        private long mWriteTimeout = OkHttp.TIME_OUT_DEFAULT;
-        private long mConnectTimeout = OkHttp.TIME_OUT_DEFAULT;
-        private int mRetryCall = OkHttp.RETRY_CALL_DEFAULT;
+        private String mEncode = Encode.UTF_8;
+        private long mReadTimeout = Constants.TIME_OUT_DEFAULT;
+        private long mWriteTimeout = Constants.TIME_OUT_DEFAULT;
+        private long mConnectTimeout = Constants.TIME_OUT_DEFAULT;
+        private int mRetryCall = Constants.RETRY_CALL_DEFAULT;
         private HttpHeaders.Builder mHeaderBuilder;
         private HttpParams.Builder mParamsBuilder;
 

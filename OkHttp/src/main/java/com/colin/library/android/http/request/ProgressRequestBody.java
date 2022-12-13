@@ -57,8 +57,8 @@ public class ProgressRequestBody extends RequestBody {
     /*重写进行写入 */
     @Override
     public void writeTo(@NonNull BufferedSink sink) throws IOException {
-        CountingSink countingSink = new CountingSink(sink, contentLength());
-        BufferedSink bufferedSink = Okio.buffer(countingSink);
+        final CountingSink countingSink = new CountingSink(sink, contentLength());
+        final BufferedSink bufferedSink = Okio.buffer(countingSink);
         mRequestBody.writeTo(bufferedSink);
         bufferedSink.flush();
     }

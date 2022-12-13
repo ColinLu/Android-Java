@@ -41,7 +41,7 @@ public class MainActivity extends AppActivity<ActivityMainBinding> {
         mBinding.mAppBar.addOnOffsetChangedListener(new OnAppBarStateChangeListener() {
             @Override
             public void onStateChanged(AppBarLayout appBarLayout, @State int state, int offset) {
-                LogUtil.i(String.format("state:$1%d\toffset:$2%d", state, offset));
+                LogUtil.i(String.format("state:%d\toffset:%d", state, offset));
                 mState = state;
                 mOffset = offset;
             }

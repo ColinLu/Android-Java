@@ -22,7 +22,7 @@ import okhttp3.Response;
  * 作者： ColinLu
  * 时间： 2022-02-17 00:40
  * <p>
- * 描述： TODO
+ * 描述： 基础Request
  */
 public interface IRequest<Returner> {
 
@@ -50,7 +50,6 @@ public interface IRequest<Returner> {
 
     @NonNull
     String getContentType();
-
 
     int getRetryCall();
 

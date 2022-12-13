@@ -6,9 +6,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.Size;
 
-import com.colin.library.android.http.OkHttp;
-import com.colin.library.android.utils.HttpUtil;
+import com.colin.library.android.annotation.Encode;
 import com.colin.library.android.utils.StringUtil;
+import com.colin.library.android.utils.encrypt.EncodeUtil;
 
 import java.nio.charset.Charset;
 import java.util.ArrayList;
@@ -35,10 +35,8 @@ public final class HttpParams {
 
     @NonNull
     public Builder newBuilder() {
-        Builder builder = new Builder();
-        for (Map.Entry<String, List<String>> entry : mParams.entrySet()) {
-            builder.mMap.put(entry.getKey(), entry.getValue());
-        }
+        final Builder builder = new Builder();
+        builder.mMap.putAll(mParams);
         return builder;
     }
 
@@ -80,7 +78,7 @@ public final class HttpParams {
 
         @NonNull
         public Builder add(@NonNull String key, @Nullable String value) {
-            if (TextUtils.isEmpty(value)) return this;
+            if (StringUtil.isEmpty(value)) return this;
             if (!mMap.containsKey(key)) {
                 mMap.put(key, new ArrayList<>(1));
             }
@@ -99,7 +97,7 @@ public final class HttpParams {
             if (map != null && map.size() > 0) {
                 for (Map.Entry<String, String> entry : map.entrySet()) {
                     final String key = entry.getKey();
-                    if (!TextUtils.isEmpty(key)) add(key, entry.getValue());
+                    if (!StringUtil.isEmpty(key)) add(key, entry.getValue());
                 }
             }
             return this;
@@ -141,23 +139,22 @@ public final class HttpParams {
 
     @Override
     public String toString() {
-        final String string = toString(OkHttp.ENCODE_DEFAULT);
-        return TextUtils.isEmpty(string) ? "null" : string;
+        return toString(Encode.UTF_8);
     }
 
-    @Nullable
+    @NonNull
     public String toString(@NonNull String encode) {
-        if (null == mParams || mParams.size() == 0) return "";
+        if (mParams.size() == 0) return "";
         final StringBuilder sb = new StringBuilder();
         for (String key : mParams.keySet()) {
-            final String encodeKey = HttpUtil.encode(key, encode);
+            final String encodeKey = EncodeUtil.encode(key, encode);
             if (StringUtil.isEmpty(encodeKey)) continue;
             final List<String> values = getValues(key);
             if (null == values || values.size() == 0) {
                 sb.append("&").append(encodeKey).append("=").append("");
             } else {
                 for (String value : values) {
-                    final String encodeValue = HttpUtil.encode(value, encode);
+                    final String encodeValue = EncodeUtil.encode(value, encode);
                     sb.append("&").append(encodeKey).append("=").append(null == encodeValue ? "" : encodeValue);
                 }
             }
@@ -169,19 +166,19 @@ public final class HttpParams {
     @Nullable
     public RequestBody toRequestBody(@NonNull String encode) {
         final Set<String> strings = mParams.keySet();
-        if (strings == null || strings.size() == 0) return null;
+        if (strings.size() == 0) return null;
         final FormBody.Builder builder = new FormBody.Builder(Charset.forName(encode));
-        boolean isEmpty = true;
+        boolean empty = true;
         for (final String key : strings) {
-            String encodeKey = HttpUtil.encode(key, encode);
+            String encodeKey = EncodeUtil.encode(key, encode);
             if (StringUtil.isEmpty(encodeKey)) continue;
             final List<String> values = mParams.get(key);
-            isEmpty = false;
+            empty = false;
             if (values != null && values.size() > 0) {
                 for (String value : values) builder.addEncoded(key, null == value ? "" : value);
             } else builder.addEncoded(key, "");
         }
 
-        return isEmpty ? null : builder.build();
+        return empty ? null : builder.build();
     }
 }

@@ -34,7 +34,6 @@ public class HttpPolicy<Result> implements IPolicy<Result> {
     private volatile boolean mExecuted;
     private volatile boolean mCanceled;
 
-
     public HttpPolicy(@NonNull OkHttpClient client, @NonNull Request request, int retryCall) {
         this.mHttpClient = client;
         this.mRequest = request;
@@ -159,6 +158,4 @@ public class HttpPolicy<Result> implements IPolicy<Result> {
             }
         });
     }
-
-
 }

@@ -5,9 +5,10 @@ import android.text.TextUtils;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.colin.library.android.http.OkHttp;
+import com.colin.library.android.annotation.Encode;
 import com.colin.library.android.http.annotation.Method;
 import com.colin.library.android.http.bean.ByteBody;
+import com.colin.library.android.http.bean.Constants;
 import com.colin.library.android.http.bean.ContentBody;
 import com.colin.library.android.http.bean.FileBody;
 import com.colin.library.android.http.bean.IRequestBody;
@@ -57,7 +58,7 @@ public class BaseRequestBody<Returner> extends BaseRequest<Returner> implements 
     @NonNull
     @Override
     public String getContentType() {
-        if (isMultipart()) return OkHttp.CONTENT_TYPE_MULTIPART;
+        if (isMultipart()) return Constants.CONTENT_TYPE_MULTIPART;
         else return super.getContentType();
     }
 
@@ -70,57 +71,57 @@ public class BaseRequestBody<Returner> extends BaseRequest<Returner> implements 
 
     @Override
     public Returner json(@Nullable String json) {
-        return content(json, OkHttp.CONTENT_TYPE_JSON, OkHttp.ENCODE_DEFAULT);
+        return content(json, Constants.CONTENT_TYPE_JSON, Encode.UTF_8);
     }
 
     @Override
     public Returner json(@Nullable String json, @NonNull String charset) {
-        return content(json, OkHttp.CONTENT_TYPE_JSON, charset);
+        return content(json, Constants.CONTENT_TYPE_JSON, charset);
     }
 
     @Override
     public Returner json(@Nullable JSONObject json) {
-        return content(null == json ? null : json.toString(), OkHttp.CONTENT_TYPE_JSON, OkHttp.ENCODE_DEFAULT);
+        return content(null == json ? null : json.toString(), Constants.CONTENT_TYPE_JSON, Encode.UTF_8);
     }
 
     @Override
     public Returner json(@Nullable JSONObject json, @NonNull String charset) {
-        return content(null == json ? null : json.toString(), OkHttp.CONTENT_TYPE_JSON, charset);
+        return content(null == json ? null : json.toString(), Constants.CONTENT_TYPE_JSON, charset);
     }
 
     @Override
     public Returner json(@Nullable JSONArray json) {
-        return content(null == json ? null : json.toString(), OkHttp.CONTENT_TYPE_JSON, OkHttp.ENCODE_DEFAULT);
+        return content(null == json ? null : json.toString(), Constants.CONTENT_TYPE_JSON, Encode.UTF_8);
     }
 
     @Override
     public Returner json(@Nullable JSONArray json, @NonNull String charset) {
-        return content(null == json ? null : json.toString(), OkHttp.CONTENT_TYPE_JSON, charset);
+        return content(null == json ? null : json.toString(), Constants.CONTENT_TYPE_JSON, charset);
     }
 
     @Override
     public Returner xml(@Nullable String xml) {
-        return content(xml, OkHttp.CONTENT_TYPE_XML, OkHttp.ENCODE_DEFAULT);
+        return content(xml, Constants.CONTENT_TYPE_XML, Constants.ENCODE_DEFAULT);
     }
 
     @Override
     public Returner xml(@Nullable String xml, @NonNull String charset) {
-        return content(xml, OkHttp.CONTENT_TYPE_XML, charset);
+        return content(xml, Constants.CONTENT_TYPE_XML, charset);
     }
 
     @Override
     public Returner content(@Nullable String content) {
-        return content(content, OkHttp.CONTENT_TYPE_DEFAULT, OkHttp.ENCODE_DEFAULT);
+        return content(content, Constants.CONTENT_TYPE_DEFAULT, Constants.ENCODE_DEFAULT);
     }
 
     @Override
     public Returner content(@Nullable String content, @NonNull String contentType) {
-        return content(content, OkHttp.CONTENT_TYPE_DEFAULT, OkHttp.ENCODE_DEFAULT);
+        return content(content, Constants.CONTENT_TYPE_DEFAULT, Constants.ENCODE_DEFAULT);
     }
 
     @Override
     public Returner content(@Nullable String content, @NonNull String contentType, @NonNull String charset) {
-        if (!TextUtils.isEmpty(content)) {
+        if (!StringUtil.isEmpty(content)) {
             mRequestBodyMap.put(contentType, new ContentBody(content, contentType, charset));
         }
         return (Returner) this;
@@ -128,22 +129,22 @@ public class BaseRequestBody<Returner> extends BaseRequest<Returner> implements 
 
     @Override
     public Returner bytes(@Nullable byte[] bytes) {
-        return bytes(bytes, OkHttp.CONTENT_TYPE_STREAM, OkHttp.ENCODE_DEFAULT, 0, null == bytes ? 0 : bytes.length);
+        return bytes(bytes, Constants.CONTENT_TYPE_STREAM, Constants.ENCODE_DEFAULT, 0, null == bytes ? 0 : bytes.length);
     }
 
     @Override
     public Returner bytes(@Nullable byte[] bytes, @NonNull String charset) {
-        return bytes(bytes, OkHttp.CONTENT_TYPE_STREAM, charset, 0, null == bytes ? 0 : bytes.length);
+        return bytes(bytes, Constants.CONTENT_TYPE_STREAM, charset, 0, null == bytes ? 0 : bytes.length);
     }
 
     @Override
     public Returner bytes(@Nullable byte[] bytes, int offset, int count) {
-        return bytes(bytes, OkHttp.CONTENT_TYPE_STREAM, OkHttp.ENCODE_DEFAULT, offset, count);
+        return bytes(bytes, Constants.CONTENT_TYPE_STREAM, Constants.ENCODE_DEFAULT, offset, count);
     }
 
     @Override
     public Returner bytes(@Nullable byte[] bytes, @NonNull String contentType, int offset, int count) {
-        return bytes(bytes, contentType, OkHttp.ENCODE_DEFAULT, offset, count);
+        return bytes(bytes, contentType, Constants.ENCODE_DEFAULT, offset, count);
 
     }
 
@@ -200,7 +201,7 @@ public class BaseRequestBody<Returner> extends BaseRequest<Returner> implements 
 
     @Override
     public Returner removeFile(@Nullable String key) {
-        if (!TextUtils.isEmpty(key)) {
+        if (!StringUtil.isEmpty(key)) {
             final Iterator<FileBody> iterator = mFileBodyList.isEmpty() ? null : mFileBodyList.iterator();
             while (iterator != null && iterator.hasNext()) {
                 final FileBody formBody = iterator.next();
@@ -294,24 +295,24 @@ public class BaseRequestBody<Returner> extends BaseRequest<Returner> implements 
         RequestBody requestBody = null;
         final String type = contentType.toLowerCase(Locale.ENGLISH);
         //指定json
-        if (type.equals(OkHttp.CONTENT_TYPE_JSON) || type.contains(OkHttp.CONTENT_TYPE_JSON)) {
-            IRequestBody body = getContentRequestBody(OkHttp.CONTENT_TYPE_JSON);
+        if (Constants.CONTENT_TYPE_JSON.equals(type) || type.contains(Constants.CONTENT_TYPE_JSON)) {
+            IRequestBody body = getContentRequestBody(Constants.CONTENT_TYPE_JSON);
             if (body != null) return body.getRequestBody();
         }
         //指定xml
-        if (type.equals(OkHttp.CONTENT_TYPE_XML) || type.contains(OkHttp.CONTENT_TYPE_XML)) {
-            IRequestBody body = getContentRequestBody(OkHttp.CONTENT_TYPE_XML);
+        if (Constants.CONTENT_TYPE_JSON.equals(type) || type.contains(Constants.CONTENT_TYPE_XML)) {
+            IRequestBody body = getContentRequestBody(Constants.CONTENT_TYPE_XML);
             if (body != null) return body.getRequestBody();
 
         }
         //指定字节流
-        if (type.equals(OkHttp.CONTENT_TYPE_STREAM) || type.contains(OkHttp.CONTENT_TYPE_STREAM)) {
-            IRequestBody body = getContentRequestBody(OkHttp.CONTENT_TYPE_STREAM);
+        if (Constants.CONTENT_TYPE_JSON.equals(type) || type.contains(Constants.CONTENT_TYPE_STREAM)) {
+            IRequestBody body = getContentRequestBody(Constants.CONTENT_TYPE_STREAM);
             if (body != null) return body.getRequestBody();
 
         }
         //没有指定
-        if (type.equals(OkHttp.CONTENT_TYPE_DEFAULT) || type.contains(OkHttp.CONTENT_TYPE_DEFAULT)) {
+        if (Constants.CONTENT_TYPE_JSON.equals(type) || type.contains(Constants.CONTENT_TYPE_DEFAULT)) {
             Iterator<Map.Entry<String, IRequestBody>> iterator = mRequestBodyMap.entrySet().iterator();
             IRequestBody body = null;
             while (iterator.hasNext()) body = iterator.next().getValue();
@@ -326,7 +327,7 @@ public class BaseRequestBody<Returner> extends BaseRequest<Returner> implements 
     private IRequestBody getContentRequestBody(@NonNull String contentType) {
         for (Map.Entry<String, IRequestBody> entry : mRequestBodyMap.entrySet()) {
             final String key = entry.getKey();
-            if (key.equals(contentType) || key.contains(contentType) || contentType.contains(key)) {
+            if (contentType.equals(key) || contentType.contains(key) || key.contains(contentType)) {
                 return entry.getValue();
             }
         }

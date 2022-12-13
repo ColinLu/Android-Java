@@ -3,9 +3,9 @@ package com.colin.library.android.http.request;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.colin.library.android.http.OkHttp;
 import com.colin.library.android.http.OkHttpHelper;
 import com.colin.library.android.http.annotation.Method;
+import com.colin.library.android.http.bean.Constants;
 import com.colin.library.android.http.bean.HttpConfig;
 import com.colin.library.android.http.bean.HttpHeaders;
 import com.colin.library.android.http.bean.HttpParams;
@@ -59,10 +59,10 @@ public class BaseRequest<Returner> implements IRequest<Returner> {
         this.mRetryCall = config.getRetryCall();
         this.mHeader = config.getHeaderBuilder();
         this.mParams = config.getParamsBuilder();
-        this.mHeader.set(OkHttp.HEAD_KEY_ACCEPT_LANGUAGE, config.getAcceptLanguage());
-        this.mHeader.set(OkHttp.HEAD_KEY_USER_AGENT, config.getUserAgent());
-        this.mHeader.set(OkHttp.HEAD_KEY_ACCEPT, OkHttp.HEADER_ACCEPT_ALL);
-        this.mHeader.set(OkHttp.HEAD_KEY_ACCEPT_ENCODING, OkHttp.ACCEPT_ENCODING_ZIP_DEFLATE);
+        this.mHeader.set(Constants.HEAD_KEY_ACCEPT_LANGUAGE, config.getAcceptLanguage());
+        this.mHeader.set(Constants.HEAD_KEY_USER_AGENT, config.getUserAgent());
+        this.mHeader.set(Constants.HEAD_KEY_ACCEPT, Constants.HEADER_ACCEPT_ALL);
+        this.mHeader.set(Constants.HEAD_KEY_ACCEPT_ENCODING, Constants.ACCEPT_ENCODING_ZIP_DEFLATE);
     }
 
     @NonNull
@@ -114,8 +114,8 @@ public class BaseRequest<Returner> implements IRequest<Returner> {
     @NonNull
     @Override
     public String getContentType() {
-        final String contentType = mHeader.build().get(OkHttp.HEAD_KEY_CONTENT_TYPE);
-        return StringUtil.isEmpty(contentType) ? OkHttp.CONTENT_TYPE_DEFAULT : contentType;
+        final String contentType = mHeader.build().get(Constants.HEAD_KEY_CONTENT_TYPE);
+        return StringUtil.isEmpty(contentType) ? Constants.CONTENT_TYPE_DEFAULT : contentType;
     }
 
 
