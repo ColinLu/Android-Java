@@ -6,9 +6,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.Size;
 
-import com.colin.library.android.http.OkHttp;
 import com.colin.library.android.utils.LogUtil;
+import com.colin.library.android.utils.StringUtil;
 import com.colin.library.android.utils.TimeUtil;
+import com.colin.library.android.utils.encrypt.EncodeUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,6 +25,7 @@ import java.util.TreeSet;
 
 import okhttp3.Headers;
 import okhttp3.MediaType;
+import okhttp3.OkHttp;
 
 /**
  * 作者： ColinLu
@@ -106,8 +108,13 @@ public final class HttpHeaders {
         return result;
     }
 
-    public Headers getHeader() {
-        return Headers.of(namesAndValues);
+    public Headers getHeader(@Nullable String encode) {
+        if (StringUtil.isEmpty(encode)) return Headers.of(namesAndValues);
+        final String[] result = new String[namesAndValues.length];
+        for (int i = 0; i < namesAndValues.length; i++) {
+            result[i] = EncodeUtil.encode(namesAndValues[i], encode);
+        }
+        return Headers.of(result);
     }
 
     /**
@@ -279,30 +286,30 @@ public final class HttpHeaders {
     @Nullable
     public static MediaType getContextType(@Nullable Headers headers) {
         if (null == headers) return null;
-        String contentType = headers.get(OkHttp.HEAD_KEY_CONTENT_TYPE);
+        String contentType = headers.get(Constants.HEAD_KEY_CONTENT_TYPE);
         if (TextUtils.isEmpty(contentType)) return null;
         return MediaType.parse(contentType);
     }
 
     @Nullable
     public static Date getDate(@Nullable Headers header) {
-        return null == header ? null : header.getDate(OkHttp.HEAD_KEY_DATE);
+        return null == header ? null : header.getDate(Constants.HEAD_KEY_DATE);
     }
 
     @Nullable
     public static String getExpires(@Nullable Headers header) {
-        return getValue(header, OkHttp.HEAD_KEY_EXPIRES);
+        return getValue(header, Constants.HEAD_KEY_EXPIRES);
     }
 
     @Nullable
     public static String getCacheControl(@Nullable Headers header) {
         if (null == header) return null;
-        final String control = header.get(OkHttp.HEAD_KEY_CACHE_CONTROL);
-        return TextUtils.isEmpty(control) ? header.get(OkHttp.HEAD_KEY_PRAGMA) : control;
+        final String control = header.get(Constants.HEAD_KEY_CACHE_CONTROL);
+        return TextUtils.isEmpty(control) ? header.get(Constants.HEAD_KEY_PRAGMA) : control;
     }
 
     public static String getETag(@Nullable Headers headers) {
-        return getValue(headers, OkHttp.HEAD_KEY_E_TAG);
+        return getValue(headers, Constants.HEAD_KEY_E_TAG);
     }
 
     public static String getValue(@Nullable Headers headers, @Nullable String name) {

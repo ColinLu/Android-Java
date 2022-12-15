@@ -14,8 +14,8 @@ import okhttp3.RequestBody;
  */
 public interface IRequestBody {
     @Nullable
-    MediaType getMediaType();
+    MediaType getMediaType(@Nullable String charset);
 
     @NonNull
-    RequestBody getRequestBody();
+    RequestBody getRequestBody(@Nullable String charset);
 }

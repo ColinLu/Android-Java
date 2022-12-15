@@ -6,7 +6,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
 
 import com.colin.library.android.helper.ThreadHelper;
-import com.colin.library.android.http.OkHttp;
+import com.colin.library.android.http.bean.Constants;
 import com.colin.library.android.http.progress.IProgress;
 import com.colin.library.android.utils.FileUtil;
 import com.colin.library.android.utils.HttpUtil;
@@ -103,7 +103,7 @@ public class FileParseResponse implements IParseResponse<File> {
     @NonNull
     private String getFileName(@NonNull final Response response) {
         if (!StringUtil.isEmpty(mFileName)) return mFileName;
-        String fileName = HttpUtil.head(response.header(OkHttp.HEAD_KEY_CONTENT_DISPOSITION), "filename", null);
+        String fileName = HttpUtil.head(response.header(Constants.HEAD_KEY_CONTENT_DISPOSITION), "filename", null);
         fileName = EncodeUtil.decode(fileName);
         if (!StringUtil.isEmpty(fileName)) return EncodeUtil.decode(fileName);
         fileName = HttpUtil.getFileName(response.request().url());

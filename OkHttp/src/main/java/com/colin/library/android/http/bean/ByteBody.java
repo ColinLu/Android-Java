@@ -3,6 +3,9 @@ package com.colin.library.android.http.bean;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.colin.library.android.annotation.Encode;
+import com.colin.library.android.utils.StringUtil;
+
 import java.util.Locale;
 
 import okhttp3.MediaType;
@@ -19,12 +22,12 @@ public class ByteBody implements IRequestBody {
     private final byte[] mBytes;
     @NonNull
     private final String mContentType;
-    @NonNull
+    @Nullable
     private final String mCharset;
     private final int mOffset;
     private final int mCount;
 
-    public ByteBody(@NonNull byte[] data, @NonNull String contentType, @NonNull String charset, int offset, int count) {
+    public ByteBody(@NonNull byte[] data, @NonNull String contentType, @Nullable String charset, int offset, int count) {
         this.mBytes = data;
         this.mContentType = contentType;
         this.mCharset = charset;
@@ -34,13 +37,23 @@ public class ByteBody implements IRequestBody {
 
     @Nullable
     @Override
-    public MediaType getMediaType() {
-        return MediaType.parse(String.format(Locale.US, "%s; charset=%s", mContentType, mCharset));
+    public MediaType getMediaType(@Nullable String charset) {
+        return MediaType.parse(formatCharset(getCharset(charset)));
     }
 
     @NonNull
     @Override
-    public RequestBody getRequestBody() {
-        return RequestBody.Companion.create(mBytes, getMediaType(), mOffset, mCount);
+    public RequestBody getRequestBody(@Nullable String charset) {
+        return RequestBody.Companion.create(mBytes, getMediaType(charset), mOffset, mCount);
+    }
+
+    @NonNull
+    private String formatCharset(@NonNull String charset) {
+        return String.format(Locale.US, "%s; charset=%s", mContentType, charset);
+    }
+
+    @NonNull
+    private String getCharset(@Nullable String charset) {
+        return !StringUtil.isEmpty(mCharset) ? mCharset : !StringUtil.isEmpty(charset) ? charset : Encode.UTF_8;
     }
 }

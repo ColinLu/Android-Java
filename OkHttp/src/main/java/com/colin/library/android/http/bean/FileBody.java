@@ -5,7 +5,9 @@ import android.text.TextUtils;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.colin.library.android.annotation.Encode;
 import com.colin.library.android.utils.HttpUtil;
+import com.colin.library.android.utils.StringUtil;
 
 import java.io.File;
 
@@ -44,13 +46,18 @@ public class FileBody implements IRequestBody {
 
     @Nullable
     @Override
-    public MediaType getMediaType() {
-        return HttpUtil.getMediaType(HttpUtil.getMimeType(mFile.getName()), mCharset);
+    public MediaType getMediaType(@Nullable String charset) {
+        return HttpUtil.getMediaType(HttpUtil.getMimeType(mFile.getName()), getCharset(charset));
     }
 
     @NonNull
     @Override
-    public RequestBody getRequestBody() {
-        return RequestBody.Companion.create(mFile, getMediaType());
+    public RequestBody getRequestBody(@Nullable String charset) {
+        return RequestBody.Companion.create(mFile, getMediaType(charset));
+    }
+
+    @NonNull
+    private String getCharset(@Nullable String charset) {
+        return !StringUtil.isEmpty(mCharset) ? mCharset : !StringUtil.isEmpty(charset) ? charset : Encode.UTF_8;
     }
 }

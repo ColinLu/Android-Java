@@ -1,12 +1,9 @@
 package com.colin.library.android.http.bean;
 
-import android.text.TextUtils;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.Size;
 
-import com.colin.library.android.annotation.Encode;
 import com.colin.library.android.utils.StringUtil;
 import com.colin.library.android.utils.encrypt.EncodeUtil;
 
@@ -79,17 +76,15 @@ public final class HttpParams {
         @NonNull
         public Builder add(@NonNull String key, @Nullable String value) {
             if (StringUtil.isEmpty(value)) return this;
-            if (!mMap.containsKey(key)) {
-                mMap.put(key, new ArrayList<>(1));
-            }
+            if (!mMap.containsKey(key)) mMap.put(key, new ArrayList<>(1));
             mMap.get(key).add(value);
             return this;
         }
 
         public Builder add(@NonNull String key, @Nullable List<String> list) {
             if (null == list || list.size() == 0) return this;
-            if (mMap.containsKey(key)) mMap.get(key).addAll(list);
-            else mMap.put(key, list);
+            if (!mMap.containsKey(key)) mMap.put(key, list);
+            else mMap.get(key).addAll(list);
             return this;
         }
 
@@ -137,13 +132,29 @@ public final class HttpParams {
     }
 
 
+    @NonNull
     @Override
     public String toString() {
-        return toString(Encode.UTF_8);
+        if (mParams.size() == 0) return "";
+        final StringBuilder sb = new StringBuilder();
+        for (String key : mParams.keySet()) {
+            if (StringUtil.isEmpty(key)) continue;
+            final List<String> values = getValues(key);
+            if (null == values || values.size() == 0) {
+                sb.append("&").append(key).append("=").append("");
+            } else {
+                for (String value : values) {
+                    sb.append("&").append(key).append("=").append(null == value ? "" : value);
+                }
+            }
+        }
+        if (sb.length() > 0) sb.deleteCharAt(0);
+        return sb.toString();
     }
 
     @NonNull
-    public String toString(@NonNull String encode) {
+    public String toString(@Nullable String encode) {
+        if (StringUtil.isEmpty(encode)) return toString();
         if (mParams.size() == 0) return "";
         final StringBuilder sb = new StringBuilder();
         for (String key : mParams.keySet()) {
@@ -164,21 +175,22 @@ public final class HttpParams {
     }
 
     @Nullable
-    public RequestBody toRequestBody(@NonNull String encode) {
-        final Set<String> strings = mParams.keySet();
-        if (strings.size() == 0) return null;
-        final FormBody.Builder builder = new FormBody.Builder(Charset.forName(encode));
+    public RequestBody toRequestBody(@Nullable String encode) {
+        if (mParams.size() == 0) return null;
+        final Set<String> names = mParams.keySet();
+        final FormBody.Builder builder = newBuilder(encode);
         boolean empty = true;
-        for (final String key : strings) {
-            String encodeKey = EncodeUtil.encode(key, encode);
-            if (StringUtil.isEmpty(encodeKey)) continue;
-            final List<String> values = mParams.get(key);
+        for (String name : names) {
+            if (StringUtil.isEmpty(name)) continue;
             empty = false;
-            if (values != null && values.size() > 0) {
-                for (String value : values) builder.addEncoded(key, null == value ? "" : value);
-            } else builder.addEncoded(key, "");
+            final List<String> values = mParams.get(names);
+            if (values == null || values.size() == 0) builder.add(name, "");
+            else for (String value : values) builder.add(name, value == null ? "" : value);
         }
-
         return empty ? null : builder.build();
+    }
+
+    public FormBody.Builder newBuilder(@Nullable String encode) {
+        return StringUtil.isEmpty(encode) ? new FormBody.Builder() : new FormBody.Builder(Charset.forName(encode));
     }
 }

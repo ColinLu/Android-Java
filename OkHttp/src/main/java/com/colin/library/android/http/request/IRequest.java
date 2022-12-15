@@ -42,7 +42,7 @@ public interface IRequest<Returner> {
     @Nullable
     RequestBody getRequestBody(@Nullable IProgress progress);
 
-    @NonNull
+    @Nullable
     String getEncode();
 
     @NonNull

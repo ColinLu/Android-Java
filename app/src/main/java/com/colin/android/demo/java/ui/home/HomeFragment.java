@@ -13,9 +13,7 @@ import com.colin.android.demo.java.R;
 import com.colin.android.demo.java.app.AppFragment;
 import com.colin.android.demo.java.databinding.FragmentHomeBinding;
 import com.colin.android.demo.java.utils.DemoUtils;
-import com.colin.library.android.http.OkHttp;
 import com.colin.library.android.http.annotation.Method;
-import com.colin.library.android.http.callback.IHttpCallback;
 
 public class HomeFragment extends AppFragment<FragmentHomeBinding> implements View.OnClickListener {
     @Override
@@ -68,12 +66,6 @@ public class HomeFragment extends AppFragment<FragmentHomeBinding> implements Vi
     }
 
     private void http(@Method @NonNull String method) {
-        OkHttp.getInstance().get("")
-                .execute(new IHttpCallback<String>() {
-                    @Override
-                    public void success(@Nullable String s) {
 
-                    }
-                });
     }
 }

@@ -219,11 +219,11 @@ public final class HttpUtil {
 
     @NonNull
     public static String getAcceptLanguage() {
-        Locale locale = Locale.getDefault();
-        String language = locale.getLanguage();
-        String country = locale.getCountry();
-        StringBuilder sb = new StringBuilder(language);
-        if (!TextUtils.isEmpty(country))
+        final Locale locale = Locale.getDefault();
+        final String language = locale.getLanguage();
+        final String country = locale.getCountry();
+        final StringBuilder sb = new StringBuilder(language);
+        if (!StringUtil.isEmpty(country))
             sb.append('-').append(country).append(',').append(language).append(";q=0.8");
         return sb.toString();
     }

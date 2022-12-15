@@ -71,56 +71,56 @@ public class BaseRequestBody<Returner> extends BaseRequest<Returner> implements 
 
     @Override
     public Returner json(@Nullable String json) {
-        return content(json, Constants.CONTENT_TYPE_JSON, Encode.UTF_8);
+        return content(json, Constants.CONTENT_TYPE_JSON, null);
     }
 
     @Override
-    public Returner json(@Nullable String json, @NonNull String charset) {
+    public Returner json(@Nullable String json, @Nullable String charset) {
         return content(json, Constants.CONTENT_TYPE_JSON, charset);
     }
 
     @Override
     public Returner json(@Nullable JSONObject json) {
-        return content(null == json ? null : json.toString(), Constants.CONTENT_TYPE_JSON, Encode.UTF_8);
+        return content(null == json ? null : json.toString(), Constants.CONTENT_TYPE_JSON, null);
     }
 
     @Override
-    public Returner json(@Nullable JSONObject json, @NonNull String charset) {
+    public Returner json(@Nullable JSONObject json, @Nullable String charset) {
         return content(null == json ? null : json.toString(), Constants.CONTENT_TYPE_JSON, charset);
     }
 
     @Override
     public Returner json(@Nullable JSONArray json) {
-        return content(null == json ? null : json.toString(), Constants.CONTENT_TYPE_JSON, Encode.UTF_8);
+        return content(null == json ? null : json.toString(), Constants.CONTENT_TYPE_JSON, null);
     }
 
     @Override
-    public Returner json(@Nullable JSONArray json, @NonNull String charset) {
+    public Returner json(@Nullable JSONArray json, @Nullable String charset) {
         return content(null == json ? null : json.toString(), Constants.CONTENT_TYPE_JSON, charset);
     }
 
     @Override
     public Returner xml(@Nullable String xml) {
-        return content(xml, Constants.CONTENT_TYPE_XML, Constants.ENCODE_DEFAULT);
+        return content(xml, Constants.CONTENT_TYPE_XML, null);
     }
 
     @Override
-    public Returner xml(@Nullable String xml, @NonNull String charset) {
+    public Returner xml(@Nullable String xml, @Nullable String charset) {
         return content(xml, Constants.CONTENT_TYPE_XML, charset);
     }
 
     @Override
     public Returner content(@Nullable String content) {
-        return content(content, Constants.CONTENT_TYPE_DEFAULT, Constants.ENCODE_DEFAULT);
+        return content(content, Constants.CONTENT_TYPE_DEFAULT, null);
     }
 
     @Override
     public Returner content(@Nullable String content, @NonNull String contentType) {
-        return content(content, Constants.CONTENT_TYPE_DEFAULT, Constants.ENCODE_DEFAULT);
+        return content(content, Constants.CONTENT_TYPE_DEFAULT, null);
     }
 
     @Override
-    public Returner content(@Nullable String content, @NonNull String contentType, @NonNull String charset) {
+    public Returner content(@Nullable String content, @NonNull String contentType, @Nullable String charset) {
         if (!StringUtil.isEmpty(content)) {
             mRequestBodyMap.put(contentType, new ContentBody(content, contentType, charset));
         }
@@ -133,7 +133,7 @@ public class BaseRequestBody<Returner> extends BaseRequest<Returner> implements 
     }
 
     @Override
-    public Returner bytes(@Nullable byte[] bytes, @NonNull String charset) {
+    public Returner bytes(@Nullable byte[] bytes, @Nullable String charset) {
         return bytes(bytes, Constants.CONTENT_TYPE_STREAM, charset, 0, null == bytes ? 0 : bytes.length);
     }
 
@@ -149,7 +149,7 @@ public class BaseRequestBody<Returner> extends BaseRequest<Returner> implements 
     }
 
     @Override
-    public Returner bytes(@Nullable byte[] bytes, @NonNull String contentType, @NonNull String charset, int offset, int count) {
+    public Returner bytes(@Nullable byte[] bytes, @NonNull String contentType, @Nullable String charset, int offset, int count) {
         if (bytes != null && bytes.length >= count && count > offset) {
             mRequestBodyMap.put(contentType, new ByteBody(bytes, contentType, charset, offset, count));
         }
@@ -252,7 +252,20 @@ public class BaseRequestBody<Returner> extends BaseRequest<Returner> implements 
     }
 
     @NonNull
-    private RequestBody getMultipartBody(@NonNull String encode) {
+    private RequestBody getSingleRequestBody(@Nullable String encode) {
+        //不为空 直接返回
+        if (mRequestBody != null) return mRequestBody;
+        //参数
+        mRequestBody = mParams.build().toRequestBody(encode);
+        if (mRequestBody != null) return mRequestBody;
+        //content json xml bytes
+        mRequestBody = getContentBody(getContentType(), encode);
+        if (mRequestBody == null) mRequestBody = mParams.build().newBuilder(encode).build();
+        return mRequestBody;
+    }
+
+    @NonNull
+    private RequestBody getMultipartBody(@Nullable String encode) {
         final MultipartBody.Builder builder = new MultipartBody.Builder().setType(MultipartBody.FORM);
         //自定义RequestBody
         if (mRequestBody != null) builder.addPart(mRequestBody);
@@ -264,30 +277,18 @@ public class BaseRequestBody<Returner> extends BaseRequest<Returner> implements 
         //content json xml bytes
         if (mRequestBodyMap.size() > 0) {
             for (Map.Entry<String, IRequestBody> entry : mRequestBodyMap.entrySet()) {
-                builder.addPart(entry.getValue().getRequestBody());
+                builder.addPart(entry.getValue().getRequestBody(encode));
             }
         }
         //File
         if (mFileBodyList != null && mFileBodyList.size() > 0) {
             for (final FileBody fileBody : mFileBodyList) {
-                builder.addFormDataPart(fileBody.getKey(), fileBody.getFileName(), fileBody.getRequestBody());
+                builder.addFormDataPart(fileBody.getKey(), fileBody.getFileName(), fileBody.getRequestBody(encode));
             }
         }
         return builder.build();
     }
 
-    @NonNull
-    private RequestBody getSingleRequestBody(@NonNull String encode) {
-        //不为空 直接返回
-        if (mRequestBody != null) return mRequestBody;
-        //参数
-        mRequestBody = mParams.build().toRequestBody(encode);
-        if (mRequestBody != null) return mRequestBody;
-        //content json xml bytes
-        mRequestBody = getContentBody(getContentType(), encode);
-        if (mRequestBody == null) mRequestBody = new FormBody.Builder().build();
-        return mRequestBody;
-    }
 
     @Nullable
     private RequestBody getContentBody(@NonNull String contentType, String encode) {
@@ -297,18 +298,18 @@ public class BaseRequestBody<Returner> extends BaseRequest<Returner> implements 
         //指定json
         if (Constants.CONTENT_TYPE_JSON.equals(type) || type.contains(Constants.CONTENT_TYPE_JSON)) {
             IRequestBody body = getContentRequestBody(Constants.CONTENT_TYPE_JSON);
-            if (body != null) return body.getRequestBody();
+            if (body != null) return body.getRequestBody(encode);
         }
         //指定xml
         if (Constants.CONTENT_TYPE_JSON.equals(type) || type.contains(Constants.CONTENT_TYPE_XML)) {
             IRequestBody body = getContentRequestBody(Constants.CONTENT_TYPE_XML);
-            if (body != null) return body.getRequestBody();
+            if (body != null) return body.getRequestBody(encode);
 
         }
         //指定字节流
         if (Constants.CONTENT_TYPE_JSON.equals(type) || type.contains(Constants.CONTENT_TYPE_STREAM)) {
             IRequestBody body = getContentRequestBody(Constants.CONTENT_TYPE_STREAM);
-            if (body != null) return body.getRequestBody();
+            if (body != null) return body.getRequestBody(encode);
 
         }
         //没有指定
@@ -316,7 +317,7 @@ public class BaseRequestBody<Returner> extends BaseRequest<Returner> implements 
             Iterator<Map.Entry<String, IRequestBody>> iterator = mRequestBodyMap.entrySet().iterator();
             IRequestBody body = null;
             while (iterator.hasNext()) body = iterator.next().getValue();
-            requestBody = null == body ? null : body.getRequestBody();
+            requestBody = null == body ? null : body.getRequestBody(encode);
             return requestBody;
         }
         return null;

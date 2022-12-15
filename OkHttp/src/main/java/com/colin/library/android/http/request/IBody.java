@@ -34,38 +34,38 @@ public interface IBody<Returner> extends IRequest<Returner> {
     /*上传Json内容*/
     Returner json(@Nullable String json);
 
-    Returner json(@Nullable String json, @NonNull String charset);
+    Returner json(@Nullable String json, @Nullable String charset);
 
     Returner json(@Nullable JSONObject json);
 
-    Returner json(@Nullable JSONObject json, @NonNull String charset);
+    Returner json(@Nullable JSONObject json, @Nullable String charset);
 
     Returner json(@Nullable @Size(min = 0) JSONArray json);
 
-    Returner json(@Nullable @Size(min = 0) JSONArray json, @NonNull String charset);
+    Returner json(@Nullable @Size(min = 0) JSONArray json, @Nullable String charset);
 
     /*上传Xml内容*/
     Returner xml(@Nullable String xml);
 
-    Returner xml(@Nullable String xml, @NonNull String charset);
+    Returner xml(@Nullable String xml, @Nullable String charset);
 
     /*上传文本内容*/
     Returner content(@Nullable String content);
 
     Returner content(@Nullable String content, @NonNull String contentType);
 
-    Returner content(@Nullable String content, @NonNull String contentType, @NonNull String charset);
+    Returner content(@Nullable String content, @NonNull String contentType, @Nullable String charset);
 
     /*上传字节数组内容*/
     Returner bytes(@Nullable byte[] bytes);
 
-    Returner bytes(@Nullable byte[] bytes, @NonNull String charset);
+    Returner bytes(@Nullable byte[] bytes, @Nullable String charset);
 
     Returner bytes(@Nullable byte[] bytes, int offset, int count);
 
     Returner bytes(@Nullable byte[] bytes, @NonNull String contentType, int offset, int count);
 
-    Returner bytes(@Nullable byte[] bytes, @NonNull String contentType, @NonNull String charset, int offset, int count);
+    Returner bytes(@Nullable byte[] bytes, @NonNull String contentType, @Nullable String charset, int offset, int count);
 
     /*上传文件*/
     Returner file(@Nullable File... files);

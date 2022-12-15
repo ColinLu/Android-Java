@@ -108,7 +108,7 @@ public class BaseRequest<Returner> implements IRequest<Returner> {
     @NonNull
     @Override
     public Headers getHeaders() {
-        return mHeader.build().getHeader();
+        return mHeader.build().getHeader(getEncode());
     }
 
     @NonNull
@@ -124,7 +124,7 @@ public class BaseRequest<Returner> implements IRequest<Returner> {
         return mRetryCall;
     }
 
-    @NonNull
+    @Nullable
     @Override
     public String getEncode() {
         return mEncode;
