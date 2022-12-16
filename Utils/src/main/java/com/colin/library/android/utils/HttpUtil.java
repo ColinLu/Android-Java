@@ -205,7 +205,7 @@ public final class HttpUtil {
 
     @Nullable
     public static MediaType getMediaType(@Nullable String mimeType, @Nullable String encode) {
-        if (StringUtil.isEmpty(mimeType) || StringUtil.isEmpty(encode)) return null;
+        if (StringUtil.isEmpty(mimeType, encode)) return null;
         return MediaType.parse(mimeType + "; charset=" + encode);
     }
 
@@ -238,21 +238,21 @@ public final class HttpUtil {
         else sb.append("1.0");// default to "1.0"
         sb.append("; ");
 
-        Locale locale = Locale.getDefault();
+        final Locale locale = Locale.getDefault();
         final String language = locale.getLanguage();
-        if (!TextUtils.isEmpty(language)) {
+        if (!StringUtil.isEmpty(language)) {
             sb.append(language.toLowerCase(locale));
             final String country = locale.getCountry();
-            if (!TextUtils.isEmpty(country)) sb.append("-").append(country.toLowerCase(locale));
+            if (!StringUtil.isEmpty(country)) sb.append("-").append(country.toLowerCase(locale));
         } else sb.append("en");// default to "en"
 
         // add the model for the release build
         if ("REL".equals(Build.VERSION.CODENAME)) {
             final String model = Build.MODEL;
-            if (!TextUtils.isEmpty(model)) sb.append("; ").append(model);
+            if (!StringUtil.isEmpty(model)) sb.append("; ").append(model);
         }
-        String id = Build.ID;
-        if (!TextUtils.isEmpty(id)) sb.append(" Build/").append(id);
+        final String id = Build.ID;
+        if (!StringUtil.isEmpty(id)) sb.append(" Build/").append(id);
         return String.format(webUserAgent, sb, "Mobile ");
     }
 

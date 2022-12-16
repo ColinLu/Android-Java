@@ -1,7 +1,5 @@
 package com.colin.library.android.http.bean;
 
-import android.text.TextUtils;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -36,7 +34,7 @@ public class FileBody implements IRequestBody {
 
     @NonNull
     public String getKey() {
-        return TextUtils.isEmpty(mKey) ? mFile.getName() : mKey;
+        return StringUtil.isEmpty(mKey) ? mFile.getName() : mKey;
     }
 
     @NonNull

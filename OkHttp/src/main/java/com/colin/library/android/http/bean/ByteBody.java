@@ -38,7 +38,7 @@ public class ByteBody implements IRequestBody {
     @Nullable
     @Override
     public MediaType getMediaType(@Nullable String charset) {
-        return MediaType.parse(formatCharset(getCharset(charset)));
+        return MediaType.parse(format(getCharset(charset)));
     }
 
     @NonNull
@@ -48,7 +48,7 @@ public class ByteBody implements IRequestBody {
     }
 
     @NonNull
-    private String formatCharset(@NonNull String charset) {
+    private String format(@NonNull String charset) {
         return String.format(Locale.US, "%s; charset=%s", mContentType, charset);
     }
 
