@@ -4,7 +4,6 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -29,6 +28,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.colin.library.android.base.def.IInitView;
 import com.colin.library.android.base.def.ILife;
+import com.colin.library.android.utils.StringUtil;
 import com.colin.library.android.utils.data.Constants;
 
 import java.lang.reflect.Field;
@@ -415,12 +415,12 @@ public abstract class BaseDialog<Returner> extends DialogFragment implements IIn
             mDismissed.set(newInstance, false);
             mShownByMe.setAccessible(true);
             mShownByMe.set(newInstance, false);
+            FragmentTransaction ft = manager.beginTransaction();
+            ft.add(this, StringUtil.isEmpty(tag) ? manager.getClass().getSimpleName() : tag);
+            ft.commitNowAllowingStateLoss();
         } catch (Exception e) {
             e.printStackTrace();
         }
-        FragmentTransaction ft = manager.beginTransaction();
-        ft.add(this, TextUtils.isEmpty(tag) ? manager.getClass().getSimpleName() : tag);
-        ft.commitAllowingStateLoss();
     }
 
     /*基本参数设置*/

@@ -58,11 +58,11 @@ public final class DialogManager {
         dialog.show(manager, TAG);
     }
 
-    public void showTip(@Nullable FragmentManager manager, @Nullable String title, @Nullable String msg) {
+    public synchronized void showTip(@Nullable FragmentManager manager, @Nullable String title, @Nullable String msg) {
         if (manager == null || StringUtil.isEmpty(title, msg)) return;
-        final TipsDialog dialog = getTipsDialog(manager, TAG);
+        final TipsDialog dialog = getTipsDialog(manager, "TipsDialog");
         dialog.setTips(title, msg);
-        dialog.show(manager, TAG);
+        dialog.show(manager, "TipsDialog");
     }
 
     private TipsDialog getTipsDialog(@NonNull FragmentManager manager, @NonNull String tag) {
@@ -91,6 +91,12 @@ public final class DialogManager {
         if (fragment instanceof ImageDialog) {
             LogUtil.i("dialog findFragmentByTag");
             return (ImageDialog) fragment;
+        }
+        for (Fragment dialog : manager.getFragments()) {
+            if (dialog instanceof ImageDialog) {
+                LogUtil.i("Fragment already added: ImageDialog{");
+                return (ImageDialog) dialog;
+            }
         }
         final ImageDialog dialog = new ImageDialog();
         mDialogRef = new WeakReference<>(dialog);
