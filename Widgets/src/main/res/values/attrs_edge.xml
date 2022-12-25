@@ -30,10 +30,10 @@
         <attr name="edgeFlingFromTarget" format="boolean" />
         <attr name="edgeScrollTouchUp" format="boolean" />
         <attr name="edgeScrollOffset" format="boolean" />
-        <attr name="edgeTargetOffset" format="dimension|enum">
+        <attr name="edgeOffsetTarget" format="dimension|enum">
             <enum name="wrap" value="-2" />
         </attr>
-        <attr name="edgeStartOffset" format="dimension" />
+        <attr name="edgeOffsetInit" format="dimension" />
         <attr name="edgeScrollSpeed" format="integer" />
         <attr name="edgeRate" format="float" />
         <attr name="edgeFlingFraction" format="float" />

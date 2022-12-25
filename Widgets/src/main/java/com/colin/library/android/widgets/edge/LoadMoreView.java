@@ -1,6 +1,5 @@
 package com.colin.library.android.widgets.edge;
 
-import android.animation.Animator;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
@@ -21,6 +20,8 @@ import androidx.core.widget.ImageViewCompat;
 import com.colin.library.android.utils.LogUtil;
 import com.colin.library.android.widgets.R;
 import com.colin.library.android.widgets.progress.LoadingView;
+
+import java.util.Locale;
 
 
 public class LoadMoreView extends ConstraintLayout implements EdgeWatcher {
@@ -107,21 +108,21 @@ public class LoadMoreView extends ConstraintLayout implements EdgeWatcher {
 
     @Override
     public void offset(@NonNull Edge edge, int offset) {
-        LogUtil.d(mRunning, mIsRelease, edge.getTargetOffset(), offset);
         if (mRunning) return;
+        LogUtil.d(String.format(Locale.US, "mRunning:%s  mIsRelease:%s getTargetOffset:%d offset:%d", mRunning, mIsRelease, edge.getOffsetTarget(), offset));
         if (mIsRelease) {
-            if (edge.getTargetOffset() > offset) {
+            if (edge.getOffsetTarget() > offset) {
                 mIsRelease = false;
+                LogUtil.i("mPullText:" + mPullText);
                 mTextView.setText(mPullText);
-                mArrowView.animate().rotation(180)
-                        .start();
+                mArrowView.animate().rotation(180).start();
             }
         } else {
-            if (edge.getTargetOffset() <= offset) {
+            if (edge.getOffsetTarget() <= offset) {
                 mIsRelease = true;
+                LogUtil.i("mReleaseText:" + mReleaseText);
                 mTextView.setText(mReleaseText);
-                mArrowView.animate().rotation(0)
-                        .start();
+                mArrowView.animate().rotation(0).start();
             }
         }
     }
@@ -129,11 +130,11 @@ public class LoadMoreView extends ConstraintLayout implements EdgeWatcher {
 
     @Override
     public void finish() {
+        mRunning = false;
         mLoadingView.stop();
         mLoadingView.setVisibility(View.GONE);
         mArrowView.setVisibility(View.VISIBLE);
         mTextView.setVisibility(View.VISIBLE);
-        mRunning = false;
     }
 
     public LoadMoreView setText(@Nullable CharSequence pull, @Nullable CharSequence release) {

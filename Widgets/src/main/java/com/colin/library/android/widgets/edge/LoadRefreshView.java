@@ -11,8 +11,11 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.core.content.ContextCompat;
 
+import com.colin.library.android.utils.LogUtil;
 import com.colin.library.android.widgets.R;
 import com.colin.library.android.widgets.Utils;
+
+import java.util.Locale;
 
 
 public class LoadRefreshView extends AppCompatImageView implements EdgeWatcher {
@@ -55,9 +58,7 @@ public class LoadRefreshView extends AppCompatImageView implements EdgeWatcher {
             mProgress.setArrowScale(SCALE_DEFAULT);
             setRadius(mRadius);
         }
-
         setImageDrawable(mProgress);
-
     }
 
 
@@ -69,9 +70,10 @@ public class LoadRefreshView extends AppCompatImageView implements EdgeWatcher {
     @Override
     public void offset(@NonNull Edge edge, int offset) {
         if (mProgress.isRunning()) return;
-        final int targetOffset = edge.getTargetOffset();
+        final int targetOffset = edge.getOffsetTarget();
         final float end = TRIM_RATE * Math.min(targetOffset, offset) / targetOffset;
         final float rotate = TRIM_OFFSET * offset / targetOffset;
+        LogUtil.d(String.format(Locale.US, "targetOffset:%d  end:%f rotate:%f", targetOffset, end, rotate));
         mProgress.setArrowEnabled(true);
         mProgress.setStartEndTrim(0, end);
         mProgress.setProgressRotation(rotate);
