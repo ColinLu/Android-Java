@@ -597,8 +597,7 @@ public class EdgeLayout extends FrameLayout implements NestedScrollingParent3 {
 
 
     private void edgeUpdateOffset(@Nullable final Edge edge, final int offset) {
-        if (edge == null) return;
-        edge.updateOffset(offset);
+        if (edge != null) edge.updateOffset(offset);
     }
 
     private void scrollToTargetOffset(@NonNull Edge edge, @Orientation int orientation, int offset) {

@@ -173,20 +173,12 @@ public final class Edge {
 
     }
 
-    public void scrollToTarget(int offset) {
+    public void scrollToTarget(@Px int offset) {
         if (mDirection == Direction.LEFT || mDirection == Direction.TOP) {
             updateOffset(getOffsetCalculator().calculator(this, offset));
         } else {
             updateOffset(getOffsetCalculator().calculator(this, -offset));
         }
-    }
-
-    public void onTargetMoved(int targetOffset) {
-        updateOffset(getOffsetCalculator().calculator(this, targetOffset));
-    }
-
-    public int getCalculatorOffset(@Px int offset) {
-        return getOffsetCalculator().calculator(this, offset);
     }
 
     public void setRunning(boolean running) {
@@ -195,9 +187,8 @@ public final class Edge {
         if (!running && mView instanceof EdgeWatcher) ((EdgeWatcher) mView).finish();
     }
 
-    public void updateOffset(int offset) {
-        final int updateOffset = getCalculatorOffset(offset);
-        this.getViewOffsetHelper().setDirection(mDirection, updateOffset);
+    public void updateOffset(@Px int offset) {
+        this.getViewOffsetHelper().setDirection(mDirection, getOffsetCalculator().calculator(this, offset));
         if (mView instanceof EdgeWatcher) ((EdgeWatcher) mView).offset(this, offset);
     }
 
