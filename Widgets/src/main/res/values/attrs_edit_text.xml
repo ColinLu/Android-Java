@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="FormatEditText">
+        <attr name="formatType" format="integer">
+            <enum name="normal" value="0" />
+            <enum name="mobile" value="1" />
+            <enum name="bank" value="2" />
+            <enum name="id" value="3" />
+        </attr>
+        <attr name="formatSeparator" format="string" />
+        <attr name="formatInterval" format="integer" />
+        <attr name="formatDelete" format="reference" />
+        <attr name="formatDeleteColor" format="color|reference" />
+        <attr name="formatPassword" format="reference" />
+        <attr name="formatSupportEmoji" format="boolean|reference" />
+    </declare-styleable>
+
+</resources>

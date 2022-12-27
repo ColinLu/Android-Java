@@ -2,12 +2,11 @@ package com.colin.android.demo.java.ui.view;
 
 import android.graphics.Color;
 import android.os.Bundle;
-import android.view.View;
 
 import androidx.annotation.Nullable;
 
 import com.colin.android.demo.java.app.AppFragment;
-import com.colin.android.demo.java.databinding.FragmentGradientTextBinding;
+import com.colin.android.demo.java.databinding.FragmentTextBinding;
 import com.colin.library.android.widgets.annotation.Orientation;
 
 /**
@@ -16,7 +15,7 @@ import com.colin.library.android.widgets.annotation.Orientation;
  * <p>
  * 描述： TODO
  */
-public class GradientTextFragment extends AppFragment<FragmentGradientTextBinding> {
+public class TextFragment extends AppFragment<FragmentTextBinding> {
 
     @Override
     public void initView(@Nullable Bundle bundle) {

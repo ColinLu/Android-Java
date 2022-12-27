@@ -4,23 +4,23 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.method.LogFragment">
+    tools:context=".ui.view.TextFragment"
+    tools:ignore="MissingDefaultResource">
 
     <com.colin.library.android.widgets.text.GradientTextView
         android:id="@+id/gradient_text"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/dp_65"
         android:layout_marginTop="@dimen/item_title_height"
+        android:endColor="@color/red"
         android:gravity="center"
         android:orientation="vertical"
+        android:startColor="@color/blue"
         android:text="@string/app_name"
         android:textSize="@dimen/sp_50"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:showGradient="true"
-        app:textEndColor="@color/blue"
-        app:textStartColor="@color/red" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/button_horizontal"
@@ -30,7 +30,8 @@
         android:text="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/gradient_text" />
+        app:layout_constraintTop_toBottomOf="@+id/gradient_text"
+        tools:ignore="TouchTargetSizeCheck" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/button_vertical"
@@ -40,7 +41,8 @@
         android:text="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button_horizontal" />
+        app:layout_constraintTop_toBottomOf="@+id/button_horizontal"
+        tools:ignore="TouchTargetSizeCheck" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/button_textColor"
@@ -50,7 +52,8 @@
         android:text="textColor"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button_vertical" />
+        app:layout_constraintTop_toBottomOf="@+id/button_vertical"
+        tools:ignore="TouchTargetSizeCheck" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/button_gradient"
@@ -60,5 +63,6 @@
         android:text="white black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button_textColor" />
+        app:layout_constraintTop_toBottomOf="@+id/button_textColor"
+        tools:ignore="TouchTargetSizeCheck" />
 </androidx.constraintlayout.widget.ConstraintLayout>

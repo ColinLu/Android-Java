@@ -109,18 +109,16 @@ public class LoadMoreView extends ConstraintLayout implements EdgeWatcher {
     @Override
     public void offset(@NonNull Edge edge, int offset) {
         if (mRunning) return;
-        LogUtil.d(String.format(Locale.US, "mRunning:%s  mIsRelease:%s getTargetOffset:%d offset:%d", mRunning, mIsRelease, edge.getOffsetTarget(), offset));
+        LogUtil.d(String.format(Locale.US, "mIsRelease:%s getTargetOffset:%d offset:%d", mIsRelease, edge.getOffsetTarget(), offset));
         if (mIsRelease) {
             if (edge.getOffsetTarget() > offset) {
                 mIsRelease = false;
-                LogUtil.i("mPullText:" + mPullText);
                 mTextView.setText(mPullText);
                 mArrowView.animate().rotation(180).start();
             }
         } else {
             if (edge.getOffsetTarget() <= offset) {
                 mIsRelease = true;
-                LogUtil.i("mReleaseText:" + mReleaseText);
                 mTextView.setText(mReleaseText);
                 mArrowView.animate().rotation(0).start();
             }

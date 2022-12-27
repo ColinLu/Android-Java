@@ -28,14 +28,11 @@ public class GradientTextView extends AppCompatTextView {
     @Orientation
     private int mOrientation = Orientation.HORIZONTAL;
     @ColorInt
-    private int mTextStartColor;
+    private int mStartColor;
     @ColorInt
-    private int mTextEndColor;
-    @ColorInt
-    private int mTextColor;
-    private boolean mShowGradient = false;
+    private int mEndColor;
+    @Nullable
     private LinearGradient mLinearGradient;
-
 
     public GradientTextView(@NonNull Context context) {
         this(context, null, Resources.ID_NULL);
@@ -48,26 +45,26 @@ public class GradientTextView extends AppCompatTextView {
     public GradientTextView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         final TypedArray array = context.getTheme().obtainStyledAttributes(attrs, R.styleable.GradientTextView, defStyleAttr, Resources.ID_NULL);
-        mShowGradient = array.getBoolean(R.styleable.GradientTextView_showGradient, mShowGradient);
-        mTextStartColor = array.getColor(R.styleable.GradientTextView_textStartColor, Color.TRANSPARENT);
-        mTextEndColor = array.getColor(R.styleable.GradientTextView_textEndColor, Color.TRANSPARENT);
-        mTextColor = array.getColor(R.styleable.TextAppearance_android_textColor, Color.WHITE);
         mOrientation = array.getInteger(R.styleable.GradientTextView_android_orientation, mOrientation);
+        mStartColor = array.getColor(R.styleable.GradientTextView_android_startColor, Color.WHITE);
+        mEndColor = array.getColor(R.styleable.GradientTextView_android_endColor, Color.BLACK);
+        array.recycle();
     }
 
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        mLinearGradient = getGradient(mOrientation, mStartColor, mEndColor);
+        getPaint().setShader(mLinearGradient);
+    }
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
         if (mOrientation == Orientation.VERTICAL && h != oldh) {
-            mLinearGradient = getVerticalGradient(h, mTextStartColor, mTextEndColor);
+            mLinearGradient = getVerticalGradient(h, mStartColor, mEndColor);
         } else if (mOrientation == Orientation.HORIZONTAL && w != oldw) {
-            mLinearGradient = getHorizontalGradient(w, mTextStartColor, mTextEndColor);
-        }
-        if (mShowGradient && mLinearGradient != null) {
-            getPaint().setShader(mLinearGradient);
-        } else {
-            getPaint().setShader(null);
+            mLinearGradient = getHorizontalGradient(w, mStartColor, mEndColor);
         }
     }
 
@@ -75,7 +72,7 @@ public class GradientTextView extends AppCompatTextView {
         if (mOrientation == orientation) {
             return;
         }
-        setTextColor(orientation, mTextStartColor, mTextEndColor);
+        setTextColor(orientation, mStartColor, mEndColor);
 
     }
 
@@ -88,37 +85,24 @@ public class GradientTextView extends AppCompatTextView {
             setTextColor(startColor);
             return;
         }
-        if (mShowGradient && mOrientation == orientation && startColor == mTextStartColor && endColor == mTextEndColor) {
+        if (mOrientation == orientation && mStartColor == startColor && mEndColor == endColor) {
             return;
         }
         this.mOrientation = orientation;
-        this.mTextStartColor = startColor;
-        this.mTextEndColor = endColor;
-        this.mShowGradient = true;
+        this.mStartColor = startColor;
+        this.mEndColor = endColor;
         this.mLinearGradient = getGradient(orientation, startColor, endColor);
         getPaint().setShader(mLinearGradient);
         invalidate();
     }
 
 
-    @Override
-    public void setTextColor(int textColor) {
-        if (!mShowGradient && mTextColor == textColor) {
-            return;
-        }
-        this.mTextColor = textColor;
-        this.mShowGradient = false;
-        getPaint().setShader(null);
-        getPaint().setColor(textColor);
-        invalidate();
-    }
-
     @NonNull
-    private LinearGradient getGradient(int orientation, int startColor, int endColor) {
+    private LinearGradient getGradient(@Orientation int orientation, @ColorInt int startColor, @ColorInt int endColor) {
         if (orientation == Orientation.VERTICAL) {
-            return getVerticalGradient(getHeight(), startColor, endColor);
+            return getVerticalGradient(getMeasuredHeight(), startColor, endColor);
         } else {
-            return getHorizontalGradient(getWidth(), startColor, endColor);
+            return getHorizontalGradient(getMeasuredWidth(), startColor, endColor);
         }
     }
 

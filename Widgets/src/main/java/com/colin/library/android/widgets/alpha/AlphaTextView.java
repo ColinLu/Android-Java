@@ -7,7 +7,7 @@ import android.util.AttributeSet;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.colin.library.android.widgets.span.TouchSpanTextView;
+import com.colin.library.android.widgets.span.SpanTextView;
 
 /**
  * 作者： ColinLu
@@ -15,7 +15,7 @@ import com.colin.library.android.widgets.span.TouchSpanTextView;
  * <p>
  * 描述： 透明效果
  */
-public class AlphaTextView extends TouchSpanTextView implements IAlphaView {
+public class AlphaTextView extends SpanTextView implements IAlphaView {
     private AlphaViewHelper mAlphaViewHelper;
 
     public AlphaTextView(@NonNull Context context) {
@@ -39,13 +39,13 @@ public class AlphaTextView extends TouchSpanTextView implements IAlphaView {
     @Override
     public void setPressed(boolean pressed) {
         super.setPressed(pressed);
-        getAlphaViewHelper().onPressedChanged(this, pressed);
+        getAlphaViewHelper().onChangedWhenPressed(this, pressed);
     }
 
     @Override
     public void setEnabled(boolean enabled) {
         super.setEnabled(enabled);
-        getAlphaViewHelper().onEnabledChanged(this, enabled);
+        getAlphaViewHelper().onChangedWhenEnabled(this, enabled);
     }
 
     @Override

@@ -18,46 +18,51 @@ public final class TouchSpanHelper {
     private WeakReference<ITouchableSpan> mTouchSpanRef;
 
     public boolean onTouchEvent(TextView textView, Spannable spannable, MotionEvent event) {
-        if (event.getAction() == MotionEvent.ACTION_DOWN) {
-            if (textView instanceof ITouchSpan) ((ITouchSpan) textView).setTouchSpan(true);
-            final ITouchableSpan span = getPressedSpan(textView, spannable, event);
-            if (span == null) return false;
-            span.setPressed(true);
-            Selection.setSelection(spannable, spannable.getSpanStart(span), spannable.getSpanEnd(span));
-            mTouchSpanRef = new WeakReference<>(span);
-            return true;
-        } else if (event.getAction() == MotionEvent.ACTION_MOVE) {
-            final ITouchableSpan span = getPressedSpan(textView, spannable, event);
-            ITouchableSpan cache = mTouchSpanRef == null ? null : mTouchSpanRef.get();
-            if (cache != null && cache != span) {
-                cache.setPressed(false);
+        ITouchableSpan span = null;
+        ITouchableSpan cache = null;
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                span = getPressedSpan(textView, spannable, event);
+                if (span != null) {
+                    span.setPressed(true);
+                    Selection.setSelection(spannable, spannable.getSpanStart(span), spannable.getSpanEnd(span));
+                    mTouchSpanRef = new WeakReference<>(span);
+                }
+                if (textView instanceof ITouchSpan)
+                    ((ITouchSpan) textView).setTouchSpan(span != null);
+                return span != null;
+            case MotionEvent.ACTION_MOVE:
+                span = getPressedSpan(textView, spannable, event);
+                cache = mTouchSpanRef == null ? null : mTouchSpanRef.get();
+                if (cache != null && cache != span) {
+                    cache.setPressed(false);
+                    mTouchSpanRef = null;
+                    cache = null;
+                    Selection.removeSelection(spannable);
+                }
+                if (textView instanceof ITouchSpan)
+                    ((ITouchSpan) textView).setTouchSpan(cache != null);
+                return cache != null;
+            case MotionEvent.ACTION_UP:
+                boolean touchSpan = false;
+                cache = mTouchSpanRef == null ? null : mTouchSpanRef.get();
+                if (cache != null) {
+                    touchSpan = true;
+                    cache.setPressed(false);
+                    cache.onClick(textView);
+                }
                 mTouchSpanRef = null;
-                cache = null;
                 Selection.removeSelection(spannable);
-            }
-            if (textView instanceof ITouchSpan) ((ITouchSpan) textView).setTouchSpan(cache != null);
-            return cache != null;
-        } else if (event.getAction() == MotionEvent.ACTION_UP) {
-            boolean touchSpan = false;
-            final ITouchableSpan cache = mTouchSpanRef == null ? null : mTouchSpanRef.get();
-            if (cache != null) {
-                touchSpan = true;
-                cache.setPressed(false);
-                cache.onClick(textView);
-            }
-            mTouchSpanRef = null;
-            Selection.removeSelection(spannable);
-            if (textView instanceof ITouchSpan) ((ITouchSpan) textView).setTouchSpan(touchSpan);
-            return touchSpan;
-        } else {
-            final ITouchableSpan cache = mTouchSpanRef == null ? null : mTouchSpanRef.get();
-            if (cache != null) cache.setPressed(false);
-            if (textView instanceof ITouchSpan) ((ITouchSpan) textView).setTouchSpan(false);
-            mTouchSpanRef = null;
-            Selection.removeSelection(spannable);
-            return false;
+                if (textView instanceof ITouchSpan) ((ITouchSpan) textView).setTouchSpan(touchSpan);
+                return touchSpan;
+            default:
+                cache = mTouchSpanRef == null ? null : mTouchSpanRef.get();
+                if (cache != null) cache.setPressed(false);
+                if (textView instanceof ITouchSpan) ((ITouchSpan) textView).setTouchSpan(false);
+                mTouchSpanRef = null;
+                Selection.removeSelection(spannable);
+                return false;
         }
-
     }
 
     public ITouchableSpan getPressedSpan(TextView textView, Spannable spannable, MotionEvent event) {

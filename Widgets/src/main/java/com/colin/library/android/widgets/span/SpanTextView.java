@@ -37,7 +37,7 @@ import androidx.appcompat.widget.AppCompatTextView;
  */
 
 
-public class TouchSpanTextView extends AppCompatTextView implements ITouchSpan {
+public class SpanTextView extends AppCompatTextView implements ITouchSpan {
     /**
      * 记录当前 Touch 事件对应的点是不是点在了 span 上面
      */
@@ -46,32 +46,25 @@ public class TouchSpanTextView extends AppCompatTextView implements ITouchSpan {
     /**
      * 记录每次真正传入的press，每次更改mTouchSpanHint，需要再调用一次setPressed，确保press状态正确
      */
-    private boolean mIsPressedRecord = false;
+    private boolean mPressed = false;
     /**
      * TextView是否应该消耗事件
      */
     private boolean mNeedForceEventToParent = false;
 
-    public TouchSpanTextView(@NonNull Context context) {
+    public SpanTextView(@NonNull Context context) {
         this(context, null, Resources.ID_NULL);
     }
 
-    public TouchSpanTextView(@NonNull Context context, @Nullable AttributeSet attrs) {
+    public SpanTextView(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs, Resources.ID_NULL);
     }
 
-    public TouchSpanTextView(@NonNull Context context, @Nullable AttributeSet attrs, @AttrRes int defStyleAttr) {
+    public SpanTextView(@NonNull Context context, @Nullable AttributeSet attrs, @AttrRes int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         setHighlightColor(Color.TRANSPARENT);
     }
 
-    @Override
-    public void setTouchSpan(boolean touch) {
-        if (mTouchSpan != touch) {
-            mTouchSpan = touch;
-            setPressed(mIsPressedRecord);
-        }
-    }
 
     @Override
     public boolean onTouchEvent(@NonNull MotionEvent event) {
@@ -79,10 +72,34 @@ public class TouchSpanTextView extends AppCompatTextView implements ITouchSpan {
             mTouchSpan = false;
             return super.onTouchEvent(event);
         }
-        mTouchSpan = true;
         // 调用super.onTouchEvent,会走到TouchSpanMovementMethod
         // 会走到TouchSpanMovementMethod#onTouchEvent会修改mTouchSpan
-        return mNeedForceEventToParent ? mTouchSpan : super.onTouchEvent(event);
+        mTouchSpan = true;
+        return mNeedForceEventToParent || super.onTouchEvent(event);
+    }
+
+    @Override
+    public boolean performClick() {
+        return !mTouchSpan && !mNeedForceEventToParent && super.performClick();
+    }
+
+    @Override
+    public boolean performLongClick() {
+        return !mTouchSpan && !mNeedForceEventToParent && super.performLongClick();
+    }
+
+    @Override
+    public void setPressed(boolean pressed) {
+        this.mPressed = pressed;
+        if (!mTouchSpan) super.setPressed(pressed);
+    }
+
+    @Override
+    public void setTouchSpan(boolean touch) {
+        if (mTouchSpan != touch) {
+            mTouchSpan = touch;
+            setPressed(mPressed);
+        }
     }
 
     public void setNeedForceEventToParent(boolean needForceEventToParent) {

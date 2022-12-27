@@ -36,8 +36,8 @@
             android:id="@+id/action_View_to_Edge"
             app:destination="@+id/EdgeFragment" />
         <action
-            android:id="@+id/action_View_to_Gradient"
-            app:destination="@+id/GradientTextFragment" />
+            android:id="@+id/action_View_to_Text"
+            app:destination="@+id/TextFragment" />
         <action
             android:id="@+id/action_View_to_Circle"
             app:destination="@+id/CircleImageFragment" />
@@ -72,20 +72,20 @@
     <fragment
         android:id="@+id/EdgeFragment"
         android:name="com.colin.android.demo.java.ui.view.EdgeFragment"
-        android:label="@string/edge"
-        tools:layout="@layout/layout_edge" />
+        android:label="@string/edge" />
+
     <fragment
-        android:id="@+id/GradientTextFragment"
-        android:name="com.colin.android.demo.java.ui.view.GradientTextFragment"
-        android:label="@string/gradient"
-        tools:layout="@layout/fragment_gradient_text" />
+        android:id="@+id/TextFragment"
+        android:name="com.colin.android.demo.java.ui.view.TextFragment"
+        android:label="@string/text" />
 
     <fragment
         android:id="@+id/CircleImageFragment"
         android:name="com.colin.android.demo.java.ui.view.CircleImageFragment"
         android:label="@string/circle"
         tools:layout="@layout/fragment_circle_image" />
-    <navigation android:id="@+id/navigation"
+    <navigation
+        android:id="@+id/navigation"
         app:startDestination="@id/MethodFragment">
         <fragment
             android:id="@+id/MethodFragment"

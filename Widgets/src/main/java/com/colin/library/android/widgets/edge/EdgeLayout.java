@@ -145,8 +145,6 @@ public class EdgeLayout extends FrameLayout implements NestedScrollingParent3 {
 
     @Override
     public void computeScroll() {
-        LogUtil.i(String.format(Locale.US, "state:%d currX:%d currY：%d finalX:%d finalY：%d",
-                mState, mScroller.getCurrX(), mScroller.getCurrY(), mScroller.getFinalX(), mScroller.getFinalY()));
         if (!mScroller.computeScrollOffset()) return;
         if (!mScroller.isFinished()) {
             edgeUpdateOffset(mScroller.getCurrX(), mScroller.getCurrY());

@@ -53,7 +53,7 @@ public final class AlphaViewHelper {
      * @param current the view to be handled, maybe not equal to target view
      * @param pressed {@link View#setPressed(boolean)} 中接收到的参数
      */
-    public void onPressedChanged(View current, boolean pressed) {
+    public void onChangedWhenPressed(View current, boolean pressed) {
         final View view = mViewRef.get();
         if (view == null) return;
         if (current.isEnabled()) {
@@ -68,7 +68,7 @@ public final class AlphaViewHelper {
      * @param current the view to be handled, maybe not  equal to target view
      * @param enabled {@link View#setEnabled(boolean)} 中接收到的参数
      */
-    public void onEnabledChanged(View current, boolean enabled) {
+    public void onChangedWhenEnabled(View current, boolean enabled) {
         final View view = mViewRef.get();
         if (view == null) return;
         float alphaForIsEnable;
@@ -95,7 +95,7 @@ public final class AlphaViewHelper {
     public void changedWhenDisable(boolean changedWhenDisable) {
         mChangedWhenDisable = changedWhenDisable;
         final View view = mViewRef.get();
-        if (view != null) onEnabledChanged(view, view.isEnabled());
+        if (view != null) onChangedWhenEnabled(view, view.isEnabled());
     }
 
 }

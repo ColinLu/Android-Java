@@ -73,6 +73,9 @@ public class ViewFragment extends AppFragment<LayoutListBinding> implements OnIt
             case "Circle":
                 DemoUtils.toNavigate(this, R.id.action_View_to_Circle);
                 break;
+            case "Text":
+                DemoUtils.toNavigate(this, R.id.action_View_to_Text);
+                break;
             default:
                 break;
         }
