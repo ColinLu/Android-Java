@@ -160,5 +160,8 @@
     </string-array>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="span_touch_fix_1">\@Colin:span的点击事件与textView的点击事件完全分离#Colin#</string>
+    <string name="span_touch_fix_2">\@Colin:默认情况下，如果textView添加了clickSpan,#Colin#那么textView的事件将无法冒泡到父级。
+        但在某些场景（例如微博评论需要整条可点），我们需要将事件冒泡给父元素进行处理。#qmui#</string>
 
 </resources>

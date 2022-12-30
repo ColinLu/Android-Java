@@ -9,7 +9,7 @@
 
     <com.colin.library.android.widgets.text.GradientTextView
         android:id="@+id/gradient_text"
-        android:layout_width="wrap_content"
+        android:layout_width="@dimen/dp_0"
         android:layout_height="@dimen/dp_65"
         android:layout_marginTop="@dimen/item_title_height"
         android:endColor="@color/red"
@@ -22,6 +22,26 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <com.colin.library.android.widgets.span.SpanTextView
+        android:id="@+id/span_fix_1"
+        android:layout_width="@dimen/dp_0"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_default"
+        android:text="@string/app_name"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/gradient_text" />
+
+    <com.colin.library.android.widgets.span.SpanTextView
+        android:id="@+id/span_fix_2"
+        android:layout_width="@dimen/dp_0"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_default"
+        android:text="@string/app_name"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/span_fix_1" />
+
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/button_horizontal"
         style="@style/Theme.App.Button"
@@ -30,7 +50,7 @@
         android:text="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/gradient_text"
+        app:layout_constraintTop_toBottomOf="@+id/span_fix_2"
         tools:ignore="TouchTargetSizeCheck" />
 
     <androidx.appcompat.widget.AppCompatButton

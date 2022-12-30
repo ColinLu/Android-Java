@@ -6,6 +6,11 @@ import android.text.Spannable;
 import android.view.MotionEvent;
 import android.widget.TextView;
 
+import androidx.annotation.ColorInt;
+
+import com.colin.library.android.utils.ResourceUtil;
+import com.colin.library.android.widgets.R;
+
 import java.lang.ref.WeakReference;
 
 /**
@@ -16,6 +21,8 @@ import java.lang.ref.WeakReference;
  */
 public final class TouchSpanHelper {
     private WeakReference<ITouchableSpan> mTouchSpanRef;
+
+
 
     public boolean onTouchEvent(TextView textView, Spannable spannable, MotionEvent event) {
         ITouchableSpan span = null;
@@ -89,4 +96,6 @@ public final class TouchSpanHelper {
         }
         return null;
     }
+
+
 }

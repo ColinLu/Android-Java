@@ -37,7 +37,7 @@ public class AutoFitTextView extends AppCompatTextView {
         super(context, attrs, defStyleAttr);
         mTestPaint = new Paint();
         mTestPaint.set(this.getPaint());
-        TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.AutoFitTextView, defStyleAttr, 0);
+        final TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.AutoFitTextView, defStyleAttr, 0);
         final float density = ResourceUtil.getDensity();
         mMinSize = array.getDimensionPixelSize(R.styleable.AutoFitTextView_minSize, Math.round(14 * density));
         mMaxSize = array.getDimensionPixelSize(R.styleable.AutoFitTextView_maxSize, Math.round(18 * density));

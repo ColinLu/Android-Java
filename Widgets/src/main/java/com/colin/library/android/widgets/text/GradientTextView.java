@@ -54,26 +54,29 @@ public class GradientTextView extends AppCompatTextView {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        mLinearGradient = getGradient(mOrientation, mStartColor, mEndColor);
-        getPaint().setShader(mLinearGradient);
+        if (mStartColor != mEndColor) {
+            mLinearGradient = getGradient(mOrientation, mStartColor, mEndColor);
+            getPaint().setShader(mLinearGradient);
+        }
     }
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
-        if (mOrientation == Orientation.VERTICAL && h != oldh) {
+        if (mOrientation == Orientation.VERTICAL && h != oldh && mStartColor != mEndColor) {
             mLinearGradient = getVerticalGradient(h, mStartColor, mEndColor);
-        } else if (mOrientation == Orientation.HORIZONTAL && w != oldw) {
+        } else if (mOrientation == Orientation.HORIZONTAL && w != oldw && mStartColor != mEndColor) {
             mLinearGradient = getHorizontalGradient(w, mStartColor, mEndColor);
         }
     }
 
-    public void setOrientation(int orientation) {
-        if (mOrientation == orientation) {
-            return;
-        }
+    public void setOrientation(@Orientation int orientation) {
         setTextColor(orientation, mStartColor, mEndColor);
 
+    }
+
+    public void setTextColor(@ColorInt int textColor) {
+        setTextColor(mOrientation, textColor, textColor);
     }
 
     public void setTextColor(@ColorInt int startColor, @ColorInt int endColor) {
@@ -81,18 +84,19 @@ public class GradientTextView extends AppCompatTextView {
     }
 
     public void setTextColor(@Orientation int orientation, @ColorInt int startColor, @ColorInt int endColor) {
-        if (startColor == endColor) {
-            setTextColor(startColor);
-            return;
-        }
         if (mOrientation == orientation && mStartColor == startColor && mEndColor == endColor) {
             return;
         }
         this.mOrientation = orientation;
         this.mStartColor = startColor;
         this.mEndColor = endColor;
-        this.mLinearGradient = getGradient(orientation, startColor, endColor);
-        getPaint().setShader(mLinearGradient);
+        if (startColor == endColor) {
+            this.mLinearGradient = null;
+            getPaint().setShader(null);
+        } else {
+            this.mLinearGradient = getGradient(orientation, startColor, endColor);
+            getPaint().setShader(mLinearGradient);
+        }
         invalidate();
     }
 

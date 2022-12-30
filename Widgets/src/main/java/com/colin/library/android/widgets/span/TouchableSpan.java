@@ -3,10 +3,14 @@ package com.colin.library.android.widgets.span;
 import android.text.TextPaint;
 import android.text.style.ClickableSpan;
 import android.view.View;
+import android.widget.TextView;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.core.view.ViewCompat;
+
+import com.colin.library.android.utils.ResourceUtil;
+import com.colin.library.android.widgets.R;
 
 /**
  * 作者： ColinLu
@@ -18,9 +22,9 @@ import androidx.core.view.ViewCompat;
 public abstract class TouchableSpan extends ClickableSpan implements ITouchableSpan {
     private boolean mIsPressed;
     @ColorInt
-    private int mNormalBackgroundColor;
+    private final int mNormalBackgroundColor;
     @ColorInt
-    private int mPressedBackgroundColor;
+    private final int mPressedBackgroundColor;
     @ColorInt
     private int mNormalTextColor;
     @ColorInt
@@ -38,6 +42,14 @@ public abstract class TouchableSpan extends ClickableSpan implements ITouchableS
         mPressedTextColor = pressedTextColor;
         mNormalBackgroundColor = normalBackgroundColor;
         mPressedBackgroundColor = pressedBackgroundColor;
+    }
+
+    @Deprecated
+    public TouchableSpan(@NonNull TextView view) {
+        mNormalTextColor = getAttrColor(view, R.attr.span_text_normal_color);
+        mPressedTextColor = getAttrColor(view, R.attr.span_text_pressed_color);
+        mNormalBackgroundColor = getAttrColor(view, R.attr.span_bg_normal_color);
+        mPressedBackgroundColor = getAttrColor(view, R.attr.span_bg_pressed_color);
     }
 
     @Override
@@ -93,4 +105,8 @@ public abstract class TouchableSpan extends ClickableSpan implements ITouchableS
     }
 
 
+    @ColorInt
+    private int getAttrColor(TextView view, int attr) {
+        return ResourceUtil.getAttrColor(view.getContext().getTheme(), attr);
+    }
 }

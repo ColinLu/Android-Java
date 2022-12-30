@@ -136,18 +136,6 @@
                       </LayoutPositions>
                     </value>
                   </entry>
-                  <entry key="GradientTextFragment">
-                    <value>
-                      <LayoutPositions>
-                        <option name="myPosition">
-                          <Point>
-                            <option name="x" value="12" />
-                            <option name="y" value="12" />
-                          </Point>
-                        </option>
-                      </LayoutPositions>
-                    </value>
-                  </entry>
                   <entry key="HomeFragment">
                     <value>
                       <LayoutPositions>
@@ -227,6 +215,18 @@
                       </LayoutPositions>
                     </value>
                   </entry>
+                  <entry key="TextFragment">
+                    <value>
+                      <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="12" />
+                            <option name="y" value="12" />
+                          </Point>
+                        </option>
+                      </LayoutPositions>
+                    </value>
+                  </entry>
                   <entry key="ViewFragment">
                     <value>
                       <LayoutPositions>
@@ -248,12 +248,12 @@
                                 <LayoutPositions />
                               </value>
                             </entry>
-                            <entry key="action_View_to_Gradient">
+                            <entry key="action_View_to_Motion">
                               <value>
                                 <LayoutPositions />
                               </value>
                             </entry>
-                            <entry key="action_View_to_Motion">
+                            <entry key="action_View_to_Text">
                               <value>
                                 <LayoutPositions />
                               </value>

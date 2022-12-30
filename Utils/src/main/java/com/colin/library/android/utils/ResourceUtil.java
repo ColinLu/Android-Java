@@ -9,6 +9,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
+import android.view.View;
 
 import androidx.annotation.AttrRes;
 import androidx.annotation.ColorInt;
@@ -83,21 +84,21 @@ public final class ResourceUtil {
         return getDisplayMetrics(context).scaledDensity;
     }
 
-    public static float getAttrFloatValue(@NonNull Context context,@AttrRes int resId) {
+    public static float getAttrFloatValue(@NonNull Context context, @AttrRes int resId) {
         return getAttrFloatValue(context.getTheme(), resId);
     }
 
-    public static float getAttrFloatValue(@NonNull Resources.Theme theme,@AttrRes  int resId) {
+    public static float getAttrFloatValue(@NonNull Resources.Theme theme, @AttrRes int resId) {
         if (sTmpValue == null) sTmpValue = new TypedValue();
         if (!theme.resolveAttribute(resId, sTmpValue, true)) return 0F;
         return sTmpValue.getFloat();
     }
 
-    public static int getAttrColor(@NonNull Context context,@AttrRes  int resId) {
+    public static int getAttrColor(@NonNull Context context, @AttrRes int resId) {
         return getAttrColor(context.getTheme(), resId);
     }
 
-    public static int getAttrColor(@NonNull Resources.Theme theme, @AttrRes  int attr) {
+    public static int getAttrColor(@NonNull Resources.Theme theme, @AttrRes int attr) {
         if (sTmpValue == null) sTmpValue = new TypedValue();
         if (!theme.resolveAttribute(attr, sTmpValue, true)) return 0;
         if (sTmpValue.type == TypedValue.TYPE_ATTRIBUTE) return getAttrColor(theme, sTmpValue.data);
@@ -105,12 +106,12 @@ public final class ResourceUtil {
     }
 
     @Nullable
-    public static ColorStateList getAttrColorStateList(@NonNull Context context, @AttrRes  int resId) {
+    public static ColorStateList getAttrColorStateList(@NonNull Context context, @AttrRes int resId) {
         return getAttrColorStateList(context, context.getTheme(), resId);
     }
 
     @Nullable
-    public static ColorStateList getAttrColorStateList(@NonNull Context context, @NonNull Resources.Theme theme, @AttrRes  int attr) {
+    public static ColorStateList getAttrColorStateList(@NonNull Context context, @NonNull Resources.Theme theme, @AttrRes int attr) {
         if (attr == Resources.ID_NULL) return null;
         if (sTmpValue == null) sTmpValue = new TypedValue();
         if (!theme.resolveAttribute(attr, sTmpValue, true)) return null;
