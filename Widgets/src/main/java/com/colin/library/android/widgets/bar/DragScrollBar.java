@@ -20,7 +20,7 @@ import com.colin.library.android.utils.ResourceUtil;
  * 作者： ColinLu
  * 时间： 2022-12-31 21:40
  * <p>
- * 描述： TODO
+ * 描述： 快速滚动条
  */
 public class DragScrollBar extends View {
 
