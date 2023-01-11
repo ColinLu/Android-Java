@@ -2,6 +2,7 @@ package com.colin.library.android.widgets.scroll;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.AttributeSet;
 import android.webkit.WebView;
 
@@ -17,8 +18,8 @@ import com.colin.library.android.utils.ResourceUtil;
  * 描述： TODO
  */
 public class NestedScrollTopWebView extends WebView implements INestedScrollTop {
-    public static final String KEY_SCROLL_INFO = "KEY_SCROLL_INFO";
-
+    public static final String INSTANCE_STATE = "INSTANCE_STATE";
+    public static final String INSTANCE_SCROLL_OFFSET = "INSTANCE_SCROLL_OFFSET";
     private OnScrollNotify mScrollNotify;
 
     public NestedScrollTopWebView(@NonNull Context context) {
@@ -63,8 +64,8 @@ public class NestedScrollTopWebView extends WebView implements INestedScrollTop 
     }
 
     @Override
-    public void injectScrollNotifier(OnScrollNotify notifier) {
-        mScrollNotify = notifier;
+    public void injectScrollNotifier(OnScrollNotify notify) {
+        mScrollNotify = notify;
     }
 
     @Override
@@ -75,14 +76,21 @@ public class NestedScrollTopWebView extends WebView implements INestedScrollTop 
     }
 
     @Override
-    public void saveScrollInfo(@NonNull Bundle bundle) {
-        bundle.putInt(KEY_SCROLL_INFO, getScrollY());
+    protected Parcelable onSaveInstanceState() {
+        final Bundle bundle = new Bundle();
+        bundle.putParcelable(INSTANCE_STATE, super.onSaveInstanceState());
+        bundle.putInt(INSTANCE_SCROLL_OFFSET, getScrollY());
+        return bundle;
     }
 
     @Override
-    public void restoreScrollInfo(@NonNull Bundle bundle) {
-        int scrollY = ResourceUtil.px2dp(bundle.getInt(KEY_SCROLL_INFO, 0));
-        exec("javascript:scrollTo(0, " + scrollY + ")");
+    protected void onRestoreInstanceState(Parcelable state) {
+        if (state instanceof Bundle) {
+            final Bundle bundle = (Bundle) state;
+            int scrollY = ResourceUtil.px2dp(bundle.getInt(INSTANCE_SCROLL_OFFSET, 0));
+            exec("javascript:scrollTo(0, " + scrollY + ")");
+            super.onRestoreInstanceState(bundle.getParcelable(INSTANCE_STATE));
+        } else super.onRestoreInstanceState(state);
     }
 
     private void exec(final String jsCode) {

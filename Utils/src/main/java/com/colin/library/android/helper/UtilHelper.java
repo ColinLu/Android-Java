@@ -17,7 +17,7 @@ import com.colin.library.android.utils.data.UtilConfig;
  * 描述： 工具类的辅助类，配置信息等
  */
 public final class UtilHelper {
-    private  UtilConfig mUtilConfig;
+    private UtilConfig mUtilConfig;
     private static volatile UtilHelper sHelper;
 
     private UtilHelper() {
@@ -33,19 +33,18 @@ public final class UtilHelper {
         return sHelper;
     }
 
-    public  void init(@NonNull Application app) {
+    public void init(@NonNull Application app) {
         init(new UtilConfig.Builder(Utils.notNull(app), BuildConfig.DEBUG).build());
     }
 
-    public  void init(@NonNull UtilConfig config) {
+    public void init(@NonNull UtilConfig config) {
         mUtilConfig = config;
         ActivityHelper.getInstance().register((Application) config.getApplication());
     }
 
     @NonNull
     public Application getContext() {
-        Utils.notNull(mUtilConfig, "UtilHelper init first !");
-        return mUtilConfig.getApplication();
+        return Utils.notNull(mUtilConfig, "UtilHelper init first !").getApplication();
     }
 
     public boolean showLog(@LogLevel final int level, @Nullable String showTag) {
@@ -55,22 +54,18 @@ public final class UtilHelper {
 
     @LogLevel
     public int getLogLevel() {
-        Utils.notNull(mUtilConfig, "UtilHelper init first !");
-        return mUtilConfig.getLogLevel();
+        return Utils.notNull(mUtilConfig, "UtilHelper init first !").getLogLevel();
     }
 
     public int getLogMethodOffset() {
-        Utils.notNull(mUtilConfig, "UtilHelper init first !");
-        return mUtilConfig.getLogMethodOffset();
+        return Utils.notNull(mUtilConfig, "UtilHelper init first !").getLogMethodOffset();
     }
 
     public int getLogMethodCount() {
-        Utils.notNull(mUtilConfig, "UtilHelper init first !");
-        return mUtilConfig.getLogMethodCount();
+        return Utils.notNull(mUtilConfig, "UtilHelper init first !").getLogMethodCount();
     }
 
     public boolean isLogShowThread() {
-        Utils.notNull(mUtilConfig, "UtilHelper init first !");
-        return mUtilConfig.isLogShowThread();
+        return Utils.notNull(mUtilConfig, "UtilHelper init first !").isLogShowThread();
     }
 }

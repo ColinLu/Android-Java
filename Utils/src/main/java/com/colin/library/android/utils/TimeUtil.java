@@ -173,7 +173,7 @@ public final class TimeUtil {
      * @param duration
      * @return
      */
-    public static String formatDurationTime(long duration) {
+    public static String formatDuration(long duration) {
         return String.format(Locale.getDefault(), "%02d:%02d",
                 TimeUnit.MILLISECONDS.toMinutes(duration),
                 TimeUnit.MILLISECONDS.toSeconds(duration)

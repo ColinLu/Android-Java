@@ -1,16 +1,16 @@
 package com.colin.library.android.base;
 
-import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.colin.library.android.widgets.def.OnItemCheckedListener;
 import com.colin.library.android.widgets.def.OnItemClickListener;
+import com.colin.library.android.widgets.def.OnItemLongClickListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +23,8 @@ import java.util.List;
 public abstract class BaseAdapter<ITEM> extends RecyclerView.Adapter<ViewHolder> {
     protected final List<ITEM> mItemList;
     protected OnItemClickListener mItemClickListener;
+    protected OnItemLongClickListener mItemLongClickListener;
+    protected OnItemCheckedListener mItemCheckedListener;
 
     public BaseAdapter() {
         this(null);
@@ -35,6 +37,14 @@ public abstract class BaseAdapter<ITEM> extends RecyclerView.Adapter<ViewHolder>
 
     public void setOnItemClickListener(@Nullable OnItemClickListener itemClickListener) {
         this.mItemClickListener = itemClickListener;
+    }
+
+    public void setOnItemLongClickListener(@Nullable OnItemLongClickListener itemLongClickListener) {
+        this.mItemLongClickListener = itemLongClickListener;
+    }
+
+    public void setOnItemCheckedListener(@Nullable OnItemCheckedListener itemCheckedListener) {
+        this.mItemCheckedListener = itemCheckedListener;
     }
 
     @Override

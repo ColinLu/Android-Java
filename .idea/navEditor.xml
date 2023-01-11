@@ -100,6 +100,18 @@
             <LayoutPositions>
               <option name="myPositions">
                 <map>
+                  <entry key="BehaviorFragment">
+                    <value>
+                      <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="12" />
+                            <option name="y" value="12" />
+                          </Point>
+                        </option>
+                      </LayoutPositions>
+                    </value>
+                  </entry>
                   <entry key="CircleImageFragment">
                     <value>
                       <LayoutPositions>
@@ -258,6 +270,11 @@
                                 <LayoutPositions />
                               </value>
                             </entry>
+                            <entry key="action_View_to_behavior">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
                           </map>
                         </option>
                       </LayoutPositions>
@@ -289,6 +306,12 @@
                             <entry key="MethodFragment">
                               <value>
                                 <LayoutPositions>
+                                  <option name="myPosition">
+                                    <Point>
+                                      <option name="x" value="12" />
+                                      <option name="y" value="12" />
+                                    </Point>
+                                  </option>
                                   <option name="myPositions">
                                     <map>
                                       <entry key="action_Method_to_ContactList">

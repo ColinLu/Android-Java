@@ -1,0 +1,44 @@
+<resources>
+    <string name="app_name">多媒体选择</string>
+
+    <string name="all_file">全部文件</string>
+    <bool name="album_status_mode">true</bool>
+    <string name="media_camera_take_image">拍照</string>
+    <string name="media_camera_take_audio">录音</string>
+    <string name="media_camera_take_video">视频</string>
+    <string name="media_title">选择多媒体</string>
+    <string name="media_image_title">选择图片</string>
+    <string name="media_video_title">选择视频</string>
+    <string name="media_audio_title">选择音频</string>
+
+    <string name="media_ok">好的</string>
+    <string name="media_cancel">取消</string>
+    <string name="media_setting">去设置</string>
+    <string name="media_refuse_permission">权限未同意</string>
+    <string name="media_convert_fail">媒体转化失败</string>
+    <string name="media_scan_fail">媒体生成失败</string>
+    <string name="media_choose_empty">暂未选择多媒体文件</string>
+    <string name="media_camera_value_empty">文件失效，异常退出</string>
+
+    <string name="media_menu_save">保存</string>
+    <string name="media_menu_finish">完成</string>
+    <string name="media_menu_selected">选择</string>
+
+    <string name="media_permission_title_tips">权限提示</string>
+    <string name="media_permission_storage">没有存储权限，请在使用之前授权。</string>
+    <string name="media_permission_camera_image">没有存储或者相机权限，请在使用前授权。</string>
+    <string name="media_permission_camera_audio">没有存储或者录音权限，请在使用前授权。</string>
+    <string name="media_permission_camera_video">没有存储或者录音、相机权限，请在使用前授权。</string>
+    <string name="media_permission_down">没有存储权限，请在使用之前授权。</string>
+
+    <string name="media_preview">预览(%1$d)</string>
+    <string name="media_preview_order">(%1$d/%2$d)</string>
+    <string name="media_folder_size">共(%1$d)张</string>
+    <string name="media_count">已选(%1$d)</string>
+    <string name="media_selected_limit">您只能选择%1$d个文件</string>
+    <string name="media_selected_video_limit">您只能选择%1$d个视频文件</string>
+    <string name="media_selected_only_video">您只能选择视频</string>
+    <string name="media_selected_only_image">您只能选择图片</string>
+    <string name="media_item_invalid">不可用</string>
+    <string name="media_take_file_unavailable">不可用的文件，请重试</string>
+</resources>

@@ -3,6 +3,7 @@ package com.colin.android.demo.java.app;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -45,6 +46,11 @@ public abstract class AppActivity<Bind extends ViewBinding> extends BaseActivity
         NetBroadReceiver.bind(this);
     }
 
+    @Nullable
+    @Override
+    public View onCreatePanelView(int featureId) {
+        return super.onCreatePanelView(featureId);
+    }
 
     @Override
     protected void onDestroy() {

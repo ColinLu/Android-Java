@@ -6,6 +6,8 @@ import android.net.Uri;
 import androidx.annotation.NonNull;
 import androidx.core.content.FileProvider;
 
+import com.colin.library.android.helper.UtilHelper;
+
 import java.io.File;
 
 ///////////////////////////////////////////////////////////////////////////
@@ -22,6 +24,10 @@ import java.io.File;
 //        </provider>
 ///////////////////////////////////////////////////////////////////////////
 public final class AppFileProvider extends FileProvider {
+    @NonNull
+    public static Uri getUri(@NonNull File file) {
+        return getUri(UtilHelper.getInstance().getContext(), file);
+    }
 
     /**
      * 文件 转化uri
@@ -33,6 +39,11 @@ public final class AppFileProvider extends FileProvider {
     @NonNull
     public static Uri getUri(@NonNull Context context, @NonNull File file) {
         return getUriForFile(context, getAuthority(context), file);
+    }
+
+    @NonNull
+    public static String getAuthority() {
+        return getAuthority(UtilHelper.getInstance().getContext());
     }
 
     @NonNull

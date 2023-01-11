@@ -2,6 +2,7 @@ package com.colin.library.android.widgets.scroll;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,7 @@ import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.Px;
 import androidx.core.view.NestedScrollingChild2;
 import androidx.core.view.NestedScrollingChildHelper;
 import androidx.core.view.NestedScrollingParent2;
@@ -26,9 +28,8 @@ import com.colin.library.android.widgets.edge.ViewOffsetHelper;
  */
 public class NestedScrollTopFrameLayout extends FrameLayout implements
         NestedScrollingChild2, NestedScrollingParent2, INestedScrollTop {
-
-    public static final String KEY_SCROLL_INFO_OFFSET = "KEY_SCROLL_INFO_OFFSET";
-
+    public static final String INSTANCE_STATE = "INSTANCE_STATE";
+    public static final String INSTANCE_SCROLL_OFFSET = "INSTANCE_SCROLL_OFFSET";
     private OnScrollNotify mScrollNotify;
     private View mHeaderView;
     private INestedScrollTop mDelegateView;
@@ -325,29 +326,29 @@ public class NestedScrollTopFrameLayout extends FrameLayout implements
         if (mDelegateView != null) {
             mDelegateView.injectScrollNotifier(new OnScrollNotify() {
                 @Override
-                public void notify(int innerOffset, int innerRange) {
+                public void notify(@Px int offset, @Px int range) {
                     notifier.notify(getCurrentScroll(), getScrollOffsetRange());
-                }
-
-                @Override
-                public void onScrollStateChange(@NonNull View view, int newScrollState) {
-
                 }
             });
         }
     }
 
     @Override
-    public void saveScrollInfo(@NonNull Bundle bundle) {
-        bundle.putInt(KEY_SCROLL_INFO_OFFSET, -mOffsetCurrent);
-        if (mDelegateView != null) mDelegateView.saveScrollInfo(bundle);
+    protected Parcelable onSaveInstanceState() {
+        final Bundle bundle = new Bundle();
+        bundle.putParcelable(INSTANCE_STATE, super.onSaveInstanceState());
+        bundle.putInt(INSTANCE_SCROLL_OFFSET, -mOffsetCurrent);
+        return bundle;
     }
 
     @Override
-    public void restoreScrollInfo(@NonNull Bundle bundle) {
-        int offset = bundle.getInt(KEY_SCROLL_INFO_OFFSET, 0);
-        offsetTo(NumberUtil.constrain(-offset, 0, getContainerOffsetRange()));
-        if (mDelegateView != null) mDelegateView.restoreScrollInfo(bundle);
+    protected void onRestoreInstanceState(Parcelable state) {
+        if (state instanceof Bundle) {
+            final Bundle bundle = (Bundle) state;
+            int offset = bundle.getInt(INSTANCE_SCROLL_OFFSET, 0);
+            offsetTo(NumberUtil.constrain(-offset, 0, getContainerOffsetRange()));
+            super.onRestoreInstanceState(bundle.getParcelable(INSTANCE_STATE));
+        } else super.onRestoreInstanceState(state);
     }
 
     // NestedScrollingChild2

@@ -38,97 +38,20 @@ public final class HttpUtil {
     private static final int READ_TIMEOUT_TIME = 19_000;
 
     /**
-     * POST + JSON
-     *
-     * @param url  target url
-     * @param json send data
-     * @return data receive from server
-     * @author MilkZS
+     * @return {@code true} if the url is a network url.
      */
-    public static String postJson(@NonNull final String url, @NonNull final String json) {
-        return http(url, true, json, true);
+    public static boolean isUrl(@Nullable final String url) {
+        return isHttp(url) || isHttps(url);
     }
 
-    /**
-     * POST + FORM
-     *
-     * @param url  target url
-     * @param form send data
-     * @return data receive from serv
-     * @author MilkZS
-     */
-    public static String postForm(@NonNull final String url, @NonNull final String form) {
-        return http(url, true, form, false);
+    public static boolean isHttp(@Nullable final String url) {
+        return isHttpUrl(url, 6, 0, 7, "http://");
     }
 
-    /**
-     * GET + JSON
-     *
-     * @param url  target url
-     * @param json send data
-     * @return data receive from server
-     * @author MilkZS
-     */
-    public static String getJson(@NonNull final String url, @NonNull final String json) {
-        return http(url, false, json, false);
+    public static boolean isHttps(@Nullable final String url) {
+        return isHttpUrl(url, 7, 0, 8, "https://");
     }
 
-    /**
-     * GET + FORM
-     *
-     * @param url  target url
-     * @param form send data
-     * @return data receive from server
-     * @author MilkZS
-     */
-    public static String getForm(@NonNull final String url, @NonNull final String form) {
-        return http(url, false, form, false);
-    }
-
-    private static String http(@NonNull final String url, final boolean post, @NonNull final String data, final boolean json) {
-        HttpURLConnection connection = null;
-        DataOutputStream os = null;
-        InputStream is = null;
-        try {
-            URL sUrl = new URL(url);
-            connection = (HttpURLConnection) sUrl.openConnection();
-            connection.setConnectTimeout(CONNECT_TIMEOUT_TIME);
-            connection.setReadTimeout(READ_TIMEOUT_TIME);
-            connection.setRequestMethod(post ? "POST" : "GET");
-            //允许输入输出
-            connection.setDoInput(true);
-            connection.setDoOutput(true);
-            // 是否使用缓冲
-            connection.setUseCaches(false);
-            // 本次连接是否处理重定向，设置成true，系统自动处理重定向；
-            // 设置成false，则需要自己从http reply中分析新的url自己重新连接。
-            connection.setInstanceFollowRedirects(true);
-            // 设置请求头里的属性
-            if (json) {
-                connection.setRequestProperty("Content-Type", "application/json");
-            } else {
-                connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-                connection.setRequestProperty("Content-Length", String.valueOf(data.length()));
-            }
-            connection.connect();
-
-            os = new DataOutputStream(connection.getOutputStream());
-            os.write(data.getBytes(), 0, data.getBytes().length);
-            os.flush();
-            os.close();
-
-            is = connection.getInputStream();
-            Scanner scan = new Scanner(is);
-            scan.useDelimiter("\\A");
-            if (scan.hasNext()) return scan.next();
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            if (connection != null) connection.disconnect();
-            IOUtil.close(os, is);
-        }
-        return null;
-    }
 
     @Nullable
     public static String getFileName(@Nullable final HttpUrl url) {
@@ -256,5 +179,104 @@ public final class HttpUtil {
         return String.format(webUserAgent, sb, "Mobile ");
     }
 
+    /**
+     * POST + JSON
+     *
+     * @param url  target url
+     * @param json send data
+     * @return data receive from server
+     * @author MilkZS
+     */
+    public static String postJson(@NonNull final String url, @NonNull final String json) {
+        return http(url, true, json, true);
+    }
 
+    /**
+     * POST + FORM
+     *
+     * @param url  target url
+     * @param form send data
+     * @return data receive from serv
+     * @author MilkZS
+     */
+    public static String postForm(@NonNull final String url, @NonNull final String form) {
+        return http(url, true, form, false);
+    }
+
+    /**
+     * GET + JSON
+     *
+     * @param url  target url
+     * @param json send data
+     * @return data receive from server
+     * @author MilkZS
+     */
+    public static String getJson(@NonNull final String url, @NonNull final String json) {
+        return http(url, false, json, false);
+    }
+
+    /**
+     * GET + FORM
+     *
+     * @param url  target url
+     * @param form send data
+     * @return data receive from server
+     * @author MilkZS
+     */
+    public static String getForm(@NonNull final String url, @NonNull final String form) {
+        return http(url, false, form, false);
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+    // 私有方法
+    ///////////////////////////////////////////////////////////////////////////
+    /*网络请求*/
+    private static String http(@NonNull final String url, final boolean post, @NonNull final String data, final boolean json) {
+        HttpURLConnection connection = null;
+        DataOutputStream os = null;
+        InputStream is = null;
+        try {
+            URL sUrl = new URL(url);
+            connection = (HttpURLConnection) sUrl.openConnection();
+            connection.setConnectTimeout(CONNECT_TIMEOUT_TIME);
+            connection.setReadTimeout(READ_TIMEOUT_TIME);
+            connection.setRequestMethod(post ? "POST" : "GET");
+            //允许输入输出
+            connection.setDoInput(true);
+            connection.setDoOutput(true);
+            // 是否使用缓冲
+            connection.setUseCaches(false);
+            // 本次连接是否处理重定向，设置成true，系统自动处理重定向；
+            // 设置成false，则需要自己从http reply中分析新的url自己重新连接。
+            connection.setInstanceFollowRedirects(true);
+            // 设置请求头里的属性
+            if (json) {
+                connection.setRequestProperty("Content-Type", "application/json");
+            } else {
+                connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+                connection.setRequestProperty("Content-Length", String.valueOf(data.length()));
+            }
+            connection.connect();
+
+            os = new DataOutputStream(connection.getOutputStream());
+            os.write(data.getBytes(), 0, data.getBytes().length);
+            os.flush();
+            os.close();
+
+            is = connection.getInputStream();
+            Scanner scan = new Scanner(is);
+            scan.useDelimiter("\\A");
+            if (scan.hasNext()) return scan.next();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (connection != null) connection.disconnect();
+            IOUtil.close(os, is);
+        }
+        return null;
+    }
+
+    private static boolean isHttpUrl(@Nullable String url, int length, int startIndex, int endIndex, @NonNull String name) {
+        return (null != url) && (url.length() > length) && url.substring(startIndex, endIndex).equalsIgnoreCase(name);
+    }
 }

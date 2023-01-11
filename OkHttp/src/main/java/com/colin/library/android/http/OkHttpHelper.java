@@ -55,20 +55,17 @@ public final class OkHttpHelper {
 
     @NonNull
     public HttpConfig getOkHttpConfig() {
-        Utils.notNull(mHttpConfig, "OkHttpConfig init first !");
-        return mHttpConfig;
+        return Utils.notNull(mHttpConfig, "OkHttpConfig init first !");
     }
 
     @NonNull
     public Context getContext() {
-        Utils.notNull(mHttpConfig, "OkHttpConfig init first !");
-        return mHttpConfig.getContext();
+        return Utils.notNull(mHttpConfig, "OkHttpConfig init first !").getContext();
     }
 
     @NonNull
     public OkHttpClient getOkHttpClient() {
-        Utils.notNull(mHttpConfig, "OkHttpConfig init first !");
-        return mHttpConfig.getOkHttpClient();
+        return Utils.notNull(mHttpConfig, "OkHttpConfig init first !").getOkHttpClient();
     }
 
     @NonNull

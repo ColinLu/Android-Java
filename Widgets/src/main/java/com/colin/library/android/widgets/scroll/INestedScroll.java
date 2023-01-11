@@ -1,12 +1,12 @@
 package com.colin.library.android.widgets.scroll;
 
-import android.os.Bundle;
 import android.view.View;
-import android.widget.ScrollView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.annotation.Px;
+
+import com.colin.library.android.widgets.annotation.ScrollState;
 
 /**
  * 作者： ColinLu
@@ -15,19 +15,14 @@ import androidx.recyclerview.widget.RecyclerView;
  * 描述： TODO
  */
 public interface INestedScroll {
-    int SCROLL_STATE_IDLE = RecyclerView.SCROLL_STATE_IDLE;
-    int SCROLL_STATE_DRAGGING = RecyclerView.SCROLL_STATE_DRAGGING;
-    int SCROLL_STATE_SETTLING = RecyclerView.SCROLL_STATE_SETTLING;
-
-    void saveScrollInfo(@NonNull Bundle bundle);
-
-    void restoreScrollInfo(@NonNull Bundle bundle);
 
     void injectScrollNotifier(@Nullable OnScrollNotify notify);
 
-    public interface OnScrollNotify {
-        void notify(int innerOffset, int innerRange);
+    interface OnScrollNotify {
+        default void notify(@Px int offset, @Px int range) {
+        }
 
-        void onScrollStateChange(@NonNull View view, int scrollState);
+        default void onScrollStateChanged(@NonNull View view, @ScrollState int scrollState) {
+        }
     }
 }

@@ -13,7 +13,7 @@ import com.colin.library.android.widgets.span.SpanTextView;
  * 作者： ColinLu
  * 时间： 2022-05-03 01:05
  * <p>
- * 描述： 透明效果
+ * 描述： 在 pressed 和 disabled 时改变 View 的透明度
  */
 public class AlphaTextView extends SpanTextView implements IAlphaView {
     private AlphaViewHelper mAlphaViewHelper;

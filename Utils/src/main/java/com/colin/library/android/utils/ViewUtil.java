@@ -15,6 +15,9 @@ import androidx.recyclerview.widget.RecyclerView;
  * 描述： View 工具类
  */
 public final class ViewUtil {
+    private ViewUtil() {
+        throw new UnsupportedOperationException("don't instantiate");
+    }
 
     public static void init(@Nullable final RecyclerView view, @Nullable final RecyclerView.Adapter<?> adapter) {
         init(view, adapter, 0, false);

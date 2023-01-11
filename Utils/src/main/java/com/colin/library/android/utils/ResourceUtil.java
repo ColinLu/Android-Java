@@ -3,13 +3,14 @@ package com.colin.library.android.utils;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.res.ColorStateList;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
-import android.view.View;
 
 import androidx.annotation.AttrRes;
 import androidx.annotation.ColorInt;
@@ -22,9 +23,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
-import com.colin.library.android.utils.data.Constants;
 import com.colin.library.android.helper.UtilHelper;
+import com.colin.library.android.utils.data.Constants;
+
+import java.util.Locale;
 
 
 /**
@@ -55,6 +60,35 @@ public final class ResourceUtil {
     @NonNull
     public static Resources getResources(@NonNull Context context) {
         return context.getResources();
+    }
+
+    /*语言本地化处理*/
+    @NonNull
+    public static void initLocale(@NonNull final Context context, @NonNull final Locale locale) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            final Configuration configuration = context.getResources().getConfiguration();
+            configuration.setLocale(locale);
+            context.createConfigurationContext(configuration);
+        } else {
+            final Resources resources = context.getResources();
+            final Configuration configuration = resources.getConfiguration();
+            configuration.locale = locale;
+            resources.updateConfiguration(configuration, resources.getDisplayMetrics());
+        }
+    }
+
+    /*屏幕方向*/
+    @RecyclerView.Orientation
+    public static int getOrientation(@NonNull final Context context) {
+        return getOrientation(context.getResources().getConfiguration());
+    }
+
+    /*屏幕方向*/
+    @RecyclerView.Orientation
+    public static int getOrientation(@NonNull final Configuration config) {
+        if (config.orientation == Configuration.ORIENTATION_LANDSCAPE)
+            return LinearLayoutManager.HORIZONTAL;
+        return LinearLayoutManager.VERTICAL;
     }
 
     @NonNull
@@ -210,6 +244,17 @@ public final class ResourceUtil {
     public static String getString(@Nullable Context context, @StringRes final int res) {
         if (context == null || res == Resources.ID_NULL) return null;
         return getResources(context).getString(res);
+    }
+
+    @Nullable
+    public static String getString(@StringRes final int res, Object... formatArgs) {
+        return getString(UtilHelper.getInstance().getContext(), res, formatArgs);
+    }
+
+    @Nullable
+    public static String getString(@Nullable Context context, @StringRes final int res, Object... formatArgs) {
+        if (context == null || res == Resources.ID_NULL) return null;
+        return getResources(context).getString(res, formatArgs);
     }
 
     @ColorInt

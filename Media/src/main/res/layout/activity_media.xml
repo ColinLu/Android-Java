@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/layout_album"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include layout="@layout/layout_media_title" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+    <TextView
+        android:id="@+id/text_media_folder"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_45"
+        android:layout_gravity="bottom"
+        android:background="@color/media_bottom_nav"
+        android:drawableEnd="@drawable/ic_arrow_drop_down"
+        android:drawableRight="@drawable/ic_arrow_drop_down"
+        android:drawablePadding="@dimen/dp_6"
+        android:gravity="end|center_vertical"
+        android:minWidth="@dimen/dp_100"
+        android:paddingStart="@dimen/dp_6"
+        android:paddingLeft="@dimen/dp_6"
+        android:paddingEnd="@dimen/dp_6"
+        android:paddingRight="@dimen/dp_6"
+        android:text="@string/media_title"
+        android:textColor="@android:color/white"
+        app:layout_behavior="android.support.design.behavior.HideBottomViewOnScrollBehavior" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

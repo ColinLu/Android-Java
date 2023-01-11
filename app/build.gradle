@@ -102,6 +102,7 @@ dependencies {
     implementation project(path: ':Utils')
     implementation project(path: ':Widgets')
     implementation project(path: ':OkHttp')
+    implementation project(path: ':Media')
 
 //    implementation 'com.colin.library.android:Base:0.0.1'
 

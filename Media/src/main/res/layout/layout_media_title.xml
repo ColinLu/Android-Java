@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.appbar.AppBarLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/layout_title"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?attr/colorPrimary"
+    android:minHeight="@dimen/dp_50"
+    android:theme="@style/Media.AppBar">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        app:contentInsetLeft="@dimen/dp_0"
+        app:contentInsetStart="@dimen/dp_0"
+        app:layout_scrollFlags="scroll|enterAlways|enterAlwaysCollapsed"
+        app:navigationIcon="@drawable/ic_back"
+        app:popupTheme="@style/Media.Popup"
+        app:subtitleTextAppearance="@style/Media.Subtitle"
+        app:titleTextAppearance="@style/Media.Title" />
+
+</com.google.android.material.appbar.AppBarLayout>

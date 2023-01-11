@@ -89,5 +89,6 @@ public class MainActivity extends AppActivity<ActivityMainBinding> {
     public void setExpanded(boolean expanded) {
         LogUtil.e("expanded:" + expanded);
         mBinding.mAppBar.setExpanded(expanded);
+        mBinding.mToolbar.setTitle(getTitle());
     }
 }

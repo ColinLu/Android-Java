@@ -1,10 +1,12 @@
 package com.colin.android.demo.java.utils;
 
 import android.content.res.Resources;
+import android.os.Bundle;
 
 import androidx.annotation.ArrayRes;
 import androidx.annotation.MainThread;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
@@ -32,7 +34,11 @@ public final class DemoUtils {
     }
 
     public static void toNavigate(Fragment fragment, int action) {
-        NavHostFragment.findNavController(fragment).navigate(action);
+        toNavigate(fragment, action, null);
+    }
+
+    public static void toNavigate(Fragment fragment, int action, @Nullable Bundle bundle) {
+        NavHostFragment.findNavController(fragment).navigate(action, bundle);
     }
 
     @NonNull

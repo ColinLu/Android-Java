@@ -1,8 +1,15 @@
 package com.colin.library.android.utils;
 
+import android.content.Context;
+import android.content.res.AssetManager;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
@@ -93,6 +100,7 @@ public final class StringUtil {
         return isEmpty(data) ? null : data.getBytes(charset);
     }
 
+
     /*char[] 转 byte[]*/
     @Nullable
     public static byte[] getBytes(@Nullable final char[] chars) {
@@ -127,6 +135,30 @@ public final class StringUtil {
     @Nullable
     public static String getString(@Nullable final byte[] bytes, @NonNull final Charset charset) {
         return ArrayUtil.isEmpty(bytes) ? null : new String(bytes, charset);
+    }
+
+    /*普通字符串 转 字节数组*/
+    @Nullable
+    public static String getString(@NonNull final AssetManager manager, @NonNull final String fileName) {
+        InputStream in = null;
+        BufferedReader reader = null;
+        try {
+            in = manager.open(fileName);
+            reader = new BufferedReader(new InputStreamReader(in));
+            String line = null;
+            final StringBuilder sb = new StringBuilder();
+            do {
+                line = reader.readLine();
+                // 去除注释
+                if (line != null && !line.matches("^\\s*\\/\\/.*")) sb.append(line);
+            } while (line != null);
+            return sb.toString();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            IOUtil.close(in, reader);
+        }
+        return null;
     }
 
 

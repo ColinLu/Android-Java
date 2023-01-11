@@ -2,6 +2,7 @@ package com.colin.library.android.widgets.scroll;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.MotionEvent;
@@ -11,9 +12,11 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.Px;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
 import com.colin.library.android.utils.NumberUtil;
+import com.colin.library.android.widgets.annotation.ScrollState;
 import com.colin.library.android.widgets.bar.DragScrollBar;
 import com.colin.library.android.widgets.behavior.BottomAreaBehavior;
 import com.colin.library.android.widgets.behavior.TopAreaBehavior;
@@ -23,7 +26,8 @@ import java.util.List;
 
 public class NestedScrollCoordinatorLayout extends CoordinatorLayout implements
         TopAreaBehavior.Callback, DragScrollBar.Callback {
-    public static final String KEY_SCROLL_INFO_OFFSET = "KEY_SCROLL_INFO_OFFSET";
+    public static final String INSTANCE_STATE = "INSTANCE_STATE";
+    public static final String INSTANCE_SCROLL_OFFSET = "INSTANCE_SCROLL_OFFSET";
     private final List<OnScrollListener> mOnScrollListeners = new ArrayList<>();
     private final Runnable mCheckLayoutAction = this::checkLayout;
 
@@ -38,7 +42,7 @@ public class NestedScrollCoordinatorLayout extends CoordinatorLayout implements
     private boolean mEnableScrollBarFadeInOut = true;
     private boolean mIsDraggableScrollBarEnabled = false;
     private boolean mIsDismissDownEvent = false;
-    private int mCurrentScrollState = INestedScroll.SCROLL_STATE_IDLE;
+    private int mCurrentScrollState = ScrollState.SCROLL_STATE_IDLE;
     private float mDismissDownY = 0;
     private int mTouchSlap = -1;
 
@@ -162,16 +166,11 @@ public class NestedScrollCoordinatorLayout extends CoordinatorLayout implements
         mTopView = (INestedScrollTop) topView;
         mTopView.injectScrollNotifier(new INestedScroll.OnScrollNotify() {
             @Override
-            public void notify(int innerOffset, int innerRange) {
+            public void notify(@Px int offset, @Px int range) {
                 int offsetCurrent = mTopAreaBehavior == null ? 0 : -mTopAreaBehavior.getTopAndBottomOffset();
                 int bottomCurrent = mBottomView == null ? 0 : mBottomView.getCurrentScroll();
                 int bottomRange = mBottomView == null ? 0 : mBottomView.getScrollOffsetRange();
-                dispatchScroll(innerOffset, innerRange, offsetCurrent, getOffsetRange(), bottomCurrent, bottomRange);
-            }
-
-            @Override
-            public void onScrollStateChange(@NonNull View view, int newScrollState) {
-                // not need this. top view scroll is driven by top behavior
+                dispatchScroll(offset, range, offsetCurrent, getOffsetRange(), bottomCurrent, bottomRange);
             }
         });
         if (layoutParams == null) {
@@ -214,26 +213,26 @@ public class NestedScrollCoordinatorLayout extends CoordinatorLayout implements
         mBottomView = (INestedScrollBottom) bottomView;
         mBottomView.injectScrollNotifier(new INestedScrollBottom.OnScrollNotify() {
             @Override
-            public void notify(int innerOffset, int innerRange) {
+            public void notify(@Px int offset, @Px int range) {
                 int topCurrent = mTopView == null ? 0 : mTopView.getCurrentScroll();
                 int topRange = mTopView == null ? 0 : mTopView.getScrollOffsetRange();
                 int offsetCurrent = mTopAreaBehavior == null ? 0 : -mTopAreaBehavior.getTopAndBottomOffset();
-                dispatchScroll(topCurrent, topRange, offsetCurrent, getOffsetRange(), innerOffset, innerRange);
+                dispatchScroll(topCurrent, topRange, offsetCurrent, getOffsetRange(), offset, range);
             }
 
             @Override
-            public void onScrollStateChange(@NonNull View view, int newScrollState) {
-                dispatchScrollStateChange(newScrollState, false);
+            public void onScrollStateChanged(@NonNull View view, @ScrollState int scrollState) {
+                dispatchScrollStateChanged(scrollState, false);
             }
         });
         if (layoutParams == null) {
             layoutParams = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         }
 
-        final Behavior behavior = layoutParams.getBehavior();
-        if (behavior instanceof BottomAreaBehavior) {
+        final Behavior<?> behavior = layoutParams.getBehavior();
+        if (behavior instanceof BottomAreaBehavior)
             mBottomAreaBehavior = (BottomAreaBehavior) behavior;
-        } else {
+        else {
             mBottomAreaBehavior = new BottomAreaBehavior();
             layoutParams.setBehavior(mBottomAreaBehavior);
         }
@@ -323,9 +322,9 @@ public class NestedScrollCoordinatorLayout extends CoordinatorLayout implements
         }
     }
 
-    private void dispatchScrollStateChange(int newScrollState, boolean fromTopBehavior) {
+    private void dispatchScrollStateChanged(int newScrollState, boolean fromTopBehavior) {
         for (OnScrollListener onScrollListener : mOnScrollListeners) {
-            onScrollListener.onScrollStateChange(this, newScrollState, fromTopBehavior);
+            onScrollListener.onScrollStateChanged(this, newScrollState, fromTopBehavior);
         }
         mCurrentScrollState = newScrollState;
     }
@@ -381,12 +380,10 @@ public class NestedScrollCoordinatorLayout extends CoordinatorLayout implements
                     if (topView.getHeight() + contentHeight < getHeight()) {
                         mTopAreaBehavior.setTopAndBottomOffset(0);
                     } else {
-                        mTopAreaBehavior.setTopAndBottomOffset(
-                                getHeight() - contentHeight - ((View) mTopView).getHeight());
+                        mTopAreaBehavior.setTopAndBottomOffset(getHeight() - contentHeight - ((View) mTopView).getHeight());
                     }
                 } else {
-                    mTopAreaBehavior.setTopAndBottomOffset(
-                            getHeight() - ((View) mBottomView).getHeight() - ((View) mTopView).getHeight());
+                    mTopAreaBehavior.setTopAndBottomOffset(getHeight() - ((View) mBottomView).getHeight() - ((View) mTopView).getHeight());
                 }
             }
         }
@@ -427,28 +424,28 @@ public class NestedScrollCoordinatorLayout extends CoordinatorLayout implements
 
     @Override
     public void onTopBehaviorTouchBegin() {
-        dispatchScrollStateChange(INestedScroll.SCROLL_STATE_DRAGGING, true);
+        dispatchScrollStateChanged(ScrollState.SCROLL_STATE_DRAGGING, true);
     }
 
     @Override
     public void onTopBehaviorTouchEnd() {
-        dispatchScrollStateChange(INestedScroll.SCROLL_STATE_IDLE, true);
+        dispatchScrollStateChanged(ScrollState.SCROLL_STATE_IDLE, true);
     }
 
     @Override
     public void onTopBehaviorFlingOrScrollStart() {
-        dispatchScrollStateChange(INestedScroll.SCROLL_STATE_SETTLING, true);
+        dispatchScrollStateChanged(ScrollState.SCROLL_STATE_SETTLING, true);
     }
 
     @Override
     public void onTopBehaviorFlingOrScrollEnd() {
-        dispatchScrollStateChange(INestedScroll.SCROLL_STATE_IDLE, true);
+        dispatchScrollStateChanged(ScrollState.SCROLL_STATE_IDLE, true);
     }
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
         if (ev.getAction() == MotionEvent.ACTION_DOWN) {
-            if (mCurrentScrollState != INestedScroll.SCROLL_STATE_IDLE) {
+            if (mCurrentScrollState != ScrollState.SCROLL_STATE_IDLE) {
                 // must stop scroll and not use the current down event.
                 // this is worked when topView scroll to bottomView or bottomView scroll to topView.
                 stopScroll();
@@ -474,49 +471,31 @@ public class NestedScrollCoordinatorLayout extends CoordinatorLayout implements
         return super.dispatchTouchEvent(ev);
     }
 
-    /**
-     * save current scroll info to bundle
-     *
-     * @param bundle
-     */
-    public void saveScrollInfo(@NonNull Bundle bundle) {
-        if (mTopView != null) {
-            mTopView.saveScrollInfo(bundle);
-        }
-        if (mBottomView != null) {
-            mBottomView.saveScrollInfo(bundle);
-        }
-        bundle.putInt(KEY_SCROLL_INFO_OFFSET, getOffsetCurrent());
+
+    @Override
+    protected Parcelable onSaveInstanceState() {
+        final Bundle bundle = new Bundle();
+        bundle.putParcelable(INSTANCE_STATE, super.onSaveInstanceState());
+        bundle.putInt(INSTANCE_SCROLL_OFFSET, getOffsetCurrent());
+        return bundle;
     }
 
-
-    /**
-     * restore current scroll info from bundle
-     *
-     * @param bundle
-     */
-    public void restoreScrollInfo(@Nullable Bundle bundle) {
-        if (bundle == null) {
-            return;
-        }
-        if (mTopAreaBehavior != null) {
-            int offset = bundle.getInt(KEY_SCROLL_INFO_OFFSET, 0);
+    @Override
+    protected void onRestoreInstanceState(Parcelable state) {
+        if (state instanceof Bundle) {
+            final Bundle bundle = (Bundle) state;
+            final int offset = bundle.getInt(INSTANCE_SCROLL_OFFSET, 0);
             mTopAreaBehavior.setTopAndBottomOffset(NumberUtil.constrain(-offset, -getOffsetRange(), 0));
-        }
-        if (mTopView != null) {
-            mTopView.restoreScrollInfo(bundle);
-        }
-
-        if (mBottomView != null) {
-            mBottomView.restoreScrollInfo(bundle);
-        }
+            super.onRestoreInstanceState(bundle.getParcelable(INSTANCE_STATE));
+        } else super.onRestoreInstanceState(state);
     }
+
 
     public interface OnScrollListener {
 
         void onScroll(@NonNull NestedScrollCoordinatorLayout scrollLayout, int topCurrent, int topRange,
                       int offsetCurrent, int offsetRange, int bottomCurrent, int bottomRange);
 
-        void onScrollStateChange(@NonNull NestedScrollCoordinatorLayout scrollLayout, int newScrollState, boolean fromTopBehavior);
+        void onScrollStateChanged(@NonNull NestedScrollCoordinatorLayout scrollLayout, int newScrollState, boolean fromTopBehavior);
     }
 }

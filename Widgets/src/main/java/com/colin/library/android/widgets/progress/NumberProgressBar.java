@@ -345,8 +345,7 @@ public class NumberProgressBar extends View {
     public void setProgress(int progress) {
         if (this.mCurrentProgress == progress) return;
         if (progress < 0) this.mCurrentProgress = 0;
-        else if (progress > getMax()) this.mCurrentProgress = getMax();
-        else this.mCurrentProgress = progress;
+        else this.mCurrentProgress = Math.min(progress, getMax());
         postInvalidate();
     }
 
