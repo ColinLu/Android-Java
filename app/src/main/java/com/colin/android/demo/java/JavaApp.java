@@ -6,6 +6,8 @@ import com.colin.library.android.helper.CrashHelper;
 import com.colin.library.android.helper.UtilHelper;
 import com.colin.library.android.http.OkHttpHelper;
 import com.colin.library.android.http.bean.HttpConfig;
+import com.colin.library.android.media.MediaHelper;
+import com.colin.library.android.media.def.MediaConfig;
 import com.colin.library.android.utils.LogUtil;
 
 
@@ -28,5 +30,6 @@ public final class JavaApp extends Application {
                 .setParam("全局参数", "全局参数值")
                 .setParam("GlobalParam", "GlobalParamValue").build();
         OkHttpHelper.getInstance().init(config);
+        MediaHelper.getInstance().init(MediaConfig.newBuilder().build());
     }
 }

@@ -49,6 +49,10 @@ public final class MediaConfig {
         return mAuthority;
     }
 
+    public static Builder newBuilder() {
+        return new Builder();
+    }
+
     public static class Builder {
         @NonNull
         private Locale mLocale = Locale.getDefault();
@@ -58,6 +62,9 @@ public final class MediaConfig {
         private String mAuthority = "/external_media";
         @IntRange(from = 2, to = 5)
         private int mColumn = 3;
+
+        public Builder() {
+        }
 
         public Builder setMediaLoader(@NonNull MediaLoader loader) {
             this.mLoader = loader;
@@ -86,6 +93,5 @@ public final class MediaConfig {
         public MediaConfig build() {
             return new MediaConfig(this);
         }
-
     }
 }

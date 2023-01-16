@@ -46,8 +46,7 @@ public abstract class AppFragment<Bind extends ViewBinding> extends BaseFragment
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        initView(savedInstanceState);
-        initData(getArguments());
+        super.onViewCreated(view, savedInstanceState);
         ScreenReceiver.bind(this);
         NetBroadReceiver.bind(this);
     }

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.colin.library.album.activity.PreviewActivity">
     <item
-        android:id="@+id/album_menu_save"
-        android:title="@string/album_menu_save"
+        android:id="@+id/media_menu_save"
+        android:title="@string/media_menu_save"
         app:showAsAction="ifRoom|withText" />
 </menu>

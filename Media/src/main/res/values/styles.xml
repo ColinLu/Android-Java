@@ -6,11 +6,11 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <!--菜案按钮颜色-->
-        <item name="android:actionMenuTextColor">@color/album_title_color</item>
+        <item name="android:actionMenuTextColor">@color/media_title_color</item>
         <!--系统动画-->
         <item name="android:windowAnimationStyle">@android:style/Animation.Activity</item>
         <!--背景颜色-->
-        <item name="android:windowBackground">@color/album_activity_bg</item>
+        <item name="android:windowBackground">@color/media_activity_bg</item>
     </style>
     <!--相册界面-->
     <style name="Media.Activity" parent="Media">

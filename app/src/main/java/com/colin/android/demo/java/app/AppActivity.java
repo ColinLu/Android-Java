@@ -40,11 +40,10 @@ public abstract class AppActivity<Bind extends ViewBinding> extends BaseActivity
         } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
         }
-        initView(savedInstanceState);
-        initData(getIntent().getExtras());
         ScreenReceiver.bind(this);
         NetBroadReceiver.bind(this);
     }
+
 
     @Nullable
     @Override

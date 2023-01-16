@@ -28,6 +28,11 @@
       <option name="FIELD_NAME_PREFIX" value="m" />
       <option name="STATIC_FIELD_NAME_PREFIX" value="s" />
     </JavaCodeStyleSettings>
+    <JetCodeStyleSettings>
+      <option name="ALIGN_IN_COLUMNS_CASE_BRANCH" value="true" />
+      <option name="CONTINUATION_INDENT_IN_ELVIS" value="false" />
+      <option name="WRAP_ELVIS_EXPRESSIONS" value="0" />
+    </JetCodeStyleSettings>
     <codeStyleSettings language="XML">
       <option name="FORCE_REARRANGE_MODE" value="1" />
       <indentOptions>
@@ -140,6 +145,15 @@
           </section>
         </rules>
       </arrangement>
+    </codeStyleSettings>
+    <codeStyleSettings language="kotlin">
+      <option name="KEEP_LINE_BREAKS" value="false" />
+      <option name="KEEP_FIRST_COLUMN_COMMENT" value="false" />
+      <option name="ALIGN_MULTILINE_PARAMETERS_IN_CALLS" value="true" />
+      <option name="CALL_PARAMETERS_RPAREN_ON_NEXT_LINE" value="true" />
+      <option name="METHOD_PARAMETERS_RPAREN_ON_NEXT_LINE" value="true" />
+      <option name="EXTENDS_LIST_WRAP" value="2" />
+      <option name="WRAP_ON_TYPING" value="0" />
     </codeStyleSettings>
   </code_scheme>
 </component>

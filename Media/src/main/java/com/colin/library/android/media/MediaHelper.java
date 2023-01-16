@@ -27,6 +27,8 @@ import com.colin.library.android.media.video.ChooseVideoMultiple;
 import com.colin.library.android.media.video.ChooseVideoSingle;
 import com.colin.library.android.media.video.ChooseVideo;
 
+import java.io.File;
+
 /**
  * 作者： ColinLu
  * 时间： 2023-01-07 01:45
@@ -84,5 +86,9 @@ public final class MediaHelper {
 
     public IPreview<PreviewImage, PreviewAudio, PreviewVideo, PreviewMedia> preview() {
         return new ChoosePreview();
+    }
+
+    public File create() {
+        return null;
     }
 }

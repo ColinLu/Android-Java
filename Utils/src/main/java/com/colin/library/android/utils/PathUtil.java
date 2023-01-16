@@ -58,23 +58,15 @@ public final class PathUtil {
     }
 
 
-    /*/data/data/package*/
-    @NonNull
-    public static File getInternalApp() {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
-            return new File(UtilHelper.getInstance().getContext().getApplicationInfo().dataDir);
-        }
-        return UtilHelper.getInstance().getContext().getDataDir();
-    }
-
-    /*/data/user/0/package*/
+    /*/data/user/0/package/code_cache*/
     public static File getUserData() {
         return getUserData(UtilHelper.getInstance().getContext());
     }
 
     /*/data/user/0/package*/
     public static File getUserData(@NonNull Context context) {
-        return context.getCodeCacheDir();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) return context.getDataDir();
+        else return new File(context.getApplicationInfo().dataDir);
     }
 
     /*/data/user/0/package/cache*/
@@ -109,7 +101,7 @@ public final class PathUtil {
 
     /*  storage/emulated/0*/
     public static File getExternalStorage() {
-        return Environment.getExternalStorageDirectory();
+        return Environment.getExternalStoragePublicDirectory(null);
     }
 
     /*  storage/emulated/0/type */
@@ -138,7 +130,6 @@ public final class PathUtil {
     public static File getExternalCache(@NonNull Context context) {
         return context.getExternalCacheDir();
     }
-
 
     @NonNull
     public static String getInternalAppPath() {

@@ -25,16 +25,31 @@ public class ChooseMedia implements IMedia<ChooseImage, ChooseAudio, ChooseVideo
         return new ChooseImage();
     }
 
+    @Override
+    public ChooseImage image(int mediaType) {
+        return null;
+    }
+
     @NonNull
     @Override
     public ChooseAudio audio() {
         return new ChooseAudio();
     }
 
+    @Override
+    public ChooseAudio audio(int mediaType) {
+        return null;
+    }
+
     @NonNull
     @Override
     public ChooseVideo video() {
         return new ChooseVideo();
+    }
+
+    @Override
+    public ChooseVideo video(int mediaType) {
+        return null;
     }
 
     @NonNull
@@ -47,5 +62,10 @@ public class ChooseMedia implements IMedia<ChooseImage, ChooseAudio, ChooseVideo
     @Override
     public ChoosePreview preview() {
         return new ChoosePreview();
+    }
+
+    @Override
+    public ChoosePreview preview(int mediaType) {
+        return null;
     }
 }

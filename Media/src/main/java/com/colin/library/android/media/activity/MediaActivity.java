@@ -47,7 +47,7 @@ import java.util.List;
  * 作者： ColinLu
  * 时间： 2023-01-07 01:47
  * <p>
- * 描述： TODO
+ * 描述： 多媒体主界面  显示相册，音频，视频
  */
 public class MediaActivity extends BaseActivity {
     public static Action<List<MediaFile>> sResultMultiple;      //多选操作返回
@@ -70,10 +70,14 @@ public class MediaActivity extends BaseActivity {
     private boolean mDisplayCamera = true;                      //是否显示相机item 默认显示
     private boolean mNeedCrop = true;                           //单选    是否剪切
     private boolean mDisplayInvalid = true;                     //是否筛选要求不符的显示 默认显示
-
-
     private boolean toSettingPermission = false;
 
+
+    private List<MediaFolder> mMediaFolders;
+    private ArrayList<MediaFile> mSelectedList;             //选中的文件
+    private int mDisplayPosition = 0;
+
+    private MediaLeaderTask mMediaLeaderTask;
 
     private AppBarLayout layout_title;
     private Toolbar toolbar;
@@ -86,29 +90,12 @@ public class MediaActivity extends BaseActivity {
     private MenuItem album_menu_preview;
     private MenuItem album_menu_finish;
 
-
-    private List<MediaFolder> mMediaFolders;
-    private ArrayList<MediaFile> mSelectedList;             //选中的文件
-    private int mDisplayPosition = 0;
-
-    private MediaLeaderTask mMediaLeaderTask;
-
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         if (savedInstanceState != null) initExtras(savedInstanceState);
         else initExtras(getIntent().getExtras());
         super.onCreate(savedInstanceState);
         ResourceUtil.initLocale(this, MediaHelper.getInstance().getMediaConfig().getLocale());
-        initView(savedInstanceState);
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        if (toolbar != null) toolbar.setTitle(getMediaTitle());
-        initData(getIntent().getExtras());
-        loadData(true);
     }
 
     @Override
@@ -156,146 +143,6 @@ public class MediaActivity extends BaseActivity {
     }
 
 
-    private void selectedMedia(int position, MediaFile mediaFile) {
-        //无效
-        if (!mediaFile.mInvalid) {
-            ToastUtil.show(R.string.media_item_invalid);
-            return;
-        }
-        //取消选中
-        if (mediaFile.mSelected) {
-            mediaFile.mSelected = false;
-            mSelectedList.remove(mediaFile);
-            mAdapter.notifyItemChanged(position);
-            refreshCount();
-            return;
-        }
-        //限制选择数量
-        if (mSelectedList.size() >= mLimitCount) {
-            ToastUtil.show(getString(R.string.media_selected_limit, mLimitCount));
-            mAdapter.notifyItemChanged(position);
-            return;
-        }
-        //选中
-        mediaFile.mSelected = true;
-        mSelectedList.add(mediaFile);
-        mAdapter.notifyItemChanged(position);
-        refreshCount();
-    }
-
-    private void chooseCamera(@NonNull View view) {
-        //限制选择数量
-        if (mSelectedList.size() >= mLimitCount) {
-            ToastUtil.show(getString(R.string.media_selected_limit, mLimitCount));
-            return;
-        }
-        if (isMediaType(MediaType.IMAGE)) takeImage();
-        else if (isMediaType(MediaType.AUDIO)) takeAudio();
-        else if (isMediaType(MediaType.VIDEO)) takeVideo();
-        else chooseCameraPopup(view);
-    }
-
-
-
-    private void chooseMedia(@NonNull final View view, int position, @NonNull final MediaFile mediaFile) {
-        if (!mediaFile.mInvalid) {
-            ToastUtil.show(R.string.media_item_invalid);
-            return;
-        }
-        if (!mMultipleMode) {//单选直接回调
-            mediaFile.mSelected = true;
-            mSelectedList.clear();
-            mSelectedList.add(mediaFile);
-            callbackResult();
-        } else preview(view, position, mMediaFolders.get(mDisplayPosition).mList);
-
-    }
-
-
-    private void preview(View view, int position, List<MediaFile> list) {
-
-    }
-
-    private void takeImage() {
-        if (!PermissionUtil.request(this, Constants.REQUEST_IMAGE, Constants.PERMISSION_IMAGE)) {
-            return;
-        }
-        MediaHelper.getInstance()
-                .camera()
-                .image(MediaUtil.createImageUri(this))
-                .crop(mNeedCrop)
-                .facing(mFacing)
-                .result(this::cameraResult)
-                .cancel(ToastUtil::show)
-                .start(this);
-    }
-
-    private void takeAudio() {
-        if (!PermissionUtil.request(this, Constants.REQUEST_AUDIO, Constants.PERMISSION_AUDIO)) {
-            return;
-        }
-        MediaHelper.getInstance()
-                .camera()
-                .audio(MediaUtil.createAudioUri(this))
-                .size(mLimitSize)
-                .duration(mLimitDuration)
-                .result(this::cameraResult)
-                .cancel(ToastUtil::show)
-                .start(this);
-    }
-
-    private void takeVideo() {
-        if (!PermissionUtil.request(this, Constants.REQUEST_VIDEO, Constants.PERMISSION_VIDEO)) {
-            return;
-        }
-        MediaHelper.getInstance()
-                .camera()
-                .video(MediaUtil.createVideoUri(this))
-                .facing(mFacing)
-                .size(mLimitSize)
-                .quality(mLimitQuality)
-                .duration(mLimitDuration)
-                .result(this::cameraResult)
-                .cancel(ToastUtil::show)
-                .start(this);
-    }
-
-    private void cameraResult(@NonNull MediaFile mediaFile) {
-        mediaFile.mInvalid = MediaUtil.filter(mediaFile, sFilterMimeType, sFilterSize, sFilterDuration);
-        if (!mediaFile.mInvalid && !mDisplayInvalid) {
-            ToastUtil.show(R.string.media_item_invalid);
-            return;
-        }
-        if (mediaFile.mInvalid) {
-            if (null == mSelectedList) mSelectedList = new ArrayList<>();
-            mediaFile.mSelected = true;
-            mSelectedList.add(mediaFile);
-            refreshCount();
-            if (!mMultipleMode) {
-                callbackResult();
-                return;
-            }
-        }
-        //刷新
-        loadData(true);
-    }
-
-
-    /*选择 拍照还是 视频*/
-    private void chooseCameraPopup(View view) {
-        if (null == mCameraPopupMenu) mCameraPopupMenu = new PopupMenu(this, view);
-        mCameraPopupMenu.getMenuInflater().inflate(R.menu.album_menu_item_camera, mCameraPopupMenu.getMenu());
-        mCameraPopupMenu.setOnMenuItemClickListener(item -> {
-            final int id = item.getItemId();
-            if (id == R.id.album_menu_camera_image) takeImage();
-            else if (id == R.id.album_menu_camera_audio) takeAudio();
-            else if (id == R.id.album_menu_camera_video) takeVideo();
-            return true;
-        });
-        mCameraPopupMenu.show();
-    }
-
-
     @Override
     public int layoutRes() {
         return R.layout.activity_media;
@@ -304,6 +151,7 @@ public class MediaActivity extends BaseActivity {
     @Override
     public void initView(@Nullable Bundle bundle) {
         if (bundle == null) {
+            layout_title = findViewById(R.id.layout_title);
             toolbar = findViewById(R.id.toolbar);
             recycler_list = findViewById(R.id.recycler_list);
             text_media_folder = findViewById(R.id.text_media_folder);
@@ -311,7 +159,7 @@ public class MediaActivity extends BaseActivity {
         //toolbar
         this.setSupportActionBar(toolbar);
         final ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
+        if (actionBar != null) actionBar.setDisplayHomeAsUpEnabled(true);
         if (null == mAdapter) mAdapter = new MediaAdapter(this, mDisplayCamera, mMultipleMode);
         mLayoutManager = new GridLayoutManager(this, mColumn, ResourceUtil.getOrientation(this), false);
         recycler_list.setLayoutManager(mLayoutManager);
@@ -449,7 +297,6 @@ public class MediaActivity extends BaseActivity {
 
     }
 
-
     /*初始化配置*/
     private void initExtras(@NonNull Bundle bundle) {
         mTitle = bundle.getString(Constants.MEDIA_TITLE, mTitle);
@@ -466,6 +313,144 @@ public class MediaActivity extends BaseActivity {
         mDisplayInvalid = bundle.getBoolean(Constants.MEDIA_DISPLAY_INVALID, mDisplayInvalid);
         mSelectedList = bundle.getParcelableArrayList(Constants.MEDIA_SELECTED_LIST);
         if (null == mSelectedList) mSelectedList = new ArrayList<>();
+    }
+
+    private void selectedMedia(int position, MediaFile mediaFile) {
+        //无效
+        if (!mediaFile.mInvalid) {
+            ToastUtil.show(R.string.media_item_invalid);
+            return;
+        }
+        //取消选中
+        if (mediaFile.mSelected) {
+            mediaFile.mSelected = false;
+            mSelectedList.remove(mediaFile);
+            mAdapter.notifyItemChanged(position);
+            refreshCount();
+            return;
+        }
+        //限制选择数量
+        if (mSelectedList.size() >= mLimitCount) {
+            ToastUtil.show(getString(R.string.media_selected_limit, mLimitCount));
+            mAdapter.notifyItemChanged(position);
+            return;
+        }
+        //选中
+        mediaFile.mSelected = true;
+        mSelectedList.add(mediaFile);
+        mAdapter.notifyItemChanged(position);
+        refreshCount();
+    }
+
+    private void chooseCamera(@NonNull View view) {
+        //限制选择数量
+        if (mSelectedList.size() >= mLimitCount) {
+            ToastUtil.show(getString(R.string.media_selected_limit, mLimitCount));
+            return;
+        }
+        if (mMediaType == MediaType.IMAGE) takeImage();
+        else if (mMediaType == MediaType.AUDIO) takeAudio();
+        else if (mMediaType == MediaType.VIDEO) takeVideo();
+        else chooseCameraPopup(view);
+    }
+
+
+    private void chooseMedia(@NonNull final View view, int position, @NonNull final MediaFile mediaFile) {
+        if (!mediaFile.mInvalid) {
+            ToastUtil.show(R.string.media_item_invalid);
+            return;
+        }
+        if (!mMultipleMode) {//单选直接回调
+            mediaFile.mSelected = true;
+            mSelectedList.clear();
+            mSelectedList.add(mediaFile);
+            callbackResult();
+        } else preview(view, position, mMediaFolders.get(mDisplayPosition).mList);
+
+    }
+
+
+    private void preview(View view, int position, List<MediaFile> list) {
+
+    }
+
+    private void takeImage() {
+        if (!PermissionUtil.request(this, Constants.REQUEST_IMAGE, Constants.PERMISSION_IMAGE)) {
+            return;
+        }
+        MediaHelper.getInstance()
+                .camera()
+                .image(MediaUtil.createImageUri(this))
+                .crop(mNeedCrop)
+                .facing(mFacing)
+                .result(this::cameraResult)
+                .cancel(ToastUtil::show)
+                .start(this);
+    }
+
+    private void takeAudio() {
+        if (!PermissionUtil.request(this, Constants.REQUEST_AUDIO, Constants.PERMISSION_AUDIO)) {
+            return;
+        }
+        MediaHelper.getInstance()
+                .camera()
+                .audio(MediaUtil.createAudioUri(this))
+                .size(mLimitSize)
+                .duration(mLimitDuration)
+                .result(this::cameraResult)
+                .cancel(ToastUtil::show)
+                .start(this);
+    }
+
+    private void takeVideo() {
+        if (!PermissionUtil.request(this, Constants.REQUEST_VIDEO, Constants.PERMISSION_VIDEO)) {
+            return;
+        }
+        MediaHelper.getInstance()
+                .camera()
+                .video(MediaUtil.createVideoUri(this))
+                .facing(mFacing)
+                .size(mLimitSize)
+                .quality(mLimitQuality)
+                .duration(mLimitDuration)
+                .result(this::cameraResult)
+                .cancel(ToastUtil::show)
+                .start(this);
+    }
+
+    private void cameraResult(@NonNull MediaFile mediaFile) {
+        mediaFile.mInvalid = MediaUtil.filter(mediaFile, sFilterMimeType, sFilterSize, sFilterDuration);
+        if (!mediaFile.mInvalid && !mDisplayInvalid) {
+            ToastUtil.show(R.string.media_item_invalid);
+            return;
+        }
+        if (mediaFile.mInvalid) {
+            if (null == mSelectedList) mSelectedList = new ArrayList<>();
+            mediaFile.mSelected = true;
+            mSelectedList.add(mediaFile);
+            refreshCount();
+            if (!mMultipleMode) {
+                callbackResult();
+                return;
+            }
+        }
+        //刷新
+        loadData(true);
+    }
+
+
+    /*选择 拍照还是 视频*/
+    private void chooseCameraPopup(View view) {
+        if (null == mCameraPopupMenu) mCameraPopupMenu = new PopupMenu(this, view);
+        mCameraPopupMenu.getMenuInflater().inflate(R.menu.album_menu_item_camera, mCameraPopupMenu.getMenu());
+        mCameraPopupMenu.setOnMenuItemClickListener(item -> {
+            final int id = item.getItemId();
+            if (id == R.id.album_menu_camera_image) takeImage();
+            else if (id == R.id.album_menu_camera_audio) takeAudio();
+            else if (id == R.id.album_menu_camera_video) takeVideo();
+            return true;
+        });
+        mCameraPopupMenu.show();
     }
 
 

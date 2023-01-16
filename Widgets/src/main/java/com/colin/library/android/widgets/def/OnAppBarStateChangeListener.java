@@ -3,6 +3,7 @@ package com.colin.library.android.widgets.def;
 import static androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP_PREFIX;
 
 import androidx.annotation.IntDef;
+import androidx.annotation.Px;
 import androidx.annotation.RestrictTo;
 
 import com.google.android.material.appbar.AppBarLayout;
@@ -30,20 +31,21 @@ public abstract class OnAppBarStateChangeListener implements AppBarLayout.OnOffs
     private int mCurrentState = State.IDLE;
 
     @Override
-    public void onOffsetChanged(AppBarLayout appBarLayout, int i) {
-        if (i == 0) {
-            if (mCurrentState != State.EXPANDED) onStateChanged(appBarLayout, State.EXPANDED, i);
+    public void onOffsetChanged(AppBarLayout appBarLayout, @Px int offset) {
+        if (offset == 0) {
+            if (mCurrentState != State.EXPANDED)
+                onStateChanged(appBarLayout, State.EXPANDED, offset);
             mCurrentState = State.EXPANDED;
-        } else if (Math.abs(i) >= appBarLayout.getTotalScrollRange()) {
-            if (mCurrentState != State.COLLAPSED) onStateChanged(appBarLayout, State.COLLAPSED, i);
+        } else if (Math.abs(offset) >= appBarLayout.getTotalScrollRange()) {
+            if (mCurrentState != State.COLLAPSED) onStateChanged(appBarLayout, State.COLLAPSED, offset);
             mCurrentState = State.COLLAPSED;
         } else {
-            if (mCurrentState != State.IDLE) onStateChanged(appBarLayout, State.IDLE, i);
+            if (mCurrentState != State.IDLE) onStateChanged(appBarLayout, State.IDLE, offset);
             mCurrentState = State.IDLE;
         }
     }
 
 
-    public abstract void onStateChanged(AppBarLayout appBarLayout, @State int state, int offset);
+    public abstract void onStateChanged(AppBarLayout appBarLayout, @State int state, @Px int offset);
 
 }

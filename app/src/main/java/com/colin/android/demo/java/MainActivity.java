@@ -6,10 +6,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.navigation.NavController;
+import androidx.navigation.NavDestination;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
@@ -17,6 +19,7 @@ import androidx.navigation.ui.NavigationUI;
 import com.colin.android.demo.java.app.AppActivity;
 import com.colin.android.demo.java.databinding.ActivityMainBinding;
 import com.colin.library.android.utils.LogUtil;
+import com.colin.library.android.utils.ToastUtil;
 import com.colin.library.android.widgets.def.OnAppBarStateChangeListener;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.snackbar.Snackbar;
@@ -33,10 +36,9 @@ public class MainActivity extends AppActivity<ActivityMainBinding> {
         setSupportActionBar(mBinding.mToolbar);
         final NavController controller = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
         appBarConfiguration = new AppBarConfiguration.Builder(controller.getGraph()).build();
-        NavigationUI.setupActionBarWithNavController(this, controller, appBarConfiguration);
+        NavigationUI.setupWithNavController(mBinding.mToolbar, controller, appBarConfiguration);
 
-        mBinding.fab.setOnClickListener(view -> Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show());
+        mBinding.fab.setOnClickListener(view -> Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG).setAction("Action", null).show());
 
         mBinding.mAppBar.addOnOffsetChangedListener(new OnAppBarStateChangeListener() {
             @Override
@@ -68,10 +70,12 @@ public class MainActivity extends AppActivity<ActivityMainBinding> {
     public boolean onOptionsItemSelected(MenuItem item) {
         final int id = item.getItemId();
         if (id == R.id.action_settings) {
+            ToastUtil.show(R.string.action_settings);
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
+
 
     @Override
     public boolean onSupportNavigateUp() {
@@ -80,14 +84,14 @@ public class MainActivity extends AppActivity<ActivityMainBinding> {
     }
 
     public void setExpanded() {
-        LogUtil.e("expanded:" + mState);
+        LogUtil.d("expanded:" + mState);
         if (mState == OnAppBarStateChangeListener.State.EXPANDED) {
             mBinding.mAppBar.setExpanded(false);
         } else mBinding.mAppBar.setExpanded(mState == OnAppBarStateChangeListener.State.COLLAPSED);
     }
 
     public void setExpanded(boolean expanded) {
-        LogUtil.e("expanded:" + expanded);
+        LogUtil.d("expanded:" + expanded);
         mBinding.mAppBar.setExpanded(expanded);
         mBinding.mToolbar.setTitle(getTitle());
     }

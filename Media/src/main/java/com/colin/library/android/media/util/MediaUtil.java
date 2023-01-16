@@ -173,25 +173,34 @@ public final class MediaUtil {
     }
 
     @NonNull
-    public static Uri createImageUri(Activity activity) {
-        return null;
+    public static Uri createImageUri(@NonNull Context context) {
+        return createUri(context, MediaType.IMAGE);
     }
 
-    public static Uri createVideoUri(Activity activity) {
-        return null;
+    public static Uri createAudioUri(@NonNull Context context) {
+        return createUri(context, MediaType.AUDIO);
     }
 
-    public static Uri createAudioUri(Activity activity, @MediaType int mediaType) {
+    public static Uri createVideoUri(@NonNull Context context) {
+        return createUri(context, MediaType.VIDEO);
+    }
+
+    @NonNull
+    public static Uri createUri(@NonNull Context context, @MediaType int mediaType) {
         final long time = System.currentTimeMillis();
-        final ContentValues values = new ContentValues(3);
-        values.put(MediaStore.MediaColumns.DATE_TAKEN, time);
-        values.put(MediaStore.MediaColumns.DISPLAY_NAME, getFileName(time, mediaType));
-        values.put(MediaStore.MediaColumns.MIME_TYPE, getMimeType(mediaType));
         if (PathUtil.canWrite()) {
+            final ContentValues values = new ContentValues(4);
+            values.put(MediaStore.MediaColumns.DATE_TAKEN, time);
+            values.put(MediaStore.MediaColumns.DISPLAY_NAME, getFileName(time, mediaType));
+            values.put(MediaStore.MediaColumns.MIME_TYPE, getMimeType(mediaType));
             values.put(MediaStore.MediaColumns.RELATIVE_PATH, getFileType(mediaType));
-            return activity.getContentResolver().insert(insertUri(mediaType, "external"), values);
+            return context.getContentResolver().insert(insertUri(mediaType, "external"), values);
         } else {
-            return activity.getContentResolver().insert(insertUri(mediaType, "internal"), values);
+            final ContentValues values = new ContentValues(3);
+            values.put(MediaStore.MediaColumns.DATE_TAKEN, time);
+            values.put(MediaStore.MediaColumns.DISPLAY_NAME, getFileName(time, mediaType));
+            values.put(MediaStore.MediaColumns.MIME_TYPE, getMimeType(mediaType));
+            return context.getContentResolver().insert(insertUri(mediaType, "internal"), values);
         }
     }
 }

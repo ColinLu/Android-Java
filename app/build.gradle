@@ -97,16 +97,13 @@ android {
 }
 
 dependencies {
-    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.7'
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.10'
     implementation project(path: ':Base')
     implementation project(path: ':Utils')
     implementation project(path: ':Widgets')
     implementation project(path: ':OkHttp')
     implementation project(path: ':Media')
 
-//    implementation 'com.colin.library.android:Base:0.0.1'
-
-//    implementation dependency.base
     implementation dependency.android_material
     implementation dependency.androidx_appcompat
     implementation dependency.androidx_legacy
@@ -124,6 +121,6 @@ dependencies {
     implementation dependency.widget_viewpager2
     implementation dependency.rx_java
     implementation dependency.rx_android
-    implementation dependency.g_son
     implementation dependency.ok_http
+    implementation dependency.g_son
 }
