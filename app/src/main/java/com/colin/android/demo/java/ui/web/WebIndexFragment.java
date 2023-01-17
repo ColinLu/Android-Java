@@ -26,9 +26,9 @@ public class WebIndexFragment extends AppFragment<FragmentWebIndexBinding> {
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        if (context instanceof MainActivity) {
-            ((MainActivity) context).setExpanded(false);
-        }
+//        if (context instanceof MainActivity) {
+//            ((MainActivity) context).setExpanded(false);
+//        }
     }
 
     @Override
@@ -68,9 +68,6 @@ public class WebIndexFragment extends AppFragment<FragmentWebIndexBinding> {
     public void onDestroyView() {
         setHasOptionsMenu(false);
         requireActivity().invalidateOptionsMenu();
-        if (getActivity() instanceof MainActivity) {
-            ((MainActivity) getActivity()).setExpanded(true);
-        }
         super.onDestroyView();
     }
 
@@ -88,7 +85,7 @@ public class WebIndexFragment extends AppFragment<FragmentWebIndexBinding> {
     private void initSearch(Menu menu) {
         final MenuItem searchItem = menu.findItem(R.id.menu_search);
         SearchView mSearchView = (SearchView) searchItem.getActionView();
-        mSearchView.setSubmitButtonEnabled(true);
+        mSearchView.setSubmitButtonEnabled(false);
         mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String key) {
