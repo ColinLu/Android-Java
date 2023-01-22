@@ -26,11 +26,11 @@ public final class ToastUtil {
 
 
     public static void show(@StringRes final int res) {
-        show(UtilHelper.getInstance().getContext(), res, Toast.LENGTH_SHORT);
+        show(UtilHelper.getInstance().getUtilConfig().getApplication(), res, Toast.LENGTH_SHORT);
     }
 
     public static void show(@StringRes final int res, final int duration) {
-        show(UtilHelper.getInstance().getContext(), res, duration);
+        show(UtilHelper.getInstance().getUtilConfig().getApplication(), res, duration);
     }
 
     public static void show(@Nullable final Context context, @StringRes final int res, final int duration) {
@@ -39,7 +39,7 @@ public final class ToastUtil {
     }
 
     public static void show(@Nullable final CharSequence msg) {
-        show(UtilHelper.getInstance().getContext(), msg, Toast.LENGTH_SHORT);
+        show(UtilHelper.getInstance().getUtilConfig().getApplication(), msg, Toast.LENGTH_SHORT);
     }
 
     public static void show(@Nullable Context context, @Nullable CharSequence msg) {

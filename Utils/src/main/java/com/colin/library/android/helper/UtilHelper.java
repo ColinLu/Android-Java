@@ -47,11 +47,6 @@ public final class UtilHelper {
         return Utils.notNull(mUtilConfig, "UtilHelper init first !");
     }
 
-    @NonNull
-    public Application getContext() {
-        return getUtilConfig().getApplication();
-    }
-
     public boolean showLog(@LogLevel final int level, @Nullable String showTag) {
         return level >= getUtilConfig().getLogLevel() && getUtilConfig().isShowLog(showTag);
     }

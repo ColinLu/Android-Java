@@ -3,9 +3,7 @@ package com.colin.library.android.utils;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Environment;
-import android.text.TextUtils;
 import android.text.format.Formatter;
-import android.webkit.MimeTypeMap;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -409,7 +407,7 @@ public final class FileUtil {
     }
 
     public static String formatSize(long sizeBytes) {
-        return Formatter.formatFileSize(UtilHelper.getInstance().getContext(), sizeBytes);
+        return Formatter.formatFileSize(UtilHelper.getInstance().getUtilConfig().getApplication(), sizeBytes);
     }
 
     /**

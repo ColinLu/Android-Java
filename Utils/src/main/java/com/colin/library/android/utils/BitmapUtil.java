@@ -102,7 +102,7 @@ public final class BitmapUtil {
     /*res -> Bitmap*/
     @Nullable
     public static Bitmap getBitmap(@DrawableRes final int res) {
-        return getBitmap(UtilHelper.getInstance().getContext(), res);
+        return getBitmap(UtilHelper.getInstance().getUtilConfig().getApplication(), res);
     }
 
     /*res -> Bitmap*/

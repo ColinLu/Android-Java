@@ -28,9 +28,9 @@ public final class UtilConfig {
     private final int mLogLevel;
     /*show 指定tag log*/
     @Nullable
-    private String mLogShowTag;
-    private int mLogMethodOffset;
-    private int mLogMethodCount;
+    private final String mLogShowTag;
+    private final int mLogMethodOffset;
+    private final int mLogMethodCount;
 
     private UtilConfig(@NonNull Builder builder) {
         this.mApplication = builder.mApplication;
@@ -39,8 +39,8 @@ public final class UtilConfig {
         this.mLogLevel = builder.mLogLevel;
         this.mLogShowTag = builder.mLogShowTag;
         this.mLogShowThread = builder.mLogShowThread;
-        this.mLogMethodOffset = builder.mLogMethodOffset;
         this.mLogMethodCount = builder.mLogMethodCount;
+        this.mLogMethodOffset = builder.mLogMethodOffset;
     }
 
 

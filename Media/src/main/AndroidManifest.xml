@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.colin.library.android.media">
 
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        tools:ignore="ScopedStorage" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
@@ -10,19 +13,19 @@
     <application>
         <activity
             android:name=".activity.MediaActivity"
-            android:configChanges="orientation|screenSize"
+            android:configChanges="orientation|screenSize|layoutDirection|locale"
             android:taskAffinity="${applicationId}"
             android:theme="@style/Media.Activity"
             android:windowSoftInputMode="stateAlwaysHidden|stateHidden" />
         <activity
             android:name=".activity.CameraActivity"
-            android:configChanges="orientation|screenSize"
+            android:configChanges="orientation|screenSize|layoutDirection|locale"
             android:taskAffinity="${applicationId}"
             android:theme="@style/Media.Activity.Camera"
             android:windowSoftInputMode="stateAlwaysHidden|stateHidden" />
         <activity
             android:name=".activity.PreviewActivity"
-            android:configChanges="orientation|screenSize"
+            android:configChanges="orientation|screenSize|layoutDirection|locale"
             android:taskAffinity="${applicationId}"
             android:theme="@style/Media.Activity.Preview"
             android:windowSoftInputMode="stateAlwaysHidden|stateHidden" />

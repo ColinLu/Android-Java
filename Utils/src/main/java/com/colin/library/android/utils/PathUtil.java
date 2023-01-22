@@ -59,7 +59,7 @@ public final class PathUtil {
 
     /*/data/user/0/package/code_cache*/
     public static File getUserData() {
-        return getUserData(UtilHelper.getInstance().getContext());
+        return getUserData(UtilHelper.getInstance().getUtilConfig().getApplication());
     }
 
     /*/data/user/0/package*/
@@ -68,7 +68,7 @@ public final class PathUtil {
     }
 
     public static File getUserCache() {
-        return getUserCache(UtilHelper.getInstance().getContext());
+        return getUserCache(UtilHelper.getInstance().getUtilConfig().getApplication());
     }
 
     /*/data/user/0/package/cache*/
@@ -78,7 +78,7 @@ public final class PathUtil {
 
 
     public static File getUserCodeCache() {
-        return getUserCodeCache(UtilHelper.getInstance().getContext());
+        return getUserCodeCache(UtilHelper.getInstance().getUtilConfig().getApplication());
     }
 
     /*/data/user/0/package/code_cache*/
@@ -87,7 +87,7 @@ public final class PathUtil {
     }
 
     public static File getDatabase() {
-        return getDatabase(UtilHelper.getInstance().getContext());
+        return getDatabase(UtilHelper.getInstance().getUtilConfig().getApplication());
     }
 
     /*/data/user/0/package/databases*/
@@ -96,7 +96,7 @@ public final class PathUtil {
     }
 
     public static File getSp() {
-        return getSp(UtilHelper.getInstance().getContext());
+        return getSp(UtilHelper.getInstance().getUtilConfig().getApplication());
     }
 
     /*/data/user/0/package/shared_prefs*/
@@ -106,7 +106,7 @@ public final class PathUtil {
 
     /*/data/user/0/package/files*/
     public static File getUserFiles() {
-        return getUserFiles(UtilHelper.getInstance().getContext());
+        return getUserFiles(UtilHelper.getInstance().getUtilConfig().getApplication());
     }
 
     /*/data/user/0/package/files*/
@@ -138,7 +138,7 @@ public final class PathUtil {
 
     /*/storage/emulated/0/Android/data/package/cache*/
     public static File getExternalCache() {
-        return getExternalCache(UtilHelper.getInstance().getContext());
+        return getExternalCache(UtilHelper.getInstance().getUtilConfig().getApplication());
     }
 
     /*/storage/emulated/0/Android/data/package/cache*/
@@ -149,9 +149,9 @@ public final class PathUtil {
     @NonNull
     public static String getInternalAppPath() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
-            return UtilHelper.getInstance().getContext().getApplicationInfo().dataDir;
+            return UtilHelper.getInstance().getUtilConfig().getApplication().getApplicationInfo().dataDir;
         }
-        return UtilHelper.getInstance().getContext().getDataDir().getAbsolutePath();
+        return UtilHelper.getInstance().getUtilConfig().getApplication().getDataDir().getAbsolutePath();
     }
 
     @NonNull
@@ -162,7 +162,7 @@ public final class PathUtil {
     /*清除缓存 操作 /data/data/package/cache */
     @NonNull
     public static File getInternalCache() {
-        return UtilHelper.getInstance().getContext().getCacheDir();
+        return UtilHelper.getInstance().getUtilConfig().getApplication().getCacheDir();
     }
 
     /*/data/data/package/shared_prefs*/

@@ -30,7 +30,7 @@ public class ContactListFragmentViewModel extends ViewModel {
     public void refresh(boolean refresh) {
         mLoadState.setValue(LoadState.ING);
         ThreadHelper.getInstance().doAsync(() -> mList.postValue(
-                ContactUtils.getContactList(UtilHelper.getInstance().getContext())));
+                ContactUtils.getContactList(UtilHelper.getInstance().getUtilConfig().getApplication())));
         ThreadHelper.getInstance().postDelayed(() -> mLoadState.setValue(LoadState.SUCCESS),
                                                Constants.DURATION_DELAYED);
     }

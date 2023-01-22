@@ -62,53 +62,53 @@ public final class AppUtil {
 
     @Nullable
     public static Drawable getIcon() {
-        return getIcon(UtilHelper.getInstance().getContext().getPackageName());
+        return getIcon(UtilHelper.getInstance().getUtilConfig().getApplication().getPackageName());
     }
 
     /*App Icon*/
     @Nullable
     public static Drawable getIcon(@Nullable String packageName) {
         if (TextUtils.isEmpty(packageName)) return null;
-        final Context context = UtilHelper.getInstance().getContext();
+        final Context context = UtilHelper.getInstance().getUtilConfig().getApplication();
         final PackageInfo info = getPackageInfo(context, packageName, 0);
         return info == null ? null : info.applicationInfo.loadIcon(context.getPackageManager());
     }
 
     @Nullable
     public static String getAppName() {
-        return getAppName(UtilHelper.getInstance().getContext().getPackageName());
+        return getAppName(UtilHelper.getInstance().getUtilConfig().getApplication().getPackageName());
     }
 
     /*App Name*/
     @Nullable
     public static String getAppName(@Nullable String packageName) {
         if (TextUtils.isEmpty(packageName)) return null;
-        final Context context = UtilHelper.getInstance().getContext();
+        final Context context = UtilHelper.getInstance().getUtilConfig().getApplication();
         final PackageInfo info = getPackageInfo(context, packageName, 0);
         return info == null ? null : info.applicationInfo.loadLabel(context.getPackageManager()).toString();
     }
 
     @Nullable
     public static String getAppPath() {
-        return getAppPath(UtilHelper.getInstance().getContext().getPackageName());
+        return getAppPath(UtilHelper.getInstance().getUtilConfig().getApplication().getPackageName());
     }
 
     /*App 安装路径*/
     @Nullable
     public static String getAppPath(@Nullable String packageName) {
         if (TextUtils.isEmpty(packageName)) return null;
-        final Context context = UtilHelper.getInstance().getContext();
+        final Context context = UtilHelper.getInstance().getUtilConfig().getApplication();
         final PackageInfo info = getPackageInfo(context, packageName, 0);
         return info == null ? null : info.applicationInfo.sourceDir;
     }
 
     public static boolean isDebug() {
-        return isDebug(UtilHelper.getInstance().getContext().getPackageName());
+        return isDebug(UtilHelper.getInstance().getUtilConfig().getApplication().getPackageName());
     }
 
     public static boolean isDebug(@Nullable final String packageName) {
         if (TextUtils.isEmpty(packageName)) return false;
-        final Context context = UtilHelper.getInstance().getContext();
+        final Context context = UtilHelper.getInstance().getUtilConfig().getApplication();
         final PackageInfo info = getPackageInfo(context, packageName, 0);
         final ApplicationInfo app = info == null ? null : info.applicationInfo;
         return app != null && (app.flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0;
@@ -121,7 +121,7 @@ public final class AppUtil {
      */
     @Nullable
     public static PackageInfo getPackageInfo() {
-        return getPackageInfo(UtilHelper.getInstance().getContext(), 0);
+        return getPackageInfo(UtilHelper.getInstance().getUtilConfig().getApplication(), 0);
     }
 
     /**
@@ -136,7 +136,7 @@ public final class AppUtil {
 
     @Nullable
     public static PackageInfo getPackageInfo(@Nullable String packageName, int flags) {
-        return getPackageInfo(UtilHelper.getInstance().getContext(), packageName, flags);
+        return getPackageInfo(UtilHelper.getInstance().getUtilConfig().getApplication(), packageName, flags);
     }
 
     /**
@@ -160,47 +160,47 @@ public final class AppUtil {
     }
 
     public static ContentResolver getContentResolver() {
-        return UtilHelper.getInstance().getContext().getContentResolver();
+        return UtilHelper.getInstance().getUtilConfig().getApplication().getContentResolver();
     }
 
     public static ActivityManager getActivityManager() {
-        return ContextCompat.getSystemService(UtilHelper.getInstance().getContext(), ActivityManager.class);
+        return ContextCompat.getSystemService(UtilHelper.getInstance().getUtilConfig().getApplication(), ActivityManager.class);
     }
 
     public static WindowManager getWindowManager() {
-        return ContextCompat.getSystemService(UtilHelper.getInstance().getContext(), WindowManager.class);
+        return ContextCompat.getSystemService(UtilHelper.getInstance().getUtilConfig().getApplication(), WindowManager.class);
     }
 
     public static LocationManager getLocationManager() {
-        return ContextCompat.getSystemService(UtilHelper.getInstance().getContext(), LocationManager.class);
+        return ContextCompat.getSystemService(UtilHelper.getInstance().getUtilConfig().getApplication(), LocationManager.class);
     }
 
     public static NotificationManager getNotificationManager() {
-        return ContextCompat.getSystemService(UtilHelper.getInstance().getContext(), NotificationManager.class);
+        return ContextCompat.getSystemService(UtilHelper.getInstance().getUtilConfig().getApplication(), NotificationManager.class);
     }
 
     public static ConnectivityManager getConnectivityManager() {
-        return ContextCompat.getSystemService(UtilHelper.getInstance().getContext(), ConnectivityManager.class);
+        return ContextCompat.getSystemService(UtilHelper.getInstance().getUtilConfig().getApplication(), ConnectivityManager.class);
     }
 
     public static TelephonyManager getTelephonyManager() {
-        return ContextCompat.getSystemService(UtilHelper.getInstance().getContext(), TelephonyManager.class);
+        return ContextCompat.getSystemService(UtilHelper.getInstance().getUtilConfig().getApplication(), TelephonyManager.class);
     }
 
     public static InputMethodManager getInputMethodManager() {
-        return ContextCompat.getSystemService(UtilHelper.getInstance().getContext(), InputMethodManager.class);
+        return ContextCompat.getSystemService(UtilHelper.getInstance().getUtilConfig().getApplication(), InputMethodManager.class);
     }
 
     public static DownloadManager getDownloadManager() {
-        return ContextCompat.getSystemService(UtilHelper.getInstance().getContext(), DownloadManager.class);
+        return ContextCompat.getSystemService(UtilHelper.getInstance().getUtilConfig().getApplication(), DownloadManager.class);
     }
 
     public static ClipboardManager getClipboardManager() {
-        return ContextCompat.getSystemService(UtilHelper.getInstance().getContext(), ClipboardManager.class);
+        return ContextCompat.getSystemService(UtilHelper.getInstance().getUtilConfig().getApplication(), ClipboardManager.class);
     }
 
     public static UserManager getUserManager() {
-        return ContextCompat.getSystemService(UtilHelper.getInstance().getContext(), UserManager.class);
+        return ContextCompat.getSystemService(UtilHelper.getInstance().getUtilConfig().getApplication(), UserManager.class);
     }
 
     public static <T> T getService(@NonNull Context context, @NonNull Class<T> clazz) {

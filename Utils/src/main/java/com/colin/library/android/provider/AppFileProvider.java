@@ -26,7 +26,7 @@ import java.io.File;
 public final class AppFileProvider extends FileProvider {
     @NonNull
     public static Uri getUri(@NonNull File file) {
-        return getUri(UtilHelper.getInstance().getContext(), file);
+        return getUri(UtilHelper.getInstance().getUtilConfig().getApplication(), file);
     }
 
     /**
@@ -43,7 +43,7 @@ public final class AppFileProvider extends FileProvider {
 
     @NonNull
     public static String getAuthority() {
-        return getAuthority(UtilHelper.getInstance().getContext());
+        return getAuthority(UtilHelper.getInstance().getUtilConfig().getApplication());
     }
 
     @NonNull

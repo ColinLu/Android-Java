@@ -24,7 +24,7 @@ public final class UriUtil {
 
     @NonNull
     public static Uri getUri(@NonNull final Uri uri, int id, @NonNull String path) {
-        return getUri(UtilHelper.getInstance().getContext(), uri, id, path);
+        return getUri(UtilHelper.getInstance().getUtilConfig().getApplication(), uri, id, path);
     }
 
     @NonNull

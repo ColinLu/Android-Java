@@ -54,41 +54,12 @@ public final class ResourceUtil {
 
     @NonNull
     public static Resources getResources() {
-        return getResources(UtilHelper.getInstance().getContext());
+        return getResources(UtilHelper.getInstance().getUtilConfig().getApplication());
     }
 
     @NonNull
     public static Resources getResources(@NonNull Context context) {
         return context.getResources();
-    }
-
-    /*语言本地化处理*/
-    @NonNull
-    public static void initLocale(@NonNull final Context context, @NonNull final Locale locale) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            final Configuration configuration = context.getResources().getConfiguration();
-            configuration.setLocale(locale);
-            context.createConfigurationContext(configuration);
-        } else {
-            final Resources resources = context.getResources();
-            final Configuration configuration = resources.getConfiguration();
-            configuration.locale = locale;
-            resources.updateConfiguration(configuration, resources.getDisplayMetrics());
-        }
-    }
-
-    /*屏幕方向*/
-    @RecyclerView.Orientation
-    public static int getOrientation(@NonNull final Context context) {
-        return getOrientation(context.getResources().getConfiguration());
-    }
-
-    /*屏幕方向*/
-    @RecyclerView.Orientation
-    public static int getOrientation(@NonNull final Configuration config) {
-        if (config.orientation == Configuration.ORIENTATION_LANDSCAPE)
-            return LinearLayoutManager.HORIZONTAL;
-        return LinearLayoutManager.VERTICAL;
     }
 
     @NonNull
@@ -111,7 +82,7 @@ public final class ResourceUtil {
 
 
     public static float getScaled() {
-        return Resources.getSystem().getDisplayMetrics().scaledDensity;
+        return getDisplayMetrics().scaledDensity;
     }
 
     public static float getScaled(@NonNull Context context) {
@@ -158,16 +129,15 @@ public final class ResourceUtil {
         return ContextCompat.getColorStateList(context, sTmpValue.resourceId);
     }
 
+    @Nullable
     public static Uri getUri(@DrawableRes int id) {
         return getUri(getResources(), id);
     }
 
+    @Nullable
     public static Uri getUri(@Nullable Resources resources, @DrawableRes int id) {
         if (null == resources || id == Resources.ID_NULL) return null;
-        return Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://"
-                + resources.getResourcePackageName(id) + "/"
-                + resources.getResourceTypeName(id) + "/"
-                + resources.getResourceEntryName(id));
+        return Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + resources.getResourcePackageName(id) + "/" + resources.getResourceTypeName(id) + "/" + resources.getResourceEntryName(id));
     }
 
     /**
@@ -235,31 +205,29 @@ public final class ResourceUtil {
     }
 
 
-    @Nullable
+    @NonNull
     public static String getString(@StringRes final int res) {
-        return getString(UtilHelper.getInstance().getContext(), res);
+        return getResources().getString(res);
     }
 
-    @Nullable
-    public static String getString(@Nullable Context context, @StringRes final int res) {
-        if (context == null || res == Resources.ID_NULL) return null;
+    @NonNull
+    public static String getString(@NonNull Context context, @StringRes final int res) {
         return getResources(context).getString(res);
     }
 
-    @Nullable
+    @NonNull
     public static String getString(@StringRes final int res, Object... formatArgs) {
-        return getString(UtilHelper.getInstance().getContext(), res, formatArgs);
+        return getResources().getString(res, formatArgs);
     }
 
-    @Nullable
-    public static String getString(@Nullable Context context, @StringRes final int res, Object... formatArgs) {
-        if (context == null || res == Resources.ID_NULL) return null;
+    @NonNull
+    public static String getString(@NonNull Context context, @StringRes final int res, Object... formatArgs) {
         return getResources(context).getString(res, formatArgs);
     }
 
     @ColorInt
     public static int getColor(@ColorRes final int res) {
-        return getColor(UtilHelper.getInstance().getContext(), res);
+        return getColor(UtilHelper.getInstance().getUtilConfig().getApplication(), res);
     }
 
     @ColorInt
@@ -270,7 +238,7 @@ public final class ResourceUtil {
 
     @Nullable
     public static Drawable getDrawable(@DrawableRes final int res) {
-        return getDrawable(UtilHelper.getInstance().getContext(), res);
+        return getDrawable(UtilHelper.getInstance().getUtilConfig().getApplication(), res);
     }
 
     @Nullable
@@ -350,7 +318,7 @@ public final class ResourceUtil {
      * metrics depending on its unit.
      */
     public static float applyDimension(final float value, final int unit) {
-        DisplayMetrics metrics = Resources.getSystem().getDisplayMetrics();
+        final DisplayMetrics metrics = getResources().getDisplayMetrics();
         switch (unit) {
             case TypedValue.COMPLEX_UNIT_PX:
                 return value;
@@ -366,6 +334,41 @@ public final class ResourceUtil {
                 return value * metrics.xdpi * (1.0f / 25.4f);
         }
         return 0;
+    }
+
+    /*语言本地化处理*/
+    @NonNull
+    public static void initLocale(@NonNull final Context context, @NonNull final Locale locale) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            final Configuration configuration = context.getResources().getConfiguration();
+            configuration.setLocale(locale);
+            context.createConfigurationContext(configuration);
+        } else {
+            final Resources resources = context.getResources();
+            final Configuration configuration = resources.getConfiguration();
+            configuration.locale = locale;
+            resources.updateConfiguration(configuration, resources.getDisplayMetrics());
+        }
+    }
+
+    /*屏幕方向*/
+    @RecyclerView.Orientation
+    public static int getOrientation() {
+        return getOrientation(getResources().getConfiguration());
+    }
+
+    /*屏幕方向*/
+    @RecyclerView.Orientation
+    public static int getOrientation(@NonNull Context context) {
+        return getOrientation(getResources(context).getConfiguration());
+    }
+
+    /*屏幕方向*/
+    @RecyclerView.Orientation
+    public static int getOrientation(@NonNull final Configuration config) {
+        if (config.orientation == Configuration.ORIENTATION_LANDSCAPE)
+            return LinearLayoutManager.HORIZONTAL;
+        return LinearLayoutManager.VERTICAL;
     }
 
 }

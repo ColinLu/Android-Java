@@ -285,14 +285,14 @@ public final class SpUtil {
         SparseArray<SharedPreferences> sparseArray = SP_MAP.get(spName);
         if (sparseArray == null) {
             sparseArray = new SparseArray<>();
-            final SharedPreferences preferences = UtilHelper.getInstance().getContext().getSharedPreferences(spName, mode);
+            final SharedPreferences preferences = UtilHelper.getInstance().getUtilConfig().getApplication().getSharedPreferences(spName, mode);
             sparseArray.put(mode, preferences);
             SP_MAP.put(spName, sparseArray);
             return preferences;
         } else {
             SharedPreferences preferences = sparseArray.get(mode);
             if (null == preferences) {
-                preferences = UtilHelper.getInstance().getContext().getSharedPreferences(spName, mode);
+                preferences = UtilHelper.getInstance().getUtilConfig().getApplication().getSharedPreferences(spName, mode);
                 sparseArray.put(mode, preferences);
             }
             return preferences;

@@ -34,6 +34,7 @@ import androidx.annotation.Px;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.core.content.ContextCompat;
 
+import com.colin.library.android.helper.UtilHelper;
 import com.colin.library.android.utils.LogUtil;
 import com.colin.library.android.widgets.web.AppWebChromeClient;
 import com.colin.library.android.widgets.web.AppWebViewClient;
@@ -106,8 +107,14 @@ public final class Utils {
     }
 
     /*屏幕宽度*/
+    @Nullable
     public static int getWindowWidth(@NonNull final Context context) {
         return context.getResources().getDisplayMetrics().widthPixels;
+    }
+
+    /*将px值转换为sp值，保证文字大小不变*/
+    public static float px2sp(@Px final float px) {
+        return px2sp(UtilHelper.getInstance().getUtilConfig().getApplication(), px);
     }
 
     /*将px值转换为sp值，保证文字大小不变*/
@@ -233,7 +240,7 @@ public final class Utils {
         if (editable) editText.requestFocus();
     }
 
-    public static void init(@Nullable final WebView view,@Nullable String url) {
+    public static void init(@Nullable final WebView view, @Nullable String url) {
         init(view, url, null);
     }
 
@@ -345,8 +352,7 @@ public final class Utils {
             }
             rectF.set(rect);
             m.mapRect(rectF);
-            rect.set((int) (rectF.left + 0.5f), (int) (rectF.top + 0.5f),
-                    (int) (rectF.right + 0.5f), (int) (rectF.bottom + 0.5f));
+            rect.set((int) (rectF.left + 0.5f), (int) (rectF.top + 0.5f), (int) (rectF.right + 0.5f), (int) (rectF.bottom + 0.5f));
         }
 
         static void offsetDescendantMatrix(ViewParent target, View view, Matrix m) {
