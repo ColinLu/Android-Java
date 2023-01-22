@@ -59,16 +59,6 @@ public final class OkHttpHelper {
     }
 
     @NonNull
-    public Context getContext() {
-        return Utils.notNull(mHttpConfig, "OkHttpConfig init first !").getContext();
-    }
-
-    @NonNull
-    public OkHttpClient getOkHttpClient() {
-        return Utils.notNull(mHttpConfig, "OkHttpConfig init first !").getOkHttpClient();
-    }
-
-    @NonNull
     public GetRequest get(@NonNull String url) {
         return new GetRequest(url);
     }
@@ -122,7 +112,7 @@ public final class OkHttpHelper {
      * 根据Tag取消请求
      */
     public void cancelTag(@Nullable Object tag) {
-        cancelTag(OkHttpHelper.getInstance().getOkHttpClient(), tag);
+        cancelTag(OkHttpHelper.getInstance().getOkHttpConfig().getOkHttpClient(), tag);
     }
 
     /**
@@ -142,7 +132,7 @@ public final class OkHttpHelper {
      * 取消所有请求请求
      */
     public void cancelAll() {
-        cancelAll(OkHttpHelper.getInstance().getOkHttpClient());
+        cancelAll(OkHttpHelper.getInstance().getOkHttpConfig().getOkHttpClient());
     }
 
     /**

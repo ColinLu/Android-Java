@@ -23,7 +23,7 @@ android {
         multiDexEnabled true
 
         ndk {
-            abiFilters "armeabi", "armeabi-v7a", "x86", "mips"
+            abiFilters "armeabi-v7a", "x86"
         }
 
     }
@@ -50,9 +50,7 @@ android {
             zipAlignEnabled true            //是否移除无用资源
             signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            manifestPlaceholders = [
-                    networkSecurityConfig: "@xml/network_security_config_test"
-            ]
+            manifestPlaceholders = [networkSecurityConfig: "@xml/network_security_config_test"]
         }
         release {
             ext.enableCrashlytics = false
@@ -63,9 +61,7 @@ android {
             zipAlignEnabled true            //是否移除无用资源
             signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            manifestPlaceholders = [
-                    networkSecurityConfig: "@xml/network_security_config"
-            ]
+            manifestPlaceholders = [networkSecurityConfig: "@xml/network_security_config"]
         }
     }
 

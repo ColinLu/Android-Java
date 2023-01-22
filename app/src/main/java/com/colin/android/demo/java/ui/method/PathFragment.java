@@ -133,6 +133,15 @@ public class PathFragment extends AppFragment<LayoutListBinding> implements OnIt
             case "user files":
                 path = PathUtil.getPath(PathUtil.getUserFiles());
                 break;
+            case "sp":
+                path = PathUtil.getPath(PathUtil.getSp());
+                break;
+            case "sp path":
+                path = PathUtil.getSpPath();
+                break;
+            case "db":
+                path = PathUtil.getPath(PathUtil.getDatabase());
+                break;
             default:
                 break;
         }

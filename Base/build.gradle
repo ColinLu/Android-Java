@@ -33,7 +33,7 @@ dependencies {
     compileOnly project(path: ':Utils')
     compileOnly project(path: ':Widgets')
     implementation dependency.androidx_appcompat
-    compileOnly dependency.android_material
+    implementation dependency.android_material
 }
 
 apply from: 'publish.gradle'

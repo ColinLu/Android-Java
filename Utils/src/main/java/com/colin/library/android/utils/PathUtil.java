@@ -1,11 +1,13 @@
 package com.colin.library.android.utils;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Build;
 import android.os.Environment;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 
 import com.colin.library.android.utils.data.Constants;
 import com.colin.library.android.helper.UtilHelper;
@@ -40,10 +42,7 @@ public final class PathUtil {
 
     /*  /storage*/
     public static File getRootStorage() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            return Environment.getStorageDirectory();
-        }
-        return null;
+        return Environment.getStorageDirectory();
     }
 
 
@@ -65,11 +64,9 @@ public final class PathUtil {
 
     /*/data/user/0/package*/
     public static File getUserData(@NonNull Context context) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) return context.getDataDir();
-        else return new File(context.getApplicationInfo().dataDir);
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.N ? context.getDataDir() : new File(context.getApplicationInfo().dataDir);
     }
 
-    /*/data/user/0/package/cache*/
     public static File getUserCache() {
         return getUserCache(UtilHelper.getInstance().getContext());
     }
@@ -79,7 +76,7 @@ public final class PathUtil {
         return context.getCacheDir();
     }
 
-    /*/data/user/0/package/code_cache*/
+
     public static File getUserCodeCache() {
         return getUserCodeCache(UtilHelper.getInstance().getContext());
     }
@@ -87,6 +84,24 @@ public final class PathUtil {
     /*/data/user/0/package/code_cache*/
     public static File getUserCodeCache(@NonNull Context context) {
         return context.getCodeCacheDir();
+    }
+
+    public static File getDatabase() {
+        return getDatabase(UtilHelper.getInstance().getContext());
+    }
+
+    /*/data/user/0/package/databases*/
+    public static File getDatabase(@NonNull Context context) {
+        return new File(context.getApplicationInfo().dataDir + File.separator + "databases");
+    }
+
+    public static File getSp() {
+        return getSp(UtilHelper.getInstance().getContext());
+    }
+
+    /*/data/user/0/package/shared_prefs*/
+    public static File getSp(@NonNull Context context) {
+        return new File(context.getApplicationInfo().dataDir + File.separator + "shared_prefs");
     }
 
     /*/data/user/0/package/files*/
@@ -139,6 +154,11 @@ public final class PathUtil {
         return UtilHelper.getInstance().getContext().getDataDir().getAbsolutePath();
     }
 
+    @NonNull
+    public static String getInternalAppPath(@NonNull Context context) {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.N ? context.getDataDir().getAbsolutePath() : context.getApplicationInfo().dataDir;
+    }
+
     /*清除缓存 操作 /data/data/package/cache */
     @NonNull
     public static File getInternalCache() {
@@ -146,13 +166,13 @@ public final class PathUtil {
     }
 
     /*/data/data/package/shared_prefs*/
-    public static String getInternalAppSpPath() {
-        return getInternalAppPath() + Constants.FILE_SEP + "shared_prefs";
+    public static String getSpPath() {
+        return getInternalAppPath() + File.separator + "shared_prefs";
     }
 
     /*/data/data/package/code_cache*/
-    public static String getInternalAppCodeCache() {
-        return getInternalAppPath() + Constants.FILE_SEP + "code_cache";
+    public static String getCodeCachePath() {
+        return getInternalAppPath() + File.separator + "code_cache";
     }
 
     @Nullable

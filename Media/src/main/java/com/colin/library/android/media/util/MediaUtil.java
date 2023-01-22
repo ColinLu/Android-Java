@@ -10,11 +10,13 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.util.DisplayMetrics;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresPermission;
 
+import com.colin.library.android.media.def.Constants;
 import com.colin.library.android.media.def.Filter;
 import com.colin.library.android.media.def.MediaFile;
 import com.colin.library.android.media.def.MediaType;
@@ -91,13 +93,13 @@ public final class MediaUtil {
     public static String getMimeType(@MediaType int mediaType) {
         switch (mediaType) {
             case MediaType.VIDEO:
-                return "video/mp4";
+                return Constants.MEDIA_TYPE_VIDEO;
             case MediaType.AUDIO:
-                return "audio/mp3";
+                return Constants.MEDIA_TYPE_AUDIO;
             case MediaType.IMAGE:
-                return "image/jpg";
+                return Constants.MEDIA_TYPE_IMAGE;
             default:
-                return "*/*";
+                return Constants.MEDIA_TYPE_ALL;
         }
     }
 
@@ -161,15 +163,10 @@ public final class MediaUtil {
     }
 
     /*筛选*/
-    public static boolean filter(@NonNull final MediaFile albumFile,
-                                 @Nullable final Filter<String> filterMime,
-                                 @Nullable final Filter<Long> filterSize,
-                                 @Nullable final Filter<Long> filterDuration) {
+    public static boolean filter(@NonNull final MediaFile albumFile, @Nullable final Filter<String> filterMime, @Nullable final Filter<Long> filterSize, @Nullable final Filter<Long> filterDuration) {
         if (filterSize != null && !filterSize.filter(albumFile.mSize)) return false;
         if (filterMime != null && !filterMime.filter(albumFile.mMimeType)) return false;
-        return albumFile.mMediaType == MediaType.IMAGE
-                || null == filterDuration
-                || filterDuration.filter(albumFile.mDuration);
+        return albumFile.mMediaType == MediaType.IMAGE || null == filterDuration || filterDuration.filter(albumFile.mDuration);
     }
 
     @NonNull
@@ -187,7 +184,11 @@ public final class MediaUtil {
 
     @NonNull
     public static Uri createUri(@NonNull Context context, @MediaType int mediaType) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            return createUriByQ(context, mediaType);
+        }
         final long time = System.currentTimeMillis();
+
         if (PathUtil.canWrite()) {
             final ContentValues values = new ContentValues(4);
             values.put(MediaStore.MediaColumns.DATE_TAKEN, time);
@@ -202,5 +203,21 @@ public final class MediaUtil {
             values.put(MediaStore.MediaColumns.MIME_TYPE, getMimeType(mediaType));
             return context.getContentResolver().insert(insertUri(mediaType, "internal"), values);
         }
+    }
+
+    @NonNull
+    private static Uri createUriByQ(@NonNull Context context, @MediaType int mediaType) {
+        final DisplayMetrics metrics = context.getResources().getDisplayMetrics();
+        final long time = System.currentTimeMillis();
+
+        final ContentValues values = new ContentValues(4);
+        values.put(MediaStore.MediaColumns.DATE_TAKEN, time);
+        values.put(MediaStore.MediaColumns.DISPLAY_NAME, getFileName(time, mediaType));
+        values.put(MediaStore.MediaColumns.MIME_TYPE, getMimeType(mediaType));
+        values.put(MediaStore.MediaColumns.RELATIVE_PATH, getFileType(mediaType));
+        values.put(MediaStore.MediaColumns.SIZE, getFileType(mediaType));
+        values.put(MediaStore.MediaColumns.WIDTH, metrics.widthPixels);
+        values.put(MediaStore.MediaColumns.HEIGHT, metrics.heightPixels);
+        return context.getContentResolver().insert(insertUri(mediaType, "external"), values);
     }
 }

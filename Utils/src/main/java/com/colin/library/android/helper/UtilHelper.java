@@ -34,38 +34,43 @@ public final class UtilHelper {
     }
 
     public void init(@NonNull Application app) {
-        init(new UtilConfig.Builder(Utils.notNull(app), BuildConfig.DEBUG).build());
+        init(new UtilConfig.Builder(app, BuildConfig.DEBUG).build());
     }
 
     public void init(@NonNull UtilConfig config) {
-        mUtilConfig = config;
-        ActivityHelper.getInstance().register((Application) config.getApplication());
+        this.mUtilConfig = config;
+        ActivityHelper.getInstance().register(config.getApplication());
+    }
+
+    @NonNull
+    public UtilConfig getUtilConfig() {
+        return Utils.notNull(mUtilConfig, "UtilHelper init first !");
     }
 
     @NonNull
     public Application getContext() {
-        return Utils.notNull(mUtilConfig, "UtilHelper init first !").getApplication();
+        return getUtilConfig().getApplication();
     }
 
     public boolean showLog(@LogLevel final int level, @Nullable String showTag) {
-        Utils.notNull(mUtilConfig, "UtilHelper init first !");
-        return level >= mUtilConfig.getLogLevel() && mUtilConfig.isShowLog(showTag);
+        return level >= getUtilConfig().getLogLevel() && getUtilConfig().isShowLog(showTag);
     }
 
     @LogLevel
     public int getLogLevel() {
-        return Utils.notNull(mUtilConfig, "UtilHelper init first !").getLogLevel();
+        return getUtilConfig().getLogLevel();
     }
 
     public int getLogMethodOffset() {
-        return Utils.notNull(mUtilConfig, "UtilHelper init first !").getLogMethodOffset();
+        return getUtilConfig().getLogMethodOffset();
     }
 
     public int getLogMethodCount() {
-        return Utils.notNull(mUtilConfig, "UtilHelper init first !").getLogMethodCount();
+        return getUtilConfig().getLogMethodCount();
     }
 
     public boolean isLogShowThread() {
-        return Utils.notNull(mUtilConfig, "UtilHelper init first !").isLogShowThread();
+        return getUtilConfig().isLogShowThread();
     }
+
 }

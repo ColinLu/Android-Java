@@ -56,7 +56,6 @@ public class MediaActivity extends BaseActivity {
     public static Filter<Long> sFilterSize;                     //筛选条件 大小
     public static Filter<Long> sFilterDuration;                 //筛选条件 时长（视频）
     public static Filter<String> sFilterMimeType;               //筛选条件 多媒体类型类型
-
     @MediaType
     private int mMediaType = MediaType.UNKNOWN;                 //选择多媒体 图片、视频、图片+视频（相册） 默认相册
     private int mColumn = MediaHelper.getInstance().getMediaConfig().getColumn();   //列表展示列数
@@ -203,23 +202,17 @@ public class MediaActivity extends BaseActivity {
         if (mMediaLeaderTask != null) {
             mMediaLeaderTask.cancel(true);
         }
-        mMediaLeaderTask = new MediaLeaderTask(this, mMediaType)
-                .setSelectedList(mSelectedList)
-                .setFilterSize(sFilterSize)
-                .setFilterDuration(sFilterDuration)
-                .setFilterMimeType(sFilterMimeType)
-                .setDisplayInvalid(mDisplayInvalid)
-                .setOnTaskListener(new OnTaskListener<MediaResult>() {
-                    @Override
-                    public void result(@Nullable MediaResult result) {
-                        if (null == result) return;
-                        mMediaFolders = result.mList;
-                        mSelectedList.clear();
-                        mSelectedList.addAll(result.mSelected);
-                        displayMedia(true, Math.min(mMediaFolders.size() - 1, mDisplayPosition));
-                        refreshCount();
-                    }
-                });
+        mMediaLeaderTask = new MediaLeaderTask(this, mMediaType).setSelectedList(mSelectedList).setFilterSize(sFilterSize).setFilterDuration(sFilterDuration).setFilterMimeType(sFilterMimeType).setDisplayInvalid(mDisplayInvalid).setOnTaskListener(new OnTaskListener<MediaResult>() {
+            @Override
+            public void result(@Nullable MediaResult result) {
+                if (null == result) return;
+                mMediaFolders = result.mList;
+                mSelectedList.clear();
+                mSelectedList.addAll(result.mSelected);
+                displayMedia(true, Math.min(mMediaFolders.size() - 1, mDisplayPosition));
+                refreshCount();
+            }
+        });
         mMediaLeaderTask.execute();
 
     }
@@ -378,44 +371,21 @@ public class MediaActivity extends BaseActivity {
         if (!PermissionUtil.request(this, Constants.REQUEST_IMAGE, Constants.PERMISSION_IMAGE)) {
             return;
         }
-        MediaHelper.getInstance()
-                .camera()
-                .image(MediaUtil.createImageUri(this))
-                .crop(mNeedCrop)
-                .facing(mFacing)
-                .result(this::cameraResult)
-                .cancel(ToastUtil::show)
-                .start(this);
+        MediaHelper.getInstance().camera().image(MediaUtil.createImageUri(this)).crop(mNeedCrop).facing(mFacing).result(this::cameraResult).cancel(ToastUtil::show).start(this);
     }
 
     private void takeAudio() {
         if (!PermissionUtil.request(this, Constants.REQUEST_AUDIO, Constants.PERMISSION_AUDIO)) {
             return;
         }
-        MediaHelper.getInstance()
-                .camera()
-                .audio(MediaUtil.createAudioUri(this))
-                .size(mLimitSize)
-                .duration(mLimitDuration)
-                .result(this::cameraResult)
-                .cancel(ToastUtil::show)
-                .start(this);
+        MediaHelper.getInstance().camera().audio(MediaUtil.createAudioUri(this)).size(mLimitSize).duration(mLimitDuration).result(this::cameraResult).cancel(ToastUtil::show).start(this);
     }
 
     private void takeVideo() {
         if (!PermissionUtil.request(this, Constants.REQUEST_VIDEO, Constants.PERMISSION_VIDEO)) {
             return;
         }
-        MediaHelper.getInstance()
-                .camera()
-                .video(MediaUtil.createVideoUri(this))
-                .facing(mFacing)
-                .size(mLimitSize)
-                .quality(mLimitQuality)
-                .duration(mLimitDuration)
-                .result(this::cameraResult)
-                .cancel(ToastUtil::show)
-                .start(this);
+        MediaHelper.getInstance().camera().video(MediaUtil.createVideoUri(this)).facing(mFacing).size(mLimitSize).quality(mLimitQuality).duration(mLimitDuration).result(this::cameraResult).cancel(ToastUtil::show).start(this);
     }
 
     private void cameraResult(@NonNull MediaFile mediaFile) {
@@ -467,7 +437,7 @@ public class MediaActivity extends BaseActivity {
     }
 
     private void refreshCount() {
-        if (null == toolbar) return;
+        if (null == toolbar || !mMultipleMode) return;
         int count = mSelectedList.size();
         toolbar.setTitle(R.string.media_preview_order);
         if (album_menu_preview != null)
@@ -487,10 +457,7 @@ public class MediaActivity extends BaseActivity {
 
     private void dialog() {
         if (null == mFolderDialog) {
-            mFolderDialog = FolderDialog.getInstance()
-                    .setAlbumFolders(mMediaFolders)
-                    .setSelectedPosition(mDisplayPosition)
-                    .setOnItemClickListener((view, position, object) -> displayMedia(false, position));
+            mFolderDialog = FolderDialog.getInstance().setAlbumFolders(mMediaFolders).setSelectedPosition(mDisplayPosition).setOnItemClickListener((view, position, object) -> displayMedia(false, position));
         }
         if (null != mFolderDialog && !mFolderDialog.isShowing()) mFolderDialog.show(this);
     }
@@ -499,19 +466,14 @@ public class MediaActivity extends BaseActivity {
         final List<String> list = PermissionUtil.getSetting(this, permissions);
         final boolean setting = list.size() > 0;
         final boolean cancel = !(setting || request == Constants.REQUEST_MEDIA);
-        new AlertDialog.Builder(this)
-                .setTitle(R.string.media_permission_title_tips)
-                .setMessage(res)
-                .setCancelable(cancel)
-                .setNegativeButton(R.string.media_cancel, (dialog, which) -> {
-                    dialog.dismiss();
-                    if (!cancel) callbackCancel(R.string.media_refuse_permission);
-                })
-                .setPositiveButton(setting ? R.string.media_setting : R.string.media_ok, (dialog, which) -> {
-                    dialog.dismiss();
-                    if (setting) IntentUtil.toPermissionSettings(MediaActivity.this);
-                    else PermissionUtil.request(MediaActivity.this, request, permissions);
-                }).show();
+        new AlertDialog.Builder(this).setTitle(R.string.media_permission_title_tips).setMessage(res).setCancelable(cancel).setNegativeButton(R.string.media_cancel, (dialog, which) -> {
+            dialog.dismiss();
+            if (!cancel) callbackCancel(R.string.media_refuse_permission);
+        }).setPositiveButton(setting ? R.string.media_setting : R.string.media_ok, (dialog, which) -> {
+            dialog.dismiss();
+            if (setting) IntentUtil.toPermissionView(MediaActivity.this);
+            else PermissionUtil.request(MediaActivity.this, request, permissions);
+        }).show();
     }
 
     /*点击图片或者预览按钮 预览 */

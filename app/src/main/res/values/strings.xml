@@ -39,6 +39,9 @@
     <string name="path_user_cache">user cache</string>
     <string name="path_user_code_cache">user code cache</string>
     <string name="path_user_files">user files</string>
+    <string name="path_sp">sp</string>
+    <string name="path_sp_path">sp path</string>
+    <string name="path_db">db</string>
 
     <string name="search">Search</string>
     <string name="web">Web</string>
@@ -153,6 +156,9 @@
         <item>@string/path_user_cache</item>
         <item>@string/path_user_code_cache</item>
         <item>@string/path_user_files</item>
+        <item>@string/path_sp</item>
+        <item>@string/path_sp_path</item>
+        <item>@string/path_db</item>
     </string-array>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

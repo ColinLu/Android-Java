@@ -4,8 +4,9 @@
     android:id="@+id/image_album_camera"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/media_item_text_color"
     android:padding="@dimen/dp_20"
     android:scaleType="centerCrop"
-    android:tint="@color/media_item_text_color"
+    android:tint="@color/media_title_color"
     android:tintMode="src_in"
     app:srcCompat="@drawable/ic_camera" />

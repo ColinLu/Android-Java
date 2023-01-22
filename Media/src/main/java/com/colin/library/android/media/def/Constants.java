@@ -23,8 +23,12 @@ public interface Constants {
     String MEDIA_LIMIT_SIZE = "MEDIA_CHOOSE_LIMIT_SIZE";
     String MEDIA_SELECTED_LIST = "MEDIA_SELECTED_LIST";
     String MEDIA_MULTIPLE_MODE = "MEDIA_MULTIPLE_MODE";
-
     String ADAPTER_PAYLOAD_CHECK = "ADAPTER_PAYLOAD_CHECK";
+    String MEDIA_TYPE_IMAGE = "image/jpg";
+    String MEDIA_TYPE_AUDIO = "audio/aac";
+    String MEDIA_TYPE_VIDEO = "video/mp4";
+    String MEDIA_TYPE_ALL = "*/*";
+
 
     /*浏览相册权限*/
     String[] PERMISSION_MEDIA = new String[]{Manifest.permission.READ_EXTERNAL_STORAGE};
@@ -47,6 +51,7 @@ public interface Constants {
     /*录像视频*/
     String[] PERMISSION_VIDEO = new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.RECORD_AUDIO, Manifest.permission.CAMERA};
+
 
     int REQUEST_MEDIA = 1000;
     int REQUEST_IMAGE = 1001;
