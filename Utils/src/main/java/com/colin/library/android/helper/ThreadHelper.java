@@ -47,11 +47,7 @@ public final class ThreadHelper {
     private final ExecutorService POOL;
 
     private ThreadHelper() {
-        POOL = new ThreadPoolExecutor(ThreadPool.getCoreCount(PoolType.IO),
-                                      ThreadPool.getMaxCount(PoolType.IO), 30L, TimeUnit.SECONDS,
-                                      new LinkedBlockingQueue<>(ThreadPool.THREAD_MAX),
-                                      new ThreadPool.CustomThreadFactory(PoolType.IO, Thread.MAX_PRIORITY),
-                                      ThreadPool.getDefaultRejected());
+        POOL = new ThreadPoolExecutor(ThreadPool.getCoreCount(PoolType.IO), ThreadPool.getMaxCount(PoolType.IO), 30L, TimeUnit.SECONDS, new LinkedBlockingQueue<>(ThreadPool.THREAD_MAX), new ThreadPool.CustomThreadFactory(PoolType.IO, Thread.MAX_PRIORITY), ThreadPool.getDefaultRejected());
     }
 
     private static final class Holder {
@@ -67,16 +63,16 @@ public final class ThreadHelper {
         return Looper.myLooper() == Looper.getMainLooper();
     }
 
-    public void post(final Runnable runnable) {
+    public void post(@NonNull final Runnable runnable) {
         if (isMain()) runnable.run();
         else HANDLER.post(runnable);
     }
 
-    public void postDelayed(final Runnable runnable, long delayMillis) {
+    public void postDelayed(@NonNull final Runnable runnable, final long delayMillis) {
         HANDLER.postDelayed(runnable, delayMillis);
     }
 
-    public void doAsync(@NonNull Runnable runnable) {
+    public void doAsync(@NonNull final Runnable runnable) {
         POOL.execute(runnable);
     }
 
@@ -93,21 +89,19 @@ public final class ThreadHelper {
      * 适用：一个任务一个任务执行的场景
      * 返回：ThreadPoolExecutor
      */
+    @NonNull
     public ExecutorService single() {
-        return single(new ThreadPool.CustomThreadFactory(PoolType.SINGLE, Thread.NORM_PRIORITY),
-                      ThreadPool.getDefaultRejected());
+        return single(new ThreadPool.CustomThreadFactory(PoolType.SINGLE, Thread.NORM_PRIORITY), ThreadPool.getDefaultRejected());
     }
 
+    @NonNull
     public ExecutorService single(@IntRange(from = 1, to = 10) final int priority) {
-        return single(new ThreadPool.CustomThreadFactory(PoolType.SINGLE, priority),
-                      ThreadPool.getDefaultRejected());
+        return single(new ThreadPool.CustomThreadFactory(PoolType.SINGLE, priority), ThreadPool.getDefaultRejected());
     }
 
-    public ExecutorService single(@NonNull final ThreadPool.CustomThreadFactory factory,
-                                  @NonNull final RejectedExecutionHandler handler) {
-        return threadPool(ThreadPool.getCoreCount(PoolType.SINGLE),
-                          ThreadPool.getMaxCount(PoolType.SINGLE), 0L, TimeUnit.MILLISECONDS,
-                          new LinkedBlockingQueue<>(ThreadPool.THREAD_MAX), factory, handler);
+    @NonNull
+    public ExecutorService single(@NonNull final ThreadPool.CustomThreadFactory factory, @NonNull final RejectedExecutionHandler handler) {
+        return threadPool(ThreadPool.getCoreCount(PoolType.SINGLE), ThreadPool.getMaxCount(PoolType.SINGLE), 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>(ThreadPool.THREAD_MAX), factory, handler);
     }
 
     /**
@@ -124,32 +118,20 @@ public final class ThreadHelper {
      * 适用：执行长期的任务，性能好很多
      * 返回：ThreadPoolExecutor
      */
+    @NonNull
     public ExecutorService fixed() {
         final int core = ThreadPool.getCoreCount(PoolType.FIXED);
-        return threadPool(core, core, 0L, TimeUnit.MILLISECONDS,
-                          new LinkedBlockingQueue<>(ThreadPool.THREAD_MAX),
-                          new ThreadPool.CustomThreadFactory(PoolType.FIXED,
-                                                             Thread.NORM_PRIORITY),
-                          ThreadPool.getDefaultRejected());
+        return threadPool(core, core, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>(ThreadPool.THREAD_MAX), new ThreadPool.CustomThreadFactory(PoolType.FIXED, Thread.NORM_PRIORITY), ThreadPool.getDefaultRejected());
     }
 
-    public ExecutorService fixed(@IntRange(from = 1, to = 4) final int core,
-                                 @IntRange(from = 1, to = 10) final int priority,
-                                 @Nullable final RejectedExecutionHandler rejectedHandler) {
-        return threadPool(core, core, 0L, TimeUnit.MILLISECONDS,
-                          new LinkedBlockingQueue<>(ThreadPool.THREAD_MAX),
-                          new ThreadPool.CustomThreadFactory(PoolType.FIXED, priority),
-                          null == rejectedHandler ? ThreadPool.getDefaultRejected() : rejectedHandler);
+    @NonNull
+    public ExecutorService fixed(@IntRange(from = 1, to = 4) final int core, @IntRange(from = 1, to = 10) final int priority, @Nullable final RejectedExecutionHandler rejectedHandler) {
+        return threadPool(core, core, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>(ThreadPool.THREAD_MAX), new ThreadPool.CustomThreadFactory(PoolType.FIXED, priority), null == rejectedHandler ? ThreadPool.getDefaultRejected() : rejectedHandler);
     }
 
-    public ExecutorService fixed(@IntRange(from = 1, to = 4) final int core,
-                                 @Nullable final ThreadFactory factory,
-                                 @Nullable final RejectedExecutionHandler rejectedHandler) {
-        return threadPool(core, core, 0L, TimeUnit.MILLISECONDS,
-                          new LinkedBlockingQueue<>(ThreadPool.THREAD_MAX),
-                          null == factory ? new ThreadPool.CustomThreadFactory(PoolType.FIXED,
-                                                                               Thread.NORM_PRIORITY) : factory,
-                          null == rejectedHandler ? ThreadPool.getDefaultRejected() : rejectedHandler);
+    @NonNull
+    public ExecutorService fixed(@IntRange(from = 1, to = 4) final int core, @Nullable final ThreadFactory factory, @Nullable final RejectedExecutionHandler rejectedHandler) {
+        return threadPool(core, core, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>(ThreadPool.THREAD_MAX), null == factory ? new ThreadPool.CustomThreadFactory(PoolType.FIXED, Thread.NORM_PRIORITY) : factory, null == rejectedHandler ? ThreadPool.getDefaultRejected() : rejectedHandler);
     }
 
     /**
@@ -166,56 +148,33 @@ public final class ThreadHelper {
      * 适用：执行很多短期异步的小程序或者负载较轻的服务器
      * 返回：ThreadPoolExecutor
      */
+    @NonNull
     public ExecutorService cache() {
-        return threadPool(ThreadPool.getCoreCount(PoolType.CACHED),
-                          ThreadPool.getMaxCount(PoolType.CACHED), 60L, TimeUnit.SECONDS,
-                          new SynchronousQueue<>(),
-                          new ThreadPool.CustomThreadFactory(PoolType.CACHED,
-                                                             Thread.NORM_PRIORITY),
-                          ThreadPool.getDefaultRejected());
+        return threadPool(ThreadPool.getCoreCount(PoolType.CACHED), ThreadPool.getMaxCount(PoolType.CACHED), 60L, TimeUnit.SECONDS, new SynchronousQueue<>(), new ThreadPool.CustomThreadFactory(PoolType.CACHED, Thread.NORM_PRIORITY), ThreadPool.getDefaultRejected());
     }
 
-    public ExecutorService cache(@IntRange(from = 0, to = Integer.MAX_VALUE) int max,
-                                 @IntRange(from = 1, to = 10) final int priority) {
-        return threadPool(ThreadPool.getCoreCount(PoolType.CACHED), max, 60L, TimeUnit.SECONDS,
-                          new SynchronousQueue<>(),
-                          new ThreadPool.CustomThreadFactory(PoolType.CACHED, priority),
-                          ThreadPool.getDefaultRejected());
+    @NonNull
+    public ExecutorService cache(@IntRange(from = 0, to = Integer.MAX_VALUE) int max, @IntRange(from = 1, to = 10) final int priority) {
+        return threadPool(ThreadPool.getCoreCount(PoolType.CACHED), max, 60L, TimeUnit.SECONDS, new SynchronousQueue<>(), new ThreadPool.CustomThreadFactory(PoolType.CACHED, priority), ThreadPool.getDefaultRejected());
     }
 
-    public ExecutorService cache(@IntRange(from = 0, to = Integer.MAX_VALUE) final int max,
-                                 @Nullable final ThreadFactory factory,
-                                 @Nullable final RejectedExecutionHandler rejectedHandler) {
-        return threadPool(ThreadPool.getCoreCount(PoolType.CACHED), max, 60L, TimeUnit.SECONDS,
-                          new SynchronousQueue<>(),
-                          null == factory ? new ThreadPool.CustomThreadFactory(PoolType.CACHED,
-                                                                               Thread.NORM_PRIORITY) : factory,
-                          null == rejectedHandler ? ThreadPool.getDefaultRejected() : rejectedHandler);
+    @NonNull
+    public ExecutorService cache(@IntRange(from = 0, to = Integer.MAX_VALUE) final int max, @Nullable final ThreadFactory factory, @Nullable final RejectedExecutionHandler rejectedHandler) {
+        return threadPool(ThreadPool.getCoreCount(PoolType.CACHED), max, 60L, TimeUnit.SECONDS, new SynchronousQueue<>(), null == factory ? new ThreadPool.CustomThreadFactory(PoolType.CACHED, Thread.NORM_PRIORITY) : factory, null == rejectedHandler ? ThreadPool.getDefaultRejected() : rejectedHandler);
     }
 
+    @NonNull
     public ExecutorService io() {
-        return threadPool(ThreadPool.getCoreCount(PoolType.IO),
-                          ThreadPool.getMaxCount(PoolType.IO), 30L, TimeUnit.SECONDS,
-                          new LinkedBlockingQueue<>(ThreadPool.THREAD_MAX),
-                          new ThreadPool.CustomThreadFactory(PoolType.IO, Thread.NORM_PRIORITY),
-                          ThreadPool.getDefaultRejected());
+        return threadPool(ThreadPool.getCoreCount(PoolType.IO), ThreadPool.getMaxCount(PoolType.IO), 30L, TimeUnit.SECONDS, new LinkedBlockingQueue<>(ThreadPool.THREAD_MAX), new ThreadPool.CustomThreadFactory(PoolType.IO, Thread.NORM_PRIORITY), ThreadPool.getDefaultRejected());
     }
 
+    @NonNull
     public ExecutorService cup() {
-        return threadPool(ThreadPool.getCoreCount(PoolType.CPU),
-                          ThreadPool.getMaxCount(PoolType.CPU), 30L, TimeUnit.SECONDS,
-                          new LinkedBlockingQueue<>(ThreadPool.THREAD_MAX),
-                          new ThreadPool.CustomThreadFactory(PoolType.CPU, Thread.NORM_PRIORITY),
-                          ThreadPool.getDefaultRejected());
+        return threadPool(ThreadPool.getCoreCount(PoolType.CPU), ThreadPool.getMaxCount(PoolType.CPU), 30L, TimeUnit.SECONDS, new LinkedBlockingQueue<>(ThreadPool.THREAD_MAX), new ThreadPool.CustomThreadFactory(PoolType.CPU, Thread.NORM_PRIORITY), ThreadPool.getDefaultRejected());
     }
 
-    public ExecutorService threadPool(@IntRange(from = 0, to = 4) final int core,
-                                      @IntRange(from = 0, to = Integer.MAX_VALUE) final int max,
-                                      @IntRange(from = 0, to = Integer.MAX_VALUE) final long keepAliveTime,
-                                      @NonNull final TimeUnit unit,
-                                      @NonNull final BlockingQueue<Runnable> queue,
-                                      @NonNull final ThreadFactory factory,
-                                      @NonNull final RejectedExecutionHandler handler) {
+    @NonNull
+    public ExecutorService threadPool(@IntRange(from = 0, to = 4) final int core, @IntRange(from = 0, to = Integer.MAX_VALUE) final int max, @IntRange(from = 0, to = Integer.MAX_VALUE) final long keepAliveTime, @NonNull final TimeUnit unit, @NonNull final BlockingQueue<Runnable> queue, @NonNull final ThreadFactory factory, @NonNull final RejectedExecutionHandler handler) {
         return new ThreadPoolExecutor(core, max, keepAliveTime, unit, queue, factory, handler);
     }
 

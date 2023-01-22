@@ -7,6 +7,9 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.colin.library.android.utils.LogUtil;
+
+import java.time.LocalDateTime;
 import java.util.Stack;
 
 /**
@@ -47,12 +50,22 @@ public final class ActivityHelper {
         try {
             application.unregisterActivityLifecycleCallbacks(ACTIVITY_LIFECYCLE);
         } catch (Exception e) {
-            e.printStackTrace();
+            LogUtil.log(e);
         }
         try {
             application.registerActivityLifecycleCallbacks(ACTIVITY_LIFECYCLE);
         } catch (Exception e) {
-            e.printStackTrace();
+            LogUtil.log(e);
+        }
+    }
+
+    /*解绑*/
+    public void unregister(@NonNull final Application application) {
+        // 先移除监听
+        try {
+            application.unregisterActivityLifecycleCallbacks(ACTIVITY_LIFECYCLE);
+        } catch (Exception e) {
+            LogUtil.log(e);
         }
     }
 
@@ -168,8 +181,7 @@ public final class ActivityHelper {
     private static class ActivityLifecycleImpl implements Application.ActivityLifecycleCallbacks {
 
         @Override
-        public void onActivityCreated(@NonNull Activity activity,
-                                      @Nullable Bundle savedInstanceState) {
+        public void onActivityCreated(@NonNull Activity activity, @Nullable Bundle savedInstanceState) {
             getInstance().add(activity);
         }
 
@@ -194,8 +206,7 @@ public final class ActivityHelper {
         }
 
         @Override
-        public void onActivitySaveInstanceState(@NonNull Activity activity,
-                                                @NonNull Bundle outState) {
+        public void onActivitySaveInstanceState(@NonNull Activity activity, @NonNull Bundle outState) {
 
         }
 
