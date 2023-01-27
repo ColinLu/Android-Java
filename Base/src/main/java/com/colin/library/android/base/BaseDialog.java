@@ -1,12 +1,14 @@
 package com.colin.library.android.base;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -26,6 +28,7 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.colin.library.android.Utils;
 import com.colin.library.android.base.def.IInitView;
 import com.colin.library.android.base.def.ILife;
 import com.colin.library.android.utils.StringUtil;
@@ -109,6 +112,16 @@ public abstract class BaseDialog<Returner> extends DialogFragment implements IIn
         setStyle(DialogFragment.STYLE_NORMAL, R.style.App_Dialog);
     }
 
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        if (null != mRootView) {
+            final ViewGroup parent = (ViewGroup) mRootView.getParent();
+            if (null != parent) parent.removeView(mRootView);
+        } else mRootView = inflater.inflate(layoutRes(), container, false);
+        return mRootView;
+    }
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         initParams(null == getDialog() ? null : getDialog().getWindow());
@@ -157,8 +170,14 @@ public abstract class BaseDialog<Returner> extends DialogFragment implements IIn
 
     @NonNull
     public <T extends View> T findViewById(@IdRes int id) {
-        if (null == mRootView) throw new RuntimeException("跟布局控件 mRootView is Empty");
+        if (null == mRootView) throw new RuntimeException("fragment dialog mRootView is Empty");
         return mRootView.findViewById(id);
+    }
+
+    @NonNull
+    @Override
+    public Context getContext() {
+        return Utils.notNull(super.getContext(), "Fragment " + this + " not attached to a context.");
     }
 
     public Returner setTitle(@Nullable CharSequence title) {
@@ -394,8 +413,8 @@ public abstract class BaseDialog<Returner> extends DialogFragment implements IIn
     }
 
     public void show(@Nullable Fragment fragment) {
-        if (null == fragment || null == fragment.getActivity()
-                || fragment.getActivity().isFinishing()) return;
+        if (null == fragment || null == fragment.getActivity() || fragment.getActivity().isFinishing())
+            return;
         show(fragment.getChildFragmentManager(), this.getClass().getSimpleName());
     }
 

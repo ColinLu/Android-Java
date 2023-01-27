@@ -5,6 +5,7 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -36,25 +37,6 @@ public abstract class BaseActivity extends AppCompatActivity implements IInitVie
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        if (mRefresh) {
-            mRefresh = false;
-            loadData(true);
-        }
-    }
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        if (mRefresh) {
-            mRefresh = false;
-            loadData(true);
-        }
-    }
-
-
-    @Override
     protected void onResume() {
         super.onResume();
         if (mRefresh) {
@@ -63,7 +45,7 @@ public abstract class BaseActivity extends AppCompatActivity implements IInitVie
         }
     }
 
-    @Nullable
+    @NonNull
     @Override
     public Context getContext() {
         return this;

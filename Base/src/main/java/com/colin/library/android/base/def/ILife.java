@@ -14,7 +14,7 @@ import androidx.lifecycle.LifecycleObserver;
  * 描述： 生命周期
  */
 public interface ILife extends LifecycleObserver {
-    @Nullable
+    @NonNull
     Context getContext();
 
     @NonNull

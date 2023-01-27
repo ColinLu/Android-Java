@@ -18,6 +18,7 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.net.UnknownHostException;
 import java.util.Formatter;
+import java.util.Locale;
 
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Source;
@@ -113,6 +114,15 @@ public final class LogUtil {
         print(level, null, format(error));
     }
 
+    public static void log(String format, Object... args) {
+        print(UtilHelper.getInstance().getLogLevel(), null,
+                String.format(Locale.getDefault(), format, args));
+    }
+
+    public static void log(@LogLevel int level, String format, Object... args) {
+        print(level, null, String.format(Locale.getDefault(), format, args));
+    }
+
     public static void log(@NonNull String tag, @Nullable Throwable error) {
         print(LogLevel.E, tag, format(error));
     }
@@ -161,7 +171,8 @@ public final class LogUtil {
         if (len == 1) return StringUtil.toString(args[0]);
         final StringBuilder sb = new StringBuilder();
         for (int i = 0; i < len; i++) {
-            sb.append(MSG).append('[').append(i).append(']').append(" = ").append(StringUtil.toString(args[i])).append(Constants.LINE_SEP);
+            sb.append(MSG).append('[').append(i).append(']').append(" = ").append(
+                    StringUtil.toString(args[i])).append(Constants.LINE_SEP);
         }
         return sb.toString().trim();
     }
@@ -216,7 +227,8 @@ public final class LogUtil {
         }
     }
 
-    private static synchronized void print(@LogLevel int level, @Nullable String tag, @NonNull String msg) {
+    private static synchronized void print(
+            @LogLevel int level, @Nullable String tag, @NonNull String msg) {
         //判断是否输出
         if (!UtilHelper.getInstance().showLog(level, tag)) return;
         //Java栈信息
@@ -247,7 +259,8 @@ public final class LogUtil {
         Log.println(level, tag, BOTTOM_BORDER);
     }
 
-    private static void printlnHead(int level, @NonNull String tag, @NonNull StackTraceElement[] traces) {
+    private static void printlnHead(
+            int level, @NonNull String tag, @NonNull StackTraceElement[] traces) {
         //thread
         if (UtilHelper.getInstance().isLogShowThread()) {
             Log.println(level, tag, HORIZONTAL_LINE + "thread:" + Thread.currentThread().getName());
@@ -264,7 +277,8 @@ public final class LogUtil {
             if (stackIndex >= traces.length) continue;
             final StackTraceElement trace = traces[stackIndex];
             formatter = new Formatter().format("%s%s.%s(%s:%d)", HORIZONTAL_LINE + space.toString(),
-                    trace.getClassName(), trace.getMethodName(), trace.getFileName(), trace.getLineNumber());
+                    trace.getClassName(), trace.getMethodName(), trace.getFileName(),
+                    trace.getLineNumber());
             Log.println(level, tag, formatter.toString());
             space.append(TAB_SPACE);
         }

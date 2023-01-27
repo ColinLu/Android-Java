@@ -47,7 +47,7 @@ public class EdgeFragment extends AppFragment<LayoutEdgeBinding> implements OnIt
                 loadData(edge.getDirection() == Direction.TOP);
             }
         });
-        initRecyclerView(getActivity());
+        initRecyclerView(requireActivity());
     }
 
     @Override

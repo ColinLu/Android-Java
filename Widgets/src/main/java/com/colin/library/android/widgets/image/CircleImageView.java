@@ -18,6 +18,7 @@ import androidx.annotation.Px;
 import androidx.appcompat.widget.AppCompatImageView;
 
 import com.colin.library.android.widgets.R;
+import com.colin.library.android.widgets.RoundOutlineProvider;
 
 /**
  * 作者： ColinLu
@@ -32,16 +33,16 @@ public class CircleImageView extends AppCompatImageView {
     private ViewOutlineProvider mOutlineProvider;
 
     public CircleImageView(@NonNull Context context) {
-        this(context, null, Resources.ID_NULL);
+        this(context, null, 0);
     }
 
     public CircleImageView(@NonNull Context context, @Nullable AttributeSet attrs) {
-        this(context, attrs, Resources.ID_NULL);
+        this(context, attrs, 0);
     }
 
     public CircleImageView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        final TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.CircleImageView, defStyleAttr, Resources.ID_NULL);
+        final TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.CircleImageView, defStyleAttr, 0);
         mRadius = array.getDimension(R.styleable.CircleImageView_android_radius, 0F);
         array.recycle();
         if (isOutline()) {
@@ -53,9 +54,7 @@ public class CircleImageView extends AppCompatImageView {
     }
 
     public void setRadius(@Px float radius) {
-        if (mRadius == radius) {
-            return;
-        }
+        if (mRadius == radius) return;
         this.mRadius = radius;
         if (radius > 0) {
             if (isOutline()) {
@@ -81,12 +80,7 @@ public class CircleImageView extends AppCompatImageView {
     }
 
     private ViewOutlineProvider getViewOutlineProvider(float radius) {
-        return new ViewOutlineProvider() {
-            @Override
-            public void getOutline(View view, Outline outline) {
-                outline.setRoundRect(0, 0, getWidth(), getHeight(), radius);
-            }
-        };
+        return new RoundOutlineProvider(radius);
     }
 
     private boolean isOutline() {

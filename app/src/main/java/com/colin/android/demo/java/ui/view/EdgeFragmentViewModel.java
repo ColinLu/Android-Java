@@ -8,8 +8,11 @@ import com.colin.android.demo.java.def.Constants;
 import com.colin.android.demo.java.def.LoadState;
 import com.colin.android.demo.java.utils.DemoUtils;
 import com.colin.library.android.helper.ThreadHelper;
+import com.colin.library.android.utils.LogUtil;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * 作者： ColinLu
@@ -21,15 +24,38 @@ public class EdgeFragmentViewModel extends ViewModel {
     private final MutableLiveData<List<String>> mList;
     private final MutableLiveData<Integer> mLoadState;
 
+    private int mPage = Constants.PAGE_START;
+
     public EdgeFragmentViewModel() {
         mList = new MutableLiveData<>();
         mLoadState = new MutableLiveData<>();
     }
 
     public void refresh(boolean refresh) {
-        mLoadState.setValue(refresh ? LoadState.ING : LoadState.MORE);
-        ThreadHelper.getInstance().doAsync(() -> mList.postValue(DemoUtils.getStringList(R.array.flow_data)));
+        if (refresh) {
+            mPage = Constants.PAGE_START;
+            mLoadState.setValue(LoadState.ING);
+        } else {
+            mPage += 1;
+            mLoadState.setValue(LoadState.MORE);
+        }
+        ThreadHelper.getInstance().doAsync(() -> {
+            LogUtil.i("current page:" + mPage);
+            mList.postValue(loadPate(mPage));
+        });
         ThreadHelper.getInstance().postDelayed(() -> mLoadState.setValue(LoadState.SUCCESS), Constants.DURATION_DELAYED);
+    }
+
+    private List<String> loadPate(int page) {
+        List<String> value = mList.getValue();
+        if (value == null) value = new ArrayList<>();
+        if (page == Constants.PAGE_START) value.clear();
+        final List<String> list = new ArrayList<>(Constants.PAGE_SIZE);
+        for (int i = 0; i < Constants.PAGE_SIZE; i++) {
+            list.add(String.format(Locale.US, "current page:%d item:%d", page, i));
+        }
+        value.addAll(list);
+        return value;
     }
 
     public MutableLiveData<List<String>> getList() {

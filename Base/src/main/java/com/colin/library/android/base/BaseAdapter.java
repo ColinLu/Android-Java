@@ -1,5 +1,6 @@
 package com.colin.library.android.base;
 
+import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
@@ -67,9 +68,11 @@ public abstract class BaseAdapter<ITEM> extends RecyclerView.Adapter<ViewHolder>
 
 
     public void addData(@Nullable List<ITEM> items) {
-        if (items != null && items.size() > 0) {
+        final int size = items == null ? 0 : items.size();
+        if (size > 0) {
             mItemList.addAll(items);
-            notifyDataSetChanged();
+            final int count = mItemList.size();
+            notifyItemRangeChanged(count - size, getItemCount());
         }
     }
 

@@ -8,4 +8,6 @@ package com.colin.android.demo.java.def;
  */
 public interface Constants {
     long DURATION_DELAYED = 3000;
+    int PAGE_START = 0;
+    int PAGE_SIZE = 10;
 }

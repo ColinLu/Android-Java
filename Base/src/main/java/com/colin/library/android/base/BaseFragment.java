@@ -1,5 +1,6 @@
 package com.colin.library.android.base;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.colin.library.android.Utils;
 import com.colin.library.android.base.def.ILife;
 import com.colin.library.android.base.def.IInitView;
 
@@ -65,7 +67,13 @@ public abstract class BaseFragment extends Fragment implements IInitView, ILife 
         }
     }
 
-    @Nullable
+    @NonNull
+    @Override
+    public Context getContext() {
+        return Utils.notNull(super.getContext(), "Fragment " + this + " not attached to a context.");
+    }
+
+    @NonNull
     public <T extends View> T findViewById(@IdRes int id) {
         return (T) mRootView.findViewById(id);
     }

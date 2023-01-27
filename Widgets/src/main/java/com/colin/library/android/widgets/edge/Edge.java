@@ -70,7 +70,7 @@ public final class Edge {
 
     @Px
     public int getEdgeSize() {
-        return mDirection == Direction.TOP || mDirection == Direction.BOTTOM ? mView.getHeight() : mView.getWidth();
+        return isVertical(mDirection) ? mView.getHeight() : mView.getWidth();
     }
 
     public int getOffsetInit() {
@@ -132,15 +132,58 @@ public final class Edge {
 
     public float getFlingRate(@ViewCompat.NestedScrollType int type, @Px int offset) {
         if (type == ViewCompat.TYPE_TOUCH) return mEdgeRate;
-        return Math.min(mEdgeRate, Math.max(mEdgeRate - (offset - getOffsetTarget()) * getScrollFling(), 0));
+        return Math.min(mEdgeRate,
+                Math.max(mEdgeRate - (offset - getOffsetTarget()) * getScrollFling(), 0));
     }
 
     public float getFlingRate(@Px int offset) {
-        return Math.min(getEdgeRate(), Math.max(getEdgeRate() - (offset - getOffsetTarget()) * getScrollFling(), 0));
+        return Math.min(getEdgeRate(),
+                Math.max(getEdgeRate() - (offset - getOffsetTarget()) * getScrollFling(), 0));
     }
 
     public int getScrollOffset(@Px int offset) {
         return (int) (mScrollSpeed * offset);
+    }
+
+    public void layout(final int width, final int height) {
+        final int vw = mView.getMeasuredWidth(), vh = mView.getMeasuredHeight();
+        int center = 0;
+        switch (mDirection) {
+            case Direction.LEFT:
+                center = (height - vh) >> 1;
+                mView.layout(-vw, center, 0, center + vh);
+                break;
+            case Direction.TOP:
+                center = (width - vw) >> 1;
+                mView.layout(center, -vh, center + vw, 0);
+                break;
+            case Direction.RIGHT:
+                center = (height - vh) >> 1;
+                mView.layout(width, center, width + vw, center + vh);
+                break;
+            case Direction.BOTTOM:
+                center = (width - vw) >> 1;
+                mView.layout(center, height, center + vw, height + vh);
+                break;
+            default:
+                break;
+        }
+
+    }
+
+    public void measure(final int width, final int height) {
+        if (isVertical()) {
+            final int widthSpec = View.MeasureSpec.makeMeasureSpec(width, View.MeasureSpec.EXACTLY);
+            final int heightSpec = View.MeasureSpec.makeMeasureSpec(mView.getHeight(),
+                    View.MeasureSpec.EXACTLY);
+            mView.measure(widthSpec, heightSpec);
+        } else {
+            final int widthSpec = View.MeasureSpec.makeMeasureSpec(mView.getWidth(),
+                    View.MeasureSpec.EXACTLY);
+            final int heightSpec = View.MeasureSpec.makeMeasureSpec(height,
+                    View.MeasureSpec.EXACTLY);
+            mView.measure(widthSpec, heightSpec);
+        }
     }
 
     public void onLayout(final int width, final int height) {
@@ -188,7 +231,8 @@ public final class Edge {
     }
 
     public void updateOffset(@Px int offset) {
-        this.getViewOffsetHelper().setDirection(mDirection, getOffsetCalculator().calculator(this, offset));
+        this.getViewOffsetHelper().setDirection(mDirection,
+                getOffsetCalculator().calculator(this, offset));
         if (mView instanceof EdgeWatcher) ((EdgeWatcher) mView).offset(this, offset);
     }
 
@@ -225,6 +269,14 @@ public final class Edge {
 
     public boolean isTargetOffset(int offset) {
         return getOffsetTarget() == Math.abs(offset);
+    }
+
+    private boolean isVertical() {
+        return isVertical(mDirection);
+    }
+
+    public boolean isVertical(@Direction int direction) {
+        return direction == Direction.TOP || direction == Direction.BOTTOM;
     }
 
     public static class Builder {
@@ -354,4 +406,23 @@ public final class Edge {
         }
     }
 
+    @Override
+    public String toString() {
+        return "Edge{" +
+                "mView=" + mView +
+                ", mDirection=" + mDirection +
+                ", mOffsetInit=" + mOffsetInit +
+                ", mOffsetTarget=" + mOffsetTarget +
+                ", mEdgeRate=" + mEdgeRate +
+                ", mScrollFling=" + mScrollFling +
+                ", mScrollSpeed=" + mScrollSpeed +
+                ", mEdgeOver=" + mEdgeOver +
+                ", mFlingFromTarget=" + mFlingFromTarget +
+                ", mScrollOffset=" + mScrollOffset +
+                ", mScrollTouchUp=" + mScrollTouchUp +
+                ", mOffsetCalculator=" + mOffsetCalculator +
+                ", mViewOffsetHelper=" + mViewOffsetHelper +
+                ", mRunning=" + mRunning +
+                '}';
+    }
 }
