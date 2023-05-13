@@ -16,7 +16,7 @@
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/mToolbar"
             style="@style/App.Toolbar"
-            app:layout_scrollFlags="scroll|enterAlways"
+            app:layout_scrollFlags="noScroll"
             app:popupTheme="@style/App.Toolbar.Popup" />
 
     </com.google.android.material.appbar.AppBarLayout>

@@ -1,10 +1,8 @@
 package com.colin.library.android.widgets.edge;
 
-import android.content.Context;
-import android.content.res.TypedArray;
-import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -12,8 +10,8 @@ import androidx.annotation.Px;
 import androidx.core.view.ViewCompat;
 
 import com.colin.library.android.utils.LogUtil;
-import com.colin.library.android.widgets.R;
 import com.colin.library.android.widgets.annotation.Direction;
+import com.colin.library.android.widgets.behavior.ViewOffsetHelper;
 
 import java.lang.ref.WeakReference;
 
@@ -27,13 +25,14 @@ public final class EdgeHelper {
     @Nullable
     private final WeakReference<View> mViewRef;
     @Nullable
-    private WeakReference<Edge> nEdgeLeftRef;
+    private View mTargetView;
+    private Edge mEdgeLeft;
     @Nullable
-    private WeakReference<Edge> nEdgeTopRef;
+    private Edge mEdgeTop;
     @Nullable
-    private WeakReference<Edge> nEdgeRightRef;
+    private Edge mEdgeRight;
     @Nullable
-    private WeakReference<Edge> nEdgeBottomRef;
+    private Edge mEdgeBottom;
     @Direction
     private int mDirectionEnabled;
     private long mEdgeScrollDuration = 500L;
@@ -41,59 +40,71 @@ public final class EdgeHelper {
     private int mEdgeLayoutTop;
     private int mEdgeLayoutRight;
     private int mEdgeLayoutBottom;
+
+    private ViewOffsetHelper mTargetViewOffsetHelper;
     private OnEdgeListener mOnEdgeListener;
 
-    public EdgeHelper(@NonNull View view, @Nullable AttributeSet attrs) {
-        final Context context = view.getContext();
+    public EdgeHelper(@NonNull View view) {
         this.mViewRef = new WeakReference<>(view);
-        final TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.EdgeLayout, 0, 0);
-        mDirectionEnabled = array.getInt(R.styleable.EdgeLayout_direction, Direction.TOP | Direction.BOTTOM);
-        array.recycle();
     }
 
-    public void setDirectionEnabled(@Direction final int enabled) {
-        this.mDirectionEnabled = enabled;
+
+    public void setTargetView(@NonNull View view) {
+        this.mTargetView = view;
+        this.mTargetViewOffsetHelper = new ViewOffsetHelper(view);
     }
 
-    @Direction
-    public int getDirectionEnabled() {
-        return mDirectionEnabled;
+    @Nullable
+    public View getTargetView() {
+        return mTargetView;
     }
 
-    public boolean isDirectionEnabled(@Direction final int direction) {
-        return (mDirectionEnabled & direction) == direction;
-    }
-
-    public void build(@Direction final int direction, @NonNull Edge.Builder builder) {
+    public void setEdgeView(@Direction final int direction, @NonNull Edge edge) {
         switch (direction) {
             case Direction.LEFT:
-                nEdgeLeftRef = new WeakReference<>(builder.build(direction));
+                mEdgeLeft = edge;
                 break;
             case Direction.TOP:
-                nEdgeTopRef = new WeakReference<>(builder.build(direction));
+                mEdgeTop = edge;
                 break;
             case Direction.RIGHT:
-                nEdgeRightRef = new WeakReference<>(builder.build(direction));
+                mEdgeRight = edge;
                 break;
             case Direction.BOTTOM:
-                nEdgeBottomRef = new WeakReference<>(builder.build(direction));
+                mEdgeBottom = edge;
                 break;
             default:
                 break;
         }
     }
 
+    public void onLayout(@NonNull ViewGroup layout, @Px int left, @Px int top, @Px int right, @Px int bottom) {
+        final int width = layout.getMeasuredWidth();
+        final int height = layout.getMeasuredHeight();
+        final int childLeft = layout.getPaddingLeft();
+        final int childTop = layout.getPaddingTop();
+        final int childWidth = width - childLeft - layout.getPaddingRight();
+        final int childHeight = height - childTop - layout.getPaddingBottom();
+        if (mTargetView != null) {
+            mTargetView.layout(childLeft, childTop, childLeft + childWidth, childTop + childHeight);
+        }
+        if (mEdgeLeft != null) mEdgeLeft.layout(width, height);
+        if (mEdgeTop != null) mEdgeTop.layout(width, height);
+        if (mEdgeRight != null) mEdgeRight.layout(width, height);
+        if (mEdgeBottom != null) mEdgeBottom.layout(width, height);
+    }
+
     @Nullable
     public Edge getEdge(@Direction int direction) {
         switch (direction) {
             case Direction.LEFT:
-                return nEdgeLeftRef == null ? null : nEdgeLeftRef.get();
+                return mEdgeLeft;
             case Direction.TOP:
-                return nEdgeTopRef == null ? null : nEdgeTopRef.get();
+                return mEdgeTop;
             case Direction.RIGHT:
-                return nEdgeRightRef == null ? null : nEdgeRightRef.get();
+                return mEdgeRight;
             case Direction.BOTTOM:
-                return nEdgeBottomRef == null ? null : nEdgeBottomRef.get();
+                return mEdgeBottom;
             default:
                 return null;
         }
@@ -115,48 +126,20 @@ public final class EdgeHelper {
         if (edge != null) edge.measure(width, height);
     }
 
-    public void onLayout(final int width, final int height) {
-        layout(getEdge(Direction.LEFT), width, height);
-        layout(getEdge(Direction.TOP), width, height);
-        layout(getEdge(Direction.RIGHT), width, height);
-        layout(getEdge(Direction.BOTTOM), width, height);
+
+    public void setDirectionEnabled(@Direction final int enabled) {
+        this.mDirectionEnabled = enabled;
     }
 
-
-    public void layout(@Nullable final Edge edge, final int width, final int height) {
-        if (edge != null) edge.layout(width, height);
-
-        final int vw = edge.getView().getMeasuredWidth(), vh = edge.getView().getMeasuredHeight();
-        int center = 0;
-        switch (edge.getDirection()) {
-            case Direction.LEFT:
-                mEdgeLayoutLeft = -vw;
-                center = (height - vh) >> 1;
-                edge.getView().layout(-vw, center, 0, center + vh);
-                edge.getViewOffsetHelper().onViewLayout();
-                break;
-            case Direction.TOP:
-                mEdgeLayoutTop = -vh;
-                center = (width - vw) >> 1;
-                edge.getView().layout(center, -vh, center + vw, 0);
-                edge.getViewOffsetHelper().onViewLayout();
-                break;
-            case Direction.RIGHT:
-                mEdgeLayoutRight = width + vw;
-                center = (height - vh) >> 1;
-                edge.getView().layout(width, center, width + vw, center + vh);
-                edge.getViewOffsetHelper().onViewLayout();
-                break;
-            case Direction.BOTTOM:
-                mEdgeLayoutBottom = height + vh;
-                center = (width - vw) >> 1;
-                edge.getView().layout(center, height, center + vw, height + vh);
-                edge.getViewOffsetHelper().onViewLayout();
-                break;
-            default:
-                break;
-        }
+    @Direction
+    public int getDirectionEnabled() {
+        return mDirectionEnabled;
     }
+
+    public boolean isDirectionEnabled(@Direction final int direction) {
+        return (mDirectionEnabled & direction) == direction;
+    }
+
 
     public void setEdgeListener(@Nullable OnEdgeListener edgeListener) {
         this.mOnEdgeListener = edgeListener;
@@ -213,6 +196,10 @@ public final class EdgeHelper {
         LogUtil.i(edge.toString());
         edge.setRunning(true);
         if (mOnEdgeListener != null) mOnEdgeListener.start(edge);
+
+    }
+
+    public void offset(@Direction int direction, @Px int px) {
 
     }
 
@@ -303,4 +290,6 @@ public final class EdgeHelper {
             LogUtil.log("水平方向滑动：actionStart");
         }
     }
+
+
 }
