@@ -4,7 +4,7 @@ import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 
-import com.colin.library.android.utils.HttpUtil;
+import com.colin.library.android.http.Util;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -107,7 +107,7 @@ public class MemoryCookieStore implements CookieStore {
     /* 当前cookie是否过期 */
     @Override
     public boolean isCookieExpired(@NonNull Cookie cookie) {
-        return HttpUtil.isCookieExpired(cookie);
+        return Util.isCookieExpired(cookie);
     }
 
     @Override

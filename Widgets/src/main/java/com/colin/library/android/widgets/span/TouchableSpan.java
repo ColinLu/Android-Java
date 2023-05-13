@@ -11,6 +11,7 @@ import androidx.core.view.ViewCompat;
 
 import com.colin.library.android.utils.ResourceUtil;
 import com.colin.library.android.widgets.R;
+import com.colin.library.android.widgets.Utils;
 
 /**
  * 作者： ColinLu
@@ -107,6 +108,6 @@ public abstract class TouchableSpan extends ClickableSpan implements ITouchableS
 
     @ColorInt
     private int getAttrColor(TextView view, int attr) {
-        return ResourceUtil.getAttrColor(view.getContext().getTheme(), attr);
+        return Utils.getAttrColor(view.getContext().getTheme(), attr);
     }
 }

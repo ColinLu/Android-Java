@@ -7,7 +7,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Px;
 import androidx.core.view.ViewCompat;
 
-import com.colin.library.android.widgets.Constants;
+import com.colin.library.android.widgets.behavior.ViewOffsetHelper;
+import com.colin.library.android.widgets.def.Constants;
 import com.colin.library.android.widgets.annotation.Direction;
 import com.colin.library.android.widgets.edge.offset.AlwaysFollowOffsetCalculator;
 import com.colin.library.android.widgets.edge.offset.IEdgeOffsetCalculator;
@@ -21,11 +22,10 @@ import com.colin.library.android.widgets.edge.offset.IEdgeOffsetCalculator;
  */
 public final class Edge {
     public static final float EDGE_RATE_DEFAULT = 0.45f;
-    @NonNull
-    private final View mView;
     @Direction
     private final int mDirection;
-
+    @NonNull
+    private final View mView;
     private final int mOffsetInit;      //初始位置
     private final int mOffsetTarget;    //触发Action的位置
     private final float mEdgeRate;
@@ -40,9 +40,9 @@ public final class Edge {
     private volatile boolean mRunning = false;
 
 
-    public Edge(@NonNull Builder builder) {
+    public Edge(@Direction int direction, @NonNull Builder builder) {
+        mDirection = direction;
         mView = builder.getView();
-        mDirection = builder.getDirection();
         mEdgeOver = builder.isEdgeOver();
         mOffsetInit = builder.getOffsetInit();
         mOffsetTarget = builder.getOffsetTarget();
@@ -55,6 +55,48 @@ public final class Edge {
         mOffsetCalculator = builder.getOffsetCalculator();
         mViewOffsetHelper = new ViewOffsetHelper(builder.getView());
         updateOffset(mOffsetInit);
+    }
+
+    public void measure(final int width, final int height) {
+        if (isVertical()) {
+            final int widthSpec = View.MeasureSpec.makeMeasureSpec(width, View.MeasureSpec.EXACTLY);
+            final int heightSpec = View.MeasureSpec.makeMeasureSpec(mView.getHeight(), View.MeasureSpec.EXACTLY);
+            mView.measure(widthSpec, heightSpec);
+        } else {
+            final int widthSpec = View.MeasureSpec.makeMeasureSpec(mView.getWidth(), View.MeasureSpec.EXACTLY);
+            final int heightSpec = View.MeasureSpec.makeMeasureSpec(height, View.MeasureSpec.EXACTLY);
+            mView.measure(widthSpec, heightSpec);
+        }
+    }
+
+    public void layout(final int width, final int height) {
+        final int vw = mView.getMeasuredWidth(), vh = mView.getMeasuredHeight();
+        int center = 0;
+        switch (mDirection) {
+            case Direction.LEFT:
+                center = (height - vh) >> 1;
+                mView.layout(-vw, center, 0, center + vh);
+                getViewOffsetHelper().onViewLayout();
+                break;
+            case Direction.TOP:
+                center = (width - vw) >> 1;
+                mView.layout(center, -vh, center + vw, 0);
+                getViewOffsetHelper().onViewLayout();
+                break;
+            case Direction.RIGHT:
+                center = (height - vh) >> 1;
+                mView.layout(width, center, width + vw, center + vh);
+                getViewOffsetHelper().onViewLayout();
+                break;
+            case Direction.BOTTOM:
+                center = (width - vw) >> 1;
+                mView.layout(center, height, center + vw, height + vh);
+                getViewOffsetHelper().onViewLayout();
+                break;
+            default:
+                break;
+        }
+
     }
 
 
@@ -132,59 +174,17 @@ public final class Edge {
 
     public float getFlingRate(@ViewCompat.NestedScrollType int type, @Px int offset) {
         if (type == ViewCompat.TYPE_TOUCH) return mEdgeRate;
-        return Math.min(mEdgeRate,
-                Math.max(mEdgeRate - (offset - getOffsetTarget()) * getScrollFling(), 0));
+        return Math.min(mEdgeRate, Math.max(mEdgeRate - (offset - getOffsetTarget()) * getScrollFling(), 0));
     }
 
     public float getFlingRate(@Px int offset) {
-        return Math.min(getEdgeRate(),
-                Math.max(getEdgeRate() - (offset - getOffsetTarget()) * getScrollFling(), 0));
+        return Math.min(getEdgeRate(), Math.max(getEdgeRate() - (offset - getOffsetTarget()) * getScrollFling(), 0));
     }
 
     public int getScrollOffset(@Px int offset) {
         return (int) (mScrollSpeed * offset);
     }
 
-    public void layout(final int width, final int height) {
-        final int vw = mView.getMeasuredWidth(), vh = mView.getMeasuredHeight();
-        int center = 0;
-        switch (mDirection) {
-            case Direction.LEFT:
-                center = (height - vh) >> 1;
-                mView.layout(-vw, center, 0, center + vh);
-                break;
-            case Direction.TOP:
-                center = (width - vw) >> 1;
-                mView.layout(center, -vh, center + vw, 0);
-                break;
-            case Direction.RIGHT:
-                center = (height - vh) >> 1;
-                mView.layout(width, center, width + vw, center + vh);
-                break;
-            case Direction.BOTTOM:
-                center = (width - vw) >> 1;
-                mView.layout(center, height, center + vw, height + vh);
-                break;
-            default:
-                break;
-        }
-
-    }
-
-    public void measure(final int width, final int height) {
-        if (isVertical()) {
-            final int widthSpec = View.MeasureSpec.makeMeasureSpec(width, View.MeasureSpec.EXACTLY);
-            final int heightSpec = View.MeasureSpec.makeMeasureSpec(mView.getHeight(),
-                    View.MeasureSpec.EXACTLY);
-            mView.measure(widthSpec, heightSpec);
-        } else {
-            final int widthSpec = View.MeasureSpec.makeMeasureSpec(mView.getWidth(),
-                    View.MeasureSpec.EXACTLY);
-            final int heightSpec = View.MeasureSpec.makeMeasureSpec(height,
-                    View.MeasureSpec.EXACTLY);
-            mView.measure(widthSpec, heightSpec);
-        }
-    }
 
     public void onLayout(final int width, final int height) {
         final int vw = mView.getMeasuredWidth(), vh = mView.getMeasuredHeight();
@@ -229,10 +229,12 @@ public final class Edge {
         if (running && mView instanceof EdgeWatcher) ((EdgeWatcher) mView).start();
         if (!running && mView instanceof EdgeWatcher) ((EdgeWatcher) mView).finish();
     }
-
+    public void setOffset(@Px int offset) {
+        this.getViewOffsetHelper().setDirection(mDirection, getOffsetCalculator().calculator(this, offset));
+        if (mView instanceof EdgeWatcher) ((EdgeWatcher) mView).offset(this, offset);
+    }
     public void updateOffset(@Px int offset) {
-        this.getViewOffsetHelper().setDirection(mDirection,
-                getOffsetCalculator().calculator(this, offset));
+        this.getViewOffsetHelper().setDirection(mDirection, getOffsetCalculator().calculator(this, offset));
         if (mView instanceof EdgeWatcher) ((EdgeWatcher) mView).offset(this, offset);
     }
 
@@ -282,8 +284,6 @@ public final class Edge {
     public static class Builder {
         @NonNull
         private final View mView;
-        @Direction
-        private final int mDirection;
         private int mOffsetInit;
         private int mOffsetTarget = ViewGroup.LayoutParams.WRAP_CONTENT;
         private float mEdgeRate = EDGE_RATE_DEFAULT;
@@ -295,9 +295,8 @@ public final class Edge {
         private boolean mScrollTouchUp = true;
         private IEdgeOffsetCalculator mOffsetCalculator;
 
-        public Builder(@NonNull View view, @Direction int direction) {
+        public Builder(@NonNull View view) {
             this.mView = view;
-            this.mDirection = direction;
         }
 
         public Builder setOffsetInit(@Px int offset) {
@@ -355,11 +354,6 @@ public final class Edge {
             return mView;
         }
 
-        @Direction
-        public int getDirection() {
-            return mDirection;
-        }
-
         public int getOffsetInit() {
             return mOffsetInit;
         }
@@ -401,28 +395,13 @@ public final class Edge {
             return null == mOffsetCalculator ? new AlwaysFollowOffsetCalculator() : mOffsetCalculator;
         }
 
-        public Edge build() {
-            return new Edge(this);
+        public Edge build(@Direction int direction) {
+            return new Edge(direction, this);
         }
     }
 
     @Override
     public String toString() {
-        return "Edge{" +
-                "mView=" + mView +
-                ", mDirection=" + mDirection +
-                ", mOffsetInit=" + mOffsetInit +
-                ", mOffsetTarget=" + mOffsetTarget +
-                ", mEdgeRate=" + mEdgeRate +
-                ", mScrollFling=" + mScrollFling +
-                ", mScrollSpeed=" + mScrollSpeed +
-                ", mEdgeOver=" + mEdgeOver +
-                ", mFlingFromTarget=" + mFlingFromTarget +
-                ", mScrollOffset=" + mScrollOffset +
-                ", mScrollTouchUp=" + mScrollTouchUp +
-                ", mOffsetCalculator=" + mOffsetCalculator +
-                ", mViewOffsetHelper=" + mViewOffsetHelper +
-                ", mRunning=" + mRunning +
-                '}';
+        return "Edge{" + "mView=" + mView + ", mDirection=" + mDirection + ", mOffsetInit=" + mOffsetInit + ", mOffsetTarget=" + mOffsetTarget + ", mEdgeRate=" + mEdgeRate + ", mScrollFling=" + mScrollFling + ", mScrollSpeed=" + mScrollSpeed + ", mEdgeOver=" + mEdgeOver + ", mFlingFromTarget=" + mFlingFromTarget + ", mScrollOffset=" + mScrollOffset + ", mScrollTouchUp=" + mScrollTouchUp + ", mOffsetCalculator=" + mOffsetCalculator + ", mViewOffsetHelper=" + mViewOffsetHelper + ", mRunning=" + mRunning + '}';
     }
 }

@@ -5,8 +5,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.colin.library.android.helper.ThreadHelper;
-import com.colin.library.android.http.bean.HttpException;
-import com.colin.library.android.http.callback.IHttpCallback;
+import com.colin.library.android.http.def.HttpException;
+import com.colin.library.android.http.action.IAction;
 import com.colin.library.android.utils.IOUtil;
 import com.colin.library.android.utils.LogUtil;
 
@@ -26,7 +26,7 @@ import okhttp3.ResponseBody;
  * <p>
  * 描述： 网络接口回调操作
  */
-public class HttpPolicy<Result> implements IPolicy<Result> {
+public class HttpPolicy implements IPolicy {
     private final OkHttpClient mHttpClient;
     private final Request mRequest;
     private volatile Call mCall;
@@ -56,27 +56,25 @@ public class HttpPolicy<Result> implements IPolicy<Result> {
     }
 
     @Override
-    public void execute(@NonNull IHttpCallback<Result> callback) {
+    public <Result> void execute(@NonNull IAction<Result> action) {
         ThreadHelper.getInstance().post(() -> {
             try {
                 //开始
-                callback.start(mRequest);
+                action.start(mRequest);
                 //检查状态
                 checkState();
                 //开始请求服务器
-                request(callback);
+                request(action);
             } catch (Throwable e) {
-                fail(callback, new HttpException(HttpException.CODE_HTTP_STATE, mRequest.url().toString(), e));
+                fail(action, new HttpException(HttpException.CODE_HTTP_STATE, mRequest.toString(), e));
             }
         });
     }
 
-    @Override
     public boolean isExecuted() {
         return mExecuted;
     }
 
-    @Override
     public boolean isCanceled() {
         if (mCanceled) return true;
         synchronized (this) {
@@ -84,25 +82,23 @@ public class HttpPolicy<Result> implements IPolicy<Result> {
         }
     }
 
-    @Override
     public void cancel() {
         mCanceled = true;
         if (null != mCall) mCall.cancel();
     }
 
-    @Override
-    public void success(@NonNull IHttpCallback<Result> callback, @Nullable Result result) {
+    public <Result> void success(@NonNull IAction<Result> action, @Nullable Result result) {
         ThreadHelper.getInstance().post(() -> {
-            callback.success(result);
-            callback.finish(true);
+            action.success(result);
+            action.finish(mRequest);
         });
     }
 
     @Override
-    public void fail(@NonNull IHttpCallback<Result> callback, @NonNull HttpException exception) {
+    public <Result> void fail(@NonNull IAction<Result> action, @NonNull Throwable e) {
         ThreadHelper.getInstance().post(() -> {
-            callback.fail(exception);
-            callback.finish(false);
+            action.fail(e);
+            action.finish(mRequest);
         });
     }
 
@@ -114,7 +110,7 @@ public class HttpPolicy<Result> implements IPolicy<Result> {
     }
 
 
-    private void request(final IHttpCallback<Result> callback) {
+    private <Result> void request(final IAction<Result> action) {
         mCall.enqueue(new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
@@ -125,9 +121,9 @@ public class HttpPolicy<Result> implements IPolicy<Result> {
                 if (e instanceof SocketTimeoutException && mRetryCall > 0) {
                     mRetryCall--;
                     mCall = mHttpClient.newCall(mRequest);
-                    request(callback);
+                    request(action);
                 } else {
-                    fail(callback, new HttpException(HttpException.CODE_HTTP_FAIL, mRequest.url().toString(), e));
+                    fail(action, new HttpException(HttpException.CODE_HTTP_FAIL, mRequest.toString(), e));
                 }
             }
 
@@ -144,14 +140,14 @@ public class HttpPolicy<Result> implements IPolicy<Result> {
                     responseBody = response.body();
                     //服务器问题 请求失败  或者没有请求体
                     if (!response.isSuccessful() || code == 404 || code >= 500) {
-                        fail(callback, new HttpException(code, mRequest.url().toString(), response.message()));
+                        fail(action, new HttpException(code, mRequest.toString(), response.message()));
                         return;
                     }
                     //解析操作
-                    final Result result = callback.parse(response);
-                    success(callback, result);
+                    final Result result = action.parse(response);
+                    success(action, result);
                 } catch (Throwable e) {
-                    fail(callback, new HttpException(code, mRequest.url().toString(), e));
+                    fail(action, new HttpException(code, mRequest.toString(), e));
                 } finally {
                     IOUtil.close(responseBody, response);
                 }

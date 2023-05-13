@@ -38,12 +38,13 @@ public class MainActivity extends AppActivity<ActivityMainBinding> {
         appBarConfiguration = new AppBarConfiguration.Builder(controller.getGraph()).build();
         NavigationUI.setupWithNavController(mBinding.mToolbar, controller, appBarConfiguration);
 
-        mBinding.fab.setOnClickListener(view -> Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG).setAction("Action", null).show());
+        mBinding.mFab.setOnClickListener(
+                view -> Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG).setAction("Action", null).show());
 
         mBinding.mAppBar.addOnOffsetChangedListener(new OnAppBarStateChangeListener() {
             @Override
             public void onStateChanged(AppBarLayout appBarLayout, @State int state, int offset) {
-                LogUtil.i(String.format("state:%d\toffset:%d", state, offset));
+                LogUtil.log("state:%d\toffset:%d", state, offset);
                 mState = state;
                 mOffset = offset;
             }

@@ -74,16 +74,13 @@ public class PathFragment extends AppFragment<LayoutListBinding> implements OnIt
     public void item(@NonNull View view, int position, @Nullable Object object) {
         final String title = object == null ? "" : object.toString();
         String path = null;
-        LogUtil.e("isWrite:" + PathUtil.canWrite() + "\tstorageState:" + PathUtil.storageState());
+        LogUtil.e("isWrite:" + PathUtil.canWrite() + "\tstorageState:" + PathUtil.hasSDCard());
         switch (title) {
             case "root system":
                 path = PathUtil.getPath(PathUtil.getRootSystem());
                 break;
             case "root data":
                 path = PathUtil.getPath(PathUtil.getRootData());
-                break;
-            case "root storage":
-                path = PathUtil.getPath(PathUtil.getRootStorage());
                 break;
             case "external":
                 ToastUtil.show("not support");
@@ -92,31 +89,31 @@ public class PathFragment extends AppFragment<LayoutListBinding> implements OnIt
                 path = PathUtil.getPath(PathUtil.getExternalFile(Environment.DIRECTORY_MUSIC));
                 break;
             case "external android music":
-                path = PathUtil.getPath(PathUtil.getExternalFile(requireContext(), Environment.DIRECTORY_MUSIC));
+                path = PathUtil.getPath(PathUtil.getExternalAppFile(requireContext(), Environment.DIRECTORY_MUSIC));
                 break;
             case "external dcim":
                 path = PathUtil.getPath(PathUtil.getExternalFile(Environment.DIRECTORY_DCIM));
                 break;
             case "external android dcim":
-                path = PathUtil.getPath(PathUtil.getExternalFile(requireContext(), Environment.DIRECTORY_DCIM));
+                path = PathUtil.getPath(PathUtil.getExternalAppFile(requireContext(), Environment.DIRECTORY_DCIM));
                 break;
             case "external picture":
                 path = PathUtil.getPath(PathUtil.getExternalFile(Environment.DIRECTORY_PICTURES));
                 break;
             case "external android picture":
-                path = PathUtil.getPath(PathUtil.getExternalFile(requireContext(), Environment.DIRECTORY_PICTURES));
+                path = PathUtil.getPath(PathUtil.getExternalAppFile(requireContext(), Environment.DIRECTORY_PICTURES));
                 break;
             case "external download":
                 path = PathUtil.getPath(PathUtil.getExternalFile(Environment.DIRECTORY_DOWNLOADS));
                 break;
             case "external android download":
-                path = PathUtil.getPath(PathUtil.getExternalFile(requireContext(), Environment.DIRECTORY_DOWNLOADS));
+                path = PathUtil.getPath(PathUtil.getExternalAppFile(requireContext(), Environment.DIRECTORY_DOWNLOADS));
                 break;
             case "external custom":
                 path = PathUtil.getPath(PathUtil.getExternalFile("custom"));
                 break;
             case "external android custom":
-                path = PathUtil.getPath(PathUtil.getExternalFile(requireContext(), "custom"));
+                path = PathUtil.getPath(PathUtil.getExternalAppFile(requireContext(), "custom"));
                 break;
             case "external cache":
                 path = PathUtil.getPath(PathUtil.getExternalCache());

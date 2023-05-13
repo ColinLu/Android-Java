@@ -35,8 +35,9 @@ public class HomeFragment extends AppFragment<FragmentHomeBinding> implements Vi
         mBinding.buttonMethod.setOnClickListener(this);
         mBinding.buttonView.setOnClickListener(this);
         mBinding.buttonWeb.setOnClickListener(this);
-        mBinding.buttonGet.setOnClickListener(this);
-        mBinding.buttonPost.setOnClickListener(this);
+        mBinding.buttonImage.setOnClickListener(this);
+        mBinding.buttonCamera.setOnClickListener(this);
+        mBinding.buttonVideo.setOnClickListener(this);
     }
 
     @Override
@@ -66,21 +67,17 @@ public class HomeFragment extends AppFragment<FragmentHomeBinding> implements Vi
                 DemoUtils.toNavigate(this, R.id.action_Home_to_Method);
                 break;
             case R.id.button_web:
-                if (getActivity() instanceof MainActivity) {
-                    ((MainActivity) getActivity()).setExpanded(false);
-                }
-                DemoUtils.toNavigate(this, R.id.action_Home_to_Web);
+                DialogManager.getInstance().showImage(getChildFragmentManager(),R.drawable.ic_launcher_background);
+//                if (getActivity() instanceof MainActivity) {
+//                    ((MainActivity) getActivity()).setExpanded(false);
+//                }
+//                DemoUtils.toNavigate(this, R.id.action_Home_to_Web);
                 break;
-            case R.id.button_get:
-                MediaHelper.getInstance()
-                        .image()
-                        .single()
-                        .camera(true)
-                        .result(this::showResult)
-                        .cancel(ToastUtil::show)
-                        .start(requireActivity());
+            case R.id.button_image:
+                DialogManager.getInstance().showImage(getChildFragmentManager(), R.drawable.image);
                 break;
-            case R.id.button_post:
+            case R.id.button_camera:
+//                DialogManager.getInstance().showImage(getChildFragmentManager(), R.drawable.ticket_image);
                 final Uri uri = MediaUtil.createImageUri(requireContext());
                 LogUtil.d(uri);
                 MediaHelper.getInstance()
@@ -89,6 +86,9 @@ public class HomeFragment extends AppFragment<FragmentHomeBinding> implements Vi
                         .result(this::showResult)
                         .cancel(ToastUtil::show)
                         .start(requireContext());
+                break;
+            case R.id.button_video:
+                DialogManager.getInstance().showImage(getChildFragmentManager(), R.drawable.ticket);
                 break;
             default:
                 break;

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.ListView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -27,6 +28,7 @@ public class NestedScrollBottomRecyclerView extends RecyclerView implements INes
 
     public NestedScrollBottomRecyclerView(@NonNull Context context) {
         super(context);
+        ListView
         init();
     }
 

@@ -1,15 +1,14 @@
 package com.colin.library.android.utils;
 
-import android.annotation.SuppressLint;
+import android.Manifest;
 import android.content.Context;
 import android.os.Build;
 import android.os.Environment;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
+import androidx.annotation.RequiresPermission;
 
-import com.colin.library.android.utils.data.Constants;
 import com.colin.library.android.helper.UtilHelper;
 
 import java.io.File;
@@ -26,25 +25,19 @@ public final class PathUtil {
     }
 
     /*判断是否存在外部存储卡*/
-    public static boolean storageState() {
+    public static boolean hasSDCard() {
         return Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState());
     }
 
     /*外部存储是否有写权限*/
     public static boolean canWrite() {
-        return storageState() && Environment.getExternalStorageDirectory().canWrite();
+        return hasSDCard() && Environment.getExternalStorageDirectory().canWrite();
     }
 
     /*  /system */
     public static File getRootSystem() {
         return Environment.getRootDirectory();
     }
-
-    /*  /storage*/
-    public static File getRootStorage() {
-        return Environment.getStorageDirectory();
-    }
-
 
     /*  /data */
     public static File getRootData() {
@@ -75,7 +68,6 @@ public final class PathUtil {
     public static File getUserCache(@NonNull Context context) {
         return context.getCacheDir();
     }
-
 
     public static File getUserCodeCache() {
         return getUserCodeCache(UtilHelper.getInstance().getUtilConfig().getApplication());
@@ -120,8 +112,18 @@ public final class PathUtil {
     }
 
     /*  storage/emulated/0/type */
+    @RequiresPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
     public static File getExternalFile(@NonNull String type) {
         return Environment.getExternalStoragePublicDirectory(type);
+    }
+
+    @RequiresPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
+    public static File getExternalStorageFile(@NonNull String type) {
+        return Environment.getExternalStoragePublicDirectory(type);
+    }
+
+    public static File getExternalAppFile(@Nullable String type) {
+        return getExternalAppFile(UtilHelper.getInstance().getUtilConfig().getApplication(), type);
     }
 
     /**
@@ -132,7 +134,7 @@ public final class PathUtil {
      * @param type
      * @return
      */
-    public static File getExternalFile(@NonNull Context context, @Nullable String type) {
+    public static File getExternalAppFile(@NonNull Context context, @Nullable String type) {
         return context.getExternalFilesDir(type);
     }
 

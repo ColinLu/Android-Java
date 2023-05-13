@@ -95,9 +95,9 @@ public class SpanTextView extends AppCompatTextView implements ITouchSpan {
     }
 
     @Override
-    public void setTouchSpan(boolean touch) {
-        if (mTouchSpan != touch) {
-            mTouchSpan = touch;
+    public void setTouchSpan(boolean touchSpan) {
+        if (mTouchSpan != touchSpan) {
+            mTouchSpan = touchSpan;
             setPressed(mPressed);
         }
     }

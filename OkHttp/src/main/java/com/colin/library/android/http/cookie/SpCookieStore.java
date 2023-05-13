@@ -6,8 +6,8 @@ import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 
-import com.colin.library.android.http.bean.CookieBean;
-import com.colin.library.android.utils.HttpUtil;
+import com.colin.library.android.http.Util;
+import com.colin.library.android.http.def.CookieBean;
 import com.colin.library.android.utils.SpUtil;
 
 import java.util.ArrayList;
@@ -119,7 +119,7 @@ public class SpCookieStore implements CookieStore {
 
     @Override
     public boolean isCookieExpired(@NonNull Cookie cookie) {
-        return HttpUtil.isCookieExpired(cookie);
+        return Util.isCookieExpired(cookie);
     }
 
     @Override

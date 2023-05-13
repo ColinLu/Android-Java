@@ -29,18 +29,14 @@ public abstract class BaseReceiver extends BroadcastReceiver implements DefaultL
     @Override
     public void onCreate(@NonNull LifecycleOwner owner) {
         final OnReceiverListener listener = null == mOnBroadcastListenerRef ? null : mOnBroadcastListenerRef.get();
-        if (listener != null && listener.getContext() != null) {
-            listener.getContext().registerReceiver(this, getIntentFilter());
-        }
+        if (listener != null) listener.getContext().registerReceiver(this, getIntentFilter());
     }
 
     /*解绑 广播*/
     @Override
     public void onDestroy(@NonNull LifecycleOwner owner) {
         final OnReceiverListener listener = null == mOnBroadcastListenerRef ? null : mOnBroadcastListenerRef.get();
-        if (listener != null && listener.getContext() != null) {
-            listener.getContext().unregisterReceiver(this);
-        }
+        if (listener != null) listener.getContext().unregisterReceiver(this);
     }
 
     /*配置广播事件*/

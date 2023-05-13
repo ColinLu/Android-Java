@@ -21,14 +21,12 @@ import androidx.core.view.NestedScrollingChildHelper;
 import androidx.core.view.NestedScrollingParent2;
 import androidx.core.view.NestedScrollingParentHelper;
 import androidx.core.view.ViewCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.colin.library.android.utils.NumberUtil;
 import com.colin.library.android.widgets.Utils;
 import com.colin.library.android.widgets.alpha.AlphaFrameLayout;
 import com.colin.library.android.widgets.annotation.ScrollState;
-import com.colin.library.android.widgets.edge.ViewOffsetHelper;
+import com.colin.library.android.widgets.behavior.ViewOffsetHelper;
 import com.colin.library.android.widgets.interpolator.Interpolators;
 
 /**

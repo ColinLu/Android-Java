@@ -8,8 +8,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
-import com.colin.library.android.widgets.edge.ViewOffsetHelper;
-
 /**
  * 作者： ColinLu
  * 时间： 2022-12-31 18:52

@@ -17,6 +17,7 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 
 
+import com.colin.library.android.utils.ResourceUtil;
 import com.colin.library.android.widgets.R;
 import com.colin.library.android.widgets.Utils;
 
@@ -109,13 +110,13 @@ public class NumberProgressBar extends View {
         final TypedArray typedArray = context.getTheme().obtainStyledAttributes(attrs, R.styleable.NumberProgressBar, defStyleAttr, 0);
         mShowText = typedArray.getBoolean(R.styleable.NumberProgressBar_numberShowText, mShowText);
         mTextColor = typedArray.getColor(R.styleable.NumberProgressBar_numberTextColor, mTextColor);
-        mTextSize = typedArray.getDimension(R.styleable.NumberProgressBar_numberTextSize, Utils.sp2px(context, 10));
-        mOffset = typedArray.getDimension(R.styleable.NumberProgressBar_numberTextOffset, Utils.dp2px(context, 3.0F));
+        mTextSize = typedArray.getDimension(R.styleable.NumberProgressBar_numberTextSize, ResourceUtil.sp2px(context, 10));
+        mOffset = typedArray.getDimension(R.styleable.NumberProgressBar_numberTextOffset, ResourceUtil.dp2px(context, 3.0F));
 
         mReachedBarColor = typedArray.getColor(R.styleable.NumberProgressBar_numberReachedColor, mReachedBarColor);
-        mReachedBarHeight = typedArray.getDimension(R.styleable.NumberProgressBar_numberReachedHeight, Utils.dp2px(context, 1.5F));
+        mReachedBarHeight = typedArray.getDimension(R.styleable.NumberProgressBar_numberReachedHeight, ResourceUtil.dp2px(context, 1.5F));
         mUnreachedBarColor = typedArray.getColor(R.styleable.NumberProgressBar_numberUnreachedColor, mUnreachedBarColor);
-        mUnreachedBarHeight = typedArray.getDimension(R.styleable.NumberProgressBar_numberUnreachedHeight, Utils.dp2px(context, 1.0F));
+        mUnreachedBarHeight = typedArray.getDimension(R.styleable.NumberProgressBar_numberUnreachedHeight, ResourceUtil.dp2px(context, 1.0F));
 
         mCurrentProgress = typedArray.getInteger(R.styleable.NumberProgressBar_numberCurrent, mCurrentProgress);
         mMaxProgress = typedArray.getInteger(R.styleable.NumberProgressBar_numberMax, mMaxProgress);
@@ -326,15 +327,13 @@ public class NumberProgressBar extends View {
 
     public void setPrefix(@Nullable String prefix) {
         if (TextUtils.equals(this.mPrefix, prefix)) return;
-        if (null == prefix) this.mPrefix = "";
-        this.mPrefix = prefix;
+        this.mPrefix = prefix == null ? "" : prefix;
         postInvalidate();
     }
 
     public void setSuffix(@Nullable String suffix) {
         if (TextUtils.equals(this.mSuffix, suffix)) return;
-        if (null == suffix) this.mSuffix = "";
-        this.mSuffix = suffix;
+        this.mSuffix = suffix == null ? "" : suffix;
         postInvalidate();
     }
 

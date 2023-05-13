@@ -12,6 +12,7 @@ import androidx.appcompat.widget.AppCompatImageView;
 import androidx.core.content.ContextCompat;
 
 import com.colin.library.android.utils.LogUtil;
+import com.colin.library.android.utils.WidgetUtil;
 import com.colin.library.android.widgets.R;
 import com.colin.library.android.widgets.Utils;
 
@@ -46,7 +47,8 @@ public class LoadRefreshView extends AppCompatImageView implements EdgeWatcher {
         if (attrs != null) {
             final TypedArray array = context.getTheme().obtainStyledAttributes(attrs, R.styleable.LoadRefreshView, defStyleAttr, 0);
             mProgress.setStyle(array.getInteger(R.styleable.LoadRefreshView_progressStyle, ProgressDrawable.DEFAULT));
-            mProgress.setColorSchemeColors(array.getColor(R.styleable.LoadRefreshView_progressColor, ContextCompat.getColor(context, R.color.colorAccent)));
+            mProgress.setColorSchemeColors(
+                    array.getColor(R.styleable.LoadRefreshView_progressColor, ContextCompat.getColor(context, R.color.colorAccent)));
             mProgress.setAlpha(array.getInt(R.styleable.LoadRefreshView_progressAlpha, MAX_ALPHA));
             mProgress.setArrowScale(array.getFloat(R.styleable.LoadRefreshView_progressScale, SCALE_DEFAULT));
             setRadius(array.getDimensionPixelSize(R.styleable.LoadRefreshView_radius, mRadius));
@@ -125,7 +127,7 @@ public class LoadRefreshView extends AppCompatImageView implements EdgeWatcher {
     public void setRadius(int radius) {
         if (mRadius != radius) {
             this.mRadius = radius;
-            Utils.setRadius(this, radius);
+            WidgetUtil.setRadius(this, radius);
         }
     }
 

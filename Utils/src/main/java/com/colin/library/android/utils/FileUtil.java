@@ -1,13 +1,9 @@
 package com.colin.library.android.utils;
 
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.os.Environment;
 import android.text.format.Formatter;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.WorkerThread;
 
 import com.colin.library.android.annotation.Encode;
 import com.colin.library.android.helper.UtilHelper;
@@ -697,7 +693,8 @@ public final class FileUtil {
      * @param isForce  是否写入文件
      * @return {@code true}: 写入成功<br>{@code false}: 写入失败
      */
-    public static boolean toFileChannelMap(@Nullable final String filePath, @Nullable final byte[] bytes, final boolean append, final boolean isForce) {
+    public static boolean toFileChannelMap(@Nullable final String filePath, @Nullable final byte[] bytes, final boolean append,
+            final boolean isForce) {
         return toFileChannelMap(FileUtil.getFile(filePath), bytes, append, isForce);
     }
 
@@ -1040,39 +1037,4 @@ public final class FileUtil {
         }
     }
 
-    @Nullable
-    @WorkerThread
-    public static String save(@Nullable final Context context, @Nullable final Bitmap bitmap) {
-        return save(context, bitmap, true);
-    }
-
-
-    @Nullable
-    @WorkerThread
-    public static String save(@Nullable final Context context, @Nullable final Bitmap bitmap, final boolean recycle) {
-        if (null == context || BitmapUtil.isEmpty(bitmap)) return null;
-        String path = null;
-        FileOutputStream out = null;
-        try {
-            final String fileName = TimeUtil.getTimeString() + ".png";
-            final File file = getFile(PathUtil.getExternalFile(Environment.DIRECTORY_DCIM), fileName);
-            final boolean existsFile = createOrExistsFile(file);
-            if (existsFile) {
-                path = file.getAbsolutePath();
-                out = new FileOutputStream(file);
-                bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
-            }
-            IOUtil.flush(out);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            if (recycle) BitmapUtil.recycle(bitmap);
-            IOUtil.close(out);
-        }
-        return path;
-    }
-
-    public interface OnFileListener {
-        boolean action(File src, File dest);
-    }
 }

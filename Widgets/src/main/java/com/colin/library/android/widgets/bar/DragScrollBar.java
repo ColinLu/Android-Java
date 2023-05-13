@@ -29,7 +29,6 @@ public class DragScrollBar extends View {
     private final Runnable mDelayInvalidateRunnable = this::invalidate;
     private final int mAdjustDistanceProtection = ResourceUtil.dp2px(20);
     private final int mAdjustMaxDistanceOnce = ResourceUtil.dp2px(4);
-
     private Drawable mDragDrawable;
     private long mStartTransitionTime = 0;
     private int mKeepShownTime = 800;
@@ -98,8 +97,7 @@ public class DragScrollBar extends View {
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         final Drawable drawable = mDragDrawable;
         if (drawable == null) super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        else
-            super.onMeasure(MeasureSpec.makeMeasureSpec(drawable.getIntrinsicWidth(), MeasureSpec.EXACTLY), heightMeasureSpec);
+        else super.onMeasure(MeasureSpec.makeMeasureSpec(drawable.getIntrinsicWidth(), MeasureSpec.EXACTLY), heightMeasureSpec);
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -107,14 +105,13 @@ public class DragScrollBar extends View {
     public boolean onTouchEvent(@NonNull MotionEvent event) {
         final Drawable drawable = mDragDrawable;
         if (drawable == null) return super.onTouchEvent(event);
-        int action = event.getAction();
+        final int action = event.getActionMasked();
         final float x = event.getX();
         final float y = event.getY();
         switch (action) {
             case MotionEvent.ACTION_DOWN:
                 mIsInDragging = false;
-                if (mCurrentAlpha > 0 && x > getWidth() - drawable.getIntrinsicWidth()
-                        && y >= mDrawableDrawTop && y <= mDrawableDrawTop + drawable.getIntrinsicHeight()) {
+                if (mCurrentAlpha > 0 && x > getWidth() - drawable.getIntrinsicWidth() && y >= mDrawableDrawTop && y <= mDrawableDrawTop + drawable.getIntrinsicHeight()) {
                     mDragInnerTop = y - mDrawableDrawTop;
                     getParent().requestDisallowInterceptTouchEvent(true);
                     mIsInDragging = true;
@@ -186,8 +183,7 @@ public class DragScrollBar extends View {
                 // keep show
                 mCurrentAlpha = 1f;
                 needInvalidate = (int) (mKeepShownTime - (timeAfterStartShow - mTransitionDuration));
-            } else if ((timeAfterEndShow = timeAfterStartShow - mTransitionDuration - mKeepShownTime)
-                    < mTransitionDuration) {
+            } else if ((timeAfterEndShow = timeAfterStartShow - mTransitionDuration - mKeepShownTime) < mTransitionDuration) {
                 // in hide animation
                 mCurrentAlpha = 1 - timeAfterEndShow * 1f / mTransitionDuration;
                 needInvalidate = 0;
@@ -220,8 +216,7 @@ public class DragScrollBar extends View {
         mDrawableDrawTop = top;
 
         if (needInvalidate == 0) invalidate();
-        else if (needInvalidate > 0)
-            ViewCompat.postOnAnimationDelayed(this, mDelayInvalidateRunnable, needInvalidate);
+        else if (needInvalidate > 0) ViewCompat.postOnAnimationDelayed(this, mDelayInvalidateRunnable, needInvalidate);
     }
 
     protected int getScrollBarTopMargin() {

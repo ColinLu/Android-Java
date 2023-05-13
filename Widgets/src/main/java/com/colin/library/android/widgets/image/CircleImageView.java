@@ -1,15 +1,12 @@
 package com.colin.library.android.widgets.image;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
-import android.graphics.Outline;
 import android.graphics.Path;
 import android.graphics.RectF;
 import android.os.Build;
 import android.util.AttributeSet;
-import android.view.View;
 import android.view.ViewOutlineProvider;
 
 import androidx.annotation.NonNull;
@@ -17,8 +14,8 @@ import androidx.annotation.Nullable;
 import androidx.annotation.Px;
 import androidx.appcompat.widget.AppCompatImageView;
 
+import com.colin.library.android.provider.AppViewOutlineProvider;
 import com.colin.library.android.widgets.R;
-import com.colin.library.android.widgets.RoundOutlineProvider;
 
 /**
  * 作者： ColinLu
@@ -57,15 +54,9 @@ public class CircleImageView extends AppCompatImageView {
         if (mRadius == radius) return;
         this.mRadius = radius;
         if (radius > 0) {
-            if (isOutline()) {
-                setOutlineProvider(mOutlineProvider);
-                setClipToOutline(true);
-            } else {
-                mRect.set(0, 0, getWidth(), getHeight());
-                mPath.reset();
-                mPath.addRoundRect(mRect, radius, radius, Path.Direction.CW);
-            }
-        } else if (isOutline()) setClipToOutline(false);
+            setOutlineProvider(mOutlineProvider);
+            setClipToOutline(true);
+        } else setClipToOutline(false);
         invalidateOutline();
     }
 
@@ -80,10 +71,10 @@ public class CircleImageView extends AppCompatImageView {
     }
 
     private ViewOutlineProvider getViewOutlineProvider(float radius) {
-        return new RoundOutlineProvider(radius);
+        return new AppViewOutlineProvider(radius);
     }
 
     private boolean isOutline() {
-        return Build.VERSION_CODES.LOLLIPOP > Build.VERSION.SDK_INT;
+        return Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP;
     }
 }

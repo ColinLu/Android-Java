@@ -9,7 +9,6 @@ import androidx.annotation.Nullable;
 
 import com.colin.library.android.utils.LogUtil;
 
-import java.time.LocalDateTime;
 import java.util.Stack;
 
 /**
@@ -22,8 +21,6 @@ public final class ActivityHelper {
     private final ActivityHelper.ActivityLifecycleImpl ACTIVITY_LIFECYCLE;
     private final Stack<Activity> ACTIVITY_STACK;                   //管理运行Activity
     private int mCount = 0;                                         //大于0 标示正在前台工作
-
-
     private static volatile ActivityHelper sHelper;
 
     private ActivityHelper() {
@@ -192,12 +189,10 @@ public final class ActivityHelper {
 
         @Override
         public void onActivityResumed(@NonNull Activity activity) {
-
         }
 
         @Override
         public void onActivityPaused(@NonNull Activity activity) {
-
         }
 
         @Override
@@ -207,7 +202,6 @@ public final class ActivityHelper {
 
         @Override
         public void onActivitySaveInstanceState(@NonNull Activity activity, @NonNull Bundle outState) {
-
         }
 
         @Override

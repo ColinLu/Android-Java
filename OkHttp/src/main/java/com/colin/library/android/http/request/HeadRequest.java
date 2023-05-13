@@ -3,6 +3,7 @@ package com.colin.library.android.http.request;
 import androidx.annotation.NonNull;
 
 import com.colin.library.android.http.annotation.Method;
+import com.colin.library.android.http.request.base.BaseRequest;
 
 /**
  * 作者： ColinLu

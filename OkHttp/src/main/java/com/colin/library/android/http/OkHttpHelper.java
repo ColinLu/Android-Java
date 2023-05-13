@@ -1,19 +1,15 @@
 package com.colin.library.android.http;
 
 import android.app.Application;
-import android.content.Context;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.colin.library.android.Utils;
-import com.colin.library.android.http.annotation.Method;
-import com.colin.library.android.http.bean.HttpConfig;
-import com.colin.library.android.http.request.BodyRequest;
+import com.colin.library.android.http.def.HttpConfig;
 import com.colin.library.android.http.request.DeleteRequest;
 import com.colin.library.android.http.request.GetRequest;
 import com.colin.library.android.http.request.HeadRequest;
-import com.colin.library.android.http.request.NoBodyRequest;
 import com.colin.library.android.http.request.OptionsRequest;
 import com.colin.library.android.http.request.PatchRequest;
 import com.colin.library.android.http.request.PostRequest;
@@ -64,23 +60,19 @@ public final class OkHttpHelper {
     }
 
     @NonNull
+    public PutRequest put(@NonNull String url) {
+        return new PutRequest(url);
+    }
+
+    @NonNull
     public PostRequest post(@NonNull String url) {
         return new PostRequest(url);
     }
 
-    @NonNull
-    public DeleteRequest delete(@NonNull String url) {
-        return new DeleteRequest(url);
-    }
 
     @NonNull
     public HeadRequest head(@NonNull String url) {
         return new HeadRequest(url);
-    }
-
-    @NonNull
-    public OptionsRequest options(@NonNull String url) {
-        return new OptionsRequest(url);
     }
 
     @NonNull
@@ -89,23 +81,18 @@ public final class OkHttpHelper {
     }
 
     @NonNull
-    public PutRequest put(@NonNull String url) {
-        return new PutRequest(url);
-    }
-
-    @NonNull
     public TraceRequest trace(@NonNull String url) {
         return new TraceRequest(url);
     }
 
     @NonNull
-    public NoBodyRequest noBody(@Method String method, @NonNull String url) {
-        return new NoBodyRequest(method, url);
+    public DeleteRequest delete(@NonNull String url) {
+        return new DeleteRequest(url);
     }
 
     @NonNull
-    public BodyRequest body(@Method String method, @NonNull String url) {
-        return new BodyRequest(method, url);
+    public OptionsRequest options(@NonNull String url) {
+        return new OptionsRequest(url);
     }
 
     /**

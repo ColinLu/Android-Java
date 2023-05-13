@@ -15,10 +15,7 @@ import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.util.Locale;
 import java.util.Scanner;
-import java.util.StringTokenizer;
 
-import okhttp3.Cookie;
-import okhttp3.HttpUrl;
 import okhttp3.MediaType;
 
 /**
@@ -52,11 +49,10 @@ public final class HttpUtil {
         return isHttpUrl(url, 7, 0, 8, "https://");
     }
 
-
-    @Nullable
-    public static String getFileName(@Nullable final HttpUrl url) {
-        return getFileName(url == null ? null : url.toString());
+    private static boolean isHttpUrl(@Nullable String url, int length, int startIndex, int endIndex, @NonNull String name) {
+        return (null != url) && (url.length() > length) && url.substring(startIndex, endIndex).equalsIgnoreCase(name);
     }
+
 
     /*解析URL地址 获取文件名字 带后缀 eg:  xxx.txt*/
     @Nullable
@@ -73,36 +69,6 @@ public final class HttpUtil {
         return null;
     }
 
-    public static boolean isCookieExpired(@NonNull Cookie cookie) {
-        return cookie.expiresAt() < System.currentTimeMillis();
-    }
-
-    /**
-     * A value of the header information.
-     *
-     * @param header like {@code text/html;charset=utf-8}.
-     * @param key    like {@code charset}.
-     * @param def    list {@code utf-8}.
-     * @return If you have a value key, you will return the parsed value if you don't return the default value.
-     */
-    @Nullable
-    public static String head(@Nullable String header, @Nullable String key, @Nullable String def) {
-        if (!TextUtils.isEmpty(header) && !TextUtils.isEmpty(key)) {
-            final StringTokenizer stringTokenizer = new StringTokenizer(header, ";");
-            while (stringTokenizer.hasMoreElements()) {
-                final String valuePair = stringTokenizer.nextToken();
-                final int index = valuePair.indexOf('=');
-                if (index > 0) {
-                    String name = valuePair.substring(0, index).trim();
-                    if (key.equalsIgnoreCase(name)) {
-                        def = valuePair.substring(index + 1).trim();
-                        break;
-                    }
-                }
-            }
-        }
-        return def;
-    }
 
     @Nullable
     public static String encode(@Nullable final String txt, @NonNull final String encode) {
@@ -146,8 +112,7 @@ public final class HttpUtil {
         final String language = locale.getLanguage();
         final String country = locale.getCountry();
         final StringBuilder sb = new StringBuilder(language);
-        if (!StringUtil.isEmpty(country))
-            sb.append('-').append(country).append(',').append(language).append(";q=0.8");
+        if (!StringUtil.isEmpty(country)) sb.append('-').append(country).append(',').append(language).append(";q=0.8");
         return sb.toString();
     }
 
@@ -276,7 +241,5 @@ public final class HttpUtil {
         return null;
     }
 
-    private static boolean isHttpUrl(@Nullable String url, int length, int startIndex, int endIndex, @NonNull String name) {
-        return (null != url) && (url.length() > length) && url.substring(startIndex, endIndex).equalsIgnoreCase(name);
-    }
+
 }

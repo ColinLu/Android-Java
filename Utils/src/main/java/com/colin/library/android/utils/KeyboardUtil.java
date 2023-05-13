@@ -12,6 +12,7 @@ import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.Px;
 
 
 /**
@@ -23,7 +24,7 @@ import androidx.annotation.Nullable;
 public final class KeyboardUtil {
     private static int sDecorViewInvisibleHeightPre;
     private static ViewTreeObserver.OnGlobalLayoutListener onGlobalLayoutListener;
-    private static OnSoftInputChangedListener onSoftInputChangedListener;
+    private static Action sAction;
     private static int sContentViewInvisibleHeightPre5497;
     private static int sDecorViewDelta = 0;
 
@@ -90,21 +91,21 @@ public final class KeyboardUtil {
      * 注册监听 Activity 弹出消失变化
      *
      * @param activity
-     * @param listener
+     * @param action
      */
-    public static void registerSoftInputChangedListener(final Activity activity, final OnSoftInputChangedListener listener) {
+    public static void registerSoftInputChangedListener(final Activity activity, final Action action) {
         final int flags = activity.getWindow().getAttributes().flags;
         if ((flags & WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS) != 0) {
             activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
         }
         final FrameLayout contentView = activity.findViewById(android.R.id.content);
         sDecorViewInvisibleHeightPre = getDecorViewInvisibleHeight(activity);
-        onSoftInputChangedListener = listener;
+        sAction = action;
         onGlobalLayoutListener = () -> {
-            if (onSoftInputChangedListener != null) {
+            if (sAction != null) {
                 int height = getDecorViewInvisibleHeight(activity);
                 if (sDecorViewInvisibleHeightPre != height) {
-                    onSoftInputChangedListener.onSoftInputChanged(height);
+                    sAction.keyboard(height);
                     sDecorViewInvisibleHeightPre = height;
                 }
             }
@@ -121,7 +122,7 @@ public final class KeyboardUtil {
     public static void unregisterSoftInputChangedListener(final Activity activity) {
         final View contentView = activity.findViewById(android.R.id.content);
         contentView.getViewTreeObserver().removeOnGlobalLayoutListener(onGlobalLayoutListener);
-        onSoftInputChangedListener = null;
+        sAction = null;
         onGlobalLayoutListener = null;
     }
 
@@ -130,7 +131,7 @@ public final class KeyboardUtil {
     // interface
     ///////////////////////////////////////////////////////////////////////////
 
-    public interface OnSoftInputChangedListener {
-        void onSoftInputChanged(int height);
+    public interface Action {
+        void keyboard(@Px int height);
     }
 }

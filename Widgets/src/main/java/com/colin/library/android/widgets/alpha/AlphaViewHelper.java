@@ -6,8 +6,8 @@ import android.view.View;
 import androidx.annotation.FloatRange;
 import androidx.annotation.NonNull;
 
-import com.colin.library.android.utils.ResourceUtil;
 import com.colin.library.android.widgets.R;
+import com.colin.library.android.widgets.Utils;
 
 import java.lang.ref.WeakReference;
 
@@ -37,11 +37,12 @@ public final class AlphaViewHelper {
     public AlphaViewHelper(@NonNull View view) {
         final Context context = view.getContext();
         this.mViewRef = new WeakReference<>(view);
-        this.mPressedAlpha = ResourceUtil.getAttrFloatValue(context, R.attr.alpha_pressed);
-        this.mDisabledAlpha = ResourceUtil.getAttrFloatValue(context, R.attr.alpha_disabled);
+        this.mPressedAlpha = Utils.getAttrFloat(context, R.attr.alpha_pressed);
+        this.mDisabledAlpha = Utils.getAttrFloat(context, R.attr.alpha_disabled);
     }
 
-    public AlphaViewHelper(@NonNull View view, @FloatRange(from = 0.0F, to = 1.0F) float pressed, @FloatRange(from = 0.0F, to = 1.0F) float disabled) {
+    public AlphaViewHelper(@NonNull View view, @FloatRange(from = 0.0F, to = 1.0F) float pressed,
+            @FloatRange(from = 0.0F, to = 1.0F) float disabled) {
         this.mViewRef = new WeakReference<>(view);
         this.mPressedAlpha = pressed;
         this.mDisabledAlpha = disabled;

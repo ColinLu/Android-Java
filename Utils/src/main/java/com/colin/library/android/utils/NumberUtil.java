@@ -4,7 +4,7 @@ package com.colin.library.android.utils;
  * 作者： ColinLu
  * 时间： 2022-12-31 22:26
  * <p>
- * 描述： TODO
+ * 描述： Util for number
  */
 public final class NumberUtil {
     private NumberUtil() {

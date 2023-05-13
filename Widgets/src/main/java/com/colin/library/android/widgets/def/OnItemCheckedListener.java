@@ -16,8 +16,8 @@ public interface OnItemCheckedListener {
     /**
      * When Item is clicked.
      *
-     * @param view     item view.
+     * @param button   item view.
      * @param position item position.
      */
-    void onItemChecked(@NonNull CompoundButton view, int position, @Nullable Object object);
+    void onItemChecked(@NonNull CompoundButton button, int position, @Nullable Object object);
 }

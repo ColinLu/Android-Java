@@ -1,7 +1,6 @@
 package com.colin.library.android.utils;
 
-import static android.Manifest.permission.CALL_PHONE;
-
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ComponentName;
@@ -9,7 +8,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.provider.Settings;
@@ -46,7 +44,7 @@ public final class IntentUtil {
     public static void start(@NonNull Context context, @Nullable Class<?> cls, @Nullable Bundle bundle, boolean close) {
         final Intent intent = new Intent(context, cls);
         if (bundle != null) intent.putExtras(bundle);
-        start(context, intent, false);
+        start(context, intent, close);
     }
 
     public static void start(@NonNull Context context, @NonNull Intent intent) {
@@ -80,10 +78,12 @@ public final class IntentUtil {
         request(activity, intent, request);
     }
 
+    // TODO: 2023/5/13 test and verify
     public static void requestAudio(@Nullable Activity activity, @IntRange(from = 0, to = 65535) int request) {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("audio/amr"); //String AUDIO_AMR = "audio/amr";
         intent.setClassName("com.android.soundrecorder", "com.android.soundrecorder.SoundRecorder");
+        request(activity, intent, request);
     }
 
     public static void requestVideo(@Nullable Activity activity, @Nullable Uri uri, @IntRange(from = 0, to = 1) final int quality, @IntRange(from = 1) final long duration, @IntRange(from = 1) final long limitBytes, @IntRange(from = 0, to = 65535) int request) {
@@ -139,7 +139,7 @@ public final class IntentUtil {
     }
 
     /*跳转拨号界面 自动拨号*/
-    @RequiresPermission(CALL_PHONE)
+    @RequiresPermission(Manifest.permission.CALL_PHONE)
     public static void toCallView(@Nullable final Context context, @Nullable final String mobile) {
         if (context != null && !StringUtil.isEmpty(mobile)) {
             start(context, new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + mobile)));

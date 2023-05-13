@@ -11,8 +11,6 @@ import androidx.cardview.widget.CardView;
 
 public class SquareCardView extends CardView {
 
-    private final Configuration mConfig;
-
     public SquareCardView(@NonNull Context context) {
         this(context, null, 0);
     }
@@ -23,12 +21,11 @@ public class SquareCardView extends CardView {
 
     public SquareCardView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        this.mConfig = getResources().getConfiguration();
     }
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        final int orientation = mConfig.orientation;
+        final int orientation = getResources().getConfiguration().orientation;
         if (orientation == Configuration.ORIENTATION_PORTRAIT) {
             super.onMeasure(widthMeasureSpec, widthMeasureSpec);
         } else if (orientation == Configuration.ORIENTATION_LANDSCAPE) {

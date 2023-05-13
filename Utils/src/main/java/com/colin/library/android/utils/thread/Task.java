@@ -17,21 +17,21 @@ import java.lang.annotation.RetentionPolicy;
  * 描述： 异步任务 子线程操作
  */
 public abstract class Task<Result> implements Runnable {
-    @IntDef({State.NEW, State.COMPLETING, State.CANCELLED, State.EXCEPTION})
+    @IntDef({State.NEW, State.ING, State.CANCELLED, State.EXCEPTION})
     @Retention(RetentionPolicy.SOURCE)
     public @interface State {
         int NEW = 0;           //新
-        int COMPLETING = 1;    //进行中
+        int ING = 1;    //进行中
         int CANCELLED = 2;     //取消
         int EXCEPTION = 3;     //异常
     }
 
     private volatile int mState = State.NEW;
 
-    private final Callback<Result> mCallback;
+    private final Action<Result> mAction;
 
-    public Task(@Nullable final Callback<Result> callback) {
-        mCallback = callback;
+    public Task(@Nullable final Action<Result> action) {
+        mAction = action;
     }
 
     @Override
@@ -39,9 +39,9 @@ public abstract class Task<Result> implements Runnable {
         try {
             final Result t = doInBackground();
             if (mState != State.NEW) return;
-            mState = State.COMPLETING;
+            mState = State.ING;
             ThreadHelper.getInstance().post(() -> {
-                if (null != mCallback) mCallback.onCall(t);
+                if (null != mAction) mAction.call(t);
             });
         } catch (Exception th) {
             if (mState != State.NEW) return;
@@ -67,8 +67,8 @@ public abstract class Task<Result> implements Runnable {
     ///////////////////////////////////////////////////////////////////////////
     public abstract Result doInBackground();
 
-    public interface Callback<T> {
-        void onCall(T data);
+    public interface Action<T> {
+        void call(T data);
     }
 
     /**

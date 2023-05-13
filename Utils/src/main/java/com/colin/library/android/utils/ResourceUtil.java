@@ -2,17 +2,13 @@ package com.colin.library.android.utils;
 
 import android.content.ContentResolver;
 import android.content.Context;
-import android.content.res.ColorStateList;
-import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.Build;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 
-import androidx.annotation.AttrRes;
 import androidx.annotation.ColorInt;
 import androidx.annotation.ColorRes;
 import androidx.annotation.DimenRes;
@@ -21,15 +17,13 @@ import androidx.annotation.FloatRange;
 import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.Px;
 import androidx.annotation.StringRes;
+import androidx.appcompat.content.res.AppCompatResources;
 import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.colin.library.android.helper.UtilHelper;
 import com.colin.library.android.utils.data.Constants;
-
-import java.util.Locale;
 
 
 /**
@@ -46,7 +40,6 @@ import java.util.Locale;
  * xxxhdpi(2K) 	    480 ~ 640 	1440 × 2560 	1dp=4px 	192 * 192
  */
 public final class ResourceUtil {
-    private static TypedValue sTmpValue;
 
     private ResourceUtil() {
         throw new UnsupportedOperationException("don't instantiate");
@@ -89,46 +82,6 @@ public final class ResourceUtil {
         return getDisplayMetrics(context).scaledDensity;
     }
 
-    public static float getAttrFloatValue(@NonNull Context context, @AttrRes int resId) {
-        return getAttrFloatValue(context.getTheme(), resId);
-    }
-
-    public static float getAttrFloatValue(@NonNull Resources.Theme theme, @AttrRes int resId) {
-        if (sTmpValue == null) sTmpValue = new TypedValue();
-        if (!theme.resolveAttribute(resId, sTmpValue, true)) return 0F;
-        return sTmpValue.getFloat();
-    }
-
-    public static int getAttrColor(@NonNull Context context, @AttrRes int resId) {
-        return getAttrColor(context.getTheme(), resId);
-    }
-
-    public static int getAttrColor(@NonNull Resources.Theme theme, @AttrRes int attr) {
-        if (sTmpValue == null) sTmpValue = new TypedValue();
-        if (!theme.resolveAttribute(attr, sTmpValue, true)) return 0;
-        if (sTmpValue.type == TypedValue.TYPE_ATTRIBUTE) return getAttrColor(theme, sTmpValue.data);
-        return sTmpValue.data;
-    }
-
-    @Nullable
-    public static ColorStateList getAttrColorStateList(@NonNull Context context, @AttrRes int resId) {
-        return getAttrColorStateList(context, context.getTheme(), resId);
-    }
-
-    @Nullable
-    public static ColorStateList getAttrColorStateList(@NonNull Context context, @NonNull Resources.Theme theme, @AttrRes int attr) {
-        if (attr == Resources.ID_NULL) return null;
-        if (sTmpValue == null) sTmpValue = new TypedValue();
-        if (!theme.resolveAttribute(attr, sTmpValue, true)) return null;
-        if (sTmpValue.type >= TypedValue.TYPE_FIRST_COLOR_INT && sTmpValue.type <= TypedValue.TYPE_LAST_COLOR_INT) {
-            return ColorStateList.valueOf(sTmpValue.data);
-        }
-        if (sTmpValue.type == TypedValue.TYPE_ATTRIBUTE)
-            return getAttrColorStateList(context, theme, sTmpValue.data);
-        if (sTmpValue.resourceId == Resources.ID_NULL) return null;
-        return ContextCompat.getColorStateList(context, sTmpValue.resourceId);
-    }
-
     @Nullable
     public static Uri getUri(@DrawableRes int id) {
         return getUri(getResources(), id);
@@ -137,7 +90,8 @@ public final class ResourceUtil {
     @Nullable
     public static Uri getUri(@Nullable Resources resources, @DrawableRes int id) {
         if (null == resources || id == Resources.ID_NULL) return null;
-        return Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + resources.getResourcePackageName(id) + "/" + resources.getResourceTypeName(id) + "/" + resources.getResourceEntryName(id));
+        return Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + resources.getResourcePackageName(id) + "/" + resources.getResourceTypeName(
+                id) + "/" + resources.getResourceEntryName(id));
     }
 
     /**
@@ -145,9 +99,10 @@ public final class ResourceUtil {
      *
      * @return
      */
+    @Px
     public static int getStatusBarHeight() {
-        int dimenResId = getDimenResId(Constants.HEIGHT_STATUS_BAR);
-        return dimenResId == 0 ? 0 : ResourceUtil.getResources().getDimensionPixelSize(dimenResId);
+        @DimenRes int dimenResId = getDimenResId(Constants.HEIGHT_STATUS_BAR);
+        return dimenResId == Resources.ID_NULL ? 0 : ResourceUtil.getResources().getDimensionPixelSize(dimenResId);
     }
 
     /**
@@ -155,14 +110,12 @@ public final class ResourceUtil {
      *
      * @return
      */
+    @Px
     public static int getNavBarHeight() {
-        int dimenResId = ResourceUtil.getDimenResId(Constants.HEIGHT_NAVIGATION_BAR);
-        return dimenResId == 0 ? 0 : ResourceUtil.getResources().getDimensionPixelSize(dimenResId);
+        @DimenRes int dimenResId = ResourceUtil.getDimenResId(Constants.HEIGHT_NAVIGATION_BAR);
+        return dimenResId == Resources.ID_NULL ? 0 : ResourceUtil.getResources().getDimensionPixelSize(dimenResId);
     }
 
-    public static int setColorAlpha(@ColorInt int color, @FloatRange(from = 0, to = 1) final float alpha) {
-        return (color & 0X00FFFFFF) | ((int) (alpha * 255.0f + 0.5f) << 24);
-    }
 
     /**
      * 获取长度资源文件ID
@@ -178,13 +131,66 @@ public final class ResourceUtil {
     /**
      * 获取资源文件ID
      *
-     * @param name
-     * @param defType
-     * @param defPackage
-     * @return
+     * @param name       eg:status_bar_height
+     * @param defType    eg:dimen/drawable
+     * @param defPackage eg:android
+     * @return eg:ResId
      */
     public static int getIdentifier(@NonNull String name, @NonNull String defType, @NonNull String defPackage) {
         return getResources().getIdentifier(name, defType, defPackage);
+    }
+
+
+    @Nullable
+    public static Drawable getDrawable(@DrawableRes final int res) {
+        return getDrawable(UtilHelper.getInstance().getUtilConfig().getApplication(), res);
+    }
+
+    @Nullable
+    public static Drawable getDrawable(@Nullable Context context, @DrawableRes final int res) {
+        if (context == null || res == Resources.ID_NULL) return null;
+        return ContextCompat.getDrawable(context, res);
+    }
+
+    @Nullable
+    public static Drawable getVectorDrawable(@NonNull final Context context, @DrawableRes final int res) {
+        return AppCompatResources.getDrawable(context, res);
+    }
+
+    @NonNull
+    public static String getString(@StringRes final int res) {
+        return getResources().getString(res);
+    }
+
+    @NonNull
+    public static String getString(@NonNull Context context, @StringRes final int res) {
+        return getResources(context).getString(res);
+    }
+
+    @NonNull
+    public static String getString(@StringRes final int res, Object... args) {
+        return getString(UtilHelper.getInstance().getUtilConfig().getApplication(), res, args);
+    }
+
+    @NonNull
+    public static String getString(@NonNull Context context, @StringRes final int res, Object... args) {
+        return getResources(context).getString(res, args);
+    }
+
+    @ColorInt
+    public static int getColor(@ColorRes final int res) {
+        return getColor(UtilHelper.getInstance().getUtilConfig().getApplication(), res);
+    }
+
+    @ColorInt
+    public static int getColor(@Nullable Context context, @ColorRes final int res) {
+        if (context == null || res == Resources.ID_NULL) return Color.TRANSPARENT;
+        return ContextCompat.getColor(context, res);
+    }
+
+
+    public static int setColorAlpha(@ColorInt int color, @FloatRange(from = 0, to = 1) final float alpha) {
+        return setColorAlpha(color, (int) (alpha * 255.0f + 0.5f));
     }
 
     /**
@@ -199,52 +205,10 @@ public final class ResourceUtil {
         return (color & 0X00FFFFFF) | (alpha << 24);
     }
 
+
     public static int getRandomColor(final boolean supportAlpha) {
         final int high = supportAlpha ? (int) (Math.random() * 0x100) << 24 : 0xFF000000;
         return high | (int) (Math.random() * 0x1000000);
-    }
-
-
-    @NonNull
-    public static String getString(@StringRes final int res) {
-        return getResources().getString(res);
-    }
-
-    @NonNull
-    public static String getString(@NonNull Context context, @StringRes final int res) {
-        return getResources(context).getString(res);
-    }
-
-    @NonNull
-    public static String getString(@StringRes final int res, Object... formatArgs) {
-        return getResources().getString(res, formatArgs);
-    }
-
-    @NonNull
-    public static String getString(@NonNull Context context, @StringRes final int res, Object... formatArgs) {
-        return getResources(context).getString(res, formatArgs);
-    }
-
-    @ColorInt
-    public static int getColor(@ColorRes final int res) {
-        return getColor(UtilHelper.getInstance().getUtilConfig().getApplication(), res);
-    }
-
-    @ColorInt
-    public static int getColor(@Nullable Context context, @ColorRes final int res) {
-        if (context == null || res == Resources.ID_NULL) return Color.TRANSPARENT;
-        return ContextCompat.getColor(context, res);
-    }
-
-    @Nullable
-    public static Drawable getDrawable(@DrawableRes final int res) {
-        return getDrawable(UtilHelper.getInstance().getUtilConfig().getApplication(), res);
-    }
-
-    @Nullable
-    public static Drawable getDrawable(@Nullable Context context, @DrawableRes final int res) {
-        if (context == null || res == Resources.ID_NULL) return null;
-        return ContextCompat.getDrawable(context, res);
     }
 
     /**
@@ -254,10 +218,13 @@ public final class ResourceUtil {
      * @return value of px
      */
     public static int dp2px(final float dp) {
-        final float density = getDensity();
-        return (int) (dp * density + 0.5f);
+        return dp2px(UtilHelper.getInstance().getUtilConfig().getApplication(), dp);
     }
 
+    public static int dp2px(@NonNull Context context, final float dp) {
+        final float density = getDensity(context);
+        return (int) (dp * density + 0.5f);
+    }
 
     /**
      * Value of px to value of dp.
@@ -266,12 +233,20 @@ public final class ResourceUtil {
      * @return value of dp
      */
     public static int px2dp(final int px) {
-        final float density = getDensity();
+        return px2dp(UtilHelper.getInstance().getUtilConfig().getApplication(), px);
+    }
+
+    public static int px2dp(@NonNull Context context, final int px) {
+        final float density = getDensity(context);
         return (int) (px / density + 0.5f);
     }
 
     public static float px2dp(final float px) {
-        final float density = getDensity();
+        return px2dp(UtilHelper.getInstance().getUtilConfig().getApplication(), px);
+    }
+
+    public static float px2dp(@NonNull Context context, final float px) {
+        final float density = getDensity(context);
         return (px / density + 0.5f);
     }
 
@@ -282,12 +257,21 @@ public final class ResourceUtil {
      * @return value of px
      */
     public static int sp2px(final int sp) {
-        final float scaled = getScaled();
+        return sp2px(UtilHelper.getInstance().getUtilConfig().getApplication(), sp);
+    }
+
+    public static int sp2px(@NonNull Context context, final int sp) {
+        final float scaled = getScaled(context);
         return (int) (sp * scaled + 0.5f);
     }
 
     public static float sp2px(final float sp) {
-        final float scaled = getScaled();
+        return sp2px(UtilHelper.getInstance().getUtilConfig().getApplication(), sp);
+
+    }
+
+    public static float sp2px(@NonNull Context context, final float sp) {
+        final float scaled = getScaled(context);
         return (sp * scaled + 0.5f);
     }
 
@@ -298,12 +282,20 @@ public final class ResourceUtil {
      * @return value of sp
      */
     public static int px2sp(final int px) {
-        final float scaled = getScaled();
+        return px2sp(UtilHelper.getInstance().getUtilConfig().getApplication(), px);
+    }
+
+    public static int px2sp(@NonNull Context context, final int px) {
+        final float scaled = getScaled(context);
         return (int) (px / scaled + 0.5f);
     }
 
     public static float px2sp(final float px) {
-        final float scaled = getScaled();
+        return px2sp(UtilHelper.getInstance().getUtilConfig().getApplication(), px);
+    }
+
+    public static float px2sp(@NonNull Context context, final float px) {
+        final float scaled = getScaled(context);
         return (px / scaled + 0.5f);
     }
 
@@ -334,41 +326,6 @@ public final class ResourceUtil {
                 return value * metrics.xdpi * (1.0f / 25.4f);
         }
         return 0;
-    }
-
-    /*语言本地化处理*/
-    @NonNull
-    public static void initLocale(@NonNull final Context context, @NonNull final Locale locale) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            final Configuration configuration = context.getResources().getConfiguration();
-            configuration.setLocale(locale);
-            context.createConfigurationContext(configuration);
-        } else {
-            final Resources resources = context.getResources();
-            final Configuration configuration = resources.getConfiguration();
-            configuration.locale = locale;
-            resources.updateConfiguration(configuration, resources.getDisplayMetrics());
-        }
-    }
-
-    /*屏幕方向*/
-    @RecyclerView.Orientation
-    public static int getOrientation() {
-        return getOrientation(getResources().getConfiguration());
-    }
-
-    /*屏幕方向*/
-    @RecyclerView.Orientation
-    public static int getOrientation(@NonNull Context context) {
-        return getOrientation(getResources(context).getConfiguration());
-    }
-
-    /*屏幕方向*/
-    @RecyclerView.Orientation
-    public static int getOrientation(@NonNull final Configuration config) {
-        if (config.orientation == Configuration.ORIENTATION_LANDSCAPE)
-            return LinearLayoutManager.HORIZONTAL;
-        return LinearLayoutManager.VERTICAL;
     }
 
 }

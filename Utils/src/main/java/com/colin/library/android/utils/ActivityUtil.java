@@ -1,11 +1,12 @@
 package com.colin.library.android.utils;
 
 import android.app.Activity;
-import android.app.Application;
 import android.app.DialogFragment;
 import android.content.Context;
 import android.content.ContextWrapper;
-import android.os.Bundle;
+import android.content.res.Configuration;
+import android.content.res.Resources;
+import android.os.Build;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -13,8 +14,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LifecycleOwner;
 
-
-import java.util.Stack;
+import java.util.Locale;
 
 /**
  * 作者： ColinLu
@@ -97,5 +97,18 @@ public final class ActivityUtil {
         return null;
     }
 
-
+    /*语言本地化处理*/
+    @NonNull
+    public static void initLocale(@NonNull final Context context, @NonNull final Locale locale) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            final Configuration configuration = context.getResources().getConfiguration();
+            configuration.setLocale(locale);
+            context.createConfigurationContext(configuration);
+        } else {
+            final Resources resources = context.getResources();
+            final Configuration configuration = resources.getConfiguration();
+            configuration.locale = locale;
+            resources.updateConfiguration(configuration, resources.getDisplayMetrics());
+        }
+    }
 }

@@ -40,7 +40,8 @@ public class BottomAreaBehavior extends ViewOffsetBehavior<View> {
     }
 
     @Override
-    public boolean onMeasureChild(@NonNull CoordinatorLayout parent, @NonNull View child, int parentWidthMeasureSpec, int widthUsed, int parentHeightMeasureSpec, int heightUsed) {
+    public boolean onMeasureChild(@NonNull CoordinatorLayout parent, @NonNull View child, int parentWidthMeasureSpec, int widthUsed,
+            int parentHeightMeasureSpec, int heightUsed) {
         final int childLpHeight = child.getLayoutParams().height;
         if (childLpHeight == ViewGroup.LayoutParams.MATCH_PARENT || childLpHeight == ViewGroup.LayoutParams.WRAP_CONTENT) {
             int availableHeight = View.MeasureSpec.getSize(parentHeightMeasureSpec);
@@ -61,13 +62,11 @@ public class BottomAreaBehavior extends ViewOffsetBehavior<View> {
             View topView = dependencies.get(0);
             final CoordinatorLayout.LayoutParams lp = (CoordinatorLayout.LayoutParams) child.getLayoutParams();
             final Rect available = mAvailableRect;
-            available.set(parent.getPaddingLeft() + lp.leftMargin,
-                    topView.getBottom() + lp.topMargin,
+            available.set(parent.getPaddingLeft() + lp.leftMargin, topView.getBottom() + lp.topMargin,
                     parent.getWidth() - parent.getPaddingRight() - lp.rightMargin,
                     parent.getHeight() + topView.getBottom() - parent.getPaddingBottom() - lp.bottomMargin);
             final Rect out = mOutRect;
-            GravityCompat.apply(resolveGravity(lp.gravity),
-                    child.getMeasuredWidth(), child.getMeasuredHeight(), available, out, layoutDirection);
+            GravityCompat.apply(resolveGravity(lp.gravity), child.getMeasuredWidth(), child.getMeasuredHeight(), available, out, layoutDirection);
             child.layout(out.left, out.top, out.right, out.bottom);
         } else super.layoutChild(parent, child, layoutDirection);
 

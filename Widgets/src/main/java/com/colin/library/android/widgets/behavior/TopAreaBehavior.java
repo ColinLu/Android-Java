@@ -18,6 +18,7 @@ import androidx.annotation.Nullable;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.view.ViewCompat;
 
+import com.colin.library.android.widgets.def.Constants;
 import com.colin.library.android.widgets.interpolator.Interpolators;
 import com.colin.library.android.widgets.scroll.INestedScrollBottom;
 import com.colin.library.android.widgets.scroll.INestedScrollTop;
@@ -32,13 +33,11 @@ import com.colin.library.android.widgets.scroll.NestedScrollTopFrameLayout;
  */
 public class TopAreaBehavior extends ViewOffsetBehavior<View> {
 
-    private static final int INVALID_POINTER = -1;
-
     private final ViewFlinger mViewFlinger;
     private final int[] mScrollConsumed = new int[2];
 
     private boolean isBeingDragged;
-    private int activePointerId = INVALID_POINTER;
+    private int activePointerId = Constants.INVALID;
     private int lastMotionY;
     private int touchSlop = -1;
     private VelocityTracker velocityTracker;
@@ -67,8 +66,7 @@ public class TopAreaBehavior extends ViewOffsetBehavior<View> {
 
     @Override
     public boolean onInterceptTouchEvent(@NonNull CoordinatorLayout parent, @NonNull View child, @NonNull MotionEvent ev) {
-        if (touchSlop < 0)
-            touchSlop = ViewConfiguration.get(parent.getContext()).getScaledTouchSlop();
+        if (touchSlop < 0) touchSlop = ViewConfiguration.get(parent.getContext()).getScaledTouchSlop();
 
         final int action = ev.getAction();
         if (action == MotionEvent.ACTION_MOVE && isBeingDragged) return true;
@@ -93,7 +91,7 @@ public class TopAreaBehavior extends ViewOffsetBehavior<View> {
             case MotionEvent.ACTION_MOVE:
                 final int activePointerId = this.activePointerId;
                 // If we don't have a valid id, the touch down wasn't on content.
-                if (activePointerId == INVALID_POINTER) break;
+                if (activePointerId == Constants.INVALID) break;
                 final int pointerIndex = ev.findPointerIndex(activePointerId);
                 if (pointerIndex == -1) break;
                 final int moveY = (int) ev.getY(pointerIndex);
@@ -120,7 +118,7 @@ public class TopAreaBehavior extends ViewOffsetBehavior<View> {
             case MotionEvent.ACTION_UP:
                 isInTouch = false;
                 isBeingDragged = false;
-                this.activePointerId = INVALID_POINTER;
+                this.activePointerId = Constants.INVALID;
                 if (velocityTracker != null) {
                     velocityTracker.recycle();
                     velocityTracker = null;
@@ -182,7 +180,7 @@ public class TopAreaBehavior extends ViewOffsetBehavior<View> {
                     if (mCallback != null) mCallback.onTopBehaviorTouchEnd();
                 }
                 isBeingDragged = false;
-                activePointerId = INVALID_POINTER;
+                activePointerId = Constants.INVALID;
                 if (velocityTracker != null) {
                     velocityTracker.recycle();
                     velocityTracker = null;
@@ -221,7 +219,7 @@ public class TopAreaBehavior extends ViewOffsetBehavior<View> {
 
     @Override
     public boolean onMeasureChild(@NonNull CoordinatorLayout parent, @NonNull View child,
-                                  int parentWidthMeasureSpec, int widthUsed, int parentHeightMeasureSpec, int heightUsed) {
+            int parentWidthMeasureSpec, int widthUsed, int parentHeightMeasureSpec, int heightUsed) {
         final int childLpHeight = child.getLayoutParams().height;
         int availableHeight = View.MeasureSpec.getSize(parentHeightMeasureSpec);
         if (childLpHeight == ViewGroup.LayoutParams.MATCH_PARENT) {
@@ -230,7 +228,8 @@ public class TopAreaBehavior extends ViewOffsetBehavior<View> {
             final int heightMeasureSpec = View.MeasureSpec.makeMeasureSpec(availableHeight, View.MeasureSpec.AT_MOST);
             parent.onMeasureChild(child, parentWidthMeasureSpec, widthUsed, heightMeasureSpec, heightUsed);
         } else {
-            parent.onMeasureChild(child, parentWidthMeasureSpec, widthUsed, View.MeasureSpec.makeMeasureSpec(MEASURED_SIZE_MASK, View.MeasureSpec.AT_MOST), heightUsed);
+            parent.onMeasureChild(child, parentWidthMeasureSpec, widthUsed,
+                    View.MeasureSpec.makeMeasureSpec(MEASURED_SIZE_MASK, View.MeasureSpec.AT_MOST), heightUsed);
         }
         return true;
     }
@@ -248,7 +247,7 @@ public class TopAreaBehavior extends ViewOffsetBehavior<View> {
 
     @Override
     public void onNestedPreScroll(@NonNull CoordinatorLayout parent, @NonNull View child, @NonNull View target,
-                                  int dx, int dy, @NonNull int[] consumed, int type) {
+            int dx, int dy, @NonNull int[] consumed, int type) {
         if (target.getParent() != parent) return;
         if (target == child) {
             // both target view and child view is top view
@@ -288,8 +287,8 @@ public class TopAreaBehavior extends ViewOffsetBehavior<View> {
 
     @Override
     public void onNestedScroll(@NonNull CoordinatorLayout parent, @NonNull View child,
-                               @NonNull View target, int dxConsumed, int dyConsumed,
-                               int dxUnconsumed, int dyUnconsumed, int type) {
+            @NonNull View target, int dxConsumed, int dyConsumed,
+            int dxUnconsumed, int dyUnconsumed, int type) {
         if (target.getParent() != parent) {
             return;
         }
@@ -346,8 +345,8 @@ public class TopAreaBehavior extends ViewOffsetBehavior<View> {
 
     @Override
     public boolean onStartNestedScroll(@NonNull CoordinatorLayout coordinatorLayout,
-                                       @NonNull View child, @NonNull View directTargetChild,
-                                       @NonNull View target, int axes, int type) {
+            @NonNull View child, @NonNull View directTargetChild,
+            @NonNull View target, int axes, int type) {
         return (axes & ViewCompat.SCROLL_AXIS_VERTICAL) != 0;
     }
 

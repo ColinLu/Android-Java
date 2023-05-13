@@ -65,16 +65,6 @@ android {
         }
     }
 
-    dexOptions {
-        //最大堆内存
-        javaMaxHeapSize '2048m'
-        //预编译
-        preDexLibraries = true
-        //线程数
-        threadCount = 16
-        dexInProcess = true
-    }
-
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8

@@ -1,16 +1,19 @@
 package com.colin.library.android.widgets.edge;
 
+import android.content.Context;
+import android.content.res.TypedArray;
+import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.Px;
 import androidx.core.view.ViewCompat;
 
 import com.colin.library.android.utils.LogUtil;
-import com.colin.library.android.widgets.Constants;
+import com.colin.library.android.widgets.R;
 import com.colin.library.android.widgets.annotation.Direction;
-import com.colin.library.android.widgets.annotation.Orientation;
-import com.colin.library.android.widgets.annotation.ScrollState;
 
 import java.lang.ref.WeakReference;
 
@@ -22,7 +25,7 @@ import java.lang.ref.WeakReference;
  */
 public final class EdgeHelper {
     @Nullable
-    private final WeakReference<EdgeLayout> mEdgeLayoutRef;
+    private final WeakReference<View> mViewRef;
     @Nullable
     private WeakReference<Edge> nEdgeLeftRef;
     @Nullable
@@ -34,10 +37,18 @@ public final class EdgeHelper {
     @Direction
     private int mDirectionEnabled;
     private long mEdgeScrollDuration = 500L;
+    private int mEdgeLayoutLeft;
+    private int mEdgeLayoutTop;
+    private int mEdgeLayoutRight;
+    private int mEdgeLayoutBottom;
     private OnEdgeListener mOnEdgeListener;
 
-    public EdgeHelper(@NonNull EdgeLayout layout) {
-        this.mEdgeLayoutRef = new WeakReference<>(layout);
+    public EdgeHelper(@NonNull View view, @Nullable AttributeSet attrs) {
+        final Context context = view.getContext();
+        this.mViewRef = new WeakReference<>(view);
+        final TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.EdgeLayout, 0, 0);
+        mDirectionEnabled = array.getInt(R.styleable.EdgeLayout_direction, Direction.TOP | Direction.BOTTOM);
+        array.recycle();
     }
 
     public void setDirectionEnabled(@Direction final int enabled) {
@@ -56,16 +67,16 @@ public final class EdgeHelper {
     public void build(@Direction final int direction, @NonNull Edge.Builder builder) {
         switch (direction) {
             case Direction.LEFT:
-                nEdgeLeftRef = new WeakReference<>(builder.build());
+                nEdgeLeftRef = new WeakReference<>(builder.build(direction));
                 break;
             case Direction.TOP:
-                nEdgeTopRef = new WeakReference<>(builder.build());
+                nEdgeTopRef = new WeakReference<>(builder.build(direction));
                 break;
             case Direction.RIGHT:
-                nEdgeRightRef = new WeakReference<>(builder.build());
+                nEdgeRightRef = new WeakReference<>(builder.build(direction));
                 break;
             case Direction.BOTTOM:
-                nEdgeBottomRef = new WeakReference<>(builder.build());
+                nEdgeBottomRef = new WeakReference<>(builder.build(direction));
                 break;
             default:
                 break;
@@ -114,6 +125,37 @@ public final class EdgeHelper {
 
     public void layout(@Nullable final Edge edge, final int width, final int height) {
         if (edge != null) edge.layout(width, height);
+
+        final int vw = edge.getView().getMeasuredWidth(), vh = edge.getView().getMeasuredHeight();
+        int center = 0;
+        switch (edge.getDirection()) {
+            case Direction.LEFT:
+                mEdgeLayoutLeft = -vw;
+                center = (height - vh) >> 1;
+                edge.getView().layout(-vw, center, 0, center + vh);
+                edge.getViewOffsetHelper().onViewLayout();
+                break;
+            case Direction.TOP:
+                mEdgeLayoutTop = -vh;
+                center = (width - vw) >> 1;
+                edge.getView().layout(center, -vh, center + vw, 0);
+                edge.getViewOffsetHelper().onViewLayout();
+                break;
+            case Direction.RIGHT:
+                mEdgeLayoutRight = width + vw;
+                center = (height - vh) >> 1;
+                edge.getView().layout(width, center, width + vw, center + vh);
+                edge.getViewOffsetHelper().onViewLayout();
+                break;
+            case Direction.BOTTOM:
+                mEdgeLayoutBottom = height + vh;
+                center = (width - vw) >> 1;
+                edge.getView().layout(center, height, center + vw, height + vh);
+                edge.getViewOffsetHelper().onViewLayout();
+                break;
+            default:
+                break;
+        }
     }
 
     public void setEdgeListener(@Nullable OnEdgeListener edgeListener) {
@@ -207,19 +249,58 @@ public final class EdgeHelper {
     }
 
 
-    private boolean isStartNestedScrollHorizontal(@ViewCompat.ScrollAxis int axes) {
-        return axes == ViewCompat.SCROLL_AXIS_HORIZONTAL && (isDirectionEnabled(Direction.LEFT) || isDirectionEnabled(Direction.RIGHT));
+    public boolean isNestedScrollEnabled(@ViewCompat.ScrollAxis int axes) {
+        return isNestedScrollVertical(axes) || isNestedScrollHorizontal(axes);
     }
 
-    private boolean isStartNestedScrollVertical(@ViewCompat.ScrollAxis int axes) {
-        return axes == ViewCompat.SCROLL_AXIS_VERTICAL && (isDirectionEnabled(Direction.TOP) || isDirectionEnabled(Direction.BOTTOM));
+    private boolean isNestedScrollHorizontal(@ViewCompat.ScrollAxis int axes) {
+        return (axes & ViewCompat.SCROLL_AXIS_HORIZONTAL) != 0 && (isDirectionEnabled(Direction.LEFT) || isDirectionEnabled(Direction.RIGHT));
     }
 
-    public boolean isHorizontalEnabled() {
-        return isDirectionEnabled(Direction.LEFT) || isDirectionEnabled(Direction.RIGHT);
+    private boolean isNestedScrollVertical(@ViewCompat.ScrollAxis int axes) {
+        return (axes & ViewCompat.SCROLL_AXIS_VERTICAL) != 0 && (isDirectionEnabled(Direction.TOP) || isDirectionEnabled(Direction.BOTTOM));
     }
 
-    public boolean isVerticalEnabled() {
-        return isDirectionEnabled(Direction.TOP) || isDirectionEnabled(Direction.BOTTOM);
+    private boolean isVertical(@Direction int direction) {
+        return direction == Direction.TOP || direction == Direction.BOTTOM;
+    }
+
+    public void setOffset(@Px int offsetX, @Px int offsetY) {
+        if (offsetX >= 0) setOffset(getEnabledEdge(Direction.LEFT), offsetX);
+        if (offsetY >= 0) setOffset(getEnabledEdge(Direction.TOP), offsetY);
+        if (offsetX <= 0) setOffset(getEnabledEdge(Direction.RIGHT), offsetX);
+        if (offsetY <= 0) setOffset(getEnabledEdge(Direction.BOTTOM), offsetY);
+    }
+
+    public void setOffset(@Nullable Edge edge, @Px int offset) {
+        if (edge == null) return;
+        LogUtil.log("setOffset:direction:%d,offset:%d", edge.getDirection(), offset);
+        edge.setOffset(offset);
+    }
+
+    public void interceptTouchEventActionDown(MotionEvent ev) {
+
+        updateOffset(getEnabledEdge(Direction.TOP));
+    }
+
+    private void updateOffset(@Nullable Edge edge) {
+        if (edge == null) return;
+        switch (edge.getDirection()) {
+            case Direction.LEFT:
+                break;
+            case Direction.TOP:
+                ViewCompat.offsetTopAndBottom(edge.getView(), 0);
+                break;
+            default:
+                break;
+        }
+    }
+
+    public void actionStart(@ViewCompat.ScrollAxis int axes) {
+        if ((axes & ViewCompat.SCROLL_AXIS_VERTICAL) != 0) {
+            LogUtil.log("垂直方向滑动：actionStart");
+        } else if ((axes & ViewCompat.SCROLL_AXIS_HORIZONTAL) != 0) {
+            LogUtil.log("水平方向滑动：actionStart");
+        }
     }
 }

@@ -18,7 +18,7 @@ import androidx.core.view.NestedScrollingParentHelper;
 import androidx.core.view.ViewCompat;
 
 import com.colin.library.android.utils.NumberUtil;
-import com.colin.library.android.widgets.edge.ViewOffsetHelper;
+import com.colin.library.android.widgets.behavior.ViewOffsetHelper;
 
 /**
  * 作者： ColinLu

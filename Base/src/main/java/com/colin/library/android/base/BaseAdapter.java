@@ -60,19 +60,19 @@ public abstract class BaseAdapter<ITEM> extends RecyclerView.Adapter<ViewHolder>
     }
 
 
+    @SuppressLint("NotifyDataSetChanged")
     public void setData(@Nullable List<ITEM> items) {
         mItemList.clear();
         if (items != null && items.size() > 0) mItemList.addAll(items);
         notifyDataSetChanged();
     }
 
-
+    @SuppressLint("NotifyDataSetChanged")
     public void addData(@Nullable List<ITEM> items) {
         final int size = items == null ? 0 : items.size();
         if (size > 0) {
             mItemList.addAll(items);
-            final int count = mItemList.size();
-            notifyItemRangeChanged(count - size, getItemCount());
+            notifyDataSetChanged();
         }
     }
 

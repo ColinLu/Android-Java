@@ -17,7 +17,7 @@
 
     <com.colin.library.android.widgets.edge.LoadRefreshView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="150dp"
         android:background="@color/white"
         app:direction="top"
         app:edgeFlingFromTarget="true"
@@ -30,7 +30,7 @@
 
     <com.colin.library.android.widgets.edge.LoadMoreView
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
+        android:layout_height="100dp"
         android:textColor="@color/colorAccent"
         app:arrow="@drawable/ic_arrow_upward"
         app:arrowColor="@color/colorAccent"

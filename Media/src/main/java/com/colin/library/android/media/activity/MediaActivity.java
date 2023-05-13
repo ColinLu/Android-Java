@@ -32,11 +32,13 @@ import com.colin.library.android.media.dialog.FolderDialog;
 import com.colin.library.android.media.task.MediaLeaderTask;
 import com.colin.library.android.media.task.OnTaskListener;
 import com.colin.library.android.media.util.MediaUtil;
+import com.colin.library.android.utils.ActivityUtil;
 import com.colin.library.android.utils.IntentUtil;
 import com.colin.library.android.utils.PermissionUtil;
 import com.colin.library.android.utils.ResourceUtil;
 import com.colin.library.android.utils.StringUtil;
 import com.colin.library.android.utils.ToastUtil;
+import com.colin.library.android.utils.WidgetUtil;
 import com.colin.library.android.widgets.recycler.SpaceItemDecoration;
 import com.google.android.material.appbar.AppBarLayout;
 
@@ -94,7 +96,7 @@ public class MediaActivity extends BaseActivity {
         if (savedInstanceState != null) initExtras(savedInstanceState);
         else initExtras(getIntent().getExtras());
         super.onCreate(savedInstanceState);
-        ResourceUtil.initLocale(this, MediaHelper.getInstance().getMediaConfig().getLocale());
+        ActivityUtil.initLocale(this, MediaHelper.getInstance().getMediaConfig().getLocale());
     }
 
     @Override
@@ -111,7 +113,7 @@ public class MediaActivity extends BaseActivity {
     public void onConfigurationChanged(@NonNull Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         int position = mLayoutManager.findFirstVisibleItemPosition();
-        mLayoutManager.setOrientation(ResourceUtil.getOrientation(newConfig));
+        mLayoutManager.setOrientation(WidgetUtil.getOrientation(newConfig));
         recycler_list.setAdapter(mAdapter);
         mLayoutManager.scrollToPosition(position);
         if (mFolderDialog != null && !mFolderDialog.isShowing()) mFolderDialog = null;
@@ -160,7 +162,7 @@ public class MediaActivity extends BaseActivity {
         final ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) actionBar.setDisplayHomeAsUpEnabled(true);
         if (null == mAdapter) mAdapter = new MediaAdapter(this, mDisplayCamera, mMultipleMode);
-        mLayoutManager = new GridLayoutManager(this, mColumn, ResourceUtil.getOrientation(this), false);
+        mLayoutManager = new GridLayoutManager(this, mColumn, WidgetUtil.getOrientation(this), false);
         recycler_list.setLayoutManager(mLayoutManager);
         recycler_list.addItemDecoration(new SpaceItemDecoration(getResources().getDimensionPixelSize(R.dimen.dp_4)));
         recycler_list.setItemAnimator(null);

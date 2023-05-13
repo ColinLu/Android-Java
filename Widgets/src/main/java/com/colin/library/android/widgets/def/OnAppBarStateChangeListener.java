@@ -3,6 +3,7 @@ package com.colin.library.android.widgets.def;
 import static androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP_PREFIX;
 
 import androidx.annotation.IntDef;
+import androidx.annotation.NonNull;
 import androidx.annotation.Px;
 import androidx.annotation.RestrictTo;
 
@@ -33,8 +34,7 @@ public abstract class OnAppBarStateChangeListener implements AppBarLayout.OnOffs
     @Override
     public void onOffsetChanged(AppBarLayout appBarLayout, @Px int offset) {
         if (offset == 0) {
-            if (mCurrentState != State.EXPANDED)
-                onStateChanged(appBarLayout, State.EXPANDED, offset);
+            if (mCurrentState != State.EXPANDED) onStateChanged(appBarLayout, State.EXPANDED, offset);
             mCurrentState = State.EXPANDED;
         } else if (Math.abs(offset) >= appBarLayout.getTotalScrollRange()) {
             if (mCurrentState != State.COLLAPSED) onStateChanged(appBarLayout, State.COLLAPSED, offset);
@@ -46,6 +46,6 @@ public abstract class OnAppBarStateChangeListener implements AppBarLayout.OnOffs
     }
 
 
-    public abstract void onStateChanged(AppBarLayout appBarLayout, @State int state, @Px int offset);
+    public abstract void onStateChanged(@NonNull AppBarLayout appBarLayout, @State int state, @Px int offset);
 
 }

@@ -3,7 +3,7 @@ package com.colin.library.android.http.interceptor;
 import android.text.TextUtils;
 
 import com.colin.library.android.http.BuildConfig;
-import com.colin.library.android.http.request.ProgressRequestBody;
+import com.colin.library.android.http.progress.ProgressRequestBody;
 import com.colin.library.android.utils.LogUtil;
 import com.colin.library.android.utils.data.Constants;
 

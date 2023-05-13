@@ -2,6 +2,7 @@ package com.colin.android.demo.java.utils;
 
 import android.graphics.Bitmap;
 
+import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -57,7 +58,11 @@ public final class DialogManager {
         dialog.setImage(bitmap);
         dialog.show(manager, TAG);
     }
-
+    public void showImage(@Nullable FragmentManager manager, @DrawableRes int res) {
+        final ImageDialog dialog = new ImageDialog();
+        dialog.setImageRes(res);
+        dialog.show(manager, TAG);
+    }
     public synchronized void showTip(@Nullable FragmentManager manager, @Nullable String title, @Nullable String msg) {
         if (manager == null || StringUtil.isEmpty(title, msg)) return;
         final TipsDialog dialog = getTipsDialog(manager, "TipsDialog");
