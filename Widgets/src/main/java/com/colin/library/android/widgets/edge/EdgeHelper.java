@@ -2,7 +2,6 @@ package com.colin.library.android.widgets.edge;
 
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -13,17 +12,15 @@ import com.colin.library.android.utils.LogUtil;
 import com.colin.library.android.widgets.annotation.Direction;
 import com.colin.library.android.widgets.behavior.ViewOffsetHelper;
 
-import java.lang.ref.WeakReference;
-
 /**
  * 作者： ColinLu
  * 时间： 2023-01-27 15:58
  * <p>
  * 描述： TODO
  */
-public final class EdgeHelper {
+public final class EdgeHelper implements IEdgeLayout {
     @Nullable
-    private final WeakReference<View> mViewRef;
+    private View mEdgeLayout;
     @Nullable
     private View mTargetView;
     private Edge mEdgeLeft;
@@ -45,7 +42,7 @@ public final class EdgeHelper {
     private OnEdgeListener mOnEdgeListener;
 
     public EdgeHelper(@NonNull View view) {
-        this.mViewRef = new WeakReference<>(view);
+        this.mEdgeLayout = view;
     }
 
 
@@ -78,13 +75,20 @@ public final class EdgeHelper {
         }
     }
 
-    public void onLayout(@NonNull ViewGroup layout, @Px int left, @Px int top, @Px int right, @Px int bottom) {
-        final int width = layout.getMeasuredWidth();
-        final int height = layout.getMeasuredHeight();
-        final int childLeft = layout.getPaddingLeft();
-        final int childTop = layout.getPaddingTop();
-        final int childWidth = width - childLeft - layout.getPaddingRight();
-        final int childHeight = height - childTop - layout.getPaddingBottom();
+    public void onMeasure(int width, int height) {
+        if (mEdgeLeft != null) mEdgeLeft.measure(width, height);
+        if (mEdgeTop != null) mEdgeTop.measure(width, height);
+        if (mEdgeRight != null) mEdgeRight.measure(width, height);
+        if (mEdgeBottom != null) mEdgeBottom.measure(width, height);
+    }
+
+    public void onLayout(@Px int left, @Px int top, @Px int right, @Px int bottom) {
+        final int width = mEdgeLayout.getMeasuredWidth();
+        final int height = mEdgeLayout.getMeasuredHeight();
+        final int childLeft = mEdgeLayout.getPaddingLeft();
+        final int childTop = mEdgeLayout.getPaddingTop();
+        final int childWidth = width - childLeft - mEdgeLayout.getPaddingRight();
+        final int childHeight = height - childTop - mEdgeLayout.getPaddingBottom();
         if (mTargetView != null) {
             mTargetView.layout(childLeft, childTop, childLeft + childWidth, childTop + childHeight);
         }
@@ -113,17 +117,6 @@ public final class EdgeHelper {
     @Nullable
     public Edge getEnabledEdge(@Direction int direction) {
         return isDirectionEnabled(direction) ? getEdge(direction) : null;
-    }
-
-    public void onMeasure(int width, int height) {
-        measure(getEdge(Direction.LEFT), width, height);
-        measure(getEdge(Direction.TOP), width, height);
-        measure(getEdge(Direction.RIGHT), width, height);
-        measure(getEdge(Direction.BOTTOM), width, height);
-    }
-
-    private void measure(@Nullable Edge edge, final int width, final int height) {
-        if (edge != null) edge.measure(width, height);
     }
 
 
@@ -165,27 +158,18 @@ public final class EdgeHelper {
 
     }
 
+    @Override
     public boolean isRunning() {
-        return isLeftRunning() || isTopRunning() || isRightRunning() || isBottomRunning();
+        return isRunning(Direction.LEFT) || isRunning(Direction.TOP) || isRunning(Direction.RIGHT) || isRunning(Direction.BOTTOM);
     }
 
-    public boolean isLeftRunning() {
-        final Edge edge = getEnabledEdge(Direction.LEFT);
-        return edge != null && edge.isRunning();
+    @Override
+    public void start() {
+
     }
 
-    public boolean isTopRunning() {
-        final Edge edge = getEnabledEdge(Direction.TOP);
-        return edge != null && edge.isRunning();
-    }
-
-    public boolean isRightRunning() {
-        final Edge edge = getEnabledEdge(Direction.RIGHT);
-        return edge != null && edge.isRunning();
-    }
-
-    public boolean isBottomRunning() {
-        final Edge edge = getEnabledEdge(Direction.BOTTOM);
+    public boolean isRunning(@Direction int direction) {
+        final Edge edge = getEnabledEdge(direction);
         return edge != null && edge.isRunning();
     }
 
@@ -199,16 +183,15 @@ public final class EdgeHelper {
 
     }
 
-    public void offset(@Direction int direction, @Px int px) {
+    public void offset(@Px int offsetX, @Px int offsetY) {
 
     }
 
+    @Override
     public void finish() {
-        finish(getEnabledEdge(Direction.LEFT), true);
-        finish(getEnabledEdge(Direction.TOP), true);
-        finish(getEnabledEdge(Direction.RIGHT), true);
-        finish(getEnabledEdge(Direction.BOTTOM), true);
+
     }
+
 
     public void finish(@Direction int direction) {
         finish(getEnabledEdge(direction), true);

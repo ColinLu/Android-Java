@@ -113,23 +113,23 @@ public final class UtilConfig {
             return this;
         }
 
-        public Builder setLogShowTag(@Nullable String showTag) {
-            this.mLogShowTag = showTag;
+        public Builder setLogShowTag(@Nullable String tag) {
+            this.mLogShowTag = tag;
             return this;
         }
 
-        public Builder setLogMethodOffset(int logMethodOffset) {
-            this.mLogMethodOffset = logMethodOffset;
+        public Builder setLogMethodOffset(int offset) {
+            this.mLogMethodOffset = offset;
             return this;
         }
 
-        public Builder setLogMethodCount(int logMethodCount) {
-            this.mLogMethodCount = logMethodCount;
+        public Builder setLogMethodCount(int count) {
+            this.mLogMethodCount = count;
             return this;
         }
 
-        public Builder setLogShowThread(boolean logShowThread) {
-            this.mLogShowThread = logShowThread;
+        public Builder setLogShowThread(boolean show) {
+            this.mLogShowThread = show;
             return this;
         }
 

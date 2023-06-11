@@ -140,6 +140,16 @@ public final class ArrayUtil {
     /**
      * 数组 转字符转
      *
+     * @param array
+     * @return
+     */
+    public static String toString(@Nullable final Object... array) {
+        return toString(",", array);
+    }
+
+    /**
+     * 数组 转字符转
+     *
      * @param separator
      * @param array
      * @return

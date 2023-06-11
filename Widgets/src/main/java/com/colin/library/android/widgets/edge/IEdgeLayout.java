@@ -1,5 +1,7 @@
 package com.colin.library.android.widgets.edge;
 
+import androidx.annotation.Px;
+
 import com.colin.library.android.widgets.annotation.Direction;
 
 /**
@@ -8,6 +10,16 @@ import com.colin.library.android.widgets.annotation.Direction;
  * <p>
  * 描述： TODO
  */
-public interface IEdgeLayout extends OnEdgeListener {
+public interface IEdgeLayout {
     void setDirectionEnabled(@Direction final int enabled);
+
+    boolean isRunning();
+
+    void start();
+
+    void offset(@Px int offsetX, @Px int offsetY);
+
+    void finish();
+
+
 }

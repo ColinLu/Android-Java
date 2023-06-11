@@ -73,6 +73,22 @@ public final class WidgetUtil {
         return LinearLayoutManager.VERTICAL;
     }
 
+    public static boolean scrollToLeft(@Nullable View view) {
+        return view != null && view.canScrollHorizontally(-1);
+    }
+
+    public static boolean scrollToTop(@Nullable View view) {
+        return view != null && view.canScrollVertically(-1);
+    }
+
+    public static boolean scrollToRight(@Nullable View view) {
+        return view != null && view.canScrollHorizontally(1);
+    }
+
+    public static boolean scrollToBottom(@Nullable View view) {
+        return view != null && view.canScrollVertically(1);
+    }
+
     /*控件圆角*/
     public static void setRadius(@Nullable View view, @Px final float radius) {
         if (view != null) {

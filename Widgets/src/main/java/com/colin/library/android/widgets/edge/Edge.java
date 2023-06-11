@@ -186,36 +186,6 @@ public final class Edge {
     }
 
 
-    public void onLayout(final int width, final int height) {
-        final int vw = mView.getMeasuredWidth(), vh = mView.getMeasuredHeight();
-        int center = 0;
-        switch (mDirection) {
-            case Direction.LEFT:
-                center = (height - vh) >> 1;
-                mView.layout(-vw, center, 0, center + vh);
-                getViewOffsetHelper().onViewLayout();
-                break;
-            case Direction.TOP:
-                center = (width - vw) >> 1;
-                mView.layout(center, -vh, center + vw, 0);
-                getViewOffsetHelper().onViewLayout();
-                break;
-            case Direction.RIGHT:
-                center = (height - vh) >> 1;
-                mView.layout(width, center, width + vw, center + vh);
-                getViewOffsetHelper().onViewLayout();
-                break;
-            case Direction.BOTTOM:
-                center = (width - vw) >> 1;
-                mView.layout(center, height, center + vw, height + vh);
-                getViewOffsetHelper().onViewLayout();
-                break;
-            default:
-                break;
-        }
-
-    }
-
     public void scrollToTarget(@Px int offset) {
         if (mDirection == Direction.LEFT || mDirection == Direction.TOP) {
             updateOffset(getOffsetCalculator().calculator(this, offset));

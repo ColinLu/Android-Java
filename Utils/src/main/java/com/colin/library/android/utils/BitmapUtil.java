@@ -1,6 +1,5 @@
 package com.colin.library.android.utils;
 
-import android.Manifest;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -33,14 +32,12 @@ import androidx.annotation.FloatRange;
 import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresPermission;
 import androidx.annotation.WorkerThread;
 import androidx.core.content.ContextCompat;
 
-import com.colin.library.android.utils.data.Constants;
 import com.colin.library.android.helper.UtilHelper;
+import com.colin.library.android.utils.data.Constants;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -78,7 +75,7 @@ public final class BitmapUtil {
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
         BitmapFactory.decodeFile(filePath, options);
-        options.inSampleSize = calculateInSampleSize(options, width, height);
+        options.inSampleSize = BitmapCompressUtil.calculateInSampleSize(options, width, height);
         options.inJustDecodeBounds = false;
         return BitmapFactory.decodeFile(filePath, options);
     }
@@ -192,7 +189,7 @@ public final class BitmapUtil {
         final BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
         BitmapFactory.decodeByteArray(data, offset, data.length, options);
-        options.inSampleSize = calculateInSampleSize(options, width, height);
+        options.inSampleSize = BitmapCompressUtil.calculateInSampleSize(options, width, height);
         options.inJustDecodeBounds = false;
         return BitmapFactory.decodeByteArray(data, offset, data.length, options);
     }
@@ -254,45 +251,6 @@ public final class BitmapUtil {
         return bitmap.getRowBytes() * bitmap.getHeight();
     }
 
-    /**
-     * 压缩图片【质量】 Bitmap
-     *
-     * @param bitmap  需要重新编码的 bitmap
-     * @param format  编码后的格式 如 Bitmap.CompressFormat.PNG
-     * @param quality 质量[0,100]
-     * @return 重新编码后的图片
-     */
-    public static Bitmap compress(@Nullable final Bitmap bitmap, @Nullable final Bitmap.CompressFormat format,
-            @IntRange(from = 0, to = 100) final int quality) {
-        return compress(bitmap, format, null, quality);
-    }
-
-    /**
-     * 压缩图片【质量】 Bitmap
-     *
-     * @param bitmap  需要重新编码的 bitmap
-     * @param format  编码后的格式 如 Bitmap.CompressFormat.PNG
-     * @param options {@link BitmapFactory.Options}
-     * @param quality 质量[0,100]
-     * @return 重新编码后的图片
-     */
-    public static Bitmap compress(@Nullable final Bitmap bitmap, @Nullable final Bitmap.CompressFormat format,
-            @Nullable final BitmapFactory.Options options, final int quality) {
-        if (isEmpty(bitmap) || format == null) return null;
-        ByteArrayOutputStream baos = null;
-        try {
-            baos = new ByteArrayOutputStream();
-            bitmap.compress(format, quality, baos);
-            final byte[] data = baos.toByteArray();
-            return BitmapFactory.decodeByteArray(data, 0, data.length, options);
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            IOUtil.flush(baos);
-            IOUtil.close(baos);
-        }
-        return null;
-    }
 
     /**
      * 旋转图片
@@ -317,7 +275,7 @@ public final class BitmapUtil {
      * @param py      旋转点纵坐标
      * @return 旋转后的图片
      */
-    public static Bitmap rotate(@Nullable final Bitmap bitmap, final int degrees, final float px, final float py) {
+    public static Bitmap rotate(@Nullable final Bitmap bitmap, final float degrees, final float px, final float py) {
         return rotate(bitmap, degrees, px, py, true);
     }
 
@@ -331,12 +289,12 @@ public final class BitmapUtil {
      * @param recycle 是否回收
      * @return 旋转后的图片
      */
-    public static Bitmap rotate(@Nullable final Bitmap bitmap, final int degrees, final float px, final float py, final boolean recycle) {
+    public static Bitmap rotate(@Nullable final Bitmap bitmap, final float degrees, final float px, final float py, final boolean recycle) {
         if (isEmpty(bitmap) || degrees == 0) return bitmap;
         final Matrix matrix = new Matrix();
         matrix.setRotate(degrees, px, py);
         final Bitmap newBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
-        if (recycle && !bitmap.isRecycled()) bitmap.recycle();
+        if (recycle) recycle(bitmap);
         return newBitmap;
     }
 
@@ -533,7 +491,7 @@ public final class BitmapUtil {
     public static Bitmap crop(@Nullable final Bitmap bitmap, final int x, final int y, final int width, final int height, final boolean recycle) {
         if (isEmpty(bitmap)) return null;
         Bitmap newBitmap = Bitmap.createBitmap(bitmap, x, y, width, height);
-        if (recycle && !bitmap.isRecycled()) bitmap.recycle();
+        if (recycle) recycle(bitmap);
         return newBitmap;
     }
 
@@ -596,8 +554,8 @@ public final class BitmapUtil {
             @Nullable final Point bgdPoint, @Nullable final Point fgPoint) {
         if (isEmpty(bgBitmap) || isEmpty(showBitmap)) return null;
 
-        int width = bgBitmap.getWidth() > showBitmap.getWidth() ? bgBitmap.getWidth() : showBitmap.getWidth();
-        int height = bgBitmap.getHeight() > showBitmap.getHeight() ? bgBitmap.getHeight() : showBitmap.getHeight();
+        int width = Math.max(bgBitmap.getWidth(), showBitmap.getWidth());
+        int height = Math.max(bgBitmap.getHeight(), showBitmap.getHeight());
 
         Paint paint = new Paint();
         if (mode != null) paint.setXfermode(new PorterDuffXfermode(mode));
@@ -673,15 +631,15 @@ public final class BitmapUtil {
     public static Bitmap combineToSameSize(@Nullable Bitmap bgBitmap, @Nullable Bitmap showBitmap, @Nullable final PorterDuff.Mode mode) {
         if (isEmpty(bgBitmap) || isEmpty(showBitmap)) return null;
 
-        int width = bgBitmap.getWidth() < showBitmap.getWidth() ? bgBitmap.getWidth() : showBitmap.getWidth();
-        int height = bgBitmap.getHeight() < showBitmap.getHeight() ? bgBitmap.getHeight() : showBitmap.getHeight();
+        int width = Math.min(bgBitmap.getWidth(), showBitmap.getWidth());
+        int height = Math.min(bgBitmap.getHeight(), showBitmap.getHeight());
 
         if (showBitmap.getWidth() != width && showBitmap.getHeight() != height) {
-            showBitmap = scale(showBitmap, width, height);
+            showBitmap = BitmapCompressUtil.scale(showBitmap, width, height);
         }
 
         if (bgBitmap.getWidth() != width && bgBitmap.getHeight() != height) {
-            bgBitmap = scale(bgBitmap, width, height);
+            bgBitmap = BitmapCompressUtil.scale(bgBitmap, width, height);
         }
 
         Paint paint = new Paint();
@@ -753,7 +711,7 @@ public final class BitmapUtil {
                 Shader.TileMode.CLAMP));
         paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_IN));
         canvas.drawRect(0, height + spacing, width, bitmapWithReflection.getHeight() + spacing, paint);
-        if (recycle) recycle(bitmap);
+        recycle(recycle, bitmap);
         return bitmapWithReflection;
     }
 
@@ -797,7 +755,7 @@ public final class BitmapUtil {
         Bitmap newBitmap = bitmap.copy(bitmap.getConfig(), true);
         Canvas canvas = new Canvas(newBitmap);
         canvas.drawText(content, x, y + textSize, paint);
-        if (recycle && !bitmap.isRecycled()) bitmap.recycle();
+        recycle(recycle, bitmap);
         return newBitmap;
     }
 
@@ -845,7 +803,7 @@ public final class BitmapUtil {
             paint.setAlpha(alpha);
             canvas.drawBitmap(watermark, x, y, paint);
         }
-        if (recycle && !bitmap.isRecycled()) bitmap.recycle();
+        if (recycle) recycle(bitmap);
         return newBitmap;
     }
 
@@ -914,7 +872,7 @@ public final class BitmapUtil {
             paint.setStrokeCap(Paint.Cap.ROUND);
             canvas.drawCircle(width / 2f, height / 2f, radius, paint);
         }
-        if (recycle && !bitmap.isRecycled()) bitmap.recycle();
+        recycle(recycle, bitmap);
         return ret;
     }
 
@@ -1004,7 +962,7 @@ public final class BitmapUtil {
         int height = bitmap.getHeight();
         float roundPx, left, top, right, bottom, dst_left, dst_top, dst_right, dst_bottom;
         if (width <= height) {
-            roundPx = width / 2;
+            roundPx = width >> 1;
             top = 0;
             bottom = width;
             left = 0;
@@ -1015,8 +973,8 @@ public final class BitmapUtil {
             dst_right = width;
             dst_bottom = width;
         } else {
-            roundPx = height / 2;
-            float clip = (width - height) / 2;
+            roundPx = height >> 1;
+            float clip = (width - height) >> 1;
             left = clip;
             right = width - clip;
             top = 0;
@@ -1048,384 +1006,15 @@ public final class BitmapUtil {
         return output;
     }
 
-    /**
-     * 计算采样率
-     *
-     * @param options   The options.
-     * @param maxWidth  The maximum width.
-     * @param maxHeight The maximum height.
-     * @return the sample size
-     */
-    public static int calculateInSampleSize(@NonNull final BitmapFactory.Options options, @IntRange(from = 0) final int maxWidth,
-            @IntRange(from = 0) final int maxHeight) {
-        if (maxHeight == 0 || maxWidth == 0) return 1;
-        int height = options.outHeight;
-        int width = options.outWidth;
-        int inSampleSize = 1;
-        while ((width >>= 1) >= maxWidth && (height >>= 1) >= maxHeight) {
-            inSampleSize <<= 1;
-        }
-        return inSampleSize;
-    }
-
-    /**
-     * 按缩放宽高压缩
-     *
-     * @param bitmap    待操作源图片
-     * @param newWidth  新宽度
-     * @param newHeight 新高度
-     * @return 缩放宽高压缩后的图片
-     * 通过缩放图片像素来减少图片占用内存大小。
-     */
-    @Nullable
-    public static Bitmap compressByScale(@Nullable final Bitmap bitmap, final int newWidth, final int newHeight) {
-        return scale(bitmap, newWidth, newHeight, false);
-    }
-
-    /**
-     * 按缩放宽高压缩
-     *
-     * @param bitmap    待操作源图片
-     * @param newWidth  新宽度
-     * @param newHeight 新高度
-     * @param recycle   是否回收
-     * @return 缩放宽高压缩后的图片
-     */
-    @Nullable
-    public static Bitmap compressByScale(@Nullable final Bitmap bitmap, final int newWidth, final int newHeight, final boolean recycle) {
-        return scale(bitmap, newWidth, newHeight, recycle);
-    }
-
-    /**
-     * 按缩放比例压缩
-     *
-     * @param bitmap      待操作源图片
-     * @param scaleWidth  横向缩放比例 ( 缩放宽度倍数 )
-     * @param scaleHeight 纵向缩放比例 ( 缩放高度倍数 )
-     * @return 缩放比例压缩后的图片
-     */
-    @Nullable
-    public static Bitmap compressByScale(@Nullable final Bitmap bitmap, final float scaleWidth, final float scaleHeight) {
-        return scale(bitmap, scaleWidth, scaleHeight, false);
-    }
-
-    /**
-     * 按缩放比例压缩
-     *
-     * @param bitmap      待操作源图片
-     * @param scaleWidth  横向缩放比例 ( 缩放宽度倍数 )
-     * @param scaleHeight 纵向缩放比例 ( 缩放高度倍数 )
-     * @param recycle     是否回收
-     * @return 缩放比例压缩后的图片
-     */
-    @Nullable
-    public static Bitmap compressByScale(@Nullable final Bitmap bitmap, final float scaleWidth, final float scaleHeight, final boolean recycle) {
-        return scale(bitmap, scaleWidth, scaleHeight, recycle);
-    }
-
-    /**
-     * 缩放图片 ( 指定所需宽高 )
-     *
-     * @param bitmap    待操作源图片
-     * @param newWidth  新宽度
-     * @param newHeight 新高度
-     * @return 缩放后的图片
-     */
-    @Nullable
-    public static Bitmap scale(@Nullable final Bitmap bitmap, final int newWidth, final int newHeight) {
-        return scale(bitmap, newWidth, newHeight, false);
-    }
-
-    /**
-     * 缩放图片 ( 指定所需宽高 )
-     *
-     * @param bitmap    待操作源图片
-     * @param newWidth  新宽度
-     * @param newHeight 新高度
-     * @param recycle   是否回收
-     * @return 缩放后的图片
-     */
-    @Nullable
-    public static Bitmap scale(@Nullable final Bitmap bitmap, final int newWidth, final int newHeight, final boolean recycle) {
-        if (isEmpty(bitmap)) return null;
-        Bitmap newBitmap = Bitmap.createScaledBitmap(bitmap, newWidth, newHeight, true);
-        if (recycle) recycle(bitmap);
-        return newBitmap;
-    }
-
-    /**
-     * 缩放图片 ( 比例缩放 )
-     *
-     * @param bitmap 待操作源图片
-     * @param scale  缩放倍数
-     * @return 缩放后的图片
-     */
-    public static Bitmap scale(@Nullable final Bitmap bitmap, final float scale) {
-        return scale(bitmap, scale, scale, true);
-    }
-
-    /**
-     * 缩放图片 ( 比例缩放 )
-     *
-     * @param bitmap 待操作源图片
-     * @param scaleX 横向缩放比例 ( 缩放宽度倍数 )
-     * @param scaleY 纵向缩放比例 ( 缩放高度倍数 )
-     * @return 缩放后的图片
-     */
-    public static Bitmap scale(@Nullable final Bitmap bitmap, final float scaleX, final float scaleY) {
-        return scale(bitmap, scaleX, scaleY, true);
-    }
-
-    /**
-     * 缩放图片 ( 比例缩放 )
-     *
-     * @param bitmap  待操作源图片
-     * @param scaleX  横向缩放比例 ( 缩放宽度倍数 )
-     * @param scaleY  纵向缩放比例 ( 缩放高度倍数 )
-     * @param recycle 是否回收
-     * @return 缩放后的图片
-     */
-    @Nullable
-    public static Bitmap scale(@Nullable final Bitmap bitmap, final float scaleX, final float scaleY, final boolean recycle) {
-        if (isEmpty(bitmap)) return null;
-        Matrix matrix = new Matrix();
-        matrix.setScale(scaleX, scaleY);
-        Bitmap newBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
-        if (recycle) recycle(bitmap);
-        return newBitmap;
-    }
-
-    /**
-     * 按质量压缩图片
-     *
-     * @param bitmap  被压缩的图片图片
-     * @param quality 质量要求 0--100
-     * @return 返回压缩的图片
-     * <p>
-     * 质量压缩不会减少图片的像素。它是在保持像素不变的前提下改变图片的位深及透明度等，来达到压缩图片的目的。
-     * 进过它压缩的图片文件大小会有改变，但是导入成bitmap后占得内存是不变的。因为要保持像素不变，所以它就无法无限压缩，
-     * 到达一个值之后就不会继续变小了。显然这个方法并不适用于缩略图，其实也不适用于想通过压缩图片减少内存的适用，
-     * 仅仅适用于想在保证图片质量的同时减少文件大小的情况而已。
-     */
-    @Nullable
-    public static Bitmap compressByQuality(@Nullable Bitmap bitmap, @IntRange(from = 0, to = 100) final int quality) {
-        return compressByQuality(bitmap, Bitmap.CompressFormat.JPEG, quality, null, false);
-    }
-
-    /**
-     * 按质量压缩图片
-     *
-     * @param bitmap  被压缩的图片图片
-     * @param quality 质量要求 0--100
-     * @param options {@link BitmapFactory.Options}
-     * @return 返回压缩的图片
-     */
-    @Nullable
-    public static Bitmap compressByQuality(@Nullable final Bitmap bitmap, @IntRange(from = 0, to = 100) int quality,
-            @Nullable final BitmapFactory.Options options) {
-        return compressByQuality(bitmap, Bitmap.CompressFormat.JPEG, quality, options, false);
-    }
-
-    /**
-     * 按质量压缩
-     *
-     * @param bitmap  待操作源图片
-     * @param format  图片压缩格式
-     * @param quality 质量
-     * @param options {@link BitmapFactory.Options}
-     * @param recycle 是否回收
-     * @return 质量压缩后的图片
-     */
-    public static Bitmap compressByQuality(@Nullable final Bitmap bitmap, @Nullable final Bitmap.CompressFormat format,
-            @IntRange(from = 0, to = 100) final int quality, @Nullable final BitmapFactory.Options options, boolean recycle) {
-        if (isEmpty(bitmap) || format == null) return null;
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, quality, byteArrayOutputStream);
-        byte[] bytes = byteArrayOutputStream.toByteArray();
-        Bitmap newBitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length, options);
-        if (recycle && !bitmap.isRecycled()) bitmap.recycle();
-        IOUtil.flush(byteArrayOutputStream);
-        IOUtil.close(byteArrayOutputStream);
-        return newBitmap;
-    }
-
-    /**
-     * 质量压缩法 像素不会减少
-     *
-     * @param bitmap  原图
-     * @param maxSize 压缩之后的图片大小
-     * @param recycle 是否回收
-     * @return 质量压缩后的图片
-     */
-    @Nullable
-    public static Bitmap compressByQuality(@Nullable final Bitmap bitmap, long maxSize, boolean recycle) {
-        if (isEmpty(bitmap)) return null;
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        //质量压缩方法，这里100表示不压缩，把压缩后的数据存放到byteArrayOutputStream中
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
-        int options = 100;
-        //循环判断如果压缩后图片是否大于 maxSize kb,大于继续压缩
-        while (byteArrayOutputStream.toByteArray().length / 1024 > maxSize) {
-            //重置baos即清空baos
-            byteArrayOutputStream.reset();
-            //这里压缩options%，把压缩后的数据存放到byteArrayOutputStream中
-            bitmap.compress(Bitmap.CompressFormat.JPEG, options, byteArrayOutputStream);
-            //每次都减少5
-            options -= 5;
-            if (options <= 5) break;
-        }
-        byte[] bytes = byteArrayOutputStream.toByteArray();
-        IOUtil.flush(byteArrayOutputStream);
-        IOUtil.close(byteArrayOutputStream);
-        if (recycle && !bitmap.isRecycled()) bitmap.recycle();
-        return BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-    }
-
-    /**
-     * 按质量压缩图片 递归处理 得到指定大小的图片
-     *
-     * @param bitmap      被压缩的图片图片
-     * @param maxByteSize 图片最大值
-     * @return 返回压缩的图片
-     */
-    @Nullable
-    public static Bitmap compressByByteSize(@Nullable final Bitmap bitmap, long maxByteSize) {
-        return compressByByteSize(bitmap, Bitmap.CompressFormat.JPEG, maxByteSize, null, false);
-    }
-
-    @Nullable
-    public static Bitmap compressByByteSize(@Nullable final Bitmap bitmap, @Nullable final BitmapFactory.Options options, long maxByteSize) {
-        return compressByByteSize(bitmap, Bitmap.CompressFormat.JPEG, maxByteSize, options, false);
-    }
-
-    /**
-     * 按质量压缩图片 递归处理 得到指定大小的图片
-     *
-     * @param bitmap      被压缩的图片图片
-     * @param maxByteSize 图片最大值
-     * @param recycle     是否回收原图片
-     * @return 返回压缩的图片
-     */
-    @Nullable
-    public static Bitmap compressByByteSize(@Nullable final Bitmap bitmap, @Nullable final Bitmap.CompressFormat format, long maxByteSize,
-            @Nullable final BitmapFactory.Options options, boolean recycle) {
-        if (isEmpty(bitmap) || maxByteSize <= 0) return null;
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bitmap.compress(format, 100, baos);
-        byte[] bytes;
-        if (baos.size() <= maxByteSize) bytes = baos.toByteArray();
-        else {
-            baos.reset();
-            bitmap.compress(format, 0, baos);
-            if (baos.size() >= maxByteSize) bytes = baos.toByteArray();
-            else {
-                // find the best quality using binary search
-                int st = 0, end = 100, mid = 0;
-                while (st < end) {// 二分法寻找最佳质量
-                    mid = (st + end) / 2;
-                    baos.reset();
-                    bitmap.compress(Bitmap.CompressFormat.JPEG, mid, baos);
-                    int len = baos.size();
-                    if (len == maxByteSize) break;
-                    else if (len > maxByteSize) end = mid - 1;
-                    else st = mid + 1;
-                }
-                if (end == mid - 1) {
-                    baos.reset();
-                    bitmap.compress(Bitmap.CompressFormat.JPEG, st, baos);
-                }
-                bytes = baos.toByteArray();
-            }
-        }
-        Bitmap newBitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length, options);
-        if (recycle && !bitmap.isRecycled()) bitmap.recycle();
-        IOUtil.flush(baos);
-        IOUtil.close(baos);
-        return newBitmap;
-    }
-
-
-    /**
-     * 按采样大小压缩
-     *
-     * @param bitmap     被压缩的图片图片
-     * @param sampleSize 图片压缩比例
-     * @return 返回压缩的图片
-     * <p>
-     * 这个方法的好处是大大的缩小了内存的使用，在读存储器上的图片时，如果不需要高清的效果，可以先只读取图片的边，
-     * 通过宽和高设定好取样率后再加载图片，这样就不会过多的占用内存。
-     */
-    @Nullable
-    public static Bitmap compressBySampleSize(@Nullable final Bitmap bitmap, final int sampleSize) {
-        return compressBySampleSize(bitmap, sampleSize, false);
-    }
-
-    /**
-     * 按采样大小压缩
-     *
-     * @param bitmap     被压缩的图片图片
-     * @param sampleSize 图片压缩比例
-     * @param recycle    是否回收原图片
-     * @return 返回压缩的图片
-     */
-    @Nullable
-    public static Bitmap compressBySampleSize(@Nullable final Bitmap bitmap, int sampleSize, boolean recycle) {
-        if (isEmpty(bitmap)) return null;
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inSampleSize = sampleSize;
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
-        byte[] bytes = byteArrayOutputStream.toByteArray();
-        Bitmap newBitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length, options);
-        if (recycle && !bitmap.isRecycled()) bitmap.recycle();
-        IOUtil.flush(byteArrayOutputStream);
-        IOUtil.close(byteArrayOutputStream);
-        return newBitmap;
-    }
-
-    /**
-     * 按采样大小压缩
-     *
-     * @param bitmap    待操作源图片
-     * @param maxWidth  最大宽度
-     * @param maxHeight 最大高度
-     * @return 按采样率压缩后的图片
-     */
-    public static Bitmap compressBySampleSize(@Nullable final Bitmap bitmap, final int maxWidth, final int maxHeight) {
-        return compressBySampleSize(bitmap, Bitmap.CompressFormat.JPEG, maxWidth, maxHeight, false);
-    }
-
-    /**
-     * 按采样大小压缩
-     *
-     * @param bitmap    待操作源图片
-     * @param format    图片压缩格式
-     * @param maxWidth  最大宽度
-     * @param maxHeight 最大高度
-     * @return 按采样率压缩后的图片
-     */
-    public static Bitmap compressBySampleSize(@Nullable final Bitmap bitmap, Bitmap.CompressFormat format, final int maxWidth, final int maxHeight,
-            final boolean recycle) {
-        if (isEmpty(bitmap)) return null;
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        //开始读入图片，此时把options.inJustDecodeBounds 设回true了
-        options.inJustDecodeBounds = true;
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bitmap.compress(format, 100, baos);
-        byte[] bytes = baos.toByteArray();
-        BitmapFactory.decodeByteArray(bytes, 0, bytes.length, options);
-        options.inSampleSize = calculateInSampleSize(options, maxWidth, maxHeight);
-        options.inJustDecodeBounds = false;
-        Bitmap newBitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length, options);
-        if (recycle && !bitmap.isRecycled()) bitmap.recycle();
-        IOUtil.flush(baos);
-        IOUtil.close(baos);
-        return newBitmap;
-    }
 
     public static void recycle(@Nullable Bitmap bitmap) {
         if (bitmap != null && !bitmap.isRecycled()) bitmap.recycle();
     }
+
+    public static void recycle(boolean recycle, @Nullable Bitmap bitmap) {
+        if (recycle && bitmap != null && !bitmap.isRecycled()) bitmap.recycle();
+    }
+
 
     /**
      * 安全的创建bitmap。
@@ -1505,37 +1094,32 @@ public final class BitmapUtil {
         return (int) n;
     }
 
-    @RequiresPermission(allOf = {Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE})
     @Nullable
     @WorkerThread
     public static String save(@Nullable final Bitmap bitmap) {
-        return save(bitmap, true);
+        return save(bitmap, PathUtil.getExternalAppFile(Environment.DIRECTORY_DCIM).getAbsolutePath(), FileUtil.createImageFileName(), true);
     }
 
-    @RequiresPermission(allOf = {Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE})
+
     @Nullable
     @WorkerThread
-    public static String save(@Nullable final Bitmap bitmap, final boolean recycle) {
+    public static String save(@Nullable final Bitmap bitmap, @Nullable final String path, @Nullable final String name, final boolean recycle) {
         if (isEmpty(bitmap)) return null;
-        String path = null;
+        final String parent = StringUtil.isEmpty(path) ? PathUtil.getExternalAppFile(Environment.DIRECTORY_PICTURES).getAbsolutePath() : path;
+        final String fileName = StringUtil.isEmpty(name) ? FileUtil.createImageFileName() : name;
+        final File file = new File(parent, fileName);
         FileOutputStream out = null;
         try {
-            final String fileName = TimeUtil.getTimeString() + ".png";
-            final File file = new File(PathUtil.getExternalStorageFile(Environment.DIRECTORY_DCIM), fileName);
-            final boolean existsFile = FileUtil.createOrExistsFile(file);
-            if (existsFile) {
-                path = file.getAbsolutePath();
-                out = new FileOutputStream(file);
-                bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
-            }
+            out = new FileOutputStream(file);
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
             IOUtil.flush(out);
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
-            if (recycle) BitmapUtil.recycle(bitmap);
             IOUtil.close(out);
+            recycle(recycle, bitmap);
         }
-        return path;
+        return file.getAbsolutePath();
     }
 
 

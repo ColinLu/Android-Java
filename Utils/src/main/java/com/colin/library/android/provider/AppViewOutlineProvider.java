@@ -9,7 +9,7 @@ import android.view.ViewOutlineProvider;
  * 作者： ColinLu
  * 时间： 2023-04-04 23:34
  * <p>
- * 描述： TODO
+ * 描述： View 圆角效果
  */
 public class AppViewOutlineProvider extends ViewOutlineProvider {
     private final float mRadius;

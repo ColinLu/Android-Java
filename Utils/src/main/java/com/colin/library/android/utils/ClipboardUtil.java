@@ -68,7 +68,7 @@ public final class ClipboardUtil {
     @Nullable
     public static ClipData.Item getItem(int position) {
         final ClipboardManager manager = AppUtil.getClipboardManager();
-        ClipData clip = null == manager ? null : manager.getPrimaryClip();
+        final ClipData clip = null == manager ? null : manager.getPrimaryClip();
         if (null == clip || clip.getItemCount() <= position) return null;
         return clip.getItemAt(position);
     }

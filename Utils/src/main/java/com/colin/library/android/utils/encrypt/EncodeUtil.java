@@ -22,13 +22,13 @@ import java.net.URLEncoder;
  */
 public final class EncodeUtil {
 
-    /*加密 url*/
+    /*url 加密*/
     @Nullable
     public static String encode(@Nullable final String url) {
         return encode(url, Encode.UTF_8);
     }
 
-    /*加密 url*/
+    /*url 加密*/
     @Nullable
     public static String encode(@Nullable final String url, @Nullable final String enc) {
         if (StringUtil.isEmpty(enc)) return url;
@@ -41,13 +41,13 @@ public final class EncodeUtil {
         return null;
     }
 
-    /*解密 url*/
+    /*url 解密*/
     @Nullable
     public static String decode(@Nullable final String url) {
         return decode(url, Encode.UTF_8);
     }
 
-    /*解密 url*/
+    /*url 解密*/
     @Nullable
     public static String decode(@Nullable final String url, @Nullable final String enc) {
         if (StringUtil.isEmpty(enc)) return url;

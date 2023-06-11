@@ -1037,4 +1037,19 @@ public final class FileUtil {
         }
     }
 
+    public static String createFileName(@NonNull String suffix) {
+        return TimeUtil.getTimeString() + suffix;
+    }
+
+    public static String createImageFileName() {
+        return createFileName(".png");
+    }
+
+    public static String createMusicFileName() {
+        return createFileName(".mp3");
+    }
+
+    public static String createVideoFileName() {
+        return createFileName(".mp4");
+    }
 }

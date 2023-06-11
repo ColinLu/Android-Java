@@ -164,43 +164,47 @@ public final class AppUtil {
     }
 
     public static ActivityManager getActivityManager() {
-        return ContextCompat.getSystemService(UtilHelper.getInstance().getUtilConfig().getApplication(), ActivityManager.class);
+        return getService(ActivityManager.class);
     }
 
     public static WindowManager getWindowManager() {
-        return ContextCompat.getSystemService(UtilHelper.getInstance().getUtilConfig().getApplication(), WindowManager.class);
+        return getService(WindowManager.class);
     }
 
     public static LocationManager getLocationManager() {
-        return ContextCompat.getSystemService(UtilHelper.getInstance().getUtilConfig().getApplication(), LocationManager.class);
+        return getService(LocationManager.class);
     }
 
     public static NotificationManager getNotificationManager() {
-        return ContextCompat.getSystemService(UtilHelper.getInstance().getUtilConfig().getApplication(), NotificationManager.class);
+        return getService(NotificationManager.class);
     }
 
     public static ConnectivityManager getConnectivityManager() {
-        return ContextCompat.getSystemService(UtilHelper.getInstance().getUtilConfig().getApplication(), ConnectivityManager.class);
+        return getService(ConnectivityManager.class);
     }
 
     public static TelephonyManager getTelephonyManager() {
-        return ContextCompat.getSystemService(UtilHelper.getInstance().getUtilConfig().getApplication(), TelephonyManager.class);
+        return getService(TelephonyManager.class);
     }
 
     public static InputMethodManager getInputMethodManager() {
-        return ContextCompat.getSystemService(UtilHelper.getInstance().getUtilConfig().getApplication(), InputMethodManager.class);
+        return getService(InputMethodManager.class);
     }
 
     public static DownloadManager getDownloadManager() {
-        return ContextCompat.getSystemService(UtilHelper.getInstance().getUtilConfig().getApplication(), DownloadManager.class);
+        return getService(DownloadManager.class);
     }
 
     public static ClipboardManager getClipboardManager() {
-        return ContextCompat.getSystemService(UtilHelper.getInstance().getUtilConfig().getApplication(), ClipboardManager.class);
+        return getService(ClipboardManager.class);
     }
 
     public static UserManager getUserManager() {
-        return ContextCompat.getSystemService(UtilHelper.getInstance().getUtilConfig().getApplication(), UserManager.class);
+        return getService(UserManager.class);
+    }
+
+    public static <T> T getService(@NonNull Class<T> clazz) {
+        return getService(UtilHelper.getInstance().getUtilConfig().getApplication(), clazz);
     }
 
     public static <T> T getService(@NonNull Context context, @NonNull Class<T> clazz) {

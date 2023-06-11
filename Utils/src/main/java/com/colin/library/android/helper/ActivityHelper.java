@@ -79,7 +79,6 @@ public final class ActivityHelper {
         return mCount;
     }
 
-
     /*管理栈中有多少个Activity*/
     public int getActivitySize() {
         return ACTIVITY_STACK.size();

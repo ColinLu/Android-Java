@@ -17,13 +17,15 @@ import java.lang.annotation.RetentionPolicy;
  * 描述： 异步任务 子线程操作
  */
 public abstract class Task<Result> implements Runnable {
-    @IntDef({State.NEW, State.ING, State.CANCELLED, State.EXCEPTION})
+    @IntDef({State.NEW, State.ING, State.CANCELLED, State.EXCEPTION, State.FINISH})
     @Retention(RetentionPolicy.SOURCE)
     public @interface State {
-        int NEW = 0;           //新
-        int ING = 1;    //进行中
-        int CANCELLED = 2;     //取消
-        int EXCEPTION = 3;     //异常
+        int NEW = 0;            //新
+        int ING = 1;            //进行中
+        int CANCELLED = 2;      //取消
+        int EXCEPTION = 3;      //异常
+        int FINISH = 4;         //完成
+
     }
 
     private volatile int mState = State.NEW;
@@ -46,6 +48,10 @@ public abstract class Task<Result> implements Runnable {
         } catch (Exception th) {
             if (mState != State.NEW) return;
             mState = State.EXCEPTION;
+        } finally {
+            if (mState != State.NEW) {
+                mState = State.FINISH;
+            }
         }
     }
 
