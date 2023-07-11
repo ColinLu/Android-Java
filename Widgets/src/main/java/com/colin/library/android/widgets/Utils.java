@@ -76,13 +76,6 @@ public final class Utils {
         WebSettings webSettings = view.getSettings();
         webSettings.setDefaultTextEncodingName("UTF-8");
         webSettings.setJavaScriptEnabled(true);// 设置可以运行JS脚本
-        // 设置可以访问文件 localStorage
-        webSettings.setDomStorageEnabled(true);
-        webSettings.setAppCacheMaxSize(1024 * 1024 * 8);
-        webSettings.setAppCachePath(view.getContext().getDir("appcache", 0).getPath());
-
-        webSettings.setAllowFileAccess(true);
-        webSettings.setAppCacheEnabled(true);
         // 设置可以支持缩放
         webSettings.setSupportZoom(zoom);
         // 设置出现缩放工具

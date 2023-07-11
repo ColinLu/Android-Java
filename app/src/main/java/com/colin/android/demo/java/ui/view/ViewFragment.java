@@ -67,9 +67,6 @@ public class ViewFragment extends AppFragment<LayoutListBinding> implements OnIt
             case "Motion":
                 DemoUtils.toNavigate(this, R.id.action_View_to_Motion);
                 break;
-            case "Edge":
-                DemoUtils.toNavigate(this, R.id.action_View_to_Edge);
-                break;
             case "Circle":
                 DemoUtils.toNavigate(this, R.id.action_View_to_Circle);
                 break;
