@@ -5,7 +5,6 @@ import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.Build;
 import android.text.Html;
 import android.text.util.Linkify;
 import android.util.SparseArray;
@@ -16,7 +15,6 @@ import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.RadioButton;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
@@ -214,8 +212,7 @@ public class ViewHolder extends RecyclerView.ViewHolder {
     public ViewHolder setHtml(@IdRes int idRes, @Nullable String html) {
         final TextView view = getView(idRes);
         if (StringUtil.isEmpty(html)) return this;
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) view.setText(Html.fromHtml(html));
-        else view.setText(Html.fromHtml(html, Html.FROM_HTML_MODE_LEGACY));
+        view.setText(Html.fromHtml(html, Html.FROM_HTML_MODE_LEGACY));
         return this;
     }
 

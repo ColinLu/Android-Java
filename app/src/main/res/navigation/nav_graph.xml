@@ -51,9 +51,6 @@
             android:id="@+id/action_View_to_Motion"
             app:destination="@+id/MotionFragment" />
         <action
-            android:id="@+id/action_View_to_Edge"
-            app:destination="@+id/EdgeFragment" />
-        <action
             android:id="@+id/action_View_to_Text"
             app:destination="@+id/TextFragment" />
         <action
@@ -94,12 +91,6 @@
         android:name="com.colin.android.demo.java.ui.method.ContactListFragment"
         android:label="@string/contact"
         tools:layout="@layout/layout_list" />
-
-    <fragment
-        android:id="@+id/EdgeFragment"
-        android:name="com.colin.android.demo.java.ui.view.EdgeFragment"
-        android:label="@string/edge"
-        tools:layout="@layout/layout_edge" />
 
     <fragment
         android:id="@+id/TextFragment"
