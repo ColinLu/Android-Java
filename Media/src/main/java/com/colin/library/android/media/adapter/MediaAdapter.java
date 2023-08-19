@@ -3,7 +3,6 @@ package com.colin.library.android.media.adapter;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.CompoundButton;
 
 import androidx.annotation.NonNull;
@@ -52,13 +51,6 @@ public class MediaAdapter extends BaseAdapter<MediaFile> {
     @Override
     public int layoutRes(int viewType) {
         return viewType == TYPE_CAMERA ? R.layout.item_camera : R.layout.item_media;
-    }
-
-
-    @NonNull
-    @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new ViewHolder(mInflater.inflate(layoutRes(viewType), parent, false));
     }
 
     @Override

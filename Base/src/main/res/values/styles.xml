@@ -5,7 +5,7 @@
      <item name="android:windowDrawsSystemBarBackgrounds">false</item>-->
 
     <!--App 整体配置-->
-    <style name="App" parent="Theme.MaterialComponents.DayNight">
+    <style name="App" parent="Theme.Material3.DayNight">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>

@@ -38,28 +38,9 @@ final class MediaLoader {
     /*过滤文件*/
     private static final String SELECTED = MediaStore.MediaColumns.SIZE + " > 0 ";
     /*媒体文件*/
-    private static final String[] VIDEO = {
-            MediaStore.MediaColumns._ID,
-            MediaStore.MediaColumns.DATA,
-            MediaStore.MediaColumns.MIME_TYPE,
-            MediaStore.MediaColumns.BUCKET_DISPLAY_NAME,
-            MediaStore.MediaColumns.WIDTH,
-            MediaStore.MediaColumns.HEIGHT,
-            MediaStore.MediaColumns.SIZE,
-            MediaStore.MediaColumns.DATE_ADDED,
-            MediaStore.MediaColumns.DURATION
-    };
+    private static final String[] VIDEO = {MediaStore.MediaColumns._ID, MediaStore.MediaColumns.DATA, MediaStore.MediaColumns.MIME_TYPE, MediaStore.MediaColumns.BUCKET_DISPLAY_NAME, MediaStore.MediaColumns.WIDTH, MediaStore.MediaColumns.HEIGHT, MediaStore.MediaColumns.SIZE, MediaStore.MediaColumns.DATE_ADDED, MediaStore.MediaColumns.DURATION};
     /*媒体文件*/
-    private static final String[] IMAGE = {
-            MediaStore.MediaColumns._ID,
-            MediaStore.MediaColumns.DATA,
-            MediaStore.MediaColumns.MIME_TYPE,
-            MediaStore.MediaColumns.BUCKET_DISPLAY_NAME,
-            MediaStore.MediaColumns.WIDTH,
-            MediaStore.MediaColumns.HEIGHT,
-            MediaStore.MediaColumns.SIZE,
-            MediaStore.MediaColumns.DATE_ADDED
-    };
+    private static final String[] IMAGE = {MediaStore.MediaColumns._ID, MediaStore.MediaColumns.DATA, MediaStore.MediaColumns.MIME_TYPE, MediaStore.MediaColumns.BUCKET_DISPLAY_NAME, MediaStore.MediaColumns.WIDTH, MediaStore.MediaColumns.HEIGHT, MediaStore.MediaColumns.SIZE, MediaStore.MediaColumns.DATE_ADDED};
     @MediaType
     private final int mMediaType;           //筛选文件类型 图片 视频 图片+视频
     private Filter<Long> mFilterSize;       //过滤大小
@@ -109,6 +90,7 @@ final class MediaLoader {
             loadMediaImage(context, MediaType.IMAGE, map, all);
             loadMediaVideo(context, MediaType.VIDEO, map, all);
         }
+        //排序
         Collections.sort(all.mList);
         final ArrayList<MediaFolder> list = new ArrayList<>();
         list.add(all);
@@ -139,7 +121,8 @@ final class MediaLoader {
     }
 
 
-    private synchronized void loadMediaVideo(@NonNull final Context context, @MediaType final int mediaType, @NonNull final ConcurrentHashMap<String, MediaFolder> map, @NonNull final MediaFolder all) {
+    private synchronized void loadMediaVideo(@NonNull final Context context, @MediaType final int mediaType,
+            @NonNull final ConcurrentHashMap<String, MediaFolder> map, @NonNull final MediaFolder all) {
         final Uri uri = getMediaUri(mediaType);
         final Cursor cursor = query(context.getContentResolver(), uri, VIDEO);
         if (null == cursor) return;
@@ -166,9 +149,10 @@ final class MediaLoader {
                 albumFile.mSize = size;
                 albumFile.mDate = date;
                 albumFile.mDuration = duration;
-                albumFile.mInvalid = MediaUtil.filter(albumFile, mFilterMime, mFilterSize, mFilterDuration);
-                if (!albumFile.mInvalid && !mDisplayInvalid) continue;
-                albumFile.mSelected = albumFile.mInvalid && mSelectedList != null && mSelectedList.contains(albumFile);
+                albumFile.mInvalid = MediaUtil.filterFailed(albumFile, mFilterMime, mFilterSize, mFilterDuration);
+                //无效并且不展示
+                if (albumFile.mInvalid && !mDisplayInvalid) continue;
+                albumFile.mSelected = !albumFile.mInvalid && mSelectedList != null && mSelectedList.contains(albumFile);
                 all.add(albumFile);
                 MediaFolder albumFolder = map.get(folder);
                 if (albumFolder != null) albumFolder.add(albumFile);
@@ -185,7 +169,8 @@ final class MediaLoader {
         }
     }
 
-    private synchronized void loadMediaImage(@NonNull final Context context, @MediaType final int mediaType, @NonNull final ConcurrentHashMap<String, MediaFolder> map, @NonNull final MediaFolder all) {
+    private synchronized void loadMediaImage(@NonNull final Context context, @MediaType final int mediaType,
+            @NonNull final ConcurrentHashMap<String, MediaFolder> map, @NonNull final MediaFolder all) {
         final Uri uri = getMediaUri(mediaType);
         final Cursor cursor = query(context.getContentResolver(), uri, IMAGE);
         if (null == cursor) return;
@@ -210,9 +195,9 @@ final class MediaLoader {
                 albumFile.mHeight = height;
                 albumFile.mSize = size;
                 albumFile.mDate = date;
-                albumFile.mInvalid = MediaUtil.filter(albumFile, mFilterMime, mFilterSize, null);
-                if (!albumFile.mInvalid && !mDisplayInvalid) continue;
-                albumFile.mSelected = albumFile.mInvalid && mSelectedList != null && mSelectedList.contains(albumFile);
+                albumFile.mInvalid = MediaUtil.filterFailed(albumFile, mFilterMime, mFilterSize, null);
+                if (albumFile.mInvalid && !mDisplayInvalid) continue;
+                albumFile.mSelected = !albumFile.mInvalid && mSelectedList != null && mSelectedList.contains(albumFile);
                 all.add(albumFile);
                 MediaFolder albumFolder = map.get(folder);
                 if (albumFolder != null) albumFolder.add(albumFile);

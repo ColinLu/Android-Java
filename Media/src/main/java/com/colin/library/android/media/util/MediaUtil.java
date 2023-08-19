@@ -3,7 +3,6 @@ package com.colin.library.android.media.util;
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
-import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
 import android.net.Uri;
@@ -144,11 +143,22 @@ public final class MediaUtil {
         return context.getExternalFilesDir(type);
     }
 
-
     @NonNull
     public static Uri getUri(@NonNull final Context context, @NonNull final Uri uri, int id, @NonNull String path) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            return uri.buildUpon().appendPath(String.valueOf(id)).build();
+            return uri.buildUpon()
+                      .appendPath(String.valueOf(id))
+                      .build();
+        }
+        return AppFileProvider.getUri(context, new File(path));
+    }
+
+    @NonNull
+    public static Uri getUri(@NonNull final Context context, @NonNull final Uri uri, int id, @Nullable String authority, @NonNull String path) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            return uri.buildUpon()
+                      .appendPath(String.valueOf(id))
+                      .build();
         }
         return AppFileProvider.getUri(context, new File(path));
     }
@@ -163,7 +173,16 @@ public final class MediaUtil {
     }
 
     /*筛选*/
-    public static boolean filter(@NonNull final MediaFile albumFile, @Nullable final Filter<String> filterMime, @Nullable final Filter<Long> filterSize, @Nullable final Filter<Long> filterDuration) {
+    public static boolean filterFailed(@NonNull final MediaFile albumFile, @Nullable final Filter<String> filterMime,
+            @Nullable final Filter<Long> filterSize, @Nullable final Filter<Long> filterDuration) {
+        if (filterSize != null && !filterSize.filter(albumFile.mSize)) return false;
+        if (filterMime != null && !filterMime.filter(albumFile.mMimeType)) return false;
+        return albumFile.mMediaType == MediaType.IMAGE || null == filterDuration || filterDuration.filter(albumFile.mDuration);
+    }
+
+    /*筛选*/
+    public static boolean filter(@NonNull final MediaFile albumFile, @Nullable final Filter<String> filterMime,
+            @Nullable final Filter<Long> filterSize, @Nullable final Filter<Long> filterDuration) {
         if (filterSize != null && !filterSize.filter(albumFile.mSize)) return false;
         if (filterMime != null && !filterMime.filter(albumFile.mMimeType)) return false;
         return albumFile.mMediaType == MediaType.IMAGE || null == filterDuration || filterDuration.filter(albumFile.mDuration);
@@ -195,21 +214,23 @@ public final class MediaUtil {
             values.put(MediaStore.MediaColumns.DISPLAY_NAME, getFileName(time, mediaType));
             values.put(MediaStore.MediaColumns.MIME_TYPE, getMimeType(mediaType));
             values.put(MediaStore.MediaColumns.RELATIVE_PATH, getFileType(mediaType));
-            return context.getContentResolver().insert(insertUri(mediaType, "external"), values);
+            return context.getContentResolver()
+                          .insert(insertUri(mediaType, "external"), values);
         } else {
             final ContentValues values = new ContentValues(3);
             values.put(MediaStore.MediaColumns.DATE_TAKEN, time);
             values.put(MediaStore.MediaColumns.DISPLAY_NAME, getFileName(time, mediaType));
             values.put(MediaStore.MediaColumns.MIME_TYPE, getMimeType(mediaType));
-            return context.getContentResolver().insert(insertUri(mediaType, "internal"), values);
+            return context.getContentResolver()
+                          .insert(insertUri(mediaType, "internal"), values);
         }
     }
 
     @NonNull
     private static Uri createUriByQ(@NonNull Context context, @MediaType int mediaType) {
-        final DisplayMetrics metrics = context.getResources().getDisplayMetrics();
+        final DisplayMetrics metrics = context.getResources()
+                                              .getDisplayMetrics();
         final long time = System.currentTimeMillis();
-
         final ContentValues values = new ContentValues(4);
         values.put(MediaStore.MediaColumns.DATE_TAKEN, time);
         values.put(MediaStore.MediaColumns.DISPLAY_NAME, getFileName(time, mediaType));
@@ -218,6 +239,7 @@ public final class MediaUtil {
         values.put(MediaStore.MediaColumns.SIZE, getFileType(mediaType));
         values.put(MediaStore.MediaColumns.WIDTH, metrics.widthPixels);
         values.put(MediaStore.MediaColumns.HEIGHT, metrics.heightPixels);
-        return context.getContentResolver().insert(insertUri(mediaType, "external"), values);
+        return context.getContentResolver()
+                      .insert(insertUri(mediaType, "external"), values);
     }
 }

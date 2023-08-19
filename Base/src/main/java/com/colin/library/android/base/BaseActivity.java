@@ -3,7 +3,6 @@ package com.colin.library.android.base;
 import android.content.Context;
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -27,11 +26,6 @@ public abstract class BaseActivity extends AppCompatActivity implements IInitVie
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (layoutRes() != Resources.ID_NULL) setContentView(layoutRes());
-    }
-
-    @Override
-    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
         initView(savedInstanceState);
         initData(getIntent().getExtras());
     }

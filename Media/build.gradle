@@ -32,6 +32,7 @@ android {
 dependencies {
     compileOnly project(path: ':Base')
     compileOnly project(path: ':Utils')
+    compileOnly project(path: ':Preview')
     compileOnly project(path: ':Widgets')
     compileOnly dependency.ok_http
     compileOnly dependency.widget_recyclerview

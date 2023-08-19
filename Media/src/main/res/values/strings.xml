@@ -13,6 +13,7 @@
 
     <string name="media_ok">好的</string>
     <string name="media_cancel">取消</string>
+    <string name="media_back">返回</string>
     <string name="media_setting">去设置</string>
     <string name="media_refuse_permission">权限未同意</string>
     <string name="media_convert_fail">媒体转化失败</string>

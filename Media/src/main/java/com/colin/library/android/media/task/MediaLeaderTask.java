@@ -21,9 +21,9 @@ import java.util.List;
  * 描述： 加载多媒体资源 多线程
  */
 public class MediaLeaderTask extends AsyncTask<Void, Void, MediaResult> {
-    private WeakReference<Activity> mWeakReference;
+    private WeakReference<Activity> mActivityRef;
     @MediaType
-    private int mMediaType;
+    private final int mMediaType;
     private List<MediaFile> mSelectedList;
     private Filter<Long> mFilterSize;                        //筛选条件 大小
     private Filter<Long> mFilterDuration;                    //筛选条件 时长（视频）
@@ -33,7 +33,7 @@ public class MediaLeaderTask extends AsyncTask<Void, Void, MediaResult> {
 
 
     public MediaLeaderTask(@NonNull Activity activity, @MediaType int mediaType) {
-        this.mWeakReference = new WeakReference<>(activity);
+        this.mActivityRef = new WeakReference<>(activity);
         this.mMediaType = mediaType;
     }
 
@@ -74,15 +74,16 @@ public class MediaLeaderTask extends AsyncTask<Void, Void, MediaResult> {
 
     @Override
     protected MediaResult doInBackground(Void... voids) {
-        if (null == mWeakReference || null == mWeakReference.get()) return null;
+        if (null == mActivityRef || null == mActivityRef.get()) return null;
         return new MediaLoader(mMediaType)
                 .setSelectedList(mSelectedList)
                 .setFilterSize(mFilterSize)
                 .setFilterMime(mFilterMimeType)
                 .setFilterDuration(mFilterDuration)
                 .setDisplayInvalid(mDisplayInvalid)
-                .load(mWeakReference.get());
+                .load(mActivityRef.get());
     }
+
 
     @Override
     protected void onCancelled() {
@@ -104,8 +105,8 @@ public class MediaLeaderTask extends AsyncTask<Void, Void, MediaResult> {
     }
 
     private void clear() {
-        if (mWeakReference != null && mWeakReference.get() != null) mWeakReference.clear();
-        mWeakReference = null;
+        if (mActivityRef != null && mActivityRef.get() != null) mActivityRef.clear();
+        mActivityRef = null;
         mOnTaskListener = null;
     }
 }

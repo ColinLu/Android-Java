@@ -19,8 +19,6 @@
         android:layout_height="@dimen/dp_45"
         android:layout_gravity="bottom"
         android:background="@color/media_bottom_nav"
-        android:drawableEnd="@drawable/ic_arrow_drop_down"
-        android:drawableRight="@drawable/ic_arrow_drop_down"
         android:drawablePadding="@dimen/dp_6"
         android:gravity="end|center_vertical"
         android:minWidth="@dimen/dp_100"
@@ -30,6 +28,8 @@
         android:paddingRight="@dimen/dp_6"
         android:text="@string/media_title"
         android:textColor="@android:color/white"
+        app:drawableEndCompat="@drawable/ic_arrow_drop_down"
+        app:drawableRightCompat="@drawable/ic_arrow_drop_down"
         app:layout_behavior="@string/hide_bottom_view_on_scroll_behavior" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

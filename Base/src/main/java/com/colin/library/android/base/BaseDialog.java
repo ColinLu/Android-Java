@@ -180,6 +180,11 @@ public abstract class BaseDialog<Returner> extends DialogFragment implements IIn
         return Utils.notNull(super.getContext(), "Fragment " + this + " not attached to a context.");
     }
 
+    public Returner setShowTitle(boolean showTitle) {
+        this.mShowTitle = showTitle;
+        return (Returner) this;
+    }
+
     public Returner setTitle(@Nullable CharSequence title) {
         this.mTitle = title;
         return (Returner) this;
@@ -195,10 +200,6 @@ public abstract class BaseDialog<Returner> extends DialogFragment implements IIn
         return (Returner) this;
     }
 
-    public Returner setShowTitle(boolean showTitle) {
-        this.mShowTitle = showTitle;
-        return (Returner) this;
-    }
 
     public Returner setMessage(@Nullable CharSequence message) {
         this.mMessage = message;
@@ -413,8 +414,7 @@ public abstract class BaseDialog<Returner> extends DialogFragment implements IIn
     }
 
     public void show(@Nullable Fragment fragment) {
-        if (null == fragment || null == fragment.getActivity() || fragment.getActivity().isFinishing())
-            return;
+        if (null == fragment || null == fragment.getActivity() || fragment.getActivity().isFinishing()) return;
         show(fragment.getChildFragmentManager(), this.getClass().getSimpleName());
     }
 

@@ -2,6 +2,7 @@ package com.colin.library.android.widgets.square;
 
 import android.content.Context;
 import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.util.AttributeSet;
 
 import androidx.annotation.NonNull;
@@ -12,11 +13,11 @@ import androidx.cardview.widget.CardView;
 public class SquareCardView extends CardView {
 
     public SquareCardView(@NonNull Context context) {
-        this(context, null, 0);
+        this(context, null, Resources.ID_NULL);
     }
 
     public SquareCardView(@NonNull Context context, @Nullable AttributeSet attrs) {
-        this(context, attrs, 0);
+        this(context, attrs, Resources.ID_NULL);
     }
 
     public SquareCardView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {

@@ -2,11 +2,11 @@ package com.colin.library.android.media;
 
 import androidx.annotation.NonNull;
 
-import com.colin.library.android.media.audio.ChooseAudio;
-import com.colin.library.android.media.camera.ChooseCamera;
-import com.colin.library.android.media.image.ChooseImage;
+import com.colin.library.android.media.choose.audio.ChooseAudio;
+import com.colin.library.android.media.choose.camera.ChooseCamera;
+import com.colin.library.android.media.choose.image.ChooseImage;
 import com.colin.library.android.media.preview.ChoosePreview;
-import com.colin.library.android.media.video.ChooseVideo;
+import com.colin.library.android.media.choose.video.ChooseVideo;
 
 
 /**

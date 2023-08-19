@@ -29,28 +29,19 @@ public interface Constants {
     String MEDIA_TYPE_VIDEO = "video/mp4";
     String MEDIA_TYPE_ALL = "*/*";
 
+    String INTENT_FACING = "android.intent.extras.CAMERA_FACING";
 
-    /*浏览相册权限*/
-    String[] PERMISSION_MEDIA = new String[]{Manifest.permission.READ_EXTERNAL_STORAGE};
+    /*浏览相册权限*/ String[] PERMISSION_MEDIA = new String[]{Manifest.permission.READ_EXTERNAL_STORAGE};
 
-    /*下载权限*/
-    String[] PERMISSION_DOWN = new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE
-    };
+    /*下载权限*/ String[] PERMISSION_DOWN = new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE};
 
-    /*录音权限*/
-    String[] PERMISSION_AUDIO = new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.RECORD_AUDIO};
+    /*录音权限*/ String[] PERMISSION_AUDIO = new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.RECORD_AUDIO};
 
 
-    /*相机拍照*/
-    String[] PERMISSION_IMAGE = new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA};
+    /*相机拍照*/ String[] PERMISSION_IMAGE = new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA};
 
 
-    /*录像视频*/
-    String[] PERMISSION_VIDEO = new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.RECORD_AUDIO, Manifest.permission.CAMERA};
+    /*录像视频*/ String[] PERMISSION_VIDEO = new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.RECORD_AUDIO, Manifest.permission.CAMERA};
 
 
     int REQUEST_MEDIA = 1000;
@@ -58,7 +49,6 @@ public interface Constants {
     int REQUEST_VIDEO = 1002;
     int REQUEST_AUDIO = 1003;
     int REQUEST_DOWN = 1004;
-
     long DEFAULT_LIMIT_SIZE = 20 * 1024 * 1024;     //默认文件 大小20M
     long DEFAULT_LIMIT_DURATION = 20 * 1000;        //默认视频 时长10s
     int DEFAULT_LIMIT_QUALITY = 1;                  //默认视频 质量1

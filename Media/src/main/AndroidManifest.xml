@@ -23,12 +23,6 @@
             android:taskAffinity="${applicationId}"
             android:theme="@style/Media.Activity.Camera"
             android:windowSoftInputMode="stateAlwaysHidden|stateHidden" />
-        <activity
-            android:name=".activity.PreviewActivity"
-            android:configChanges="orientation|screenSize|layoutDirection|locale"
-            android:taskAffinity="${applicationId}"
-            android:theme="@style/Media.Activity.Preview"
-            android:windowSoftInputMode="stateAlwaysHidden|stateHidden" />
     </application>
 
 </manifest>

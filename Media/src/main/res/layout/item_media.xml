@@ -15,7 +15,7 @@
             android:id="@+id/image_item_media"
             android:layout_width="@dimen/dp_0"
             android:layout_height="@dimen/dp_0"
-            android:contentDescription="@string/media_title"
+            android:contentDescription="@string/app_name"
             android:scaleType="centerCrop"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintDimensionRatio="w,1:1"
@@ -36,20 +36,20 @@
             android:layout_height="@dimen/dp_30"
             android:layout_alignParentBottom="true"
             android:background="#66000000"
-            android:drawableStart="@drawable/ic_video"
             android:drawablePadding="@dimen/dp_4"
-            android:drawableTint="@color/media_title_color"
             android:ellipsize="end"
             android:gravity="start|center_vertical"
             android:maxLines="1"
             android:paddingLeft="@dimen/dp_4"
             android:paddingRight="@dimen/dp_4"
-            android:text="@string/app_name"
             android:textColor="@color/media_title_color"
+            app:drawableStartCompat="@drawable/ic_video"
+            app:drawableTint="@color/media_title_color"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            tools:ignore="UnusedAttribute" />
+            tools:ignore="UnusedAttribute"
+            tools:text="@string/app_name" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/text_item_media_invalid"

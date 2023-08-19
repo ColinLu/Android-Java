@@ -22,11 +22,9 @@ public abstract class Base<Returner, Result, Cancel> implements IBase<Returner, 
     @IntRange(from = 1)
     protected final int mLimitCount;            //显示获取多媒体数量 0标示不限制
     @Nullable
-    protected String mTitle;                    //界面显示标题
+    protected CharSequence mTitle;              //界面显示标题
     @Nullable
     protected Uri mUri;                         //返回地址
-    @IntRange(from = 2, to = 5)
-    protected int mColumn = MediaHelper.getInstance().getMediaConfig().getColumn();//列表显示列数
     @Facing
     protected int mFacing;                      //前置 or 后置
     @Nullable
@@ -41,11 +39,12 @@ public abstract class Base<Returner, Result, Cancel> implements IBase<Returner, 
     protected Action<Cancel> mCancel;           //取消、异常之后回调
     @Nullable
     protected List<MediaFile> mList;            //已选中数量
-
     protected boolean mDisplayCamera;           //列表是否显示camera
     protected boolean mDisplayInvalid;          //列表是否显示无效多媒体文件
     protected boolean mNeedCrop;                //是否剪切
-    protected boolean mMultipleMode;            //列表开启多选模式
+    protected boolean mMultiple;            //列表开启多选模式
+    @IntRange(from = 2, to = 5)
+    protected int mColumn = MediaHelper.getInstance().getMediaConfig().getColumn();//列表显示列数
     protected int mLimitQuality = Constants.DEFAULT_LIMIT_QUALITY;      //视频 质量
     protected long mLimitSize = Constants.DEFAULT_LIMIT_SIZE;           //文件 大小
     protected long mLimitDuration = Constants.DEFAULT_LIMIT_DURATION;   //视频、音频时长
@@ -54,10 +53,10 @@ public abstract class Base<Returner, Result, Cancel> implements IBase<Returner, 
         this(mediaType, limit, false);
     }
 
-    public Base(@MediaType int mediaType, @IntRange(from = 1) int limit, boolean multipleMode) {
+    public Base(@MediaType int mediaType, @IntRange(from = 1) int limit, boolean multiple) {
         this.mMediaType = mediaType;
         this.mLimitCount = limit;
-        this.mMultipleMode = multipleMode;
+        this.mMultiple = multiple;
     }
 
     public Base(@MediaType int mediaType, @NonNull Uri uri, @IntRange(from = 1) int limit) {
