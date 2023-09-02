@@ -34,6 +34,7 @@ dependencies {
     compileOnly project(path: ':Utils')
     compileOnly project(path: ':Widgets')
     compileOnly dependency.ok_http
+//    compileOnly dependency.kotlin
     compileOnly dependency.widget_recyclerview
     implementation dependency.androidx_appcompat
     implementation dependency.android_material

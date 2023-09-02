@@ -76,16 +76,26 @@ android {
         disable 'RestrictedApi'
     }
 
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/license.txt'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/notice.txt'
+        exclude 'META-INF/ASL2.0'
+        exclude("META-INF/*.kotlin_module")
+    }
 }
 
 dependencies {
-    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.10'
     implementation project(path: ':Base')
-    implementation project(path: ':Utils')
+//    implementation project(path: ':Utils')
     implementation project(path: ':Widgets')
     implementation project(path: ':OkHttp')
     implementation project(path: ':Media')
-
+    implementation dependency.utils
     implementation dependency.android_material
     implementation dependency.androidx_appcompat
     implementation dependency.androidx_legacy
@@ -105,4 +115,5 @@ dependencies {
     implementation dependency.rx_android
     implementation dependency.ok_http
     implementation dependency.g_son
+    debugImplementation dependency.debug_leakcanary
 }

@@ -1,8 +1,7 @@
 plugins {
     id 'com.android.library'
-    id 'maven-publish'
-
 }
+
 
 android {
     compileSdk build_versions.compile_sdk
@@ -15,12 +14,14 @@ android {
     }
 
     buildTypes {
-        debug {
-            minifyEnabled false
+        release {
+            debuggable true
+            minifyEnabled false             //关闭混淆；
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
         release {
-            minifyEnabled false
+            debuggable false
+            minifyEnabled false             //打开混淆；
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
@@ -32,77 +33,17 @@ android {
 }
 
 dependencies {
+//    compileOnly dependency.kotlin
     compileOnly dependency.android_material
     compileOnly dependency.androidx_appcompat
     compileOnly dependency.ok_http
     compileOnly dependency.g_son
 }
 
-//apply from: 'maven.gradle'
-
-
-task javadocJar(type: Jar) {
-    from android.sourceSets.main.java.srcDirs
-    archiveClassifier = 'javadoc'
-}
-
-task sourceJar(type: Jar) {
-    from android.sourceSets.main.java.srcDirs
-    classifier "sources"
-}
-
-task buildAar(dependsOn: ["assembleRelease", "assembleDebug"]) {
-    doLast {
-        println("build aar success :$dependsOn")
-    }
+if (app_config.publishing_utils_enabled) {
+    apply from: 'maven.gradle'
 }
 
 
-publishing {
-    publications {
-        aar(MavenPublication) {
-            def projectName = project.name
-            groupId mavens.utils_group_id
-            artifactId mavens.utils_artifact_id
-            version mavens.utils_version
-            artifact(javadocJar)
-            artifact(sourceJar)
-            artifact("$buildDir/outputs/aar/${projectName}_release.aar")
-            println("publishing-->>${groupId}:${artifactId}:${version}")
-            pom.withXml {
-                def dependenciesNode = asNode().appendNode('dependencies')
-                configurations.implementation.allDependencies.withType(ModuleDependency) { ModuleDependency dp ->
-                    if (dp.version != "unspecified") {
-                        def dependencyNode = dependenciesNode.appendNode('dependency')
-                        dependencyNode.appendNode('groupId', dp.group)
-                        dependencyNode.appendNode('artifactId', dp.name)
-                        dependencyNode.appendNode('version', dp.version)
-                        if (dp.excludeRules.size() > 0) {
-                            def exclusions = dependencyNode.appendNode('exclusions')
-                            dp.excludeRules.each { ExcludeRule rule ->
-                                def exclusion = exclusions.appendNode('exclusion')
-                                exclusion.appendNode('groupId', rule.group)
-                                exclusion.appendNode('artifactId', rule.module)
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
 
-    repositories {
-        maven {
-            //指定上传Maven仓库远程地址与账户密码
-            url = mavens.url_remote
-            credentials {
-                username = mavens.username
-                password = mavens.password
-            }
-        }
-        mavenLocal {
-            //指定上传Maven仓库本地地址
-            url = mavens.url_local
-        }
-    }
-}
+

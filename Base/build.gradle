@@ -32,6 +32,7 @@ android {
 dependencies {
     compileOnly project(path: ':Utils')
     compileOnly project(path: ':Widgets')
+//    compileOnly dependency.kotlin
     implementation dependency.androidx_appcompat
     implementation dependency.android_material
 }
