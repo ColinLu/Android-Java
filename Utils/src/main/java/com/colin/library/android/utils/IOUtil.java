@@ -6,7 +6,6 @@ import androidx.annotation.Size;
 
 import com.colin.library.android.utils.data.Constants;
 
-import org.jetbrains.annotations.Contract;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -290,25 +289,21 @@ public final class IOUtil {
     }
 
     @NonNull
-    @Contract("_ -> new")
     public static InputStream toInputStream(@NonNull final CharSequence input) {
         return new ByteArrayInputStream(getBytes(input));
     }
 
     @NonNull
-    @Contract("_, _ -> new")
     public static InputStream toInputStream(@NonNull final CharSequence input, @NonNull final Charset charset) {
         return new ByteArrayInputStream(getBytes(input, charset));
     }
 
     @NonNull
-    @Contract("_ -> new")
     public static InputStream toInputStream(@NonNull final String input) {
         return new ByteArrayInputStream(getBytes(input));
     }
 
     @NonNull
-    @Contract("_, _ -> new")
     public static InputStream toInputStream(@NonNull final String input, @NonNull final Charset charset) {
         return new ByteArrayInputStream(getBytes(input, charset));
     }

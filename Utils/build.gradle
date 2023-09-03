@@ -2,6 +2,7 @@ plugins {
     id 'com.android.library'
 }
 
+
 android {
     compileSdk build_versions.compile_sdk
 
@@ -13,12 +14,14 @@ android {
     }
 
     buildTypes {
-        debug {
-            minifyEnabled false
+        release {
+            debuggable true
+            minifyEnabled false             //关闭混淆；
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
         release {
-            minifyEnabled false
+            debuggable false
+            minifyEnabled false             //打开混淆；
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
@@ -30,8 +33,17 @@ android {
 }
 
 dependencies {
+//    compileOnly dependency.kotlin
     compileOnly dependency.android_material
     compileOnly dependency.androidx_appcompat
     compileOnly dependency.ok_http
     compileOnly dependency.g_son
 }
+
+if (app_config.publishing_utils_enabled) {
+    apply from: 'maven.gradle'
+}
+
+
+
+

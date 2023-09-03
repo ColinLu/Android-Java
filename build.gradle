@@ -1,35 +1,39 @@
 buildscript {
     apply from: 'config.gradle'
-    // 线程池优化Gradle插件，测试稳定后再上线，目前仅用于线程池排查
-    if (readLocalProperty("THREAD_POOL_SHRINK")) {
-        apply from: "thread.gradle"
-    }
     repositories {
         google()
         mavenCentral()
+        mavenLocal()
         maven { url 'https://jitpack.io' }
 
         maven {
-            url 'https://maven.aliyun.com/nexus/content/groups/public/'
-        }
-        maven {
-            credentials {
-                username '620d1dc29d2642b5b41ce77d'
-                password 'ptWrnQ=kts]S'
-            }
-            url 'https://packages.aliyun.com/maven/repository/2188588-release-hTVplo/'
-        }
-        maven {
-            credentials {
-                username '620d1dc29d2642b5b41ce77d'
-                password 'ptWrnQ=kts]S'
-            }
-            url 'https://packages.aliyun.com/maven/repository/2188588-snapshot-u3krPQ/'
+            url mavens.url_local
         }
     }
 
     dependencies {
         classpath "com.android.tools.build:gradle:$build_versions.android_gradle_plugin"
+//        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.30"
+
+    }
+
+
+}
+
+allprojects {
+    tasks.withType(Javadoc) {
+        options.encoding = "UTF-8"
+    }
+    tasks.withType(JavaCompile) {
+        options.encoding = "UTF-8"
+    }
+}
+//skip Test tasks
+gradle.taskGraph.whenReady {
+    tasks.each { task ->
+        if (task.name.contains("test")) {
+            task.enabled = app_config.task_test_enabled
+        }
     }
 }
 

@@ -7,7 +7,6 @@ import com.colin.library.android.http.progress.ProgressRequestBody;
 import com.colin.library.android.utils.LogUtil;
 import com.colin.library.android.utils.data.Constants;
 
-import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
