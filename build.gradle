@@ -3,22 +3,13 @@ buildscript {
     repositories {
         google()
         mavenCentral()
-        mavenLocal()
-        maven { url 'https://jitpack.io' }
-
-        maven {
-            url mavens.url_local
-        }
     }
 
     dependencies {
         classpath "com.android.tools.build:gradle:$build_versions.android_gradle_plugin"
-//        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.30"
-
     }
-
-
 }
+
 
 allprojects {
     tasks.withType(Javadoc) {

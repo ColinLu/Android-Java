@@ -35,17 +35,12 @@ public class TestGsonBean {
 
     @Override
     public String toString() {
-        return "TestGsonBean{" +
-                "mName='" + mName + '\'' +
-                ", mList=" + mList +
-                ", mArray=" + Arrays.toString(array) +
-                '}';
+        return "TestGsonBean{" + "mName='" + mName + '\'' + ", mList=" + mList + ", mArray=" + Arrays.toString(array) + '}';
     }
 
     public static void main(String[] args) {
-        final Gson gson = new GsonBuilder()
-                .excludeFieldsWithoutExposeAnnotation()
-                .create();
+        final Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation()
+                                           .create();
         final String[] array = {"A1", "A2"};
 
         System.out.println("-----------list is null-------------");

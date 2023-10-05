@@ -33,7 +33,6 @@ android {
 }
 
 dependencies {
-//    compileOnly dependency.kotlin
     compileOnly dependency.android_material
     compileOnly dependency.androidx_appcompat
     compileOnly dependency.ok_http

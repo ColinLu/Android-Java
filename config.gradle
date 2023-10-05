@@ -34,8 +34,8 @@ versions.recyclerview = '1.1.0'
 versions.viewpager2 = '1.0.0'
 versions.rx_java = '2.2.21'
 versions.rx_android = '2.1.1'
-//versions.ok_http = '4.9.1'
-versions.ok_http = '3.11.0'
+versions.ok_http = '4.9.1'
+//versions.ok_http = '3.11.0'
 versions.g_son = '2.10.1'
 versions.android_junit = '4.13.2'
 versions.androidx_junit = '1.1.3'
@@ -71,7 +71,7 @@ dependency.rx_android = "io.reactivex.rxjava2:rxandroid:${versions.rx_android}"
 dependency.ok_http = "com.squareup.okhttp3:okhttp:${versions.ok_http}"
 dependency.g_son = "com.google.code.gson:gson:${versions.g_son}"
 
-dependency.utils = 'com.colin.library.android:Utils:0.0.1@aar'
+dependency.utils = 'com.colin.library.android:Utils:0.0.1'
 
 //UnitTest
 dependency.test_android_junit = 'junit:junit:4.13.2'
@@ -81,12 +81,15 @@ dependency.debug_leakcanary = "com.squareup.leakcanary:leakcanary-android:${vers
 ext.dependency = dependency
 
 def mavens = [:]
-mavens.url_local = "file:///Users/colinlu/Program/Maven/Android"
+mavens.url_local = "file:///Users/colin/Program/Maven/Android"
 //mavens.url_local = "file:///${buildDir}/aar"
 mavens.url_remote = "https://maven.aliyun.com/nexus/content/groups/public/"
 mavens.utils_group_id = "com.colin.library.android"
+mavens.base_group_id = "com.colin.library.android"
 mavens.utils_artifact_id = "Utils"
+mavens.base_artifact_id = "Utils"
 mavens.utils_version = "0.0.1"
+mavens.base_version = "0.0.1"
 mavens.username = "username"
 mavens.password = "password"
 ext.mavens = mavens
