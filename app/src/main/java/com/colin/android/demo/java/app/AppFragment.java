@@ -16,7 +16,6 @@ import com.colin.library.android.base.BaseFragment;
 import com.colin.library.android.utils.LogUtil;
 import com.colin.library.android.utils.NetUtil;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 
@@ -26,8 +25,8 @@ import java.lang.reflect.ParameterizedType;
  * <p>
  * 描述： TODO
  */
-public abstract class AppFragment<Bind extends ViewBinding> extends BaseFragment implements
-        ScreenReceiver.OnScreenBroadcastListener, NetBroadReceiver.OnNetListener {
+public abstract class AppFragment<Bind extends ViewBinding> extends BaseFragment
+        implements ScreenReceiver.OnScreenBroadcastListener, NetBroadReceiver.OnNetListener {
     protected Bind mBinding;
 
     @Nullable
@@ -38,7 +37,7 @@ public abstract class AppFragment<Bind extends ViewBinding> extends BaseFragment
         try {
             final Method inflate = cls.getDeclaredMethod("inflate", LayoutInflater.class, ViewGroup.class, boolean.class);
             mBinding = (Bind) inflate.invoke(null, inflater, container, false);
-        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return mBinding.getRoot();

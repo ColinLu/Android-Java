@@ -28,12 +28,10 @@ public class ContactAdapter extends BaseAdapter<ContactBean> {
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         final ContactBean bean = mItemList.get(position);
-        holder.setImageURI(R.id.mContactPhoto, bean.photo == null ? null : Uri.parse(bean.photo))
-                .setText(R.id.mContactName, bean.name)
-                .setText(R.id.mContactNumber, bean.number)
-                .setOnClickListener(R.id.mItemLayout, v -> {
-                    if (mItemClickListener != null) mItemClickListener.item(v, position, bean);
+        holder.setImageURI(R.id.mContactPhoto, bean.photo == null ? null : Uri.parse(bean.photo)).setText(R.id.mContactName, bean.name)
+              .setText(R.id.mContactNumber, bean.number).setOnClickListener(R.id.mItemLayout, v -> {
+                  if (mItemClickListener != null) mItemClickListener.item(v, position, bean);
 
-                });
+              });
     }
 }

@@ -23,8 +23,8 @@ public abstract class BaseActivity extends AppCompatActivity implements IInitVie
     protected boolean mRefresh = true;
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
         if (layoutRes() != Resources.ID_NULL) setContentView(layoutRes());
         initView(savedInstanceState);
         initData(getIntent().getExtras());
@@ -49,4 +49,5 @@ public abstract class BaseActivity extends AppCompatActivity implements IInitVie
     public void setRefresh(boolean refresh) {
         mRefresh = refresh;
     }
+
 }

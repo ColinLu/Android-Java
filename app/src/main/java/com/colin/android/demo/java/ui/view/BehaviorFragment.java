@@ -51,7 +51,7 @@ public class BehaviorFragment extends AppFragment<FragmentBehaviorBinding> imple
         bottomParams.setBehavior(new BottomAreaBehavior());
         mBinding.mCoordinator.setBottomAreaView(mRecyclerView, bottomParams);
 
-        Utils.init(mWebView, "https://mp.weixin.qq.com/s/zgfLOMD2JfZJKfHx-5BsBg");
+//        Utils.init(mWebView, "https://mp.weixin.qq.com/s/zgfLOMD2JfZJKfHx-5BsBg");
         initRecyclerView(requireContext());
 
 

@@ -9,12 +9,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.viewbinding.ViewBinding;
 
+import com.colin.library.android.annotation.NetType;
 import com.colin.library.android.base.BaseActivity;
 import com.colin.library.android.utils.LogUtil;
 import com.colin.library.android.utils.NetUtil;
-import com.colin.library.android.annotation.NetType;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 
@@ -24,9 +23,10 @@ import java.lang.reflect.ParameterizedType;
  * <p>
  * 描述： 构建App基本逻辑
  */
-public abstract class AppActivity<Bind extends ViewBinding> extends BaseActivity implements
-        ScreenReceiver.OnScreenBroadcastListener, NetBroadReceiver.OnNetListener {
+public abstract class AppActivity<Bind extends ViewBinding> extends BaseActivity
+        implements ScreenReceiver.OnScreenBroadcastListener, NetBroadReceiver.OnNetListener {
     protected Bind mBinding;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -37,7 +37,7 @@ public abstract class AppActivity<Bind extends ViewBinding> extends BaseActivity
             Method inflate = cls.getDeclaredMethod("inflate", LayoutInflater.class);
             mBinding = (Bind) inflate.invoke(null, getLayoutInflater());
             setContentView(mBinding.getRoot());
-        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         ScreenReceiver.bind(this);

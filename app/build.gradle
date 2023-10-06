@@ -39,8 +39,8 @@ android {
     buildTypes {
         debug {
             ext.enableCrashlytics = false
-            debuggable true
-            jniDebuggable true
+            debuggable false
+            jniDebuggable false
             minifyEnabled false             //true，打开混淆；
             shrinkResources false           //打开资源压缩
             zipAlignEnabled true            //是否移除无用资源
@@ -90,9 +90,10 @@ android {
 }
 
 dependencies {
+    implementation project(path: ':Base')
     implementation project(path: ':Media')
     implementation dependency.utils
-    implementation dependency.base
+//    implementation dependency.base
     implementation dependency.okhttp
     implementation dependency.widgets
     implementation dependency.android_material

@@ -17,11 +17,12 @@ import com.colin.android.demo.java.utils.DemoUtils;
 import com.colin.android.demo.java.utils.DialogManager;
 import com.colin.library.android.http.annotation.Method;
 import com.colin.library.android.media.MediaHelper;
-import com.colin.library.android.media.def.Action;
 import com.colin.library.android.media.def.MediaFile;
 import com.colin.library.android.media.util.MediaUtil;
 import com.colin.library.android.utils.LogUtil;
 import com.colin.library.android.utils.ToastUtil;
+
+import java.util.List;
 
 public class HomeFragment extends AppFragment<FragmentHomeBinding> implements View.OnClickListener {
     @Override
@@ -67,25 +68,18 @@ public class HomeFragment extends AppFragment<FragmentHomeBinding> implements Vi
                 DemoUtils.toNavigate(this, R.id.action_Home_to_Method);
                 break;
             case R.id.button_web:
-                DialogManager.getInstance().showImage(getChildFragmentManager(),R.drawable.ic_launcher_background);
-//                if (getActivity() instanceof MainActivity) {
-//                    ((MainActivity) getActivity()).setExpanded(false);
-//                }
-//                DemoUtils.toNavigate(this, R.id.action_Home_to_Web);
+                if (getActivity() instanceof MainActivity) {
+                    ((MainActivity) getActivity()).setExpanded(false);
+                }
+                DemoUtils.toNavigate(this, R.id.action_Home_to_Web);
                 break;
             case R.id.button_image:
-                DialogManager.getInstance().showImage(getChildFragmentManager(), R.drawable.image);
+                MediaHelper.getInstance().image().multiple(3).column(2).title("title").result(this::showResult).cancel(ToastUtil::show)
+                           .start(requireContext());
                 break;
             case R.id.button_camera:
-//                DialogManager.getInstance().showImage(getChildFragmentManager(), R.drawable.ticket_image);
                 final Uri uri = MediaUtil.createImageUri(requireContext());
-                LogUtil.d(uri);
-                MediaHelper.getInstance()
-                        .camera()
-                        .image(uri)
-                        .result(this::showResult)
-                        .cancel(ToastUtil::show)
-                        .start(requireContext());
+                MediaHelper.getInstance().camera().image(uri).result(this::showResult).cancel(ToastUtil::show).start(requireContext());
                 break;
             case R.id.button_video:
                 DialogManager.getInstance().showImage(getChildFragmentManager(), R.drawable.ticket);
@@ -96,6 +90,10 @@ public class HomeFragment extends AppFragment<FragmentHomeBinding> implements Vi
     }
 
     private void showResult(MediaFile mediaFile) {
+        LogUtil.d(mediaFile.toString());
+    }
+
+    private void showResult(List<MediaFile> mediaFile) {
         LogUtil.d(mediaFile.toString());
     }
 
