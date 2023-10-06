@@ -21,7 +21,7 @@ android {
         }
         release {
             debuggable false
-            minifyEnabled false             //打开混淆；
+            minifyEnabled false             //关闭混淆；
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
@@ -33,8 +33,8 @@ android {
 }
 
 dependencies {
-    compileOnly dependency.android_material
     compileOnly dependency.androidx_appcompat
+    compileOnly dependency.android_material
     compileOnly dependency.ok_http
     compileOnly dependency.g_son
 }

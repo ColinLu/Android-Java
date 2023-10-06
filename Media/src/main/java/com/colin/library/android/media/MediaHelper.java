@@ -5,6 +5,7 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 
 import com.colin.library.android.Utils;
+import com.colin.library.android.media.choose.IChoose;
 import com.colin.library.android.media.choose.audio.ChooseAudio;
 import com.colin.library.android.media.choose.audio.ChooseAudioMultiple;
 import com.colin.library.android.media.choose.audio.ChooseAudioSingle;
@@ -12,22 +13,19 @@ import com.colin.library.android.media.choose.camera.CameraAudio;
 import com.colin.library.android.media.choose.camera.CameraImage;
 import com.colin.library.android.media.choose.camera.CameraVideo;
 import com.colin.library.android.media.choose.camera.ChooseCamera;
-import com.colin.library.android.media.choose.IChoose;
-import com.colin.library.android.media.def.MediaConfig;
-import com.colin.library.android.media.def.MediaFile;
 import com.colin.library.android.media.choose.image.ChooseImage;
 import com.colin.library.android.media.choose.image.ChooseImageMultiple;
 import com.colin.library.android.media.choose.image.ChooseImageSingle;
+import com.colin.library.android.media.choose.video.ChooseVideo;
+import com.colin.library.android.media.choose.video.ChooseVideoMultiple;
+import com.colin.library.android.media.choose.video.ChooseVideoSingle;
+import com.colin.library.android.media.def.MediaConfig;
+import com.colin.library.android.media.def.MediaFile;
 import com.colin.library.android.media.preview.ChoosePreview;
 import com.colin.library.android.media.preview.PreviewAudio;
 import com.colin.library.android.media.preview.PreviewImage;
 import com.colin.library.android.media.preview.PreviewMedia;
 import com.colin.library.android.media.preview.PreviewVideo;
-import com.colin.library.android.media.choose.video.ChooseVideoMultiple;
-import com.colin.library.android.media.choose.video.ChooseVideoSingle;
-import com.colin.library.android.media.choose.video.ChooseVideo;
-
-import java.io.File;
 
 /**
  * 作者： ColinLu
@@ -88,7 +86,4 @@ public final class MediaHelper {
         return new ChoosePreview();
     }
 
-    public File create() {
-        return null;
-    }
 }

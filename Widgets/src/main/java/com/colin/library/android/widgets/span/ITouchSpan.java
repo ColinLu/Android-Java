@@ -4,7 +4,7 @@ package com.colin.library.android.widgets.span;
  * 作者： ColinLu
  * 时间： 2022-05-02 21:47
  * <p>
- * 描述： TODO
+ * 描述： 设置点击 Span
  */
 public interface ITouchSpan {
     /**

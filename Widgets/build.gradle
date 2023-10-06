@@ -19,7 +19,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
         release {
-            minifyEnabled true
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
@@ -30,9 +30,12 @@ android {
 }
 
 dependencies {
-//    compileOnly project(path: ':Utils')
-    implementation dependency.utils
     compileOnly dependency.android_material
     compileOnly dependency.androidx_appcompat
     compileOnly dependency.widget_swiperefresh
+    compileOnly dependency.utils
+}
+
+if (app_config.publishing_widgets_enabled) {
+    apply from: 'maven.gradle'
 }

@@ -72,6 +72,9 @@ dependency.ok_http = "com.squareup.okhttp3:okhttp:${versions.ok_http}"
 dependency.g_son = "com.google.code.gson:gson:${versions.g_son}"
 
 dependency.utils = 'com.colin.library.android:Utils:0.0.1'
+dependency.base = 'com.colin.library.android:Base:0.0.1'
+dependency.okhttp = 'com.colin.library.android:OkHttp:0.0.1'
+dependency.widgets = 'com.colin.library.android:Widgets:0.0.1'
 
 //UnitTest
 dependency.test_android_junit = 'junit:junit:4.13.2'
@@ -82,14 +85,19 @@ ext.dependency = dependency
 
 def mavens = [:]
 mavens.url_local = "file:///Users/colin/Program/Maven/Android"
-//mavens.url_local = "file:///${buildDir}/aar"
 mavens.url_remote = "https://maven.aliyun.com/nexus/content/groups/public/"
 mavens.utils_group_id = "com.colin.library.android"
 mavens.base_group_id = "com.colin.library.android"
+mavens.okhttp_group_id = "com.colin.library.android"
+mavens.widgets_group_id = "com.colin.library.android"
 mavens.utils_artifact_id = "Utils"
-mavens.base_artifact_id = "Utils"
+mavens.base_artifact_id = "Base"
+mavens.okhttp_artifact_id = "OkHttp"
+mavens.widgets_artifact_id = "Widgets"
 mavens.utils_version = "0.0.1"
 mavens.base_version = "0.0.1"
+mavens.okhttp_version = "0.0.1"
+mavens.widgets_version = "0.0.1"
 mavens.username = "username"
 mavens.password = "password"
 ext.mavens = mavens
@@ -97,7 +105,10 @@ ext.mavens = mavens
 def app_config = [:]
 app_config.debug = true
 app_config.task_test_enabled = false
-app_config.publishing_utils_enabled = true
+app_config.publishing_utils_enabled = false
+app_config.publishing_base_enabled = true
+app_config.publishing_okhttp_enabled = false
+app_config.publishing_widgets_enabled = false
 ext.app_config = app_config
 
 

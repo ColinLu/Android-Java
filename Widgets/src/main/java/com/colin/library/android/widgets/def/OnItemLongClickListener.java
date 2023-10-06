@@ -1,8 +1,6 @@
 package com.colin.library.android.widgets.def;
 
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -11,7 +9,7 @@ import androidx.annotation.Nullable;
  * 作者： ColinLu
  * 时间： 2021-12-14 23:52
  * <p>
- * 描述： 点击Item
+ * 描述： 长按Item
  */
 public interface OnItemLongClickListener {
 

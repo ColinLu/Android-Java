@@ -19,9 +19,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.colin.library.android.utils.LogUtil;
-import com.colin.library.android.widgets.web.AppWebChromeClient;
-import com.colin.library.android.widgets.web.AppWebViewClient;
-import com.colin.library.android.widgets.web.IWebCallback;
 
 /**
  * 作者： ColinLu
@@ -51,18 +48,6 @@ public final class Utils {
         if (!theme.resolveAttribute(attr, sTmpValue, true)) return 0;
         if (sTmpValue.type == TypedValue.TYPE_ATTRIBUTE) return getAttrColor(theme, sTmpValue.data);
         return sTmpValue.data;
-    }
-
-    public static void init(@Nullable final WebView view, @Nullable String url) {
-        init(view, url, null);
-    }
-
-    public static void init(@Nullable final WebView view, @Nullable String url, @Nullable IWebCallback callback) {
-        if (null == view || null == view.getContext()) return;
-        view.setWebChromeClient(new AppWebChromeClient(callback));
-        view.setWebViewClient(new AppWebViewClient(callback));
-        initSetting(view, false);
-        view.loadUrl(url);
     }
 
     /**

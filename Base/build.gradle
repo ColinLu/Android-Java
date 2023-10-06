@@ -30,11 +30,12 @@ android {
 }
 
 dependencies {
-    compileOnly project(path: ':Utils')
-    compileOnly project(path: ':Widgets')
-//    compileOnly dependency.kotlin
+    compileOnly dependency.utils
+    compileOnly dependency.widgets
     implementation dependency.androidx_appcompat
     implementation dependency.android_material
 }
 
-apply from: 'publish.gradle'
+if (app_config.publishing_base_enabled) {
+    apply from: 'maven.gradle'
+}

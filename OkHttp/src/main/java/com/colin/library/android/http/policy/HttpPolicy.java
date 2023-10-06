@@ -75,6 +75,12 @@ public class HttpPolicy implements IPolicy {
         return mExecuted;
     }
 
+
+    public void cancel() {
+        mCanceled = true;
+        if (null != mCall) mCall.cancel();
+    }
+
     public boolean isCanceled() {
         if (mCanceled) return true;
         synchronized (this) {
@@ -82,22 +88,17 @@ public class HttpPolicy implements IPolicy {
         }
     }
 
-    public void cancel() {
-        mCanceled = true;
-        if (null != mCall) mCall.cancel();
+    @Override
+    public <Result> void fail(@NonNull IAction<Result> action, @NonNull Throwable e) {
+        ThreadHelper.getInstance().post(() -> {
+            action.fail(e);
+            action.finish(mRequest);
+        });
     }
 
     public <Result> void success(@NonNull IAction<Result> action, @Nullable Result result) {
         ThreadHelper.getInstance().post(() -> {
             action.success(result);
-            action.finish(mRequest);
-        });
-    }
-
-    @Override
-    public <Result> void fail(@NonNull IAction<Result> action, @NonNull Throwable e) {
-        ThreadHelper.getInstance().post(() -> {
-            action.fail(e);
             action.finish(mRequest);
         });
     }

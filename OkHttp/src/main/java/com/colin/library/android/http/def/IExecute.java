@@ -22,5 +22,6 @@ public interface IExecute {
     /*异步请求获取数据*/
     <Result> void execute(@NonNull IAction<Result> action);
 
-
+    /*当前请求是否已经执行 true，已经执行， false，没有执行*/
+    boolean isExecuted();
 }

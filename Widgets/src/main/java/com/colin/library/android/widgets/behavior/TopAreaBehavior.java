@@ -29,7 +29,7 @@ import com.colin.library.android.widgets.scroll.NestedScrollTopFrameLayout;
  * 作者： ColinLu
  * 时间： 2022-12-31 19:22
  * <p>
- * 描述： TODO
+ * 描述： 上方区域
  */
 public class TopAreaBehavior extends ViewOffsetBehavior<View> {
 

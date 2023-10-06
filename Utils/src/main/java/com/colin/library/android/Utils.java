@@ -11,7 +11,8 @@ import java.util.Arrays;
  * <p>
  * 描述： 辅助类
  */
-public final class Utils {
+public final class Utils
+{
 
     @NonNull
     public static <T> T notNull(@Nullable T reference) {
@@ -20,11 +21,12 @@ public final class Utils {
     }
 
     @NonNull
-    public static <T> T notNull(@Nullable T reference, @NonNull Object errorMessage) {
-        if (reference == null) throw new NullPointerException(String.valueOf(errorMessage));
+    public static <T> T notNull(@Nullable T reference, @NonNull Object error) {
+        if (reference == null) throw new NullPointerException(error.toString());
         return reference;
     }
 
+    @NonNull
     public static String toString(@Nullable Object object) {
         if (object == null) return "null";
         if (!object.getClass().isArray()) return object.toString();

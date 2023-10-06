@@ -78,5 +78,4 @@ public abstract class BaseAdapter<ITEM> extends RecyclerView.Adapter<ViewHolder>
 
     @LayoutRes
     public abstract int layoutRes(int viewType);
-
 }

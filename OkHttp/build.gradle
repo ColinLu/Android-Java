@@ -30,9 +30,12 @@ android {
 }
 
 dependencies {
-    compileOnly project(path: ':Utils')
-//    compileOnly dependency.kotlin
     compileOnly dependency.android_material
     compileOnly dependency.ok_http
     compileOnly dependency.g_son
+    compileOnly dependency.utils
+}
+
+if (app_config.publishing_okhttp_enabled) {
+    apply from: 'maven.gradle'
 }

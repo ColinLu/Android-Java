@@ -90,12 +90,11 @@ android {
 }
 
 dependencies {
-    implementation project(path: ':Base')
-//    implementation project(path: ':Utils')
-    implementation project(path: ':Widgets')
-    implementation project(path: ':OkHttp')
     implementation project(path: ':Media')
     implementation dependency.utils
+    implementation dependency.base
+    implementation dependency.okhttp
+    implementation dependency.widgets
     implementation dependency.android_material
     implementation dependency.androidx_appcompat
     implementation dependency.androidx_legacy

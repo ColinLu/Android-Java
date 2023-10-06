@@ -12,7 +12,7 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout;
  * 作者： ColinLu
  * 时间： 2022-12-31 18:52
  * <p>
- * 描述： TODO
+ * 描述： Behavior 偏移
  */
 public class ViewOffsetBehavior<V extends View> extends CoordinatorLayout.Behavior<V> {
     private ViewOffsetHelper mViewOffsetHelper;
@@ -72,8 +72,7 @@ public class ViewOffsetBehavior<V extends View> extends CoordinatorLayout.Behavi
     }
 
     public void setVerticalOffsetEnabled(boolean verticalOffsetEnabled) {
-        if (mViewOffsetHelper != null)
-            mViewOffsetHelper.setVerticalOffsetEnabled(verticalOffsetEnabled);
+        if (mViewOffsetHelper != null) mViewOffsetHelper.setVerticalOffsetEnabled(verticalOffsetEnabled);
     }
 
     public int getLayoutTop() {

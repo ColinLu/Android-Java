@@ -20,7 +20,7 @@ import java.util.List;
  * 作者： ColinLu
  * 时间： 2022-12-31 19:10
  * <p>
- * 描述： TODO
+ * 描述： 下方区域
  */
 public class BottomAreaBehavior extends ViewOffsetBehavior<View> {
     private final Rect mAvailableRect = new Rect();

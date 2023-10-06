@@ -47,9 +47,13 @@ public class BaseRequest<Returner> implements IRequest<Returner>, IExecute {
     protected transient long mConnectTimeout;
     protected transient HttpHeaders.Builder mHeader;
     protected transient HttpParams.Builder mParams;
+    protected transient IExecute mExecute;
 
     public BaseRequest(@NonNull String url, @Method @NonNull String method) {
-        final HttpConfig config = OkHttpHelper.getInstance().getOkHttpConfig();
+        this(url, method, OkHttpHelper.getInstance().getOkHttpConfig());
+    }
+
+    private BaseRequest(@NonNull String url, @Method @NonNull String method, @NonNull HttpConfig config) {
         this.mUrl = url;
         this.mMethod = method;
         this.mOkHttpClient = config.getOkHttpClient();
@@ -258,8 +262,8 @@ public class BaseRequest<Returner> implements IRequest<Returner>, IExecute {
     @NonNull
     @Override
     public OkHttpClient getOkHttpClient() {
-        return mOkHttpClient.newBuilder().readTimeout(mReadTimeout, TimeUnit.SECONDS).writeTimeout(mWriteTimeout, TimeUnit.SECONDS).connectTimeout(
-                mConnectTimeout, TimeUnit.SECONDS).build();
+        return mOkHttpClient.newBuilder().readTimeout(mReadTimeout, TimeUnit.SECONDS).writeTimeout(mWriteTimeout, TimeUnit.SECONDS)
+                            .connectTimeout(mConnectTimeout, TimeUnit.SECONDS).build();
     }
 
     @NonNull
@@ -272,13 +276,18 @@ public class BaseRequest<Returner> implements IRequest<Returner>, IExecute {
     @Nullable
     @Override
     public Response execute() {
-        final HttpPolicy policy = new HttpPolicy(getOkHttpClient(), toRequest(null), getRetryCall());
-        return policy.execute();
+        mExecute = new HttpPolicy(getOkHttpClient(), toRequest(null), getRetryCall());
+        return mExecute.execute();
     }
 
     @Override
     public <Result> void execute(@NonNull IAction<Result> action) {
-        final HttpPolicy policy = new HttpPolicy(getOkHttpClient(), toRequest(action), getRetryCall());
-        policy.execute(action);
+        mExecute = new HttpPolicy(getOkHttpClient(), toRequest(action), getRetryCall());
+        mExecute.execute(action);
+    }
+
+    @Override
+    public boolean isExecuted() {
+        return mExecute != null && mExecute.isExecuted();
     }
 }

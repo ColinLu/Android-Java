@@ -25,7 +25,6 @@ public abstract class Task<Result> implements Runnable {
         int CANCELLED = 2;      //取消
         int EXCEPTION = 3;      //异常
         int FINISH = 4;         //完成
-
     }
 
     private volatile int mState = State.NEW;

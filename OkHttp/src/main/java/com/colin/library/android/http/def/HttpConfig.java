@@ -24,7 +24,7 @@ import okhttp3.OkHttpClient;
  * 描述： 全局配置
  */
 public final class HttpConfig {
-    private final Application mApplication;                     //上下文
+    private final Application mApplication;             //上下文
     private final OkHttpClient mOkHttpClient;           //统一请求客户端
     private final String mEncode;                       //URL 加密方式
     private final long mReadTimeout;                    //读取时间
@@ -127,8 +127,7 @@ public final class HttpConfig {
 
         public Builder(@NonNull Application application) {
             this.mApplication = application;
-            this.mOkHttpClient = new OkHttpClient.Builder()
-                    .addInterceptor(new LogInterceptor()).build();
+            this.mOkHttpClient = new OkHttpClient.Builder().addInterceptor(new LogInterceptor()).build();
             this.mHeaderBuilder = new HttpHeaders.Builder();
             this.mParamsBuilder = new HttpParams.Builder();
         }
