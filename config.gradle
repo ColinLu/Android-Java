@@ -105,10 +105,10 @@ ext.mavens = mavens
 def app_config = [:]
 app_config.debug = true
 app_config.task_test_enabled = false
-app_config.publishing_utils_enabled = false
-app_config.publishing_base_enabled = false
-app_config.publishing_okhttp_enabled = false
-app_config.publishing_widgets_enabled = false
+app_config.publishing_utils_enabled = true
+app_config.publishing_widgets_enabled = true
+app_config.publishing_base_enabled = true
+app_config.publishing_okhttp_enabled = true
 ext.app_config = app_config
 
 

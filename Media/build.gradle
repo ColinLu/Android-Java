@@ -31,11 +31,11 @@ android {
 
 dependencies {
     compileOnly project(path: ':Preview')
-    compileOnly dependency.utils
-    compileOnly dependency.base
     compileOnly dependency.widgets
     compileOnly dependency.ok_http
     compileOnly dependency.widget_recyclerview
+    implementation dependency.utils
+    implementation dependency.base
     implementation dependency.androidx_appcompat
     implementation dependency.android_material
 
