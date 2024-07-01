@@ -47,13 +47,22 @@ public final class UtilHelper {
         return Utils.notNull(mUtilConfig, "UtilHelper init first !");
     }
 
-    public boolean showLog(@LogLevel final int level, @Nullable String showTag) {
-        return level >= getUtilConfig().getLogLevel() && getUtilConfig().isShowLog(showTag);
+    public boolean showLog(@LogLevel final int level) {
+        return level >= getLogLevel() && getUtilConfig().isShowLog();
+    }
+
+    public boolean isShowLogThread() {
+        return getUtilConfig().isShowLogThread();
     }
 
     @LogLevel
     public int getLogLevel() {
         return getUtilConfig().getLogLevel();
+    }
+
+    @Nullable
+    public String getLogTag() {
+        return getUtilConfig().getLogTag();
     }
 
     public int getLogMethodOffset() {
@@ -64,8 +73,5 @@ public final class UtilHelper {
         return getUtilConfig().getLogMethodCount();
     }
 
-    public boolean isLogShowThread() {
-        return getUtilConfig().isLogShowThread();
-    }
 
 }

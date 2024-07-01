@@ -8,7 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.colin.library.android.base.def.IInitView;
+import com.colin.library.android.base.def.IBase;
 import com.colin.library.android.base.def.ILife;
 
 /**
@@ -18,7 +18,7 @@ import com.colin.library.android.base.def.ILife;
  * 描述： Activity 基类
  * 实现刷新机制
  */
-public abstract class BaseActivity extends AppCompatActivity implements IInitView, ILife {
+public abstract class BaseActivity extends AppCompatActivity implements IBase, ILife {
 
     protected boolean mRefresh = true;
 

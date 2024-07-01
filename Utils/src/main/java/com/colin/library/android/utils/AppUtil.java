@@ -53,11 +53,10 @@ public final class AppUtil {
      *
      * @return 空值 失败
      */
-    @NonNull
+    @Nullable
     public static String getVersionName() {
         final PackageInfo packageInfo = getPackageInfo();
-        final String versionName = null == packageInfo ? null : packageInfo.versionName;
-        return StringUtil.isEmpty(versionName) ? "" : versionName;
+        return null == packageInfo ? null : packageInfo.versionName;
     }
 
     @Nullable
@@ -70,7 +69,7 @@ public final class AppUtil {
     public static Drawable getIcon(@Nullable String packageName) {
         if (TextUtils.isEmpty(packageName)) return null;
         final Context context = UtilHelper.getInstance().getUtilConfig().getApplication();
-        final PackageInfo info = getPackageInfo(context, packageName, 0);
+        final PackageInfo info = getPackageInfo(context, packageName, Constants.ZERO);
         return info == null ? null : info.applicationInfo.loadIcon(context.getPackageManager());
     }
 
@@ -121,17 +120,25 @@ public final class AppUtil {
      */
     @Nullable
     public static PackageInfo getPackageInfo() {
-        return getPackageInfo(UtilHelper.getInstance().getUtilConfig().getApplication(), 0);
+        return getPackageInfo(UtilHelper.getInstance().getUtilConfig().getApplication());
     }
-
     /**
      * 获取AndroidManifest.xml文件的信息
      *
      * @return
      */
     @Nullable
-    public static PackageInfo getPackageInfo(@Nullable Context context, int flags) {
-        return getPackageInfo(context, null == context ? null : context.getPackageName(), flags);
+    public static PackageInfo getPackageInfo(@NonNull Context context) {
+        return getPackageInfo(context, context.getPackageName(), Constants.ZERO);
+    }
+    /**
+     * 获取AndroidManifest.xml文件的信息
+     *
+     * @return
+     */
+    @Nullable
+    public static PackageInfo getPackageInfo(@NonNull Context context, int flags) {
+        return getPackageInfo(context, context.getPackageName(), flags);
     }
 
     @Nullable
@@ -148,8 +155,8 @@ public final class AppUtil {
      * @return 指定app
      */
     @Nullable
-    public static PackageInfo getPackageInfo(@Nullable Context context, @Nullable String packageName, @IntRange(from = 0) int flags) {
-        final PackageManager packageManager = null == context ? null : context.getPackageManager();
+    public static PackageInfo getPackageInfo(@NonNull Context context, @Nullable String packageName, @IntRange(from = 0) int flags) {
+        final PackageManager packageManager = context.getPackageManager();
         if (null == packageManager || StringUtil.isEmpty(packageName)) return null;
         try {
             return packageManager.getPackageInfo(packageName, flags);

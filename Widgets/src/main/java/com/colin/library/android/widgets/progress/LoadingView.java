@@ -16,9 +16,8 @@ import androidx.annotation.Nullable;
 import androidx.annotation.Px;
 import androidx.core.content.ContextCompat;
 
-import com.colin.library.android.utils.WidgetUtil;
+import com.colin.library.android.utils.ViewUtil;
 import com.colin.library.android.widgets.R;
-import com.colin.library.android.widgets.Utils;
 
 
 public class LoadingView extends View {
@@ -56,7 +55,7 @@ public class LoadingView extends View {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        setMeasuredDimension(WidgetUtil.getSize(widthMeasureSpec, mSize), WidgetUtil.getSize(heightMeasureSpec, mSize));
+        setMeasuredDimension(ViewUtil.getSize(widthMeasureSpec, mSize), ViewUtil.getSize(heightMeasureSpec, mSize));
     }
 
     @Override

@@ -17,27 +17,18 @@ import com.colin.library.android.utils.LogUtil;
  */
 public class LogFragment extends AppFragment<FragmentLogBinding> {
     public static final String TAG = "LogFragment";
-    public static final String JSON = "{\"l1\":{\"l1_1\":[\"l1_1_1\",\"l1_1_2\"],\"l1_2\":{\"l1_2_1\":121}},\"l2\":{\"l2_1\":null,\"l2_2\":true,\"l2_3\":{}}}";
-    public static final String XML = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" +
-            "<resources>\n" +
-            "    <color name=\"purple_200\">#FFBB86FC</color>\n" +
-            "    <color name=\"purple_500\">#FF6200EE</color>\n" +
-            "    <color name=\"purple_700\">#FF3700B3</color>\n" +
-            "    <color name=\"teal_200\">#FF03DAC5</color>\n" +
-            "    <color name=\"teal_700\">#FF018786</color>\n" +
-            "    <color name=\"black\">#FF000000</color>\n" +
-            "    <color name=\"white\">#FFFFFFFF</color>\n" +
-            "</resources>";
+    public static final String JSON = "{\n" + "  \"sites\": {\n" + "    \"site\": [\n" + "      {\n" + "        \"id\": \"1\",\n" + "        \"name\": \"菜鸟教程\",\n" + "        \"url\": \"www.runoob.com\"\n" + "      },\n" + "      {\n" + "        \"id\": \"2\",\n" + "        \"name\": \"菜鸟工具\",\n" + "        \"url\": \"www.jyshare.com\"\n" + "      },\n" + "      {\n" + "        \"id\": \"3\",\n" + "        \"name\": \"Google\",\n" + "        \"url\": \"www.google.com\"\n" + "      }\n" + "    ]\n" + "  }\n" + "}";
+    public static final String XML = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n" + "<sites>\n" + "    <site>\n" + "        <id>1</id>\n" + "        <name>菜鸟教程</name>\n" + "        <url>www.runoob.com</url>\n" + "    </site>\n" + "    <site>\n" + "        <id>2</id>\n" + "        <name>菜鸟工具</name>\n" + "        <url>www.jyshare.com</url>\n" + "    </site>\n" + "    <site>\n" + "        <id>3</id>\n" + "        <name>Google</name>\n" + "        <url>www.google.com</url>\n" + "    </site>\n" + "</sites>\n";
 
     @Override
     public void initView(@Nullable Bundle bundle) {
         mBinding.mButtonLogI.setOnClickListener(v -> LogUtil.i((Object) null));
-        mBinding.mButtonLogV.setOnClickListener(v -> LogUtil.vTag("Tag V", "log v", "1.f"));
+        mBinding.mButtonLogV.setOnClickListener(v -> LogUtil.v("Tag V", "log v", "1.f"));
         mBinding.mButtonLogD.setOnClickListener(v -> LogUtil.d("String", 1, 2.0D, 3.0F));
         mBinding.mButtonLogW.setOnClickListener(v -> LogUtil.w("log w"));
-        mBinding.mButtonLogA.setOnClickListener(v -> LogUtil.a("log a", "log a"));
+        mBinding.mButtonLogA.setOnClickListener(v -> LogUtil.log("log a", "log a"));
         mBinding.mButtonLogE.setOnClickListener(v -> LogUtil.e(TAG, "log e", "log e"));
-        mBinding.mButtonLogJson.setOnClickListener(v -> LogUtil.json(LogLevel.D, JSON));
+        mBinding.mButtonLogJson.setOnClickListener(v -> LogUtil.json(LogLevel.I, JSON));
         mBinding.mButtonLogXml.setOnClickListener(v -> LogUtil.xml(LogLevel.E, XML));
         mBinding.mButtonLogThrowable.setOnClickListener(v -> LogUtil.log(new NullPointerException("log throwable")));
     }

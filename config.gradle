@@ -20,7 +20,7 @@ ext.build_versions = build_versions
 /**
  * 依赖库版本*/
 def versions = [:]
-versions.kotlin = '1.5.30'
+//versions.kotlin = '1.5.30'
 versions.material = '1.5.0'
 versions.appcompat = '1.4.1'
 versions.legacy = '1.0.0'
@@ -47,7 +47,7 @@ ext.versions = versions
 /**
  * 依赖管理*/
 def dependency = [:]
-dependency.kotlin = "org.jetbrains.kotlin:kotlin-stdlib:${versions.kotlin}"
+//dependency.kotlin = "org.jetbrains.kotlin:kotlin-stdlib:${versions.kotlin}"
 dependency.android_material = "com.google.android.material:material:${versions.material}"
 dependency.androidx_appcompat = "androidx.appcompat:appcompat:${versions.appcompat}"
 dependency.androidx_legacy = "androidx.legacy:legacy-support-v4:${versions.legacy}"

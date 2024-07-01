@@ -30,12 +30,12 @@ android {
 }
 
 dependencies {
+    compileOnly project(path: ':Utils')
+    compileOnly project(path: ':Widgets')
+    compileOnly project(path: ':OkHttp')
     compileOnly project(path: ':Preview')
-    compileOnly dependency.widgets
-    compileOnly dependency.ok_http
-    compileOnly dependency.widget_recyclerview
-    implementation dependency.utils
-    implementation dependency.base
+    compileOnly project(path: ':Base')
+    implementation dependency.widget_recyclerview
     implementation dependency.androidx_appcompat
     implementation dependency.android_material
 

@@ -15,7 +15,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.colin.library.android.Utils;
 import com.colin.library.android.base.def.ILife;
-import com.colin.library.android.base.def.IInitView;
+import com.colin.library.android.base.def.IBase;
 
 /**
  * 作者： ColinLu
@@ -23,7 +23,7 @@ import com.colin.library.android.base.def.IInitView;
  * <p>
  * 描述： Fragment 基类
  */
-public abstract class BaseFragment extends Fragment implements IInitView, ILife {
+public abstract class BaseFragment extends Fragment implements IBase, ILife {
     protected static final String STATE_SAVE_IS_HIDDEN = "STATE_SAVE_IS_HIDDEN";
     protected View mRootView;                                   //根布局
     protected boolean mRefresh = true;

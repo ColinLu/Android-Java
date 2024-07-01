@@ -1,6 +1,5 @@
 package com.colin.android.demo.java.ui.home;
 
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
@@ -16,13 +15,7 @@ import com.colin.android.demo.java.databinding.FragmentHomeBinding;
 import com.colin.android.demo.java.utils.DemoUtils;
 import com.colin.android.demo.java.utils.DialogManager;
 import com.colin.library.android.http.annotation.Method;
-import com.colin.library.android.media.MediaHelper;
-import com.colin.library.android.media.def.MediaFile;
-import com.colin.library.android.media.util.MediaUtil;
-import com.colin.library.android.utils.LogUtil;
-import com.colin.library.android.utils.ToastUtil;
 
-import java.util.List;
 
 public class HomeFragment extends AppFragment<FragmentHomeBinding> implements View.OnClickListener {
     @Override
@@ -74,12 +67,12 @@ public class HomeFragment extends AppFragment<FragmentHomeBinding> implements Vi
                 DemoUtils.toNavigate(this, R.id.action_Home_to_Web);
                 break;
             case R.id.button_image:
-                MediaHelper.getInstance().image().multiple(3).column(2).title("title").result(this::showResult).cancel(ToastUtil::show)
-                           .start(requireContext());
+//                MediaHelper.getInstance().image().multiple(3).column(2).title("title").result(this::showResult).cancel(ToastUtil::show)
+//                           .start(requireContext());
                 break;
             case R.id.button_camera:
-                final Uri uri = MediaUtil.createImageUri(requireContext());
-                MediaHelper.getInstance().camera().image(uri).result(this::showResult).cancel(ToastUtil::show).start(requireContext());
+//                final Uri uri = MediaUtil.createImageUri(requireContext());
+//                MediaHelper.getInstance().camera().image(uri).result(this::showResult).cancel(ToastUtil::show).start(requireContext());
                 break;
             case R.id.button_video:
                 DialogManager.getInstance().showImage(getChildFragmentManager(), R.drawable.ticket);
@@ -89,13 +82,13 @@ public class HomeFragment extends AppFragment<FragmentHomeBinding> implements Vi
         }
     }
 
-    private void showResult(MediaFile mediaFile) {
-        LogUtil.d(mediaFile.toString());
-    }
-
-    private void showResult(List<MediaFile> mediaFile) {
-        LogUtil.d(mediaFile.toString());
-    }
+//    private void showResult(MediaFile mediaFile) {
+//        LogUtil.d(mediaFile.toString());
+//    }
+//
+//    private void showResult(List<MediaFile> mediaFile) {
+//        LogUtil.d(mediaFile.toString());
+//    }
 
     private void http(@Method @NonNull String method) {
 

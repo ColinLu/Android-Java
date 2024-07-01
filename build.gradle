@@ -20,11 +20,13 @@ buildscript {
 
 
 allprojects {
-    tasks.withType(Javadoc) {
+    tasks.withType(Javadoc).configureEach {
         options.encoding = "UTF-8"
     }
-    tasks.withType(JavaCompile) {
-        options.encoding = "UTF-8"
+    tasks.withType(JavaCompile).tap {
+        configureEach {
+            options.encoding = "UTF-8"
+        }
     }
 }
 //skip Test tasks

@@ -5,8 +5,6 @@ import android.app.DialogFragment;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.res.Configuration;
-import android.content.res.Resources;
-import android.os.Build;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -64,7 +62,7 @@ public final class ActivityUtil {
     /**
      * 判断当前 Activity 是否存活
      *
-     * @param context
+     * @param context 当前上下文
      * @return {@link true :存活 ,false 获取失败或者销毁}
      */
     public static boolean isAlive(@Nullable final Context context) {
@@ -98,17 +96,9 @@ public final class ActivityUtil {
     }
 
     /*语言本地化处理*/
-    @NonNull
     public static void initLocale(@NonNull final Context context, @NonNull final Locale locale) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            final Configuration configuration = context.getResources().getConfiguration();
-            configuration.setLocale(locale);
-            context.createConfigurationContext(configuration);
-        } else {
-            final Resources resources = context.getResources();
-            final Configuration configuration = resources.getConfiguration();
-            configuration.locale = locale;
-            resources.updateConfiguration(configuration, resources.getDisplayMetrics());
-        }
+        final Configuration configuration = context.getResources().getConfiguration();
+        configuration.setLocale(locale);
+        context.createConfigurationContext(configuration);
     }
 }

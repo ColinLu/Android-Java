@@ -7,7 +7,6 @@ import androidx.annotation.Nullable;
 
 import com.colin.library.android.annotation.LogLevel;
 import com.colin.library.android.utils.BuildConfig;
-import com.colin.library.android.utils.StringUtil;
 
 
 /**
@@ -21,24 +20,27 @@ public final class UtilConfig {
     private final Application mApplication;
     /*环境*/
     private final boolean mDebug;
-    /*Log*/
     private final boolean mShowLog;
-    private final boolean mLogShowThread;
+    private final boolean mShowLogThread;
     @LogLevel
     private final int mLogLevel;
     /*show 指定tag log*/
     @Nullable
-    private final String mLogShowTag;
+    private final String mLogTag;
     private final int mLogMethodOffset;
     private final int mLogMethodCount;
+
+    public static UtilConfig.Builder newBuilder(@NonNull Application application) {
+        return new Builder(application);
+    }
 
     private UtilConfig(@NonNull Builder builder) {
         this.mApplication = builder.mApplication;
         this.mDebug = builder.mDebug;
         this.mShowLog = builder.mShowLog;
+        this.mShowLogThread = builder.mShowLogThread;
         this.mLogLevel = builder.mLogLevel;
-        this.mLogShowTag = builder.mLogShowTag;
-        this.mLogShowThread = builder.mLogShowThread;
+        this.mLogTag = builder.mLogTag;
         this.mLogMethodCount = builder.mLogMethodCount;
         this.mLogMethodOffset = builder.mLogMethodOffset;
     }
@@ -53,13 +55,12 @@ public final class UtilConfig {
         return mDebug;
     }
 
-    public boolean isShowLog(@Nullable String tag) {
-        if (!mShowLog) return false;
-        return StringUtil.isEmpty(mLogShowTag) || StringUtil.equals(mLogShowTag, tag);
+    public boolean isShowLog() {
+        return mShowLog;
     }
 
-    public boolean isLogShowThread() {
-        return mLogShowThread;
+    public boolean isShowLogThread() {
+        return mShowLogThread;
     }
 
 
@@ -76,18 +77,23 @@ public final class UtilConfig {
         return mLogLevel;
     }
 
+    @Nullable
+    public String getLogTag() {
+        return mLogTag;
+    }
+
     public static class Builder {
         /*全局上下文*/
         private final Application mApplication;
         /*环境*/
         private final boolean mDebug;
         /*Log*/
-        private boolean mShowLog;
+        private boolean mShowLog = true;
+        private boolean mShowLogThread = true;
         @LogLevel
-        private int mLogLevel = LogLevel.D;
+        private int mLogLevel = LogLevel.I;
         @Nullable
-        private String mLogShowTag;
-        private boolean mLogShowThread = true;
+        private String mLogTag;
         private int mLogMethodOffset = 0;
         private int mLogMethodCount = 3;
 
@@ -102,36 +108,41 @@ public final class UtilConfig {
         }
 
         @NonNull
-        public Builder setShowLog(boolean showLog) {
-            this.mShowLog = showLog;
+        public Builder setShowLog(boolean show) {
+            this.mShowLog = show;
             return this;
         }
 
         @NonNull
-        public Builder setLogLevel(@LogLevel int logLevel) {
-            this.mLogLevel = logLevel;
+        public Builder setShowLogThread(boolean show) {
+            this.mShowLogThread = show;
             return this;
         }
 
-        public Builder setLogShowTag(@Nullable String tag) {
-            this.mLogShowTag = tag;
+        @NonNull
+        public Builder setLogLevel(@LogLevel int level) {
+            this.mLogLevel = level;
             return this;
         }
 
+        @NonNull
+        public Builder setLogTag(@Nullable String tag) {
+            this.mLogTag = tag;
+            return this;
+        }
+
+        @NonNull
         public Builder setLogMethodOffset(int offset) {
             this.mLogMethodOffset = offset;
             return this;
         }
 
+        @NonNull
         public Builder setLogMethodCount(int count) {
             this.mLogMethodCount = count;
             return this;
         }
 
-        public Builder setLogShowThread(boolean show) {
-            this.mLogShowThread = show;
-            return this;
-        }
 
         @NonNull
         public UtilConfig build() {

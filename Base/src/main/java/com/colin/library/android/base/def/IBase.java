@@ -11,7 +11,7 @@ import androidx.annotation.Nullable;
  * <p>
  * 描述： 界面实现定义
  */
-public interface IInitView {
+public interface IBase {
 
     @LayoutRes
     int layoutRes();

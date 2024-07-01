@@ -9,6 +9,7 @@ import androidx.annotation.Nullable;
 
 import com.colin.library.android.utils.BitmapUtil;
 import com.colin.library.android.utils.IOUtil;
+import com.colin.library.android.utils.LogUtil;
 import com.colin.library.android.utils.StringUtil;
 import com.colin.library.android.annotation.Encode;
 import com.colin.library.android.utils.data.Constants;
@@ -110,7 +111,7 @@ public final class Base64Util {
      */
     @Nullable
     public static byte[] decode(final String data) {
-        if (null == data || data.length() == 0) return null;
+        if (null == data || data.isEmpty()) return null;
         return decode(getBytes(data, Encode.UTF_8));
     }
 
@@ -187,7 +188,7 @@ public final class Base64Util {
             if (length == 0) return null;
             return BitmapFactory.decodeByteArray(array, 0, length);
         } catch (Exception e) {
-            e.printStackTrace();
+            LogUtil.log(e);
         }
         return null;
     }
@@ -205,7 +206,7 @@ public final class Base64Util {
             out = new FileOutputStream(path);
             out.write(buffer);
         } catch (IOException e) {
-            e.printStackTrace();
+            LogUtil.log(e);
         } finally {
             IOUtil.flush(out);
             IOUtil.close(out);
@@ -214,11 +215,11 @@ public final class Base64Util {
 
     @Nullable
     private static byte[] getBytes(@Nullable final String data, @Encode final String charset) {
-        if (null == data || data.length() == 0) return null;
+        if (null == data || data.isEmpty()) return null;
         try {
             return data.getBytes(charset);
         } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+            LogUtil.log(e);
         }
         return null;
     }

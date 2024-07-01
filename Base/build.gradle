@@ -30,8 +30,8 @@ android {
 }
 
 dependencies {
-    compileOnly dependency.utils
-    compileOnly dependency.widgets
+    compileOnly project(path: ':Utils')
+    compileOnly project(path: ':Widgets')
     implementation dependency.androidx_appcompat
     implementation dependency.android_material
 }

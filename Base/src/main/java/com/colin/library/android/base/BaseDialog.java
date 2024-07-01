@@ -29,7 +29,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.colin.library.android.Utils;
-import com.colin.library.android.base.def.IInitView;
+import com.colin.library.android.base.def.IBase;
 import com.colin.library.android.base.def.ILife;
 import com.colin.library.android.utils.StringUtil;
 import com.colin.library.android.utils.data.Constants;
@@ -42,36 +42,31 @@ import java.lang.reflect.Field;
  * <p>
  * 描述： 弹框基类
  */
-public abstract class BaseDialog<Returner> extends DialogFragment implements IInitView, ILife {
+public abstract class BaseDialog<Returner> extends DialogFragment implements IBase, ILife {
     protected boolean mRefresh = true;
 
     /*Dialog标题*/
+    protected boolean mShowTitle = true;
     @ColorInt
     protected int mTitleColor = Constants.INVALID;
-    @StringRes
-    protected int mTitleRes = Resources.ID_NULL;
     @Nullable
     protected CharSequence mTitle = "";
-    protected boolean mShowTitle = true;
 
     /*Dialog提示文案*/
     @ColorInt
     protected int mMessageColor = Constants.INVALID;
-    protected int mMessageRes = Resources.ID_NULL;
     @Nullable
     protected CharSequence mMessage = null;
 
     /*Dialog左边按钮效果*/
     @ColorInt
     protected int mLeftButtonColor = Constants.INVALID;
-    protected int mLeftButtonRes = Resources.ID_NULL;
     @Nullable
     protected CharSequence mLeftButton = null;
 
     /*Dialog右边按钮效果*/
     @ColorInt
     protected int mRightButtonColor = Constants.INVALID;
-    protected int mRightButtonRes = Resources.ID_NULL;
     @Nullable
     protected CharSequence mRightButton = null;
 
@@ -164,8 +159,8 @@ public abstract class BaseDialog<Returner> extends DialogFragment implements IIn
 
     @Override
     public void onDismiss(@NonNull DialogInterface dialog) {
-        super.onDismiss(dialog);
         if (null != mOnDismissListener) mOnDismissListener.onDismiss(dialog);
+        super.onDismiss(dialog);
     }
 
     @NonNull
@@ -180,8 +175,18 @@ public abstract class BaseDialog<Returner> extends DialogFragment implements IIn
         return Utils.notNull(super.getContext(), "Fragment " + this + " not attached to a context.");
     }
 
-    public Returner setShowTitle(boolean showTitle) {
-        this.mShowTitle = showTitle;
+    public Returner setShowTitle(boolean show) {
+        this.mShowTitle = show;
+        return (Returner) this;
+    }
+
+    public Returner setTitleColor(@ColorInt int color) {
+        this.mTitleColor = color;
+        return (Returner) this;
+    }
+
+    public Returner setTitle(@StringRes int res) {
+        this.mTitle = getString(res);
         return (Returner) this;
     }
 
@@ -190,29 +195,24 @@ public abstract class BaseDialog<Returner> extends DialogFragment implements IIn
         return (Returner) this;
     }
 
-    public Returner setTitle(@StringRes int titleRes) {
-        this.mTitleRes = titleRes;
+
+    public Returner setMessageColor(@ColorInt int messageColor) {
+        this.mMessageColor = messageColor;
         return (Returner) this;
     }
 
-    public Returner setTitleColor(@ColorInt int titleColor) {
-        this.mTitleColor = titleColor;
+    public Returner setMessage(@StringRes int res) {
+        this.mMessage = getString(res);
         return (Returner) this;
     }
-
 
     public Returner setMessage(@Nullable CharSequence message) {
         this.mMessage = message;
         return (Returner) this;
     }
 
-    public Returner setMessage(@StringRes int messageRes) {
-        this.mMessageRes = messageRes;
-        return (Returner) this;
-    }
-
-    public Returner setMessageColor(@ColorInt int messageColor) {
-        this.mMessageColor = messageColor;
+    public Returner setLeftButtonColor(@ColorInt int color) {
+        this.mLeftButtonColor = color;
         return (Returner) this;
     }
 
@@ -221,29 +221,23 @@ public abstract class BaseDialog<Returner> extends DialogFragment implements IIn
         return (Returner) this;
     }
 
-    public Returner setLeftButton(@StringRes int leftButtonRes) {
-        this.mLeftButtonRes = leftButtonRes;
-        return (Returner) this;
-    }
-
-    public Returner setLeftButtonColor(@ColorInt int leftButtonColor) {
-        this.mLeftButtonColor = leftButtonColor;
-        return (Returner) this;
-    }
-
-
-    public Returner setRightButton(@Nullable CharSequence rightButton) {
-        this.mRightButton = rightButton;
-        return (Returner) this;
-    }
-
-    public Returner setRightButton(@StringRes int rightButtonRes) {
-        this.mRightButtonRes = rightButtonRes;
+    public Returner setLeftButton(@StringRes int res) {
+        this.mLeftButton = getString(res);
         return (Returner) this;
     }
 
     public Returner setRightButtonColor(@ColorInt int rightButtonColor) {
         this.mRightButtonColor = rightButtonColor;
+        return (Returner) this;
+    }
+
+    public Returner setRightButton(@StringRes int res) {
+        this.mRightButton = getString(res);
+        return (Returner) this;
+    }
+
+    public Returner setRightButton(@Nullable CharSequence rightButton) {
+        this.mRightButton = rightButton;
         return (Returner) this;
     }
 
@@ -309,11 +303,12 @@ public abstract class BaseDialog<Returner> extends DialogFragment implements IIn
         return (Returner) this;
     }
 
-
+    @Nullable
     public View getRootView() {
         return mRootView;
     }
 
+    @LayoutRes
     public int getLayoutRes() {
         return mLayoutRes;
     }
@@ -341,59 +336,49 @@ public abstract class BaseDialog<Returner> extends DialogFragment implements IIn
         return mDialogHeight * mDisplayMetrics.heightPixels;
     }
 
-
     @ColorInt
     public int getTitleColor() {
         return mTitleColor;
     }
 
-
-    @Nullable
-    public CharSequence getTitle() {
-        return mTitle;
-    }
-
-
     public boolean isShowTitle() {
         return mShowTitle;
     }
 
+    @Nullable
+    public CharSequence getTitle() {
+        return isShowTitle() ? mTitle : null;
+    }
 
     @ColorInt
     public int getMessageColor() {
         return mMessageColor;
     }
 
-
     @Nullable
     public CharSequence getMessage() {
         return mMessage;
     }
-
 
     @ColorInt
     public int getLeftButtonColor() {
         return mLeftButtonColor;
     }
 
-
     @Nullable
     public CharSequence getLeftButton() {
         return mLeftButton;
     }
-
 
     @ColorInt
     public int getRightButtonColor() {
         return mRightButtonColor;
     }
 
-
     @Nullable
     public CharSequence getRightButton() {
         return mRightButton;
     }
-
 
     public boolean isOutViewCancel() {
         return mOutViewCancel;

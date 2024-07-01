@@ -66,10 +66,10 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
-
     buildFeatures {
         viewBinding true
     }
+
     lint {
         abortOnError false
         checkReleaseBuilds false
@@ -90,12 +90,15 @@ android {
 }
 
 dependencies {
+    implementation project(path: ':Utils')
     implementation project(path: ':Base')
-    implementation project(path: ':Media')
-    implementation dependency.utils
+    implementation project(path: ':Widgets')
+//    implementation project(path: ':Media')
+    implementation project(path: ':OkHttp')
+//    implementation dependency.utils
 //    implementation dependency.base
-    implementation dependency.okhttp
-    implementation dependency.widgets
+//    implementation dependency.okhttp
+//    implementation dependency.widgets
     implementation dependency.android_material
     implementation dependency.androidx_appcompat
     implementation dependency.androidx_legacy
@@ -103,7 +106,7 @@ dependencies {
     implementation dependency.life_viewmodel
     implementation dependency.room_runtime
     implementation dependency.room_rxjave2
-    implementation dependency.room_ktx
+//    implementation dependency.room_ktx
     implementation dependency.work_runtime
     implementation dependency.work_ktx
     implementation dependency.navigation_fragment
@@ -115,5 +118,5 @@ dependencies {
     implementation dependency.rx_android
     implementation dependency.ok_http
     implementation dependency.g_son
-    debugImplementation dependency.debug_leakcanary
+//    debugImplementation dependency.debug_leakcanary
 }

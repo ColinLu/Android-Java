@@ -10,7 +10,6 @@ import com.colin.library.android.helper.UtilHelper;
 import com.colin.library.android.utils.data.Constants;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.PrintWriter;
@@ -18,7 +17,6 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.net.UnknownHostException;
 import java.util.Formatter;
-import java.util.Locale;
 
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Source;
@@ -46,7 +44,7 @@ public final class LogUtil {
     private static final String TAB_SPACE = "    ";
     private static final String POINT = ".";
     private static final String MSG = "value";
-    private static final String LOG_EMPTY = "log is null";
+    private static final String LOG_EMPTY = "null";
     private static final String XML_PROPERTY_NAME = "{http://xml.apache.org/xslt}indent-amount";
     private static final int INDENT_SPACES = 4;
     private static final int LOG_COUNT = 4000;
@@ -59,127 +57,103 @@ public final class LogUtil {
     // 对外公开api
     ///////////////////////////////////////////////////////////////////////////
     public static void v(@Nullable Object... args) {
-        print(LogLevel.V, null, format(args));
-    }
-
-    public static void vTag(@NonNull String tag, @Nullable Object... args) {
-        print(LogLevel.V, tag, format(args));
+        print(LogLevel.V, UtilHelper.getInstance().getLogTag(), format(args));
     }
 
     public static void d(@Nullable Object... args) {
-        print(LogLevel.D, null, format(args));
-    }
-
-    public static void dTag(@NonNull String tag, @Nullable Object... args) {
-        print(LogLevel.D, tag, format(args));
+        print(LogLevel.D, UtilHelper.getInstance().getLogTag(), format(args));
     }
 
     public static void i(@Nullable Object... args) {
-        print(LogLevel.I, null, format(args));
-    }
-
-    public static void iTag(@NonNull String tag, @Nullable Object... args) {
-        print(LogLevel.I, tag, format(args));
+        print(LogLevel.I, UtilHelper.getInstance().getLogTag(), format(args));
     }
 
     public static void w(@Nullable Object... args) {
-        print(LogLevel.W, null, format(args));
-    }
-
-    public static void wTag(@NonNull String tag, @Nullable Object... args) {
-        print(LogLevel.W, tag, format(args));
+        print(LogLevel.W, UtilHelper.getInstance().getLogTag(), format(args));
     }
 
     public static void e(@Nullable Object... args) {
-        print(LogLevel.E, null, format(args));
-    }
-
-    public static void eTag(@NonNull String tag, @Nullable Object... args) {
-        print(LogLevel.E, tag, format(args));
+        print(LogLevel.E, UtilHelper.getInstance().getLogTag(), format(args));
     }
 
     public static void a(@Nullable Object... args) {
-        print(LogLevel.A, null, format(args));
+        print(LogLevel.A, UtilHelper.getInstance().getLogTag(), format(args));
     }
 
-    public static void aTag(@NonNull String tag, @Nullable Object... args) {
-        print(LogLevel.A, tag, format(args));
-    }
-
-    public static void log(@Nullable Throwable error) {
-        print(LogLevel.E, null, format(error));
-    }
-
-    public static void log(@LogLevel int level, @Nullable Throwable error) {
-        print(level, null, format(error));
-    }
-
-    public static void log(String format, Object... args) {
-        print(UtilHelper.getInstance().getLogLevel(), null,
-                String.format(Locale.getDefault(), format, args));
-    }
-
-    public static void log(@LogLevel int level, String format, Object... args) {
-        print(level, null, String.format(Locale.getDefault(), format, args));
-    }
-
-    public static void log(@NonNull String tag, @Nullable Throwable error) {
-        print(LogLevel.E, tag, format(error));
+    public static void log(@NonNull Throwable error) {
+        print(LogLevel.E, UtilHelper.getInstance().getLogTag(), format(error));
     }
 
     public static void log(@Nullable Object obj) {
         print(UtilHelper.getInstance().getLogLevel(), null, StringUtil.toString(obj));
     }
 
-    public static void log(@LogLevel int level, @Nullable Object obj) {
-        print(level, null, StringUtil.toString(obj));
+    public static void log(@NonNull String tag, @NonNull Throwable error) {
+        print(LogLevel.E, tag, format(error));
     }
 
-    public static void log(@NonNull String tag, @Nullable Object obj) {
-        print(UtilHelper.getInstance().getLogLevel(), tag, StringUtil.toString(obj));
+    public static void log(@NonNull String tag, @NonNull Object msg) {
+        print(LogLevel.E, tag, StringUtil.toString(msg));
+    }
+
+    public static void log(@LogLevel int level, @NonNull Throwable error) {
+        print(level, UtilHelper.getInstance().getLogTag(), format(error));
+    }
+
+    public static void log(@LogLevel int level, @Nullable Object msg) {
+        print(level, null, StringUtil.toString(msg));
+    }
+
+    public static void log(@LogLevel int level, @NonNull String tag, @Nullable Object obj) {
+        print(level, tag, StringUtil.toString(obj));
     }
 
     public static void json(@Nullable Object obj) {
-        print(UtilHelper.getInstance().getLogLevel(), null, formatJson(obj));
-    }
-
-    public static void json(@LogLevel int level, @Nullable Object obj) {
-        print(level, null, formatJson(obj));
+        print(UtilHelper.getInstance().getLogLevel(), UtilHelper.getInstance().getLogTag(), formatJson(obj));
     }
 
     public static void json(@NonNull String tag, @Nullable Object obj) {
         print(UtilHelper.getInstance().getLogLevel(), tag, formatJson(obj));
     }
 
-    public static void xml(@Nullable String xml) {
-        print(UtilHelper.getInstance().getLogLevel(), null, formatXml(xml));
+    public static void json(@LogLevel int level, @Nullable Object obj) {
+        print(level, UtilHelper.getInstance().getLogTag(), formatJson(obj));
     }
 
-    public static void xml(@LogLevel int level, @Nullable String xml) {
-        print(level, null, formatXml(xml));
+    public static void json(@LogLevel int level, @NonNull String tag, @Nullable Object obj) {
+        print(level, tag, formatJson(obj));
+    }
+
+    public static void xml(@Nullable String xml) {
+        print(UtilHelper.getInstance().getLogLevel(), UtilHelper.getInstance().getLogTag(), formatXml(xml));
     }
 
     public static void xml(@NonNull String tag, @Nullable String xml) {
         print(UtilHelper.getInstance().getLogLevel(), tag, formatXml(xml));
     }
 
+    public static void xml(@LogLevel int level, @Nullable String xml) {
+        print(level, UtilHelper.getInstance().getLogTag(), formatXml(xml));
+    }
+
+    public static void xml(@LogLevel int level, @NonNull String tag, @Nullable String xml) {
+        print(level, tag, formatXml(xml));
+    }
 
     @NonNull
-    private static String format(@Nullable Object... args) {
-        final int len = args == null ? 0 : args.length;
-        if (len == 0) return LOG_EMPTY;
-        if (len == 1) return StringUtil.toString(args[0]);
+    public static String format(@Nullable Object... args) {
+        final int len = args == null ? Constants.ZERO : args.length;
+        if (len == Constants.ZERO) return LOG_EMPTY;
+        if (len == 1) return StringUtil.toString(args[Constants.ZERO]);
         final StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < len; i++) {
-            sb.append(MSG).append('[').append(i).append(']').append(" = ").append(
-                    StringUtil.toString(args[i])).append(Constants.LINE_SEP);
+        for (int i = Constants.ZERO; i < len; i++) {
+            sb.append(MSG).append('[').append(i).append(']').append(" = ").append(StringUtil.toString(args[i])).append(Constants.LINE_SEP);
         }
         return sb.toString().trim();
     }
 
     @NonNull
-    public static String format(@Nullable final Throwable error) {
-        if (error == null) return "exception is null";
+    public static String format(@NonNull final Throwable error) {
         Throwable t = error;
         while (t != null) {
             if (t instanceof UnknownHostException) return "UnknownHostException";
@@ -199,13 +173,13 @@ public final class LogUtil {
             if (obj instanceof JSONObject) return ((JSONObject) obj).toString(INDENT_SPACES);
             if (obj instanceof JSONArray) return ((JSONArray) obj).toString(INDENT_SPACES);
             final String json = obj.toString();
-            for (int i = 0, len = json.length(); i < len; i++) {
+            for (int i = Constants.ZERO, len = json.length(); i < len; i++) {
                 final char c = json.charAt(i);
                 if (c == '{') return new JSONObject(json).toString(INDENT_SPACES);
                 else if (c == '[') return new JSONArray(json).toString(INDENT_SPACES);
                 else if (!Character.isWhitespace(c)) return json;
             }
-        } catch (JSONException e) {
+        } catch (Exception e) {
             return format(e);
         }
         return StringUtil.toString(obj);
@@ -227,10 +201,9 @@ public final class LogUtil {
         }
     }
 
-    private static synchronized void print(
-            @LogLevel int level, @Nullable String tag, @NonNull String msg) {
+    private static synchronized void print(@LogLevel int level, @Nullable String tag, @NonNull String msg) {
         //判断是否输出
-        if (!UtilHelper.getInstance().showLog(level, tag)) return;
+        if (!UtilHelper.getInstance().showLog(level)) return;
         //Java栈信息
         final StackTraceElement[] traces = Thread.currentThread().getStackTrace();
         //print tag
@@ -250,7 +223,7 @@ public final class LogUtil {
             return;
         }
         //
-        for (int i = 0; i < length; i += LOG_COUNT) {
+        for (int i = Constants.ZERO; i < length; i += LOG_COUNT) {
             final int count = Math.min(length - i, LOG_COUNT);
             final String[] lines = new String(bytes, i, count).split(Constants.LINE_SEP);
             for (String line : lines) Log.println(level, tag, HORIZONTAL_LINE + line);
@@ -259,30 +232,28 @@ public final class LogUtil {
         Log.println(level, tag, BOTTOM_BORDER);
     }
 
-    private static void printlnHead(
-            int level, @NonNull String tag, @NonNull StackTraceElement[] traces) {
+    private static void printlnHead(int level, @NonNull String tag, @NonNull StackTraceElement[] traces) {
         //thread
-        if (UtilHelper.getInstance().isLogShowThread()) {
+        if (UtilHelper.getInstance().isShowLogThread()) {
             Log.println(level, tag, HORIZONTAL_LINE + "thread:" + Thread.currentThread().getName());
             Log.println(level, tag, MIDDLE_BORDER);
         }
         //method
         final int count = UtilHelper.getInstance().getLogMethodCount();
-        if (count == 0) return;
+        if (count == Constants.ZERO) return;
         final int offset = getStackOffset(traces) + UtilHelper.getInstance().getLogMethodOffset();
         final StringBuilder space = new StringBuilder();
         Formatter formatter;
-        for (int i = count; i > 0; i--) {
+        for (int i = count; i > Constants.ZERO; i--) {
             final int stackIndex = i + offset;
             if (stackIndex >= traces.length) continue;
             final StackTraceElement trace = traces[stackIndex];
-            formatter = new Formatter().format("%s%s.%s(%s:%d)", HORIZONTAL_LINE + space.toString(),
-                    trace.getClassName(), trace.getMethodName(), trace.getFileName(),
-                    trace.getLineNumber());
+            formatter = new Formatter().format("%s%s.%s(%s:%d)", HORIZONTAL_LINE + space.toString(), trace.getClassName(), trace.getMethodName(),
+                                               trace.getFileName(), trace.getLineNumber());
             Log.println(level, tag, formatter.toString());
             space.append(TAB_SPACE);
         }
-        if (count > 0) Log.println(level, tag, MIDDLE_BORDER);
+        if (count > Constants.ZERO) Log.println(level, tag, MIDDLE_BORDER);
     }
 
 

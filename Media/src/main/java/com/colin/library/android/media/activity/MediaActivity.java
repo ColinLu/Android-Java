@@ -528,7 +528,7 @@ public class MediaActivity extends BaseActivity {
     }
 
     private void callbackResult() {
-        if (null == mSelectedList || mSelectedList.size() == 0) {
+        if (null == mSelectedList || mSelectedList.isEmpty()) {
             callbackCancel(R.string.media_choose_empty);
         } else {
             if (sResultSingle != null) sResultSingle.onAction(mSelectedList.get(0));

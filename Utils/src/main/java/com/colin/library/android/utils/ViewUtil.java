@@ -4,6 +4,7 @@ import android.view.View;
 import android.widget.EditText;
 
 import androidx.annotation.Nullable;
+import androidx.annotation.Px;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -51,7 +52,21 @@ public final class ViewUtil {
         view.setNestedScrollingEnabled(!scroll);
     }
 
-
+    /*自定义控件 onMeasure()*/
+    @Px
+    public static int getSize(int measureSpec, @Px final int def) {
+        final int mode = View.MeasureSpec.getMode(measureSpec);
+        switch (mode) {
+            //具体数值，或者 MATCH_PARENT
+            case View.MeasureSpec.EXACTLY:
+                return View.MeasureSpec.getSize(mode);
+            //WRAP_CONTENT
+            case View.MeasureSpec.AT_MOST:
+            case View.MeasureSpec.UNSPECIFIED:
+            default:
+                return def;
+        }
+    }
     /*控件设置焦点 可触摸 可点击*/
     public static void setFocusable(@Nullable final View view, final boolean focusable) {
         if (null == view) return;

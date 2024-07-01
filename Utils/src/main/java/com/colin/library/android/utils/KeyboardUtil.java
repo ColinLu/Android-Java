@@ -1,9 +1,7 @@
 package com.colin.library.android.utils;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.graphics.Rect;
-import android.os.Build;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
@@ -118,7 +116,6 @@ public final class KeyboardUtil {
      *
      * @param activity
      */
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     public static void unregisterSoftInputChangedListener(final Activity activity) {
         final View contentView = activity.findViewById(android.R.id.content);
         contentView.getViewTreeObserver().removeOnGlobalLayoutListener(onGlobalLayoutListener);

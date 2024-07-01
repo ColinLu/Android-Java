@@ -5,14 +5,11 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.provider.ContactsContract;
 import android.provider.ContactsContract.CommonDataKinds.Phone;
-import android.provider.SyncStateContract;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.colin.android.demo.java.def.bean.ContactBean;
-import com.colin.library.android.utils.IOUtil;
 import com.colin.library.android.utils.LogUtil;
 import com.google.gson.Gson;
 
@@ -40,7 +37,6 @@ public final class ContactUtils {
         print(context, Phone.CONTENT_URI);
         print(context, ContactsContract.RawContacts.CONTENT_URI);
         print(context, ContactsContract.Contacts.CONTENT_URI);
-        print(context, ContactsContract.RawContactsEntity.CONTENT_URI);
         print(context, ContactsContract.RawContactsEntity.CONTENT_URI);
         final Cursor cursor = getCursor(context, Phone.CONTENT_URI, PROJECTION_CONTACT_LIST,
                 null, null, null);
