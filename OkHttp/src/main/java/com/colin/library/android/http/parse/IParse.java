@@ -20,7 +20,7 @@ public interface IParse<Result> extends IProgress {
 
     @Nullable
     @WorkerThread
-    default Result parse(@NonNull Response response) throws IOException {
+    default Result parse(@NonNull Response response, @Nullable String encode, @NonNull IProgress progress) throws IOException {
         return null;
     }
 }

@@ -26,7 +26,7 @@ public interface IAction<Result> extends IParse<Result> {
     /*网络请求失败*/
     @MainThread
     default void fail(@NonNull Throwable e) {
-        LogUtil.e(e);
+        LogUtil.log(e);
     }
 
     /*网络请求成功*/

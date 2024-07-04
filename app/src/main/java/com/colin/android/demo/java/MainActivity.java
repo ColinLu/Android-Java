@@ -40,7 +40,7 @@ public class MainActivity extends AppActivity<ActivityMainBinding> {
         mBinding.mAppBar.addOnOffsetChangedListener(new OnAppBarStateChangeListener() {
             @Override
             public void onStateChanged(AppBarLayout appBarLayout, @State int state, int offset) {
-                LogUtil.log("state:%d\toffset:%d", state, offset);
+                LogUtil.log(String.format("state:%d\toffset:%d", state, offset));
                 mState = state;
                 mOffset = offset;
             }

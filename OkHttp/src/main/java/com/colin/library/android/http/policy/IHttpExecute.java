@@ -13,7 +13,7 @@ import com.colin.library.android.http.def.IExecute;
  * <p>
  * 描述： 请求动作定义
  */
-public interface IPolicy extends IExecute {
+public interface IHttpExecute extends IExecute {
     /*取消当前请求*/
     void cancel();
 

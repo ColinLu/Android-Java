@@ -22,10 +22,6 @@ import okhttp3.RequestBody;
  * 描述： 请求体
  */
 public interface IBody<Returner> {
-
-    /*是否拼接网址*/
-    Returner splice(boolean url);
-
     /*多表单提交*/
     Returner multipart(boolean body);
 

@@ -79,6 +79,9 @@ public class PathFragment extends AppFragment<LayoutListBinding> implements OnIt
             case "root system":
                 path = PathUtil.getPath(PathUtil.getRootSystem());
                 break;
+            case "root storage":
+                path = PathUtil.getPath(PathUtil.getExternalStorage());
+                break;
             case "root data":
                 path = PathUtil.getPath(PathUtil.getRootData());
                 break;

@@ -4,6 +4,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
 
+import com.colin.library.android.http.progress.IProgress;
+
 import java.io.IOException;
 
 import okhttp3.Response;
@@ -18,7 +20,7 @@ public class ParseString implements IParse<String> {
     @Nullable
     @Override
     @WorkerThread
-    public String parse(@NonNull Response response) throws IOException {
+    public String parse(@NonNull Response response, @Nullable String encode, @NonNull IProgress progress) throws IOException {
         return response.body().string();
     }
 }

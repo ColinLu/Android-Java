@@ -152,7 +152,7 @@ public final class FileUtil {
         try {
             return file.createNewFile();
         } catch (IOException e) {
-            e.printStackTrace();
+            LogUtil.log(e);
             return false;
         }
     }

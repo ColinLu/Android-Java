@@ -8,7 +8,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.Size;
 
-import com.colin.library.android.annotation.Encode;
 import com.colin.library.android.http.interceptor.LogInterceptor;
 import com.colin.library.android.utils.HttpUtil;
 
@@ -82,13 +81,13 @@ public final class HttpConfig {
     }
 
     public HttpHeaders.Builder getHeaderBuilder() {
-        if (null == mHeaderBuilder) new HttpHeaders.Builder();
-        return mHeaderBuilder.build().newBuilder();
+        if (mHeaderBuilder != null) mHeaderBuilder.build().newBuilder();
+        return new HttpHeaders.Builder();
     }
 
     public HttpParams.Builder getParamsBuilder() {
-        if (null == mParamsBuilder) new HttpParams.Builder();
-        return mParamsBuilder.build().newBuilder();
+        if (mParamsBuilder != null) mParamsBuilder.build().newBuilder();
+        return new HttpParams.Builder();
     }
 
 
@@ -117,7 +116,7 @@ public final class HttpConfig {
         @NonNull
         private final Application mApplication;
         private OkHttpClient mOkHttpClient;
-        private String mEncode = Encode.UTF_8;
+        private String mEncode;
         private long mReadTimeout = Constants.TIME_OUT_DEFAULT;
         private long mWriteTimeout = Constants.TIME_OUT_DEFAULT;
         private long mConnectTimeout = Constants.TIME_OUT_DEFAULT;
@@ -189,6 +188,11 @@ public final class HttpConfig {
 
         public Builder addParam(@NonNull @Size(min = 1) Map<String, String> map) {
             this.mParamsBuilder.add(map);
+            return this;
+        }
+
+        public Builder setRetryCall(int retryCall) {
+            this.mRetryCall = retryCall;
             return this;
         }
 

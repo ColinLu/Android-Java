@@ -94,7 +94,7 @@ public final class LogInterceptor implements Interceptor
             sb.append("code      :").append(clone.code()).append('\t').append("message   :").append(clone.message());
             ResponseBody body = clone.body();
             if (clone.isSuccessful()) {
-                if (!isPlaintext(body.contentType())) sb.append("not text").append('\n');
+                if (!isPlaintext(body.contentType())) sb.append("\tnot text").append('\n');
                 else {
                     BufferedSource source = clone.body().source();
                     source.request(Long.MAX_VALUE); // request the entire body.

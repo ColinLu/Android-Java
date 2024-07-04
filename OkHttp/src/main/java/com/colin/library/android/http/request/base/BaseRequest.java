@@ -13,7 +13,7 @@ import com.colin.library.android.http.def.HttpParams;
 import com.colin.library.android.http.action.IAction;
 import com.colin.library.android.http.progress.IProgress;
 import com.colin.library.android.http.def.IExecute;
-import com.colin.library.android.http.policy.HttpPolicy;
+import com.colin.library.android.http.policy.HttpExecute;
 import com.colin.library.android.utils.HttpUtil;
 import com.colin.library.android.utils.StringUtil;
 
@@ -41,7 +41,9 @@ public class BaseRequest<Returner> implements IRequest<Returner>, IExecute {
     protected transient OkHttpClient mOkHttpClient;
     protected transient Object mTag;
     protected transient int mRetryCall;
+
     protected transient String mEncode;
+    protected transient boolean mAppend;        //url是否需要拼接参数
     protected transient long mReadTimeout;
     protected transient long mWriteTimeout;
     protected transient long mConnectTimeout;
@@ -162,6 +164,13 @@ public class BaseRequest<Returner> implements IRequest<Returner>, IExecute {
 
     @NonNull
     @Override
+    public Returner append(boolean append) {
+        this.mAppend = append;
+        return (Returner) this;
+    }
+
+    @NonNull
+    @Override
     public Returner param(@NonNull String key, @Nullable String value) {
         return param(key, value, false);
     }
@@ -170,7 +179,6 @@ public class BaseRequest<Returner> implements IRequest<Returner>, IExecute {
     @Override
     public Returner param(@NonNull String key, @Nullable List<String> list) {
         return param(key, list, false);
-
     }
 
     @NonNull
@@ -230,7 +238,7 @@ public class BaseRequest<Returner> implements IRequest<Returner>, IExecute {
     @NonNull
     @Override
     public String getUrl() {
-        return HttpUtil.getUrl(mUrl, mParams.build().toString(getEncode()));
+        return mAppend ? HttpUtil.getUrl(mUrl, mParams.build().toString(getEncode())) : mUrl;
     }
 
     @Nullable
@@ -262,8 +270,11 @@ public class BaseRequest<Returner> implements IRequest<Returner>, IExecute {
     @NonNull
     @Override
     public OkHttpClient getOkHttpClient() {
-        return mOkHttpClient.newBuilder().readTimeout(mReadTimeout, TimeUnit.SECONDS).writeTimeout(mWriteTimeout, TimeUnit.SECONDS)
-                            .connectTimeout(mConnectTimeout, TimeUnit.SECONDS).build();
+        return mOkHttpClient.newBuilder()
+                            .readTimeout(mReadTimeout, TimeUnit.SECONDS)
+                            .writeTimeout(mWriteTimeout, TimeUnit.SECONDS)
+                            .connectTimeout(mConnectTimeout, TimeUnit.SECONDS)
+                            .build();
     }
 
     @NonNull
@@ -276,13 +287,13 @@ public class BaseRequest<Returner> implements IRequest<Returner>, IExecute {
     @Nullable
     @Override
     public Response execute() {
-        mExecute = new HttpPolicy(getOkHttpClient(), toRequest(null), getRetryCall());
+        mExecute = new HttpExecute(getOkHttpClient(), toRequest(null), getEncode(), getRetryCall());
         return mExecute.execute();
     }
 
     @Override
     public <Result> void execute(@NonNull IAction<Result> action) {
-        mExecute = new HttpPolicy(getOkHttpClient(), toRequest(action), getRetryCall());
+        mExecute = new HttpExecute(getOkHttpClient(), toRequest(action), getEncode(), getRetryCall());
         mExecute.execute(action);
     }
 

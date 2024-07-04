@@ -26,17 +26,19 @@ import okhttp3.ResponseBody;
  * <p>
  * 描述： 网络接口回调操作
  */
-public class HttpPolicy implements IPolicy {
-    private final OkHttpClient mHttpClient;
-    private final Request mRequest;
+public class HttpExecute implements IHttpExecute {
+    private final transient OkHttpClient mHttpClient;
+    private final transient Request mRequest;
+    private transient final String mEncode;
+    private transient int mRetryCall;
     private volatile Call mCall;
-    private int mRetryCall;
     private volatile boolean mExecuted;
     private volatile boolean mCanceled;
 
-    public HttpPolicy(@NonNull OkHttpClient client, @NonNull Request request, int retryCall) {
+    public HttpExecute(@NonNull OkHttpClient client, @NonNull Request request, @Nullable String encode, int retryCall) {
         this.mHttpClient = client;
         this.mRequest = request;
+        this.mEncode = encode;
         this.mRetryCall = retryCall;
     }
 
@@ -48,7 +50,7 @@ public class HttpPolicy implements IPolicy {
             checkState();
             response = mCall.execute();
         } catch (Throwable e) {
-            e.printStackTrace();
+            LogUtil.log(e);
         } finally {
             if (response != null) IOUtil.close(response);
         }
@@ -71,6 +73,7 @@ public class HttpPolicy implements IPolicy {
         });
     }
 
+    @Override
     public boolean isExecuted() {
         return mExecuted;
     }
@@ -116,7 +119,7 @@ public class HttpPolicy implements IPolicy {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
                 if (isCanceled() || call.isCanceled()) {
-                    LogUtil.d("isCanceled");
+                    LogUtil.e("isCanceled: url" + mRequest.url().toString());
                     return;
                 }
                 if (e instanceof SocketTimeoutException && mRetryCall > 0) {
@@ -135,7 +138,7 @@ public class HttpPolicy implements IPolicy {
                 try {
                     //操作取消
                     if (isCanceled() || call.isCanceled()) {
-                        LogUtil.e("isCanceled");
+                        LogUtil.e("isCanceled: url" + mRequest.url().toString());
                         return;
                     }
                     responseBody = response.body();
@@ -145,7 +148,7 @@ public class HttpPolicy implements IPolicy {
                         return;
                     }
                     //解析操作
-                    final Result result = action.parse(response);
+                    final Result result = action.parse(response, mEncode, action);
                     success(action, result);
                 } catch (Throwable e) {
                     fail(action, new HttpException(code, mRequest.toString(), e));

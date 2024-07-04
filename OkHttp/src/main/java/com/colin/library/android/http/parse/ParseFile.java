@@ -1,7 +1,5 @@
 package com.colin.library.android.http.parse;
 
-import android.os.Environment;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
@@ -35,47 +33,37 @@ public class ParseFile implements IParse<File> {
     @Nullable
     private String mFileName;
 
-    @Nullable
-    private IProgress mProgress;
-
     public ParseFile(@Nullable File folder, @Nullable String fileName) {
         this.mFolder = folder;
         this.mFileName = fileName;
     }
 
-    public ParseFile setProgress(@Nullable IProgress progress) {
-        this.mProgress = progress;
-        return this;
-    }
-
     @Nullable
     @Override
     @WorkerThread
-    public File parse(@NonNull final Response response) throws IOException {
+    public File parse(@NonNull final Response response, @Nullable String encode, @NonNull final IProgress progress) throws IOException {
         final ResponseBody body = response.body();
+        if (body == null) return null;
         final long total = body.contentLength();
         if (total == 0) return null;
-        final String fileName = getFileName(response);
+        final String fileName = getFileName(response, encode);
         final File folder = getFolder();
         final File file = new File(folder, fileName);
-        final boolean exists = FileUtil.createFile(file);
+        final boolean exists = FileUtil.createFile(file, true);
         if (!exists) return null;
-        LogUtil.d(fileName, folder.getAbsolutePath());
+        LogUtil.d(fileName, file.getPath());
         InputStream is = null;
-        final byte[] buffer = new byte[1024 * 8];
+        final byte[] buffer = new byte[1024];
         int len;
         FileOutputStream out = null;
         try {
             is = body.byteStream();
-            out = new FileOutputStream(folder);
+            out = new FileOutputStream(fileName);
             long sum = 0;
             while ((len = is.read(buffer)) != -1) {
                 out.write(buffer, 0, len);
-                if (mProgress != null) {
-                    final long progress = sum + len;
-                    ThreadHelper.getInstance().post(() -> progress(total, progress));
-                }
-
+                final long pro = sum + len;
+                ThreadHelper.getInstance().post(() -> progress.progress(total, pro));
             }
             IOUtil.flush(out);
             return file;
@@ -87,13 +75,13 @@ public class ParseFile implements IParse<File> {
     @NonNull
     private File getFolder() {
         if (FileUtil.isDir(mFolder)) return mFolder;
-        return PathUtil.getExternalAppFile(Environment.DIRECTORY_DOWNLOADS);
+        return PathUtil.getInternalCache();
     }
 
     @NonNull
-    private String getFileName(@NonNull final Response response) {
+    private String getFileName(@NonNull final Response response, @Nullable String encode) {
         if (!StringUtil.isEmpty(mFileName)) return mFileName;
-        String name = Util.getFileName(response);
+        String name = Util.getFileName(response, encode);
         return StringUtil.isEmpty(name) ? "unknown" : name;
     }
 }

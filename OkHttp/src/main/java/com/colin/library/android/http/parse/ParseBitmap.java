@@ -6,6 +6,7 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.colin.library.android.http.progress.IProgress;
 import com.colin.library.android.utils.BitmapUtil;
 
 import java.io.IOException;
@@ -49,7 +50,7 @@ public class ParseBitmap implements IParse<Bitmap> {
 
     @Nullable
     @Override
-    public Bitmap parse(@NonNull Response response) throws IOException {
+    public Bitmap parse(@NonNull Response response, @Nullable String encode, @NonNull IProgress progress) throws IOException {
         return BitmapUtil.getBitmap(response.body().bytes(), mConfig, mScaleType, mMaxWidth, mMaxHeight);
     }
 }

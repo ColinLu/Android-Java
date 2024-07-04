@@ -6,12 +6,15 @@ import android.text.TextUtils;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.colin.library.android.annotation.Encode;
+
 import java.io.DataOutputStream;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.Locale;
 import java.util.Scanner;
@@ -53,33 +56,79 @@ public final class HttpUtil {
         return (null != url) && (url.length() > length) && url.substring(startIndex, endIndex).equalsIgnoreCase(name);
     }
 
-
-    /*解析URL地址 获取文件名字 带后缀 eg:  xxx.txt*/
     @Nullable
-    public static String getFileName(@Nullable final String url) {
+    public static String encode(@Nullable final String text, @NonNull final String encode) {
+        if (TextUtils.isEmpty(text)) return null;
+        try {
+            return URLEncoder.encode(text, encode);
+        } catch (UnsupportedEncodingException e) {
+            LogUtil.log(e);
+        }
+        return null;
+    }
+
+    @Nullable
+    public static String decode(@Nullable final String text, @NonNull final String encode) {
+        if (TextUtils.isEmpty(text)) return null;
+        try {
+            return URLDecoder.decode(text, encode);
+        } catch (UnsupportedEncodingException e) {
+            LogUtil.log(e);
+        }
+        return null;
+    }
+
+    /**
+     * 解析文件头
+     * Content-Disposition:attachment;filename=FileName.txt
+     * Content-Disposition: attachment; filename*="UTF-8''%E6%9B%BF%E6%8D%A2%E5%AE%9E%E9%AA%8C%E6%8A%A5%E5%91%8A.pdf"
+     */
+    @Nullable
+    public static String getFileName(@Nullable final String disposition) {
+        if (StringUtil.isEmpty(disposition)) return null;
+        //文件名可能包含双引号，需要去除
+        String fileName = disposition.replaceAll("\"", "");
+        String split = "filename=";
+        int indexOf = fileName.indexOf(split);
+        if (indexOf != -1) return fileName.substring(indexOf + split.length());
+        split = "filename*=";
+        indexOf = fileName.indexOf(split);
+        if (indexOf != -1) {
+            fileName = fileName.substring(indexOf + split.length());
+            if (fileName.startsWith(Encode.UTF_8)) fileName = fileName.substring(Encode.UTF_8.length());
+            return fileName;
+        }
+        return null;
+    }
+
+    /**
+     * 解析URL地址 获取文件名字 带后缀 eg:  xxx.txt
+     * https://txt.xbaoshu.com/d/file/down/2023/11/29/都市医仙.txt
+     *
+     * @param url
+     * @param encode
+     * @return
+     */
+    @Nullable
+    public static String getFileName(@Nullable final String url, @Nullable String encode) {
         if (StringUtil.isEmpty(url)) return null;
         final String[] strings = url.split("/");
-        for (String string : strings) {
-            if (string.contains("?")) {
-                int endIndex = string.indexOf("?");
-                if (endIndex != -1) return string.substring(0, endIndex);
+        String fileName = getFileName(strings);
+        if (StringUtil.isEmpty(fileName)) fileName = strings[strings.length - 1];
+        return StringUtil.isEmpty(encode) ? fileName : decode(fileName, encode);
+    }
+
+    private static String getFileName(@NonNull final String[] array) {
+        final String key = "?";
+        for (String name : array) {
+            if (name.contains(key)) {
+                int index = name.indexOf("?");
+                if (index != -1) return name.substring(0, index);
             }
         }
-        if (strings.length > 0) return strings[strings.length - 1];
         return null;
     }
 
-
-    @Nullable
-    public static String encode(@Nullable final String txt, @NonNull final String encode) {
-        if (TextUtils.isEmpty(txt)) return null;
-        try {
-            return URLEncoder.encode(txt, encode);
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
 
     @NonNull
     public static String getUrl(@NonNull final String url, @Nullable final String params) {

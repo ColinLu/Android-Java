@@ -34,7 +34,6 @@ import okhttp3.RequestBody;
  * 描述： 请求体基础类
  */
 public class BaseRequestBody<Returner> extends BaseRequest<Returner> implements IBody<Returner> {
-    protected transient boolean mSpliceUrl;                 //拼接地址
     protected transient boolean mMultipartBody;             //多表单
     protected transient RequestBody mRequestBody;           //请求体
     protected transient final HashMap<String, IRequestBody> mRequestBodyMap;
@@ -44,12 +43,6 @@ public class BaseRequestBody<Returner> extends BaseRequest<Returner> implements 
         super(url, method);
         this.mRequestBodyMap = new HashMap<>();
         this.mFileBodyList = new ArrayList<>();
-    }
-
-    @Override
-    public Returner splice(boolean url) {
-        this.mSpliceUrl = url;
-        return (Returner) this;
     }
 
     @Override
@@ -169,7 +162,7 @@ public class BaseRequestBody<Returner> extends BaseRequest<Returner> implements 
 
     @Override
     public Returner file(@Nullable String key, @Nullable String charset, @Nullable File... files) {
-        if (files != null && files.length > 0) {
+        if (files != null) {
             for (File file : files) {
                 mFileBodyList.add(new FileBody(file, key, charset));
             }
@@ -179,7 +172,7 @@ public class BaseRequestBody<Returner> extends BaseRequest<Returner> implements 
 
     @Override
     public Returner file(@Nullable String key, @Nullable String charset, @Nullable List<File> list) {
-        if (list != null && list.size() > 0) {
+        if (list != null && !list.isEmpty()) {
             for (File file : list) {
                 mFileBodyList.add(new FileBody(file, key, charset));
             }
@@ -218,13 +211,6 @@ public class BaseRequestBody<Returner> extends BaseRequest<Returner> implements 
             mRequestBodyMap.put(contentType, requestBody);
         }
         return (Returner) this;
-    }
-
-
-    @NonNull
-    @Override
-    public String getUrl() {
-        return mSpliceUrl ? super.getUrl() : mUrl;
     }
 
     @NonNull
@@ -271,13 +257,13 @@ public class BaseRequestBody<Returner> extends BaseRequest<Returner> implements 
         if (params != null) builder.addPart(params);
 
         //content json xml bytes
-        if (mRequestBodyMap.size() > 0) {
+        if (!mRequestBodyMap.isEmpty()) {
             for (Map.Entry<String, IRequestBody> entry : mRequestBodyMap.entrySet()) {
                 builder.addPart(entry.getValue().toRequestBody(encode));
             }
         }
         //File
-        if (mFileBodyList != null && mFileBodyList.size() > 0) {
+        if (mFileBodyList != null && !mFileBodyList.isEmpty()) {
             for (final FileBody fileBody : mFileBodyList) {
                 builder.addFormDataPart(fileBody.getKey(), fileBody.getFileName(), fileBody.toRequestBody(encode));
             }
@@ -288,7 +274,7 @@ public class BaseRequestBody<Returner> extends BaseRequest<Returner> implements 
 
     @Nullable
     private RequestBody getContentBody(@NonNull String contentType, String encode) {
-        if (mRequestBodyMap.size() == 0) return null;
+        if (mRequestBodyMap.isEmpty()) return null;
         IRequestBody body = null;
         //指定字节流
         body = getContentRequestBody(contentType, Constants.CONTENT_TYPE_STREAM);

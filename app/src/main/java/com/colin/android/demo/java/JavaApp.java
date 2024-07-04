@@ -29,11 +29,18 @@ public final class JavaApp extends Application {
     }
 
     private UtilConfig getUtilConfig() {
-        return UtilConfig.newBuilder(this).setShowLog(true).setLogLevel(LogLevel.V).setLogMethodCount(1).setLogTag("Colin").build();
+        return UtilConfig.newBuilder(this)
+                         .setShowLog(true)
+                         .setLogLevel(LogLevel.V)
+                         .setLogMethodCount(3)
+                         .setLogTag("Colin")
+                         .build();
     }
 
     private HttpConfig getHttpConfig() {
-        return HttpConfig.newBuilder(this).setHeader("GlobalHeader", "GlobalHeaderValue").setHeader("全局头部", "全局头部值")
-                         .setParam("全局参数", "全局参数值").setParam("GlobalParam", "GlobalParamValue").build();
+        return HttpConfig.newBuilder(this)
+                         .setHeader("GlobalHeader", "GlobalHeaderValue")
+                         .setParam("GlobalParam", "GlobalParamValue")
+                         .build();
     }
 }

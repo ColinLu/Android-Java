@@ -5,15 +5,14 @@ import android.text.TextUtils;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.colin.library.android.annotation.Encode;
 import com.colin.library.android.http.def.Constants;
 import com.colin.library.android.utils.HttpUtil;
-import com.colin.library.android.utils.StringUtil;
 
 import java.util.StringTokenizer;
 
 import okhttp3.Cookie;
 import okhttp3.Headers;
-import okhttp3.HttpUrl;
 import okhttp3.Request;
 import okhttp3.Response;
 
@@ -25,20 +24,15 @@ import okhttp3.Response;
  */
 public final class Util {
     @Nullable
-    public static String getFileName(@NonNull final Response response) {
+    public static String getFileName(@NonNull final Response response, @Nullable String encode) {
         final Request request = response.request();
-        String name = getFileName(request.headers());
-        if (StringUtil.isEmpty(name)) {
-            name = getFileName(request.url());
-        }
-        return name;
+        final Headers headers = request.headers();
+        final String disposition = headers.get(Constants.HEAD_KEY_CONTENT_DISPOSITION);
+        final String filename = HttpUtil.getFileName(disposition);
+        return TextUtils.isEmpty(filename) ? HttpUtil.getFileName(request.url().toString(), encode) : filename;
     }
 
-    /**
-     * 解析文件头
-     * Content-Disposition:attachment;filename=FileName.txt
-     * Content-Disposition: attachment; filename*="UTF-8''%E6%9B%BF%E6%8D%A2%E5%AE%9E%E9%AA%8C%E6%8A%A5%E5%91%8A.pdf"
-     */
+
     @Nullable
     public static String getFileName(@NonNull final Headers headers) {
         String disposition = headers.get(Constants.HEAD_KEY_CONTENT_DISPOSITION);
@@ -52,17 +46,11 @@ public final class Util {
             indexOf = disposition.indexOf(split);
             if (indexOf != -1) {
                 String fileName = disposition.substring(indexOf + split.length());
-                String encode = "UTF-8''";
-                if (fileName.startsWith(encode)) fileName = fileName.substring(encode.length());
+                if (fileName.startsWith(Encode.UTF_8)) fileName = fileName.substring(Encode.UTF_8.length());
                 return fileName;
             }
         }
         return null;
-    }
-
-    @Nullable
-    public static String getFileName(@NonNull final HttpUrl url) {
-        return HttpUtil.getFileName(url.toString());
     }
 
 

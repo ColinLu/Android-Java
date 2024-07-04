@@ -62,6 +62,9 @@ public interface IRequest<Returner> {
     Returner removeHeaderAll();
 
     @NonNull
+    Returner append(boolean append);
+
+    @NonNull
     Returner param(@NonNull String key, @Nullable String value);
 
     @NonNull

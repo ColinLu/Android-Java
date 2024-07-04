@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 
 import com.colin.library.android.http.parse.IParse;
 import com.colin.library.android.http.parse.ParseString;
+import com.colin.library.android.http.progress.IProgress;
 
 import java.io.IOException;
 
@@ -30,7 +31,7 @@ public class ActionString implements IAction<String> {
 
     @Nullable
     @Override
-    public String parse(@NonNull Response response) throws IOException {
-        return this.mParseResult.parse(response);
+    public String parse(@NonNull Response response, @Nullable String encode, @NonNull IProgress progress) throws IOException {
+        return this.mParseResult.parse(response, encode, progress);
     }
 }

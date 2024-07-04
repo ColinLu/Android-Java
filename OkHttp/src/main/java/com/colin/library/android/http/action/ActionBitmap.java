@@ -9,6 +9,7 @@ import androidx.annotation.WorkerThread;
 
 import com.colin.library.android.http.parse.IParse;
 import com.colin.library.android.http.parse.ParseBitmap;
+import com.colin.library.android.http.progress.IProgress;
 
 import java.io.IOException;
 
@@ -43,7 +44,7 @@ public class ActionBitmap implements IAction<Bitmap> {
     @Nullable
     @Override
     @WorkerThread
-    public Bitmap parse(@NonNull Response response) throws IOException {
-        return mParseResult.parse(response);
+    public Bitmap parse(@NonNull Response response, @Nullable String encode, @NonNull IProgress progress) throws IOException {
+        return mParseResult.parse(response, encode, progress);
     }
 }

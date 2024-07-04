@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 
 import com.colin.library.android.http.parse.IParse;
 import com.colin.library.android.http.parse.ParseFile;
+import com.colin.library.android.http.progress.IProgress;
 
 import java.io.File;
 import java.io.IOException;
@@ -31,16 +32,16 @@ public class ActionFile implements IAction<File> {
 
 
     public ActionFile(@Nullable File dir, @Nullable String fileName) {
-        this.mParseResult = new ParseFile(dir, fileName).setProgress(this);
+        this.mParseResult = new ParseFile(dir, fileName);
     }
 
-    public ActionFile(@NonNull IParse<File> parseResponse) {
-        this.mParseResult = parseResponse;
+    public ActionFile(@NonNull IParse<File> parse) {
+        this.mParseResult = parse;
     }
 
     @Nullable
     @Override
-    public File parse(@NonNull Response response) throws IOException {
-        return mParseResult.parse(response);
+    public File parse(@NonNull Response response, @Nullable String encode, @NonNull IProgress progress) throws IOException {
+        return mParseResult.parse(response, encode, progress);
     }
 }
