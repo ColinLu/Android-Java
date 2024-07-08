@@ -1,5 +1,6 @@
 plugins {
     id 'com.android.library'
+    id 'maven-publish'
 }
 
 android {
@@ -36,6 +37,15 @@ dependencies {
     implementation dependency.android_material
 }
 
-if (app_config.publishing_base_enabled) {
-    apply from: 'maven.gradle'
+afterEvaluate {
+    publishing {
+        publications {
+            release(MavenPublication) {
+                from components.release
+                groupId = 'com.colin.library'
+                artifactId = 'base'
+                version = '0.1'
+            }
+        }
+    }
 }
