@@ -44,7 +44,7 @@ afterEvaluate {
     publishing {
         publications {
             release(MavenPublication) {
-                from components.findByName('release')
+                from components.release
                 groupId = mavens.utils_group_id
                 artifactId = mavens.utils_artifact_id
                 version = mavens.utils_version
