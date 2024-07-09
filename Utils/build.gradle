@@ -40,20 +40,8 @@ dependencies {
 }
 
 if (app_config.publishing_utils_enabled) {
-    apply from: 'maven.gradle'
+    apply from: 'maven_github.gradle'
 }
 
-afterEvaluate {
-    publishing {
-        publications {
-            release(MavenPublication) {
-                from components.findByName('release')
-                groupId mavens.utils_group_id
-                artifactId mavens.utils_artifact_id
-                version mavens.utils_version
-            }
-        }
-    }
-}
 
 
