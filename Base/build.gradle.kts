@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace = "com.colin.library.android.base"
-    compileSdk = 34
+    namespace = libs.versions.publish.group.get()
+    compileSdk = libs.versions.compileSdk.get().toInt()
 
     defaultConfig {
-        minSdk = 24
+        minSdk = libs.versions.minSdk.get().toInt()
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
@@ -19,8 +19,7 @@ android {
         release {
             isMinifyEnabled = false
             proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
             )
         }
     }
@@ -34,21 +33,20 @@ android {
 }
 
 dependencies {
-
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.appcompat)
-    implementation(libs.material)
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
+    compileOnly(project(":Utils"))
+    compileOnly(project(":Widgets"))
+    compileOnly(libs.androidx.core.ktx)
+    compileOnly(libs.androidx.appcompat)
+    compileOnly(libs.material)
 }
+
 afterEvaluate {
     publishing {
         publications {
             create<MavenPublication>("maven") {
-                groupId = "com.github.ColinLu"
-                artifactId = "base"
-                version = "0.2.1"
+                groupId = libs.versions.publish.group.get()
+                artifactId = libs.versions.publish.artifact.base.get()
+                version = libs.versions.publish.version.base.get()
                 from(components["release"])
             }
         }

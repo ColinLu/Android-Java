@@ -19,7 +19,7 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "ColinDemo"
+rootProject.name = "Android-Java"
 include(":app")
 include(":Base")
 include(":OkHttp")

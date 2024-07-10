@@ -1,0 +1,1126 @@
+package com.colin.library.android.utils;
+
+import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.BitmapShader;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.LinearGradient;
+import android.graphics.Matrix;
+import android.graphics.Paint;
+import android.graphics.Point;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
+import android.graphics.Rect;
+import android.graphics.RectF;
+import android.graphics.Shader;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.media.ExifInterface;
+import android.net.Uri;
+import android.os.Build;
+import android.os.Environment;
+import android.text.TextUtils;
+import android.view.View;
+import android.widget.ImageView;
+
+import androidx.annotation.ColorInt;
+import androidx.annotation.DrawableRes;
+import androidx.annotation.FloatRange;
+import androidx.annotation.IntRange;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.WorkerThread;
+import androidx.core.content.ContextCompat;
+
+import com.colin.library.android.helper.UtilHelper;
+import com.colin.library.android.utils.data.Constants;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+
+/**
+ * 作者： ColinLu
+ * 时间： 2021-12-26 20:25
+ * <p>
+ * 描述： Bitmap Util
+ */
+public final class BitmapUtil {
+    private BitmapUtil() {
+        throw new UnsupportedOperationException("don't instantiate");
+    }
+
+    /*判断bitmap对象是否为空*/
+    public static boolean isEmpty(@Nullable final Bitmap bitmap) {
+        return null == bitmap || bitmap.getWidth() == 0 || bitmap.getHeight() == 0;
+    }
+
+    /**
+     * 获得指定大小的图片
+     *
+     * @param file   文件
+     * @param width  最大宽度
+     * @param height 最大高度
+     * @return bitmap
+     */
+    @Nullable
+    public static Bitmap getBitmap(@Nullable final File file, @IntRange(from = 0) final int width, @IntRange(from = 0) final int height) {
+        if (!FileUtil.isFile(file)) return null;
+        String filePath = file.getAbsolutePath();
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(filePath, options);
+        options.inSampleSize = BitmapCompressUtil.calculateInSampleSize(options, width, height);
+        options.inJustDecodeBounds = false;
+        return BitmapFactory.decodeFile(filePath, options);
+    }
+
+    /*path -> Bitmap*/
+    @Nullable
+    public static Bitmap getBitmap(@Nullable final String path) {
+        return getBitmap(path, (BitmapFactory.Options) null);
+    }
+
+    /*path -> Bitmap*/
+    @Nullable
+    public static Bitmap getBitmap(@Nullable final String path, @Nullable BitmapFactory.Options options) {
+        if (!FileUtil.isFile(path)) return null;
+        return BitmapFactory.decodeFile(path, options);
+    }
+
+    /*file -> Bitmap*/
+    @Nullable
+    public static Bitmap getBitmap(@Nullable final File file) {
+        if (null == file || !file.exists() || !file.isFile()) return null;
+        return BitmapFactory.decodeFile(file.getAbsolutePath(), null);
+    }
+
+    /*res -> Bitmap*/
+    @Nullable
+    public static Bitmap getBitmap(@DrawableRes final int res) {
+        return getBitmap(UtilHelper.getInstance().getUtilConfig().getApplication(), res);
+    }
+
+    /*res -> Bitmap*/
+    @Nullable
+    public static Bitmap getBitmap(@Nullable final Context context, @DrawableRes final int res) {
+        if (res == Resources.ID_NULL || context == null) return null;
+        return getBitmap(ContextCompat.getDrawable(context, res));
+    }
+
+    /*Drawable -> Bitmap*/
+    @Nullable
+    public static Bitmap getBitmap(@Nullable final Drawable drawable) {
+        if (null == drawable) return null;
+        if (drawable.getIntrinsicWidth() <= 0 || drawable.getIntrinsicHeight() <= 0) return null;
+        final Canvas canvas = new Canvas();
+        final Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        canvas.setBitmap(bitmap);
+        drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
+        drawable.draw(canvas);
+        return bitmap;
+    }
+
+    /*View -> Bitmap https://github.com/tyrantgit/ExplosionField */
+    @Nullable
+    public static Bitmap getBitmap(@Nullable final View view) {
+        return getBitmap(view, 1.0F);
+    }
+
+    /*View -> Bitmap https://github.com/tyrantgit/ExplosionField */
+    @Nullable
+    public static Bitmap getBitmap(@Nullable final View view, @FloatRange(from = 0, to = 1) final float scale) {
+        if (view instanceof ImageView) return getBitmap((ImageView) view);
+        if (null == view || !view.isShown()) return null;
+        view.clearFocus();
+        final Bitmap bitmap = createBitmapSafely((int) (view.getWidth() * scale), (int) (view.getHeight() * scale), Bitmap.Config.ARGB_8888, 1);
+        if (bitmap != null) {
+            Canvas canvas = new Canvas();
+            canvas.setBitmap(bitmap);
+            canvas.save();
+            canvas.drawColor(Color.WHITE); // 防止 View 上面有些区域空白导致最终 Bitmap 上有些区域变黑
+            canvas.scale(scale, scale);
+            view.draw(canvas);
+            canvas.restore();
+            canvas.setBitmap(null);
+        }
+        return bitmap;
+    }
+
+    /*ImageView -> Bitmap*/
+    @Nullable
+    public static Bitmap getBitmap(@Nullable final ImageView imageView) {
+        final Drawable drawable = null == imageView || !imageView.isShown() ? null : imageView.getDrawable();
+        if (drawable instanceof BitmapDrawable) return ((BitmapDrawable) drawable).getBitmap();
+        return null;
+    }
+
+    /*Uri -> Bitmap */
+    @Nullable
+    public static Bitmap getBitmap(@Nullable final Context context, @Nullable final Uri uri) {
+        if (null == context || null == uri) return null;
+        try {
+            return BitmapFactory.decodeStream(context.getContentResolver().openInputStream(uri));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Nullable
+    public static Bitmap getBitmap(@Nullable final InputStream is) {
+        return null == is ? null : BitmapFactory.decodeStream(is);
+    }
+
+    @Nullable
+    public static Bitmap getBitmap(@Nullable final InputStream is, final int width, final int height) {
+        return is == null ? null : getBitmap(IOUtil.getBytes(is), 0, width, height);
+    }
+
+    @Nullable
+    public static Bitmap getBitmap(@Nullable final byte[] data, @IntRange(from = 0) final int offset, @IntRange(from = 0) final int width,
+            @IntRange(from = 0) final int height) {
+        if (null == data || data.length == 0) return null;
+        final BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeByteArray(data, offset, data.length, options);
+        options.inSampleSize = BitmapCompressUtil.calculateInSampleSize(options, width, height);
+        options.inJustDecodeBounds = false;
+        return BitmapFactory.decodeByteArray(data, offset, data.length, options);
+    }
+
+    @Nullable
+    public static Bitmap getBitmap(@Nullable final byte[] bytes, @NonNull final Bitmap.Config config) {
+        final int length = bytes == null ? 0 : bytes.length;
+        return length == 0 ? null : BitmapFactory.decodeByteArray(bytes, 0, length, getBitmapOptions(config));
+    }
+
+    /**
+     * 解析图片
+     *
+     * @param bytes     图片数据源
+     * @param config    图片输出配置
+     * @param scaleType 图片显示类型
+     * @param width     用户需要图片宽度
+     * @param height    用户需要图片高度
+     * @return Bitmap
+     */
+    @Nullable
+    public static Bitmap getBitmap(@Nullable final byte[] bytes, @NonNull Bitmap.Config config, @NonNull ImageView.ScaleType scaleType, int width,
+            int height) {
+        final int length = bytes == null ? 0 : bytes.length;
+        if (length == 0) return null;
+        final BitmapFactory.Options options = new BitmapFactory.Options();
+        Bitmap bitmap;
+        if (width == 0 && height == 0) {
+            options.inPreferredConfig = config;
+            bitmap = BitmapFactory.decodeByteArray(bytes, 0, length, options);
+        } else {
+            options.inJustDecodeBounds = true;
+            BitmapFactory.decodeByteArray(bytes, 0, length, options);
+            final int outWidth = options.outWidth;
+            final int outHeight = options.outHeight;
+            final int bestWidth = getBestSize(scaleType, width, height, outWidth, outHeight);
+            final int bestHeight = getBestSize(scaleType, height, width, outHeight, outWidth);
+            options.inSampleSize = getBestSampleSize(outWidth, outHeight, bestWidth, bestHeight);
+            options.inJustDecodeBounds = false;
+            final Bitmap tempBitmap = BitmapFactory.decodeByteArray(bytes, 0, length, options);
+            if (tempBitmap != null && (tempBitmap.getWidth() > bestWidth || tempBitmap.getHeight() > bestHeight)) {
+                bitmap = Bitmap.createScaledBitmap(tempBitmap, bestWidth, bestHeight, true);
+                tempBitmap.recycle();
+            } else bitmap = tempBitmap;
+        }
+        return bitmap;
+    }
+
+
+    /**
+     * 得到bitmap的大小
+     */
+    public static long getSize(@Nullable Bitmap bitmap) {
+        if (isEmpty(bitmap)) return 0;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) // API 19
+            return bitmap.getAllocationByteCount();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1)  // API 12
+            return bitmap.getByteCount();
+        return bitmap.getRowBytes() * bitmap.getHeight();
+    }
+
+
+    /**
+     * 旋转图片
+     *
+     * @param bitmap  源图片
+     * @param degrees 旋转角度
+     * @return 旋转后的图片
+     */
+    public static Bitmap rotate(@Nullable final Bitmap bitmap, final float degrees) {
+        if (isEmpty(bitmap)) return null;
+        final Matrix matrix = new Matrix();
+        matrix.postRotate(degrees);
+        return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, false);
+    }
+
+    /**
+     * 旋转图片
+     *
+     * @param bitmap  源图片
+     * @param degrees 旋转角度
+     * @param px      旋转点横坐标
+     * @param py      旋转点纵坐标
+     * @return 旋转后的图片
+     */
+    public static Bitmap rotate(@Nullable final Bitmap bitmap, final float degrees, final float px, final float py) {
+        return rotate(bitmap, degrees, px, py, true);
+    }
+
+    /**
+     * 旋转图片
+     *
+     * @param bitmap  源图片
+     * @param degrees 旋转角度
+     * @param px      旋转点横坐标
+     * @param py      旋转点纵坐标
+     * @param recycle 是否回收
+     * @return 旋转后的图片
+     */
+    public static Bitmap rotate(@Nullable final Bitmap bitmap, final float degrees, final float px, final float py, final boolean recycle) {
+        if (isEmpty(bitmap) || degrees == 0) return bitmap;
+        final Matrix matrix = new Matrix();
+        matrix.setRotate(degrees, px, py);
+        final Bitmap newBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+        if (recycle) recycle(bitmap);
+        return newBitmap;
+    }
+
+    /**
+     * 翻转图片
+     *
+     * @param bitmap     待操作源图片
+     * @param horizontal 是否水平翻转 true 水平 false 垂直
+     * @return 翻转后的图片
+     */
+    public static Bitmap reverse(@Nullable final Bitmap bitmap, final boolean horizontal) {
+        if (horizontal) return reverseByHorizontal(bitmap);
+        else return reverseByVertical(bitmap);
+    }
+
+    /**
+     * 水平翻转图片 ( 左右颠倒 )
+     *
+     * @param bitmap 源图片
+     * @return 翻转后的图片
+     */
+    public static Bitmap reverseByHorizontal(@Nullable final Bitmap bitmap) {
+        if (isEmpty(bitmap)) return null;
+        final Matrix matrix = new Matrix();
+        matrix.preScale(-1, 1);
+        return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, false);
+    }
+
+    /**
+     * 垂直翻转图片 ( 上下颠倒 )
+     *
+     * @param bitmap 源图片
+     * @return 翻转后的图片
+     */
+    public static Bitmap reverseByVertical(@Nullable final Bitmap bitmap) {
+        if (isEmpty(bitmap)) return null;
+        final Matrix matrix = new Matrix();
+        matrix.preScale(1, -1);
+        return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, false);
+    }
+
+
+    /**
+     * 读取图片属性, 获取图片被旋转的角度
+     *
+     * @param filePath 文件路径
+     * @return 旋转角度
+     */
+    public static int getRotateDegree(@Nullable final String filePath) {
+        if (TextUtils.isEmpty(filePath)) return Constants.INVALID;
+        try {
+            ExifInterface exifInterface = new ExifInterface(filePath);
+            int orientation = exifInterface.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+            switch (orientation) {
+                case ExifInterface.ORIENTATION_ROTATE_90:
+                    return 90;
+                case ExifInterface.ORIENTATION_ROTATE_180:
+                    return 180;
+                case ExifInterface.ORIENTATION_ROTATE_270:
+                    return 270;
+                default:
+                    return 0;
+            }
+        } catch (Exception e) {
+            LogUtil.log(e);
+        }
+        return Constants.INVALID;
+    }
+
+
+    /**
+     * 倾斜图片
+     *
+     * @param bitmap 待操作源图片
+     * @param kx     X 轴倾斜因子
+     * @param ky     Y 轴倾斜因子
+     * @return 倾斜后的图片
+     */
+    public static Bitmap skew(final Bitmap bitmap, final float kx, final float ky) {
+        return skew(bitmap, kx, ky, 0, 0, true);
+    }
+
+    /**
+     * 倾斜图片
+     * 倾斜因子 以小数点倾斜 如: 0.1 防止数值过大 Canvas: trying to draw too large
+     *
+     * @param bitmap 待操作源图片
+     * @param kx     X 轴倾斜因子
+     * @param ky     Y 轴倾斜因子
+     * @param px     X 轴轴心点
+     * @param py     Y 轴轴心点
+     * @return 倾斜后的图片
+     */
+    public static Bitmap skew(@Nullable final Bitmap bitmap, final float kx, final float ky, final float px, final float py) {
+        return skew(bitmap, kx, ky, px, py, true);
+    }
+
+
+    /**
+     * 倾斜图片
+     * 倾斜因子 以小数点倾斜 如: 0.1 防止数值过大 Canvas: trying to draw too large
+     *
+     * @param bitmap  待操作源图片
+     * @param kx      X 轴倾斜因子
+     * @param ky      Y 轴倾斜因子
+     * @param px      X 轴轴心点
+     * @param py      Y 轴轴心点
+     * @param recycle 是否回收
+     * @return 倾斜后的图片
+     */
+    @Nullable
+    public static Bitmap skew(@Nullable final Bitmap bitmap, final float kx, final float ky, final float px, final float py, final boolean recycle) {
+        if (isEmpty(bitmap)) return null;
+        Matrix matrix = new Matrix();
+        matrix.setSkew(kx, ky, px, py);
+        Bitmap ret = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+        if (recycle && !bitmap.isRecycled()) bitmap.recycle();
+        return ret;
+    }
+
+    /**
+     * 裁剪图片 ( 返回指定比例图片 )
+     *
+     * @param bitmap 待操作源图片
+     * @return 裁剪指定比例的图片
+     */
+    public static Bitmap crop(@Nullable final Bitmap bitmap) {
+        return crop(bitmap, 16.0f, 9.0f);
+    }
+
+    /**
+     * 裁剪图片 ( 返回指定比例图片 )
+     *
+     * @param bitmap      待操作源图片
+     * @param widthScale  宽度比例
+     * @param heightScale 高度比例
+     * @return 裁剪指定比例的图片
+     */
+    public static Bitmap crop(@Nullable final Bitmap bitmap, final float widthScale, final float heightScale) {
+        if (isEmpty(bitmap)) return null;
+        try {
+            int width = bitmap.getWidth();
+            int height = bitmap.getHeight();
+
+            // 获取需要裁剪的高度
+            int reHeight = (int) ((width * heightScale) / widthScale);
+            // 判断需要裁剪的高度与偏移差距
+            int diffHeight = height - reHeight;
+
+            // 属于宽度 * 对应比例 >= 高度
+            if (diffHeight >= 0) { // 以高度做偏移
+                return Bitmap.createBitmap(bitmap, 0, diffHeight >> 1, width, reHeight, null, false);
+            } else { // 以宽度做偏移
+                // 获取需要裁剪的宽度
+                int reWidth = (int) ((height * widthScale) / heightScale);
+                // 判断需要裁剪的宽度与偏移差距
+                int diffWidth = width - reWidth;
+                // 创建图片
+                return Bitmap.createBitmap(bitmap, diffWidth >> 1, 0, reWidth, height, null, false);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
+     * 裁剪图片
+     *
+     * @param bitmap 待操作源图片
+     * @param x      X 轴开始坐标
+     * @param y      Y 轴开始坐标
+     * @param width  裁剪宽度
+     * @param height 裁剪高度
+     * @return 裁剪后的图片
+     */
+    @Nullable
+    public static Bitmap crop(@Nullable final Bitmap bitmap, final int x, final int y, final int width, final int height) {
+        return crop(bitmap, x, y, width, height, false);
+    }
+
+    /**
+     * 裁剪图片
+     *
+     * @param bitmap  待操作源图片
+     * @param x       X 轴开始坐标
+     * @param y       Y 轴开始坐标
+     * @param width   裁剪宽度
+     * @param height  裁剪高度
+     * @param recycle 是否回收
+     * @return 裁剪后的图片
+     */
+    @Nullable
+    public static Bitmap crop(@Nullable final Bitmap bitmap, final int x, final int y, final int width, final int height, final boolean recycle) {
+        if (isEmpty(bitmap)) return null;
+        Bitmap newBitmap = Bitmap.createBitmap(bitmap, x, y, width, height);
+        if (recycle) recycle(bitmap);
+        return newBitmap;
+    }
+
+    /**
+     * 复制 Bitmap
+     *
+     * @param bitmap
+     * @return {@link Bitmap}
+     */
+    public static Bitmap copy(@Nullable Bitmap bitmap) {
+        return copy(bitmap, false);
+    }
+
+    /**
+     * 复制 Bitmap
+     *
+     * @param bitmap    {@link Bitmap}
+     * @param isMutable 是否允许编辑
+     * @return {@link Bitmap}
+     */
+    private static Bitmap copy(Bitmap bitmap, boolean isMutable) {
+        if (isEmpty(bitmap)) return null;
+        return bitmap.copy(bitmap.getConfig(), isMutable);
+    }
+
+    /**
+     * 合并图片
+     *
+     * @param bgBitmap   后景 Bitmap
+     * @param showBitmap 前景 Bitmap
+     * @return 合并后的图片
+     */
+    public static Bitmap combine(@Nullable final Bitmap bgBitmap, @Nullable final Bitmap showBitmap) {
+        return combine(bgBitmap, showBitmap, PorterDuff.Mode.SRC_ATOP, null, null);
+    }
+
+    /**
+     * 合并图片
+     *
+     * @param bgBitmap   后景 Bitmap
+     * @param showBitmap 前景 Bitmap
+     * @param mode       合并模式 {@link PorterDuff.Mode}
+     * @return 合并后的图片
+     */
+    public static Bitmap combine(@Nullable final Bitmap bgBitmap, @Nullable final Bitmap showBitmap, @Nullable final PorterDuff.Mode mode) {
+        return combine(bgBitmap, showBitmap, mode, null, null);
+    }
+
+    /**
+     * 合并图片
+     *
+     * @param bgBitmap   后景 Bitmap
+     * @param showBitmap 前景 Bitmap
+     * @param mode       合并模式 {@link PorterDuff.Mode}
+     * @param bgdPoint   后景绘制 left、top 坐标
+     * @param fgPoint    前景绘制 left、top 坐标
+     * @return 合并后的图片
+     */
+    public static Bitmap combine(@Nullable final Bitmap bgBitmap, @Nullable final Bitmap showBitmap, @Nullable final PorterDuff.Mode mode,
+            @Nullable final Point bgdPoint, @Nullable final Point fgPoint) {
+        if (isEmpty(bgBitmap) || isEmpty(showBitmap)) return null;
+
+        int width = Math.max(bgBitmap.getWidth(), showBitmap.getWidth());
+        int height = Math.max(bgBitmap.getHeight(), showBitmap.getHeight());
+
+        Paint paint = new Paint();
+        if (mode != null) paint.setXfermode(new PorterDuffXfermode(mode));
+
+        Bitmap newBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(newBitmap);
+        canvas.drawBitmap(bgBitmap, (bgdPoint != null) ? bgdPoint.x : 0, (bgdPoint != null) ? bgdPoint.y : 0, null);
+        canvas.drawBitmap(showBitmap, (fgPoint != null) ? fgPoint.x : 0, (fgPoint != null) ? fgPoint.y : 0, paint);
+        return newBitmap;
+    }
+
+    /**
+     * 合并图片 ( 居中 )
+     *
+     * @param bgBitmap   后景 Bitmap
+     * @param showBitmap 前景 Bitmap
+     * @return 合并后的图片
+     */
+    public static Bitmap combineToCenter(@Nullable final Bitmap bgBitmap, @Nullable final Bitmap showBitmap) {
+        return combineToCenter(bgBitmap, showBitmap, null);
+    }
+
+    /**
+     * 合并图片 ( 居中 )
+     *
+     * @param bgBitmap   后景 Bitmap
+     * @param showBitmap 前景 Bitmap
+     * @param mode       合并模式 {@link PorterDuff.Mode}
+     * @return 合并后的图片
+     */
+    public static Bitmap combineToCenter(@Nullable Bitmap bgBitmap, @Nullable Bitmap showBitmap, @Nullable final PorterDuff.Mode mode) {
+        if (isEmpty(bgBitmap) || isEmpty(showBitmap)) return null;
+
+        // 绘制坐标点
+        Point bgdPoint = new Point();
+        Point fgPoint = new Point();
+
+        // 宽高信息
+        int bgdWidth = bgBitmap.getWidth();
+        int bgdHeight = bgBitmap.getHeight();
+
+        int fgWidth = showBitmap.getWidth();
+        int fgHeight = showBitmap.getHeight();
+
+        if (bgdWidth > fgWidth) fgPoint.x = (bgdWidth - fgWidth) / 2;
+        else bgdPoint.x = (fgWidth - bgdWidth) / 2;
+
+        if (bgdHeight > fgHeight) fgPoint.y = (bgdHeight - fgHeight) / 2;
+        else bgdPoint.y = (fgHeight - bgdHeight) / 2;
+
+        return combine(bgBitmap, showBitmap, mode, bgdPoint, fgPoint);
+    }
+
+    /**
+     * 合并图片 ( 转为相同大小 )
+     *
+     * @param bgBitmap   后景 Bitmap
+     * @param showBitmap 前景 Bitmap
+     * @return 合并后的图片
+     */
+    public static Bitmap combineToSameSize(@Nullable Bitmap bgBitmap, @Nullable Bitmap showBitmap) {
+        return combineToSameSize(bgBitmap, showBitmap, PorterDuff.Mode.SRC_ATOP);
+    }
+
+    /**
+     * 合并图片 ( 转为相同大小 )
+     *
+     * @param bgBitmap   后景 Bitmap
+     * @param showBitmap 前景 Bitmap
+     * @param mode       合并模式 {@link PorterDuff.Mode}
+     * @return 合并后的图片
+     */
+    public static Bitmap combineToSameSize(@Nullable Bitmap bgBitmap, @Nullable Bitmap showBitmap, @Nullable final PorterDuff.Mode mode) {
+        if (isEmpty(bgBitmap) || isEmpty(showBitmap)) return null;
+
+        int width = Math.min(bgBitmap.getWidth(), showBitmap.getWidth());
+        int height = Math.min(bgBitmap.getHeight(), showBitmap.getHeight());
+
+        if (showBitmap.getWidth() != width && showBitmap.getHeight() != height) {
+            showBitmap = BitmapCompressUtil.scale(showBitmap, width, height);
+        }
+
+        if (bgBitmap.getWidth() != width && bgBitmap.getHeight() != height) {
+            bgBitmap = BitmapCompressUtil.scale(bgBitmap, width, height);
+        }
+
+        Paint paint = new Paint();
+        if (mode != null) paint.setXfermode(new PorterDuffXfermode(mode));
+
+        Bitmap newBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(newBitmap);
+        canvas.drawBitmap(bgBitmap, 0, 0, null);
+        canvas.drawBitmap(showBitmap, 0, 0, paint);
+        return newBitmap;
+    }
+
+    /**
+     * 图片倒影处理
+     *
+     * @param bitmap 待操作源图片
+     * @return 倒影处理后的图片
+     */
+    public static Bitmap addReflection(final Bitmap bitmap) {
+        if (isEmpty(bitmap)) return null;
+        return addReflection(bitmap, 0, bitmap.getHeight(), false);
+    }
+
+    /**
+     * 图片倒影处理
+     *
+     * @param bitmap           待操作源图片
+     * @param reflectionHeight 倒影高度
+     * @return 倒影处理后的图片
+     */
+    public static Bitmap addReflection(final Bitmap bitmap, final int reflectionHeight) {
+        return addReflection(bitmap, 0, reflectionHeight, false);
+    }
+
+    /**
+     * 图片倒影处理
+     *
+     * @param bitmap            待操作源图片
+     * @param reflectionSpacing 源图片与倒影之间的间距
+     * @param reflectionHeight  倒影高度
+     * @return 倒影处理后的图片
+     */
+    public static Bitmap addReflection(final Bitmap bitmap, final int reflectionSpacing, final int reflectionHeight, boolean recycle) {
+        if (isEmpty(bitmap)) return null;
+        if (reflectionHeight <= 0) return null;
+        // 获取图片宽高
+        int width = bitmap.getWidth();
+        int height = bitmap.getHeight();
+
+        // 创建画布, 画布分为上中下三部分, 上: 是源图片, 中: 是源图片与倒影的间距, 下: 是倒影
+
+        // 创建倒影图片
+        Bitmap reflectionImage = reverseByVertical(bitmap); // 垂直翻转图片 ( 上下颠倒 )
+        // 创建一张宽度与源图片相同, 但高度等于 源图片的高度 + 间距 + 倒影的高度的图片
+        Bitmap bitmapWithReflection = Bitmap.createBitmap(width, height + reflectionSpacing + reflectionHeight, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmapWithReflection);
+
+        // 将源图片画到画布的上半部分, 将倒影画到画布的下半部分, 倒影与画布顶部的间距是源图片的高度加上源图片与倒影之间的间距
+        canvas.drawBitmap(bitmap, 0, 0, null);
+        canvas.drawBitmap(reflectionImage, 0, height + reflectionSpacing, null);
+        reflectionImage.recycle();
+
+        // 边距负数处理
+        int spacing = Math.max(reflectionSpacing, 0);
+
+        // 将倒影改成半透明, 创建画笔, 并设置画笔的渐变从半透明的白色到全透明的白色, 然后再倒影上面画半透明效果
+        Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        paint.setShader(new LinearGradient(0, bitmap.getHeight(), 0, bitmapWithReflection.getHeight() + spacing, 0x70FFFFFF, 0x00FFFFFF,
+                Shader.TileMode.CLAMP));
+        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_IN));
+        canvas.drawRect(0, height + spacing, width, bitmapWithReflection.getHeight() + spacing, paint);
+        recycle(recycle, bitmap);
+        return bitmapWithReflection;
+    }
+
+    /**
+     * 添加文字水印
+     *
+     * @param bitmap   待操作源图片
+     * @param content  水印文本
+     * @param textSize 水印字体大小 pixel
+     * @param color    水印字体颜色
+     * @param x        起始坐标 x
+     * @param y        起始坐标 y
+     * @return 添加文字水印后的图片
+     */
+    public static Bitmap addTextWatermark(@Nullable final Bitmap bitmap, @Nullable final String content, final float textSize,
+            @ColorInt final int color, final float x, final float y) {
+        return addTextWatermark(bitmap, content, textSize, color, x, y, true);
+    }
+
+    /**
+     * 添加文字水印
+     *
+     * @param bitmap   待操作源图片
+     * @param content  水印文本
+     * @param textSize 水印字体大小 pixel
+     * @param color    水印字体颜色
+     * @param x        起始坐标 x
+     * @param y        起始坐标 y
+     * @param recycle  是否回收
+     * @return 添加文字水印后的图片
+     */
+    public static Bitmap addTextWatermark(@Nullable final Bitmap bitmap, @Nullable final String content, final float textSize,
+            @ColorInt final int color, final float x, final float y, boolean recycle) {
+        if (isEmpty(bitmap) || StringUtil.isEmpty(content)) return null;
+        Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        paint.setColor(color);
+        paint.setTextSize(textSize);
+        Rect bounds = new Rect();
+        paint.getTextBounds(content, 0, content.length(), bounds);
+
+        Bitmap newBitmap = bitmap.copy(bitmap.getConfig(), true);
+        Canvas canvas = new Canvas(newBitmap);
+        canvas.drawText(content, x, y + textSize, paint);
+        recycle(recycle, bitmap);
+        return newBitmap;
+    }
+
+    /**
+     * 添加图片水印
+     *
+     * @param bitmap    待操作源图片
+     * @param watermark 水印图片
+     * @param x         起始坐标 x
+     * @param y         起始坐标 y
+     * @param alpha     透明度
+     * @return 添加图片水印后的图片
+     */
+    public static Bitmap addImageWatermark(final Bitmap bitmap, final Bitmap watermark, final int x, final int y,
+            @IntRange(from = 0, to = 255) final int alpha) {
+        if (isEmpty(bitmap)) return null;
+        Bitmap newBitmap = bitmap.copy(bitmap.getConfig(), true);
+        if (!isEmpty(watermark)) {
+            Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+            Canvas canvas = new Canvas(newBitmap);
+            paint.setAlpha(alpha);
+            canvas.drawBitmap(watermark, x, y, paint);
+        }
+        return newBitmap;
+    }
+
+    /**
+     * 添加图片水印
+     *
+     * @param bitmap    待操作源图片
+     * @param watermark 水印图片
+     * @param x         起始坐标 x
+     * @param y         起始坐标 y
+     * @param alpha     透明度
+     * @param recycle   是否回收
+     * @return 添加图片水印后的图片
+     */
+    public static Bitmap addImageWatermark(final Bitmap bitmap, final Bitmap watermark, final int x, final int y,
+            @IntRange(from = 0, to = 255) final int alpha, boolean recycle) {
+        if (isEmpty(bitmap)) return null;
+        Bitmap newBitmap = bitmap.copy(bitmap.getConfig(), true);
+        if (!isEmpty(watermark)) {
+            Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+            Canvas canvas = new Canvas(newBitmap);
+            paint.setAlpha(alpha);
+            canvas.drawBitmap(watermark, x, y, paint);
+        }
+        if (recycle) recycle(bitmap);
+        return newBitmap;
+    }
+
+    /**
+     * 图片圆角处理 ( 非圆形 )
+     * 以宽高中最小值设置为圆角尺寸, 如果宽高一致, 则处理为圆形图片
+     *
+     * @param bitmap 待操作源图片
+     * @return 圆角处理后的图片
+     */
+    @Nullable
+    public static Bitmap setRound(@Nullable final Bitmap bitmap, int borderSize) {
+        return setRound(bitmap, borderSize, Color.TRANSPARENT, false);
+    }
+
+    /**
+     * 图片圆角处理 ( 非圆形 )
+     * 以宽高中最小值设置为圆角尺寸, 如果宽高一致, 则处理为圆形图片
+     *
+     * @param bitmap      待操作源图片
+     * @param borderSize  圆角大小
+     * @param borderColor 圆角颜色
+     * @return 圆角处理后的图片
+     */
+    @Nullable
+    public static Bitmap setRound(@Nullable final Bitmap bitmap, @FloatRange(from = 0) final float borderSize, @ColorInt final int borderColor) {
+        return setRound(bitmap, borderSize, borderColor, false);
+    }
+
+    /**
+     * 图片圆角处理 ( 非圆形 )
+     * 以宽高中最小值设置为圆角尺寸, 如果宽高一致, 则处理为圆形图片
+     *
+     * @param bitmap      待操作源图片
+     * @param borderSize  圆角大小
+     * @param borderColor 圆角颜色
+     * @param recycle     是否回收
+     * @return 圆角处理后的图片
+     */
+    @Nullable
+    public static Bitmap setRound(@Nullable final Bitmap bitmap, @FloatRange(from = 0) final float borderSize, @ColorInt final int borderColor,
+            final boolean recycle) {
+        if (isEmpty(bitmap)) return null;
+        int width = bitmap.getWidth();
+        int height = bitmap.getHeight();
+        int size = Math.min(width, height);
+        Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        Bitmap ret = Bitmap.createBitmap(width, height, bitmap.getConfig());
+        float center = size / 2f;
+        RectF rectF = new RectF(0, 0, width, height);
+        rectF.inset((width - size) / 2f, (height - size) / 2f);
+        Matrix matrix = new Matrix();
+        matrix.setTranslate(rectF.left, rectF.top);
+        matrix.preScale((float) size / width, (float) size / height);
+        BitmapShader shader = new BitmapShader(bitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP);
+        shader.setLocalMatrix(matrix);
+        paint.setShader(shader);
+        Canvas canvas = new Canvas(ret);
+        canvas.drawRoundRect(rectF, center, center, paint);
+        if (borderSize > 0) {
+            paint.setShader(null);
+            paint.setColor(borderColor);
+            paint.setStyle(Paint.Style.STROKE);
+            paint.setStrokeWidth(borderSize);
+            float radius = center - borderSize / 2f;
+            paint.setStrokeCap(Paint.Cap.ROUND);
+            canvas.drawCircle(width / 2f, height / 2f, radius, paint);
+        }
+        recycle(recycle, bitmap);
+        return ret;
+    }
+
+    /**
+     * 图片圆角处理 ( 非圆形 ) - 只有 leftTop、rightTop
+     *
+     * @param bitmap    待操作源图片
+     * @param roundSize 圆角大小
+     * @return 圆角处理后的图片
+     */
+    public static Bitmap setRoundTop(final Bitmap bitmap, final float roundSize) {
+        return setRound(bitmap, roundSize, Color.TRANSPARENT, new boolean[]{true, true, true, false});
+    }
+
+    public static Bitmap setRoundTop(final Bitmap bitmap, final float roundSize, @ColorInt int roundColor) {
+        return setRound(bitmap, roundSize, roundColor, new boolean[]{true, true, true, false});
+    }
+
+    /**
+     * 图片圆角处理 ( 非圆形 ) - 只有 leftBottom、rightBottom
+     *
+     * @param bitmap    待操作源图片
+     * @param roundSize 圆角大小
+     * @return 圆角处理后的图片
+     */
+    public static Bitmap setRoundBottom(final Bitmap bitmap, final float roundSize) {
+        return setRound(bitmap, roundSize, Color.TRANSPARENT, new boolean[]{true, false, true, true});
+    }
+
+    public static Bitmap setRoundBottom(final Bitmap bitmap, final float pixels, @ColorInt int roundColor) {
+        return setRound(bitmap, pixels, roundColor, new boolean[]{true, false, true, true});
+    }
+
+    /**
+     * 图片圆角处理 ( 非圆形 )
+     * 只要左上圆角: new boolean[] {true, true, false, false};
+     * 只要右上圆角: new boolean[] {false, true, true, false};
+     * 只要左下圆角: new boolean[] {true, false, false, true};
+     * 只要右下圆角: new boolean[] {false, false, true, true};
+     *
+     * @param bitmap     待操作源图片
+     * @param roundSize  圆角大小
+     * @param roundColor 圆角大小
+     * @param directions 需要圆角的方向 [left, top, right, bottom]
+     * @return 圆角处理后的图片
+     */
+    public static Bitmap setRound(final Bitmap bitmap, final float roundSize, @ColorInt int roundColor, final boolean[] directions) {
+        if (isEmpty(bitmap)) return null;
+        if (directions == null || directions.length != 4) return null;
+        // 创建一个同源图片一样大小的矩形, 用于把源图片绘制到这个矩形上
+        Rect rect = new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight());
+        RectF rectF = new RectF(rect); // 创建一个精度更高的矩形, 用于画出圆角效果
+        //圆角方向控制
+        if (!directions[0]) rectF.left -= roundSize;
+
+        if (!directions[1]) rectF.top -= roundSize;
+
+        if (!directions[2]) rectF.right += roundSize;
+
+        if (!directions[3]) rectF.bottom += roundSize;
+
+        Paint paint = new Paint();
+        paint.setAntiAlias(true);
+        paint.setColor(roundColor); // 设置画笔的颜色为不透明的灰色
+
+        Bitmap newBitmap = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(newBitmap);
+        canvas.drawARGB(0, 0, 0, 0);
+        canvas.drawRoundRect(rectF, roundSize, roundSize, paint);
+        // 绘制底圆后, 进行合并 ( 交集处理 )
+        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
+        canvas.drawBitmap(bitmap, rect, rect, paint);
+        return newBitmap;
+    }
+
+
+    /**
+     * 圆形图片
+     *
+     * @param bitmap
+     * @return
+     */
+    @Nullable
+    public static Bitmap getCircleBitmap(@Nullable final Bitmap bitmap) {
+        if (isEmpty(bitmap)) return null;
+        int width = bitmap.getWidth();
+        int height = bitmap.getHeight();
+        float roundPx, left, top, right, bottom, dst_left, dst_top, dst_right, dst_bottom;
+        if (width <= height) {
+            roundPx = width >> 1;
+            top = 0;
+            bottom = width;
+            left = 0;
+            right = width;
+            height = width;
+            dst_left = 0;
+            dst_top = 0;
+            dst_right = width;
+            dst_bottom = width;
+        } else {
+            roundPx = height >> 1;
+            float clip = (width - height) >> 1;
+            left = clip;
+            right = width - clip;
+            top = 0;
+            bottom = height;
+            width = height;
+            dst_left = 0;
+            dst_top = 0;
+            dst_right = height;
+            dst_bottom = height;
+        }
+
+        Bitmap output = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(output);
+
+        final int color = 0xFF424242;
+        final Paint paint = new Paint();
+        final Rect src = new Rect((int) left, (int) top, (int) right, (int) bottom);
+        final Rect dst = new Rect((int) dst_left, (int) dst_top, (int) dst_right, (int) dst_bottom);
+        final RectF rectF = new RectF(dst);
+
+        paint.setAntiAlias(true);
+
+        canvas.drawARGB(0, 0, 0, 0);
+        paint.setColor(color);
+        canvas.drawRoundRect(rectF, roundPx, roundPx, paint);
+
+        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
+        canvas.drawBitmap(bitmap, src, dst, paint);
+        return output;
+    }
+
+
+    public static void recycle(@Nullable Bitmap bitmap) {
+        if (bitmap != null && !bitmap.isRecycled()) bitmap.recycle();
+    }
+
+    public static void recycle(boolean recycle, @Nullable Bitmap bitmap) {
+        if (recycle && bitmap != null && !bitmap.isRecycled()) bitmap.recycle();
+    }
+
+
+    /**
+     * 安全的创建bitmap。
+     * 如果新建 Bitmap 时产生了 OOM，可以主动进行一次 GC - System.gc()，然后再次尝试创建。
+     *
+     * @param width      Bitmap 宽度。
+     * @param height     Bitmap 高度。
+     * @param config     传入一个 Bitmap.Config。
+     * @param retryCount 创建 Bitmap 时产生 OOM 后，主动重试的次数。
+     * @return 返回创建的 Bitmap。
+     */
+    public static Bitmap createBitmapSafely(int width, int height, Bitmap.Config config, int retryCount) {
+        try {
+            return Bitmap.createBitmap(width, height, config);
+        } catch (OutOfMemoryError e) {
+            e.printStackTrace();
+            if (retryCount > 0) {
+                System.gc();
+                return createBitmapSafely(width, height, config, retryCount - 1);
+            }
+            return null;
+        }
+    }
+
+    @NonNull
+    private static BitmapFactory.Options getBitmapOptions(@NonNull Bitmap.Config decodeConfig) {
+        final BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inPreferredConfig = decodeConfig;
+        return options;
+    }
+
+    /**
+     * 计算长度 根据 ImageView.ScaleType
+     *
+     * @param outPrimary    图片本来输出Size
+     * @param userPrimary   用户想要的最大Size
+     * @param userSecondary 用户想要的最大Size 备用
+     * @param outSecondary  图片本来输出Size 备用
+     * @param scaleType     图片显示效果
+     * @return
+     */
+    private static int getBestSize(@NonNull final ImageView.ScaleType scaleType, final int userPrimary, final int userSecondary, final int outPrimary,
+            final int outSecondary) {
+        // If no dominant value at all, just return the actual.
+        if (userPrimary == 0 && userSecondary == 0) return outPrimary;
+
+        // If ScaleType.FIT_XY fill the whole rectangle, ignore ratio.
+        if (scaleType == ImageView.ScaleType.FIT_XY) return userPrimary == 0 ? outPrimary : userPrimary;
+
+        // If primary is unspecified, scale primary to match secondary's scaling ratio.
+        if (userPrimary == 0) {
+            final double ratio = (double) userSecondary / (double) outSecondary;
+            return (int) (outPrimary * ratio);
+        }
+
+        if (userSecondary == 0) return userPrimary;
+        final double ratio = (double) outSecondary / (double) outPrimary;
+        int resized = userPrimary;
+
+        // If ScaleType.CENTER_CROP fill the whole rectangle, preserve aspect ratio.
+        if (scaleType == ImageView.ScaleType.CENTER_CROP) {
+            if ((resized * ratio) < userSecondary) resized = (int) (userSecondary / ratio);
+            return resized;
+        }
+
+        if ((resized * ratio) > userSecondary) resized = (int) (userSecondary / ratio);
+        return resized;
+    }
+
+
+    private static int getBestSampleSize(int outWidth, int outHeight, int userWidth, int userHeight) {
+        final double wr = (double) outWidth / userWidth;
+        final double hr = (double) outHeight / userHeight;
+        final double ratio = Math.min(wr, hr);
+        float n = 1.0f;
+        while ((n * 2) <= ratio) n *= 2;
+        return (int) n;
+    }
+
+    @Nullable
+    @WorkerThread
+    public static String save(@Nullable final Bitmap bitmap) {
+        return save(bitmap, PathUtil.getExternalAppFile(Environment.DIRECTORY_DCIM).getAbsolutePath(), FileUtil.createImageFileName(), true);
+    }
+
+
+    @Nullable
+    @WorkerThread
+    public static String save(@Nullable final Bitmap bitmap, @Nullable final String path, @Nullable final String name, final boolean recycle) {
+        if (isEmpty(bitmap)) return null;
+        final String parent = StringUtil.isEmpty(path) ? PathUtil.getExternalAppFile(Environment.DIRECTORY_PICTURES).getAbsolutePath() : path;
+        final String fileName = StringUtil.isEmpty(name) ? FileUtil.createImageFileName() : name;
+        final File file = new File(parent, fileName);
+        FileOutputStream out = null;
+        try {
+            out = new FileOutputStream(file);
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
+            IOUtil.flush(out);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            IOUtil.close(out);
+            recycle(recycle, bitmap);
+        }
+        return file.getAbsolutePath();
+    }
+
+
+}

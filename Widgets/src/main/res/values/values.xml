@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--App 状态栏背景栏颜色-->
+    <color name="colorPrimaryDark">#FFFFFFFF</color>
+    <!--App 标题栏背景颜色-->
+    <color name="colorPrimary">#FFFFFFFF</color>
+    <!--App 状态选中等颜色-->
+    <color name="colorAccent">#FF4E9AF7</color>
+
+    <color name="textColorPrimary">?android:attr/textColorPrimary</color>
+</resources>

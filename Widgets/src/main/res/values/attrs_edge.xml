@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--自定义控件 方向-->
+    <attr name="direction">
+        <enum name="left" value="1" />
+        <enum name="top" value="2" />
+        <enum name="right" value="4" />
+        <enum name="bottom" value="8" />
+    </attr>
+    <dimen name="load_size_default">32dp</dimen>
+    <dimen name="load_more_height_default">56dp</dimen>
+
+    <attr name="loadSize" format="reference|dimension" />
+    <attr name="loadColor" format="reference|color" />
+
+    <declare-styleable name="EdgeLayout">
+        <attr name="direction" />
+    </declare-styleable>
+
+    <attr name="EdgeLayoutStyle" format="reference" />
+
+    <declare-styleable name="EdgeLayout_Layout">
+        <attr name="target" format="boolean" />
+        <attr name="direction" />
+        <attr name="edgeOver" format="boolean" />
+        <attr name="edgeFlingFromTarget" format="boolean" />
+        <attr name="edgeScrollTouchUp" format="boolean" />
+        <attr name="edgeScrollOffset" format="boolean" />
+        <attr name="edgeOffsetTarget" format="dimension|enum">
+            <enum name="wrap" value="-2" />
+        </attr>
+        <attr name="edgeOffsetInit" format="dimension" />
+        <attr name="edgeScrollSpeed" format="integer" />
+        <attr name="edgeRate" format="float" />
+        <attr name="edgeFlingFraction" format="float" />
+    </declare-styleable>
+
+    <declare-styleable name="LoadingView">
+        <attr name="loadSize" />
+        <attr name="loadColor" />
+    </declare-styleable>
+
+    <attr name="LoadingViewStyle" format="reference" />
+
+    <declare-styleable name="LoadMoreView">
+        <attr name="android:layout_height" />
+        <attr name="android:textSize" />
+        <attr name="android:textColor" />
+        <attr name="pullText" format="reference|string" />
+        <attr name="releaseText" format="reference|string" />
+        <attr name="arrow" format="reference" />
+        <attr name="arrowColor" format="reference|color" />
+        <attr name="backgroundColor" format="reference|color" />
+        <attr name="loadSpace" format="reference|dimension" />
+        <attr name="loadSize" />
+        <attr name="loadColor" />
+
+    </declare-styleable>
+
+    <attr name="LoadMoreStyle" format="reference" />
+
+
+    <declare-styleable name="LoadRefreshView">
+        <attr name="radius" format="reference|dimension" />
+        <attr name="progressColor" format="reference|color" />
+        <attr name="progressScale" format="float" />
+        <attr name="progressAlpha" format="integer" />
+        <attr name="progressStyle" format="enum">
+            <enum name="large" value="0" />
+            <enum name="normal" value="1" />
+        </attr>
+    </declare-styleable>
+
+    <attr name="LoadRefreshViewStyle" format="reference" />
+</resources>

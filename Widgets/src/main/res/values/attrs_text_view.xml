@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <attr name="span_text_normal_color" format="color" />
+    <attr name="span_text_pressed_color" format="color" />
+    <attr name="span_bg_normal_color" format="color" />
+    <attr name="span_bg_pressed_color" format="color" />
+
+
+    <declare-styleable name="GradientTextView">
+        <attr name="android:orientation" />
+        <attr name="android:startColor" format="color" />
+        <attr name="android:endColor" format="color" />
+        <attr name="android:textColor" format="reference|color" />
+    </declare-styleable>
+
+    <attr name="GradientTextViewStyle" format="reference" />
+
+    <declare-styleable name="AutoFitTextView">
+        <attr name="minSize" format="reference|dimension" />
+        <attr name="maxSize" format="reference|dimension" />
+    </declare-styleable>
+
+    <declare-styleable name="TextListLayout"></declare-styleable>
+
+
+</resources>

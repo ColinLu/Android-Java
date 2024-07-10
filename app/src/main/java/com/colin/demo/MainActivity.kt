@@ -5,10 +5,6 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.colin.library.android.UtilsDemo
-import com.colin.library.android.base.BaseDemo
-import com.colin.library.android.http.OkDemo
-import com.colin.library.android.http.OkKtDemo
 import com.colin.library.android.widgets.WidgetsDemo
 
 class MainActivity : AppCompatActivity() {

@@ -1,0 +1,25 @@
+package com.colin.library.android.widgets.annotation;
+
+import static androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP_PREFIX;
+
+import androidx.annotation.IntDef;
+import androidx.annotation.RestrictTo;
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+
+/**
+ * 作者： ColinLu
+ * 时间： 2021-03-05 22:55
+ * <p>
+ * 描述： 控件方向 上下左右
+ */
+@RestrictTo(LIBRARY_GROUP_PREFIX)
+@Retention(RetentionPolicy.SOURCE)
+@IntDef({Direction.LEFT, Direction.TOP, Direction.RIGHT, Direction.BOTTOM})
+public @interface Direction {
+    int LEFT = 1;
+    int TOP = 2;
+    int RIGHT = 4;
+    int BOTTOM = 8;
+}
