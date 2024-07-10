@@ -48,7 +48,7 @@ afterEvaluate {
             create<MavenPublication>("maven") {
                 groupId = "com.github.ColinLu"
                 artifactId = "okhttp"
-                version = "0.2"
+                version = "0.2.1"
                 from(components["release"])
             }
         }
