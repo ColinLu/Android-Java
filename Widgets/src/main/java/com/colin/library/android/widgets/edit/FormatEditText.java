@@ -27,6 +27,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatEditText;
 import androidx.core.graphics.drawable.DrawableCompat;
 
+import com.colin.library.android.widgets.R;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

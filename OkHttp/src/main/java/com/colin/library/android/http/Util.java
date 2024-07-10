@@ -8,11 +8,13 @@ import androidx.annotation.Nullable;
 import com.colin.library.android.annotation.Encode;
 import com.colin.library.android.http.def.Constants;
 import com.colin.library.android.utils.HttpUtil;
+import com.colin.library.android.utils.StringUtil;
 
 import java.util.StringTokenizer;
 
 import okhttp3.Cookie;
 import okhttp3.Headers;
+import okhttp3.MediaType;
 import okhttp3.Request;
 import okhttp3.Response;
 
@@ -83,5 +85,11 @@ public final class Util {
             }
         }
         return def;
+    }
+
+    @Nullable
+    public static MediaType getMediaType(@Nullable String mimeType, @Nullable String encode) {
+        if (StringUtil.isEmpty(mimeType, encode)) return null;
+        return MediaType.parse(mimeType + "; charset=" + encode);
     }
 }

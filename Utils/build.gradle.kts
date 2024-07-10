@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = libs.versions.publish.group.get()
+    namespace = libs.versions.publish.group.utils.get()
     compileSdk = libs.versions.compileSdk.get().toInt()
 
     defaultConfig {
@@ -41,7 +41,7 @@ afterEvaluate {
     publishing {
         publications {
             create<MavenPublication>("maven") {
-                groupId = libs.versions.publish.group.get()
+                groupId = libs.versions.publish.group.id.get()
                 artifactId = libs.versions.publish.artifact.utils.get()
                 version = libs.versions.publish.version.utils.get()
                 from(components["release"])

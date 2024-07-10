@@ -2,7 +2,6 @@ package com.colin.library.android.http.interceptor;
 
 import android.text.TextUtils;
 
-import com.colin.library.android.http.BuildConfig;
 import com.colin.library.android.http.progress.ProgressRequestBody;
 import com.colin.library.android.utils.LogUtil;
 import com.colin.library.android.utils.data.Constants;
@@ -42,11 +41,11 @@ public final class LogInterceptor implements Interceptor
     private static final String LABEL = "----------------------------------";
     private static final int KEY_LENGTH = 20;
     private static final String SPACE = " ";
-    private boolean mDebug = BuildConfig.DEBUG;
+    private boolean mDebug = true;
     private int mLimitSize = 1024;
 
     public LogInterceptor() {
-        this(BuildConfig.DEBUG, 1024);
+        this(true, 1024);
     }
 
     public LogInterceptor(boolean debug, int limit) {

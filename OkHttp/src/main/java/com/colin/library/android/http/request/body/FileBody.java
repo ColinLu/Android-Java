@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.colin.library.android.annotation.Encode;
+import com.colin.library.android.http.Util;
 import com.colin.library.android.utils.HttpUtil;
 import com.colin.library.android.utils.StringUtil;
 
@@ -45,7 +46,7 @@ public class FileBody implements IRequestBody {
     @Nullable
     @Override
     public MediaType getMediaType(@Nullable String charset) {
-        return HttpUtil.getMediaType(HttpUtil.getMimeType(mFile.getName()), getCharset(charset));
+        return Util.getMediaType(HttpUtil.getMimeType(mFile.getName()), getCharset(charset));
     }
 
     @NonNull

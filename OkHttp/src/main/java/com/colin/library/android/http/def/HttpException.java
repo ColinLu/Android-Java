@@ -8,7 +8,7 @@ import java.io.IOException;
  * 作者： ColinLu
  * 时间： 2022-02-17 20:26
  * <p>
- * 描述： TODO
+ * 描述：网络请求异常定义
  */
 public class HttpException extends IOException {
     public static final int CODE_HTTP_STATE = -2;

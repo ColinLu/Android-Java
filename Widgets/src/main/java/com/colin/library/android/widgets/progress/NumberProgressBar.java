@@ -16,8 +16,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 
-import com.colin.library.android.R;
 import com.colin.library.android.utils.ResourceUtil;
+import com.colin.library.android.widgets.R;
 
 import java.util.Locale;
 
