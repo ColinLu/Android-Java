@@ -26,10 +26,10 @@ publish-artifact-utils = "Utils"
 publish-artifact-base = "Base"
 publish-artifact-okhttp = "OkHttp"
 publish-artifact-widgets = "Widgets"
-publish-version-utils = "0.0.1"
-publish-version-base = "0.0.1"
-publish-version-okhttp = "0.0.1"
-publish-version-widgets = "0.0.1"
+publish-version-utils = "0.2.2"
+publish-version-base = "0.2.2"
+publish-version-okhttp = "0.2.2"
+publish-version-widgets = "0.2.2"
 
 [libraries]
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
