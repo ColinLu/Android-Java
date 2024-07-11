@@ -9,8 +9,8 @@ appcompat = "1.6.1"
 material = "1.10.0"
 activity = "1.8.0"
 constraintlayout = "2.1.4"
-okhttp = '4.9.1'
-gson = '2.10.1'
+okhttp = "4.12.0"
+gson = "2.11.0"
 compileSdk = "34"
 minSdk = "31"
 targetSdk = "34"
@@ -26,10 +26,10 @@ publish-artifact-utils = "Utils"
 publish-artifact-base = "Base"
 publish-artifact-okhttp = "OkHttp"
 publish-artifact-widgets = "Widgets"
-publish-version-utils = "0.2.2"
-publish-version-base = "0.2.2"
-publish-version-okhttp = "0.2.2"
-publish-version-widgets = "0.2.2"
+publish-version-utils = "0.2.3"
+publish-version-base = "0.2.3"
+publish-version-okhttp = "0.2.3"
+publish-version-widgets = "0.2.3"
 
 [libraries]
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
