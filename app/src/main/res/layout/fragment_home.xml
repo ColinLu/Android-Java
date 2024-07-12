@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mAppRootLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".ui.home.HomeFragment">
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/button_view"
+        style="@style/Theme.App.Button"
+        android:layout_width="@dimen/dp_0"
+        android:layout_marginTop="@dimen/margin_default"
+        android:text="@string/view"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/button_method"
+        style="@style/Theme.App.Button"
+        android:layout_width="@dimen/dp_0"
+        android:layout_marginTop="@dimen/margin_default"
+        android:text="@string/method"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button_view" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/button_web"
+        style="@style/Theme.App.Button"
+        android:layout_width="@dimen/dp_0"
+        android:layout_marginTop="@dimen/margin_default"
+        android:text="@string/web"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button_method" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/button_image"
+        style="@style/Theme.App.Button"
+        android:layout_width="@dimen/dp_0"
+        android:layout_marginTop="@dimen/margin_default"
+        android:text="image"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button_web" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/button_camera"
+        style="@style/Theme.App.Button"
+        android:layout_width="@dimen/dp_0"
+        android:layout_marginTop="@dimen/margin_default"
+        android:text="camera"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button_image" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/button_video"
+        style="@style/Theme.App.Button"
+        android:layout_width="@dimen/dp_0"
+        android:layout_marginTop="@dimen/margin_default"
+        android:text="video"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button_camera" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

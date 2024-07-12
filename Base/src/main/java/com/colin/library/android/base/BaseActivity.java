@@ -1,9 +1,10 @@
 package com.colin.library.android.base;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.os.Bundle;
+import android.view.View;
 
+import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,10 +23,14 @@ public abstract class BaseActivity extends AppCompatActivity implements IBase, I
 
     protected boolean mRefresh = true;
 
-    @Override
-    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-        if (layoutRes() != Resources.ID_NULL) setContentView(layoutRes());
+    public void setContentView(@LayoutRes int layoutRes, @Nullable Bundle savedInstanceState) {
+        super.setContentView(layoutRes);
+        initView(savedInstanceState);
+        initData(getIntent().getExtras());
+    }
+
+    public void setContentView(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.setContentView(view);
         initView(savedInstanceState);
         initData(getIntent().getExtras());
     }

@@ -56,28 +56,100 @@ public final class LogUtil {
     ///////////////////////////////////////////////////////////////////////////
     // 对外公开api
     ///////////////////////////////////////////////////////////////////////////
-    public static void v(@Nullable Object... args) {
-        print(LogLevel.V, UtilHelper.getInstance().getLogTag(), format(args));
+    public static void v(@Nullable String msg) {
+        print(LogLevel.V, UtilHelper.getInstance().getLogTag(), msg == null ? LOG_EMPTY : msg);
     }
 
-    public static void d(@Nullable Object... args) {
-        print(LogLevel.D, UtilHelper.getInstance().getLogTag(), format(args));
+    public static void v(@NonNull String tag, @Nullable String msg) {
+        print(LogLevel.V, tag, msg == null ? LOG_EMPTY : msg);
     }
 
-    public static void i(@Nullable Object... args) {
-        print(LogLevel.I, UtilHelper.getInstance().getLogTag(), format(args));
+    public static void v(@NonNull String format, Object... args) {
+        print(LogLevel.V, UtilHelper.getInstance().getLogTag(), String.format(format, args));
     }
 
-    public static void w(@Nullable Object... args) {
-        print(LogLevel.W, UtilHelper.getInstance().getLogTag(), format(args));
+    public static void v(@NonNull String tag, @NonNull String format, Object... args) {
+        print(LogLevel.V, tag, String.format(format, args));
     }
 
-    public static void e(@Nullable Object... args) {
-        print(LogLevel.E, UtilHelper.getInstance().getLogTag(), format(args));
+    public static void d(@Nullable String msg) {
+        print(LogLevel.D, UtilHelper.getInstance().getLogTag(), msg == null ? LOG_EMPTY : msg);
     }
 
-    public static void a(@Nullable Object... args) {
-        print(LogLevel.A, UtilHelper.getInstance().getLogTag(), format(args));
+    public static void d(@NonNull String tag, @Nullable String msg) {
+        print(LogLevel.D, tag, msg == null ? LOG_EMPTY : msg);
+    }
+
+    public static void d(@NonNull String format, Object... args) {
+        print(LogLevel.D, UtilHelper.getInstance().getLogTag(), String.format(format, args));
+    }
+
+    public static void d(@NonNull String tag, @NonNull String format, Object... args) {
+        print(LogLevel.D, tag, String.format(format, args));
+    }
+
+    public static void i(@Nullable String msg) {
+        print(LogLevel.I, UtilHelper.getInstance().getLogTag(), msg == null ? LOG_EMPTY : msg);
+    }
+
+    public static void i(@NonNull String tag, @Nullable String msg) {
+        print(LogLevel.I, tag, msg == null ? LOG_EMPTY : msg);
+    }
+
+    public static void i(@NonNull String format, Object... args) {
+        print(LogLevel.I, UtilHelper.getInstance().getLogTag(), String.format(format, args));
+    }
+
+    public static void i(@NonNull String tag, @NonNull String format, Object... args) {
+        print(LogLevel.I, tag, String.format(format, args));
+    }
+
+    public static void w(@Nullable String msg) {
+        print(LogLevel.W, UtilHelper.getInstance().getLogTag(), msg == null ? LOG_EMPTY : msg);
+    }
+
+    public static void w(@NonNull String tag, @Nullable String msg) {
+        print(LogLevel.W, tag, msg == null ? LOG_EMPTY : msg);
+    }
+
+    public static void w(@NonNull String format, Object... args) {
+        print(LogLevel.W, UtilHelper.getInstance().getLogTag(), String.format(format, args));
+    }
+
+    public static void w(@NonNull String tag, @NonNull String format, Object... args) {
+        print(LogLevel.W, tag, String.format(format, args));
+    }
+
+    public static void e(@Nullable String msg) {
+        print(LogLevel.E, UtilHelper.getInstance().getLogTag(), msg == null ? LOG_EMPTY : msg);
+    }
+
+    public static void e(@NonNull String tag, @Nullable String msg) {
+        print(LogLevel.E, tag, msg == null ? LOG_EMPTY : msg);
+    }
+
+    public static void e(@NonNull String format, Object... args) {
+        print(LogLevel.E, UtilHelper.getInstance().getLogTag(), String.format(format, args));
+    }
+
+    public static void e(@NonNull String tag, @NonNull String format, Object... args) {
+        print(LogLevel.E, tag, String.format(format, args));
+    }
+
+    public static void a(@Nullable String msg) {
+        print(LogLevel.A, UtilHelper.getInstance().getLogTag(), msg == null ? LOG_EMPTY : msg);
+    }
+
+    public static void a(@NonNull String tag, @Nullable String msg) {
+        print(LogLevel.A, tag, msg == null ? LOG_EMPTY : msg);
+    }
+
+    public static void a(@NonNull String format, Object... args) {
+        print(LogLevel.A, UtilHelper.getInstance().getLogTag(), String.format(format, args));
+    }
+
+    public static void a(@NonNull String tag, @NonNull String format, Object... args) {
+        print(LogLevel.A, tag, String.format(format, args));
     }
 
     public static void log(@NonNull Throwable error) {
@@ -101,7 +173,7 @@ public final class LogUtil {
     }
 
     public static void log(@LogLevel int level, @Nullable Object msg) {
-        print(level, null, StringUtil.toString(msg));
+        print(level, UtilHelper.getInstance().getLogTag(), StringUtil.toString(msg));
     }
 
     public static void log(@LogLevel int level, @NonNull String tag, @Nullable Object obj) {
@@ -248,8 +320,7 @@ public final class LogUtil {
             final int stackIndex = i + offset;
             if (stackIndex >= traces.length) continue;
             final StackTraceElement trace = traces[stackIndex];
-            formatter = new Formatter().format("%s%s.%s(%s:%d)", HORIZONTAL_LINE + space.toString(), trace.getClassName(), trace.getMethodName(),
-                                               trace.getFileName(), trace.getLineNumber());
+            formatter = new Formatter().format("%s%s.%s(%s:%d)", HORIZONTAL_LINE + space.toString(), trace.getClassName(), trace.getMethodName(), trace.getFileName(), trace.getLineNumber());
             Log.println(level, tag, formatter.toString());
             space.append(TAB_SPACE);
         }

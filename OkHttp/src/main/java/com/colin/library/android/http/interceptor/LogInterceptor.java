@@ -36,8 +36,7 @@ import okio.BufferedSource;
  * addNetInterceptor是添加网络拦截器，addInterceptor是添加应用拦截器，
  * 如果看到okhttp的流程分析的知道：应用拦截器是在网络拦截器前执行的。
  */
-public final class LogInterceptor implements Interceptor
-{
+public final class LogInterceptor implements Interceptor {
     private static final String LABEL = "----------------------------------";
     private static final int KEY_LENGTH = 20;
     private static final String SPACE = " ";
@@ -63,9 +62,9 @@ public final class LogInterceptor implements Interceptor
             sb.append(LABEL).append("Start:").append(startTime).append(LABEL).append('\n');
             Request request = chain.request();
             sb.append("url").append(space("url")).append(":").append(request.url().toString()).append(Constants.LINE_SEP).append("method")
-              .append(space("method")).append(":").append(request.method()).append(Constants.LINE_SEP).append("isHttps").append(space("isHttps"))
-              .append(":").append(request.isHttps()).append(Constants.LINE_SEP).append("Protocol").append(space("Protocol")).append(":")
-              .append(getProtocol(chain)).append(Constants.LINE_SEP).append(LABEL).append("Header").append(LABEL).append(Constants.LINE_SEP);
+                    .append(space("method")).append(":").append(request.method()).append(Constants.LINE_SEP).append("isHttps").append(space("isHttps"))
+                    .append(":").append(request.isHttps()).append(Constants.LINE_SEP).append("Protocol").append(space("Protocol")).append(":")
+                    .append(getProtocol(chain)).append(Constants.LINE_SEP).append(LABEL).append("Header").append(LABEL).append(Constants.LINE_SEP);
             Headers headers = request.headers().newBuilder().build();
             Map<String, List<String>> headMap = headers.toMultimap();
             for (Map.Entry<String, List<String>> stringListEntry : headMap.entrySet()) {
@@ -99,18 +98,21 @@ public final class LogInterceptor implements Interceptor
                     source.request(Long.MAX_VALUE); // request the entire body.
                     Buffer buffer = source.getBuffer();
                     String readString = buffer.clone().readString(Charset.defaultCharset());
-                    if (mLimitSize > 0 && readString.length() > mLimitSize) sb.append("too much text:").append(readString.length()).append('\n');
-                    else if (TextUtils.isEmpty(readString)) sb.append('\n').append("parse fail").append('\n');
+                    if (mLimitSize > 0 && readString.length() > mLimitSize)
+                        sb.append("too much text:").append(readString.length()).append('\n');
+                    else if (TextUtils.isEmpty(readString))
+                        sb.append('\n').append("parse fail").append('\n');
                     else if ((readString.startsWith("[") && readString.endsWith("]")) || (readString.startsWith("{") && readString.endsWith("}")))
                         sb.append('\n').append(LogUtil.formatJson(readString)).append('\n');
-                    else if (readString.startsWith("<?xml")) sb.append('\n').append(LogUtil.formatXml(readString)).append('\n');
+                    else if (readString.startsWith("<?xml"))
+                        sb.append('\n').append(LogUtil.formatXml(readString)).append('\n');
                     else sb.append('\n').append(readString).append('\n');
                 }
             } else sb.append("request fail").append('\n');
             sb.append(LABEL).append("Result").append(LABEL).append('\n');
         } catch (Throwable e) {
             sb.append(LABEL).append("Exception").append(LABEL).append('\n');
-            sb.append(e.toString());
+            sb.append(e.toString()).append('\n');
             sb.append(LABEL).append("Exception").append(LABEL).append('\n');
             throw new IOException(e);
         } finally {
@@ -118,7 +120,7 @@ public final class LogInterceptor implements Interceptor
             long duration = endTime - startTime;
             sb.append(LABEL).append("Duration:").append(duration).append(LABEL).append('\n');
             sb.append(LABEL).append("End:").append(endTime).append(LABEL).append('\n');
-            LogUtil.e(sb);
+            LogUtil.e(sb.toString());
         }
         return response;
     }

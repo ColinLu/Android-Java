@@ -486,7 +486,7 @@ public final class FileUtil {
             IOUtil.flush(os);
             return true;
         } catch (IOException e) {
-            LogUtil.e(e);
+            LogUtil.log(e);
             return false;
         } finally {
             IOUtil.close(is, os);
@@ -602,7 +602,7 @@ public final class FileUtil {
             IOUtil.flush(bw);
             return true;
         } catch (IOException e) {
-            e.printStackTrace();
+            LogUtil.log(e);
             return false;
         } finally {
             IOUtil.close(bw);
@@ -693,8 +693,7 @@ public final class FileUtil {
      * @param isForce  是否写入文件
      * @return {@code true}: 写入成功<br>{@code false}: 写入失败
      */
-    public static boolean toFileChannelMap(@Nullable final String filePath, @Nullable final byte[] bytes, final boolean append,
-            final boolean isForce) {
+    public static boolean toFileChannelMap(@Nullable final String filePath, @Nullable final byte[] bytes, final boolean append, final boolean isForce) {
         return toFileChannelMap(FileUtil.getFile(filePath), bytes, append, isForce);
     }
 

@@ -78,9 +78,14 @@ public final class IntentUtil {
         request(activity, intent, request);
     }
 
-    public static void requestVideo(@Nullable Activity activity, @Nullable Uri uri, @IntRange(from = 0, to = 1) final int quality,
-                                    @IntRange(from = 1) final long duration, @IntRange(from = 1) final long limitBytes,
-                                    @IntRange(from = 0, to = 65535) int request) {
+    public static void requestImage(@Nullable Fragment fragment, @IntRange(from = 0, to = 65535) int request) {
+        final Intent intent = new Intent(Intent.ACTION_PICK);
+        intent.setType(Constants.MIME_TYPE_IMAGE);
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        request(fragment, intent, request);
+    }
+
+    public static void requestVideo(@Nullable Activity activity, @Nullable Uri uri, @IntRange(from = 0, to = 1) final int quality, @IntRange(from = 1) final long duration, @IntRange(from = 1) final long limitBytes, @IntRange(from = 0, to = 65535) int request) {
         if (uri == null) return;
         final Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
@@ -91,7 +96,17 @@ public final class IntentUtil {
         request(activity, intent, request);
     }
 
-    // TODO: 2023/5/13 test and verify
+    public static void requestVideo(@Nullable Fragment fragment, @Nullable Uri uri, @IntRange(from = 0, to = 1) final int quality, @IntRange(from = 1) final long duration, @IntRange(from = 1) final long limitBytes, @IntRange(from = 0, to = 65535) int request) {
+        if (uri == null) return;
+        final Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+        intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, quality);
+        intent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, duration);
+        intent.putExtra(MediaStore.EXTRA_SIZE_LIMIT, limitBytes);
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+        request(fragment, intent, request);
+    }
+
     public static void requestAudio(@Nullable Activity activity, @IntRange(from = 0, to = 65535) int request) {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("audio/amr"); //String AUDIO_AMR = "audio/amr";
@@ -99,6 +114,12 @@ public final class IntentUtil {
         request(activity, intent, request);
     }
 
+    public static void requestAudio(@Nullable Fragment fragment, @IntRange(from = 0, to = 65535) int request) {
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("audio/amr"); //String AUDIO_AMR = "audio/amr";
+        intent.setClassName("com.android.soundrecorder", "com.android.soundrecorder.SoundRecorder");
+        request(fragment, intent, request);
+    }
 
     public static void request(@Nullable Activity activity, @Nullable Intent intent, @IntRange(from = 0, to = 65535) int request) {
         if (isAvailable(activity, intent)) activity.startActivityForResult(intent, request);
@@ -228,8 +249,7 @@ public final class IntentUtil {
         if (context != null) start(context, new Intent(action, uri));
     }
 
-    public static void toActionView(@Nullable final Context context, @NonNull final String action, @Nullable final Uri uri,
-                                    @Nullable final String type) {
+    public static void toActionView(@Nullable final Context context, @NonNull final String action, @Nullable final Uri uri, @Nullable final String type) {
         if (context != null) start(context, new Intent(action).setDataAndType(uri, type));
     }
 

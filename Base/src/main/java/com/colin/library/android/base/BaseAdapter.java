@@ -33,7 +33,7 @@ public abstract class BaseAdapter<ITEM> extends RecyclerView.Adapter<ViewHolder>
 
     public BaseAdapter(@Nullable List<ITEM> list) {
         mItemList = new ArrayList<>();
-        if (list != null && list.size() > 0) mItemList.addAll(list);
+        if (list != null && !list.isEmpty()) mItemList.addAll(list);
     }
 
     public void setOnItemClickListener(@Nullable OnItemClickListener itemClickListener) {
@@ -63,7 +63,7 @@ public abstract class BaseAdapter<ITEM> extends RecyclerView.Adapter<ViewHolder>
     @SuppressLint("NotifyDataSetChanged")
     public void setData(@Nullable List<ITEM> items) {
         mItemList.clear();
-        if (items != null && items.size() > 0) mItemList.addAll(items);
+        if (items != null && !items.isEmpty()) mItemList.addAll(items);
         notifyDataSetChanged();
     }
 

@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -31,6 +30,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.colin.library.android.Utils;
 import com.colin.library.android.base.def.IBase;
 import com.colin.library.android.base.def.ILife;
+import com.colin.library.android.utils.LogUtil;
 import com.colin.library.android.utils.StringUtil;
 import com.colin.library.android.utils.data.Constants;
 
@@ -76,8 +76,6 @@ public abstract class BaseDialog<Returner> extends DialogFragment implements IBa
     protected boolean mSingleButton = false;
     @NonNull
     protected final DisplayMetrics mDisplayMetrics = Resources.getSystem().getDisplayMetrics();
-    /*Dialog跟布局*/
-    protected View mRootView;
     /*Dialog布局文件*/
     @LayoutRes
     protected int mLayoutRes = Resources.ID_NULL;
@@ -104,17 +102,7 @@ public abstract class BaseDialog<Returner> extends DialogFragment implements IBa
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setStyle(DialogFragment.STYLE_NORMAL, android.R.style.Theme_Dialog);
-    }
-
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        if (null != mRootView) {
-            final ViewGroup parent = (ViewGroup) mRootView.getParent();
-            if (null != parent) parent.removeView(mRootView);
-        } else mRootView = inflater.inflate(layoutRes(), container, false);
-        return mRootView;
+        setStyle(DialogFragment.STYLE_NORMAL, android.R.style.Theme_Material_Dialog_NoActionBar);
     }
 
     @Override
@@ -165,8 +153,7 @@ public abstract class BaseDialog<Returner> extends DialogFragment implements IBa
 
     @NonNull
     public <T extends View> T findViewById(@IdRes int id) {
-        if (null == mRootView) throw new RuntimeException("fragment dialog mRootView is Empty");
-        return mRootView.findViewById(id);
+        return Utils.notNull(getView()).findViewById(id);
     }
 
     @NonNull
@@ -261,11 +248,6 @@ public abstract class BaseDialog<Returner> extends DialogFragment implements IBa
         return (Returner) this;
     }
 
-    public Returner setView(@NonNull View view) {
-        this.mRootView = view;
-        return (Returner) this;
-    }
-
     public Returner setLayoutRes(@LayoutRes int layoutRes) {
         this.mLayoutRes = layoutRes;
         return (Returner) this;
@@ -301,11 +283,6 @@ public abstract class BaseDialog<Returner> extends DialogFragment implements IBa
     public Returner setOutViewCancel(boolean outViewCancel) {
         this.mOutViewCancel = outViewCancel;
         return (Returner) this;
-    }
-
-    @Nullable
-    public View getRootView() {
-        return mRootView;
     }
 
     @LayoutRes
@@ -399,7 +376,8 @@ public abstract class BaseDialog<Returner> extends DialogFragment implements IBa
     }
 
     public void show(@Nullable Fragment fragment) {
-        if (null == fragment || null == fragment.getActivity() || fragment.getActivity().isFinishing()) return;
+        if (null == fragment || null == fragment.getActivity() || fragment.getActivity().isFinishing())
+            return;
         show(fragment.getChildFragmentManager(), this.getClass().getSimpleName());
     }
 
@@ -423,7 +401,7 @@ public abstract class BaseDialog<Returner> extends DialogFragment implements IBa
             ft.add(this, StringUtil.isEmpty(tag) ? manager.getClass().getSimpleName() : tag);
             ft.commitNowAllowingStateLoss();
         } catch (Exception e) {
-            e.printStackTrace();
+            LogUtil.log(e);
         }
     }
 

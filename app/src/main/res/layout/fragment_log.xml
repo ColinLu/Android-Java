@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.method.LogFragment">
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/mButtonLogI"
+        style="@style/Theme.App.Button"
+        android:layout_width="@dimen/dp_0"
+        android:layout_marginTop="@dimen/margin_default"
+        android:text="Log I"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/mButtonLogV"
+        style="@style/Theme.App.Button"
+        android:layout_width="@dimen/dp_0"
+        android:layout_marginTop="@dimen/margin_default"
+        android:text="Log V"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/mButtonLogI" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/mButtonLogD"
+        style="@style/Theme.App.Button"
+        android:layout_width="@dimen/dp_0"
+        android:layout_marginTop="@dimen/margin_default"
+        android:text="Log D"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/mButtonLogV" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/mButtonLogW"
+        style="@style/Theme.App.Button"
+        android:layout_width="@dimen/dp_0"
+        android:layout_height="@dimen/button_height"
+        android:layout_marginTop="@dimen/margin_default"
+        android:text="Log W"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/mButtonLogD" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/mButtonLogA"
+        style="@style/Theme.App.Button"
+        android:layout_width="@dimen/dp_0"
+        android:layout_height="@dimen/button_height"
+        android:layout_marginTop="@dimen/margin_default"
+        android:text="Log A"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/mButtonLogW" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/mButtonLogE"
+        style="@style/Theme.App.Button"
+        android:layout_width="@dimen/dp_0"
+        android:layout_height="@dimen/button_height"
+        android:layout_marginTop="@dimen/margin_default"
+        android:text="Log E"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/mButtonLogA" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/mButtonLogJson"
+        style="@style/Theme.App.Button"
+        android:layout_width="@dimen/dp_0"
+        android:layout_height="@dimen/button_height"
+        android:layout_marginTop="@dimen/margin_default"
+        android:text="Log Json"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/mButtonLogE" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/mButtonLogXml"
+        style="@style/Theme.App.Button"
+        android:layout_width="@dimen/dp_0"
+        android:layout_height="@dimen/button_height"
+        android:layout_marginTop="@dimen/margin_default"
+        android:text="Log XML"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/mButtonLogJson" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/mButtonLogThrowable"
+        style="@style/Theme.App.Button"
+        android:layout_width="@dimen/dp_0"
+        android:layout_height="@dimen/button_height"
+        android:layout_marginTop="@dimen/margin_default"
+        android:text="Log Throwable"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/mButtonLogXml" />
+</androidx.constraintlayout.widget.ConstraintLayout>

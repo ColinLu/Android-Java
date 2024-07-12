@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/HomeFragment">
+    <navigation
+        android:id="@+id/navigation"
+        app:startDestination="@id/MethodFragment">
+        <fragment
+            android:id="@+id/MethodFragment"
+            android:name="com.colin.android.demo.java.ui.method.MethodFragment"
+            android:label="@string/method"
+            tools:layout="@layout/layout_list">
+            <action
+                android:id="@+id/action_Method_to_Log"
+                app:destination="@+id/LogFragment" />
+            <action
+                android:id="@+id/action_Method_to_ContactList"
+                app:destination="@+id/ContactListFragment" />
+            <action
+                android:id="@+id/action_Method_to_Path"
+                app:destination="@+id/PathFragment" />
+            <action
+                android:id="@+id/action_Method_to_Http"
+                app:destination="@+id/HttpFragment" />
+        </fragment>
+    </navigation>
+
+    <fragment
+        android:id="@+id/HomeFragment"
+        android:name="com.colin.android.demo.java.ui.home.HomeFragment"
+        android:label="@string/app_name"
+        tools:layout="@layout/fragment_home">
+        <action
+            android:id="@+id/action_Home_to_View"
+            app:destination="@+id/ViewFragment" />
+        <action
+            android:id="@+id/action_Home_to_Method"
+            app:destination="@id/navigation" />
+        <action
+            android:id="@+id/action_Home_to_Web"
+            app:destination="@+id/WebIndexFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/ViewFragment"
+        android:name="com.colin.android.demo.java.ui.view.ViewFragment"
+        android:label="@string/view">
+        <action
+            android:id="@+id/action_View_to_Motion"
+            app:destination="@+id/MotionFragment" />
+        <action
+            android:id="@+id/action_View_to_Text"
+            app:destination="@+id/TextFragment" />
+        <action
+            android:id="@+id/action_View_to_Circle"
+            app:destination="@+id/CircleImageFragment" />
+        <action
+            android:id="@+id/action_View_to_behavior"
+            app:destination="@+id/BehaviorFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/WebIndexFragment"
+        android:name="com.colin.android.demo.java.ui.web.WebIndexFragment"
+        android:label="@string/web"
+        tools:layout="@layout/fragment_web_index" />
+    <fragment
+        android:id="@+id/LogFragment"
+        android:name="com.colin.android.demo.java.ui.method.LogFragment"
+        android:label="@string/log"
+        tools:layout="@layout/fragment_log" />
+    <fragment
+        android:id="@+id/HttpFragment"
+        android:name="com.colin.android.demo.java.ui.method.HttpFragment"
+        android:label="@string/http"
+        tools:layout="@layout/fragment_http" />
+    <fragment
+        android:id="@+id/PathFragment"
+        android:name="com.colin.android.demo.java.ui.method.PathFragment"
+        android:label="@string/path"
+        tools:layout="@layout/layout_list" />
+    <fragment
+        android:id="@+id/MotionFragment"
+        android:name="com.colin.android.demo.java.ui.view.MotionFragment"
+        android:label="@string/motion"
+        tools:layout="@layout/fragment_motion" />
+
+    <fragment
+        android:id="@+id/ContactListFragment"
+        android:name="com.colin.android.demo.java.ui.method.ContactListFragment"
+        android:label="@string/contact"
+        tools:layout="@layout/layout_list" />
+
+    <fragment
+        android:id="@+id/TextFragment"
+        android:name="com.colin.android.demo.java.ui.view.TextFragment"
+        android:label="@string/text"
+        tools:layout="@layout/fragment_text" />
+
+    <fragment
+        android:id="@+id/CircleImageFragment"
+        android:name="com.colin.android.demo.java.ui.view.CircleImageFragment"
+        android:label="@string/circle"
+        tools:layout="@layout/fragment_circle_image" />
+    <fragment
+        android:id="@+id/BehaviorFragment"
+        android:name="com.colin.android.demo.java.ui.view.BehaviorFragment"
+        android:label="@string/behavior"
+        tools:layout="@layout/fragment_behavior" />
+
+</navigation>
