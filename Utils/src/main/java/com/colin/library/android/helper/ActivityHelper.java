@@ -97,7 +97,7 @@ public final class ActivityHelper {
     /*从栈中获取最近加入的Activity 也就是栈顶Activity*/
     @Nullable
     public Activity getCurrentActivity() {
-        return ACTIVITY_STACK.size() == 0 ? null : ACTIVITY_STACK.lastElement();
+        return ACTIVITY_STACK.isEmpty() ? null : ACTIVITY_STACK.lastElement();
     }
 
     /*获取指定的Activity*/
@@ -167,7 +167,7 @@ public final class ActivityHelper {
             //Java方式退出
             System.exit(0);
         } catch (Throwable e) {
-            e.printStackTrace();
+            LogUtil.log(e);
         }
     }
 

@@ -70,17 +70,6 @@ public class HttpFragment extends AppFragment<FragmentHttpBinding> {
         mBinding.mButtonDownload.setOnClickListener(v -> httpDownload());
     }
 
-
-    @Override
-    public void initData(@Nullable Bundle bundle) {
-
-    }
-
-    @Override
-    public void loadData(boolean refresh) {
-
-    }
-
     @Override
     public void onDestroyView() {
         super.onDestroyView();

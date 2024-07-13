@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.colin.library.android.utils.IOUtil;
+import com.colin.library.android.utils.LogUtil;
 import com.colin.library.android.utils.encrypt.HexUtil;
 
 import java.io.ByteArrayInputStream;
@@ -109,11 +110,7 @@ public class CookieBean implements Serializable {
         final boolean httpOnly = in.readBoolean();
         final boolean hostOnly = in.readBoolean();
         final boolean persistent = in.readBoolean();
-        Cookie.Builder builder = new Cookie.Builder()
-                .name(name)
-                .value(value)
-                .expiresAt(expiresAt)
-                .path(path);
+        Cookie.Builder builder = new Cookie.Builder().name(name).value(value).expiresAt(expiresAt).path(path);
         builder = hostOnly ? builder.hostOnlyDomain(domain) : builder.domain(domain);
         builder = secure ? builder.secure() : builder;
         builder = httpOnly ? builder.httpOnly() : builder;
@@ -123,12 +120,12 @@ public class CookieBean implements Serializable {
     /*cookies 序列化成 string*/
     @Nullable
     public static String encode(@NonNull final String host, @NonNull final Cookie cookie) {
-        return HexUtil.getString(toBytes(host, cookie));
+        return HexUtil.getHex(toBytes(host, cookie));
     }
 
     /*将字符串反序列化成cookies*/
-    public static Cookie decode(@NonNull final String encode) {
-        return toCookie(HexUtil.getBytes(encode));
+    public static Cookie decode(@NonNull final String cookie) {
+        return toCookie(HexUtil.getBytes(cookie));
     }
 
     @Nullable
@@ -140,11 +137,11 @@ public class CookieBean implements Serializable {
             ByteArrayOutputStream os = new ByteArrayOutputStream();
             outputStream = new ObjectOutputStream(os);
             outputStream.writeObject(cookieBean);
-            os.flush();
-            os.close();
+            IOUtil.flush(os);
+            IOUtil.close(os);
             return os.toByteArray();
         } catch (IOException e) {
-            e.printStackTrace();
+            LogUtil.log(e);
         } finally {
             IOUtil.close(outputStream);
         }
@@ -161,7 +158,7 @@ public class CookieBean implements Serializable {
             ObjectInputStream objectInputStream = new ObjectInputStream(is);
             return ((CookieBean) objectInputStream.readObject()).getCookie();
         } catch (Exception e) {
-            e.printStackTrace();
+            LogUtil.log(e);
         } finally {
             IOUtil.close(is);
         }

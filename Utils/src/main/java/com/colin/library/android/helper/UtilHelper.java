@@ -22,7 +22,6 @@ public final class UtilHelper {
     private UtilHelper() {
     }
 
-
     public static UtilHelper getInstance() {
         if (sHelper == null) {
             synchronized (UtilHelper.class) {

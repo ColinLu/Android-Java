@@ -17,6 +17,7 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.net.UnknownHostException;
 import java.util.Formatter;
+import java.util.Locale;
 
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Source;
@@ -97,11 +98,11 @@ public final class LogUtil {
     }
 
     public static void i(@NonNull String format, Object... args) {
-        print(LogLevel.I, UtilHelper.getInstance().getLogTag(), String.format(format, args));
+        print(LogLevel.I, UtilHelper.getInstance().getLogTag(), String.format(Locale.getDefault(), format, args));
     }
 
     public static void i(@NonNull String tag, @NonNull String format, Object... args) {
-        print(LogLevel.I, tag, String.format(format, args));
+        print(LogLevel.I, tag, String.format(Locale.getDefault(), format, args));
     }
 
     public static void w(@Nullable String msg) {
@@ -113,11 +114,11 @@ public final class LogUtil {
     }
 
     public static void w(@NonNull String format, Object... args) {
-        print(LogLevel.W, UtilHelper.getInstance().getLogTag(), String.format(format, args));
+        print(LogLevel.W, UtilHelper.getInstance().getLogTag(), String.format(Locale.getDefault(), format, args));
     }
 
     public static void w(@NonNull String tag, @NonNull String format, Object... args) {
-        print(LogLevel.W, tag, String.format(format, args));
+        print(LogLevel.W, tag, String.format(Locale.getDefault(), format, args));
     }
 
     public static void e(@Nullable String msg) {
@@ -129,11 +130,11 @@ public final class LogUtil {
     }
 
     public static void e(@NonNull String format, Object... args) {
-        print(LogLevel.E, UtilHelper.getInstance().getLogTag(), String.format(format, args));
+        print(LogLevel.E, UtilHelper.getInstance().getLogTag(), String.format(Locale.getDefault(), format, args));
     }
 
     public static void e(@NonNull String tag, @NonNull String format, Object... args) {
-        print(LogLevel.E, tag, String.format(format, args));
+        print(LogLevel.E, tag, String.format(Locale.getDefault(), format, args));
     }
 
     public static void a(@Nullable String msg) {
@@ -145,39 +146,27 @@ public final class LogUtil {
     }
 
     public static void a(@NonNull String format, Object... args) {
-        print(LogLevel.A, UtilHelper.getInstance().getLogTag(), String.format(format, args));
+        print(LogLevel.A, UtilHelper.getInstance().getLogTag(), String.format(Locale.getDefault(), format, args));
     }
 
     public static void a(@NonNull String tag, @NonNull String format, Object... args) {
-        print(LogLevel.A, tag, String.format(format, args));
+        print(LogLevel.A, tag, String.format(Locale.getDefault(), format, args));
     }
 
     public static void log(@NonNull Throwable error) {
         print(LogLevel.E, UtilHelper.getInstance().getLogTag(), format(error));
     }
 
-    public static void log(@Nullable Object obj) {
-        print(UtilHelper.getInstance().getLogLevel(), null, StringUtil.toString(obj));
-    }
-
     public static void log(@NonNull String tag, @NonNull Throwable error) {
         print(LogLevel.E, tag, format(error));
     }
 
+    public static void log(@Nullable Object obj) {
+        print(UtilHelper.getInstance().getLogLevel(), UtilHelper.getInstance().getLogTag(), StringUtil.toString(obj));
+    }
+
     public static void log(@NonNull String tag, @NonNull Object msg) {
-        print(LogLevel.E, tag, StringUtil.toString(msg));
-    }
-
-    public static void log(@LogLevel int level, @NonNull Throwable error) {
-        print(level, UtilHelper.getInstance().getLogTag(), format(error));
-    }
-
-    public static void log(@LogLevel int level, @Nullable Object msg) {
-        print(level, UtilHelper.getInstance().getLogTag(), StringUtil.toString(msg));
-    }
-
-    public static void log(@LogLevel int level, @NonNull String tag, @Nullable Object obj) {
-        print(level, tag, StringUtil.toString(obj));
+        print(UtilHelper.getInstance().getLogLevel(), tag, StringUtil.toString(msg));
     }
 
     public static void json(@Nullable Object obj) {

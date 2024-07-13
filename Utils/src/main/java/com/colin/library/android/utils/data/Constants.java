@@ -68,6 +68,7 @@ public interface Constants {
     String ENCODE_UTF_32 = "UTF-32";
     @NonNull
     String ENCODE_ISO_8859_1 = "iso8859-1";
+    int RADIX_HEX = 16;
     /*常见加密*/
     @NonNull
     byte[] DIGITS_BYTE_LOWER = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
@@ -96,15 +97,12 @@ public interface Constants {
     /*Regex of simple mobile*/ String REGEX_MOBILE = "^[1]\\d{10}$";
     /*Regex of telephone number.*/ String REGEX_TEL = "\\d{3}-\\d{8}|\\d{4}-\\{7,8}";
     /*Regex of id card number which length is 15*/ String REGEX_IDENTITY_15 = "^[1-9]\\d{7}((0\\d)|(1[0-2]))(([0|1|2]\\d)|3[0-1])\\d{3}$";
-    /*Regex of id card number which length is 18*/ String REGEX_IDENTITY_18 =
-            "^[1-9]\\d{5}[1-9]\\d{3}((0\\d)|(1[0-2]))(([0|1|2]\\d)|3[0-1])\\d{3}" + "([0-9Xx])$";
+    /*Regex of id card number which length is 18*/ String REGEX_IDENTITY_18 = "^[1-9]\\d{5}[1-9]\\d{3}((0\\d)|(1[0-2]))(([0|1|2]\\d)|3[0-1])\\d{3}" + "([0-9Xx])$";
     /*Regex of email*/ String REGEX_EMAIL = "^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$";
     /*Regex of url*/ String REGEX_URL = "[a-zA-z]+://[^\\s]*";
     /*Regex of Chinese character*/ String REGEX_ZH = "^[\\u4e00-\\u9fa5]+$";
-    /*Regex of date which pattern is "yyyy-MM-dd"*/ String REGEX_DATE = "^(?:(?!0000)[0-9]{4}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1[0-9]|2[0-8])|" +
-            "(?:0[13-9]|1[0-2])-(?:29|30)|(?:0[13578]|1[02])-31)|(?:[0-9]{2}(?:0[48]|[2468][048]|[13579][26])|(?:0[48]|[2468][048]|[13579][26])00)" + "-02-29)$";
-    /*Regex of ip address*/ String REGEX_IP = "((?:(?:25[0-5]|2[0-4]\\d|((1\\d{2})|([1-9]?\\d)))\\.){3}(?:25[0-5]|2[0-4]\\d|((1\\d{2})|([1-9]?\\d))"
-            + "))";
+    /*Regex of date which pattern is "yyyy-MM-dd"*/ String REGEX_DATE = "^(?:(?!0000)[0-9]{4}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1[0-9]|2[0-8])|" + "(?:0[13-9]|1[0-2])-(?:29|30)|(?:0[13578]|1[02])-31)|(?:[0-9]{2}(?:0[48]|[2468][048]|[13579][26])|(?:0[48]|[2468][048]|[13579][26])00)" + "-02-29)$";
+    /*Regex of ip address*/ String REGEX_IP = "((?:(?:25[0-5]|2[0-4]\\d|((1\\d{2})|([1-9]?\\d)))\\.){3}(?:25[0-5]|2[0-4]\\d|((1\\d{2})|([1-9]?\\d))" + "))";
     /*Regex of double-byte characters*/ String REGEX_DOUBLE_BYTE_CHAR = "[^\\x00-\\xff]";
     /*Regex of blank line*/ String REGEX_BLANK_LINE = "\\n\\s*\\r";
     /*Regex of postal code in China*/ String REGEX_CHINA_POSTAL_CODE = "[1-9]\\d{5}(?!\\d)";
@@ -116,8 +114,7 @@ public interface Constants {
     /*Regex of positive float*/ String REGEX_POSITIVE_FLOAT = "^[1-9]\\d*\\.\\d*|0\\.\\d*[1-9]\\d*$";
     /*Regex of negative float*/ String REGEX_NEGATIVE_FLOAT = "^-[1-9]\\d*\\.\\d*|-0\\.\\d*[1-9]\\d*$";
     /*Regex of hex*/ String REGEX_HEX = "^[A-Fa-f0-9]+$";
-    /*Regex of plate code*/ String REGEX_PLATE_CODE = "([京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领 A-Z]{1}[A-Z]{1}(([0-9]{5}[DF])|([DF]([A-HJ-NP-Z0-9])" +
-            "[0-9]{4})))|([京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领 A-Z]{1}[A-Z]{1}[A-HJ-NP-Z0-9]{4}[A-HJ-NP-Z0-9 挂学警港澳]{1})";
+    /*Regex of plate code*/ String REGEX_PLATE_CODE = "([京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领 A-Z]{1}[A-Z]{1}(([0-9]{5}[DF])|([DF]([A-HJ-NP-Z0-9])" + "[0-9]{4})))|([京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领 A-Z]{1}[A-Z]{1}[A-HJ-NP-Z0-9]{4}[A-HJ-NP-Z0-9 挂学警港澳]{1})";
 
     String REGEX_IP_V4 = "\"^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$\"";
     String REGEX_IP_V6 = "^[0-9a-fA-F]{1,4}(:[0-9a-fA-F]{1,4}){7}$";

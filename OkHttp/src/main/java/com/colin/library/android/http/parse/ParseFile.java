@@ -1,7 +1,10 @@
 package com.colin.library.android.http.parse;
 
+import android.os.Build;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.annotation.WorkerThread;
 
 import com.colin.library.android.helper.ThreadHelper;
@@ -41,6 +44,7 @@ public class ParseFile implements IParse<File> {
     @Nullable
     @Override
     @WorkerThread
+    @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
     public File parse(@NonNull final Response response, @Nullable String encode, @NonNull final IProgress progress) throws IOException {
         final ResponseBody body = response.body();
         if (body == null) return null;
@@ -79,6 +83,7 @@ public class ParseFile implements IParse<File> {
     }
 
     @NonNull
+    @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
     private String getFileName(@NonNull final Response response, @Nullable String encode) {
         if (!StringUtil.isEmpty(mFileName)) return mFileName;
         String name = Util.getFileName(response, encode);

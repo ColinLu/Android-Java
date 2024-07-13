@@ -2,7 +2,6 @@ package com.colin.library.android.utils;
 
 import android.Manifest;
 import android.content.Context;
-import android.os.Build;
 import android.os.Environment;
 
 import androidx.annotation.NonNull;
@@ -57,7 +56,7 @@ public final class PathUtil {
 
     /*/data/user/0/package*/
     public static File getUserData(@NonNull Context context) {
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.N ? context.getDataDir() : new File(context.getApplicationInfo().dataDir);
+        return context.getDataDir();
     }
 
     public static File getUserCache() {
@@ -130,9 +129,9 @@ public final class PathUtil {
      * /storage/emulated/0/Android/data/package/files    type == null
      * /storage/emulated/0/Android/data/package/files/type
      *
-     * @param context
-     * @param type
-     * @return
+     * @param context 运用上下文
+     * @param type    文件类型
+     * @return 返回文件夹
      */
     public static File getExternalAppFile(@NonNull Context context, @Nullable String type) {
         return context.getExternalFilesDir(type);
@@ -150,15 +149,12 @@ public final class PathUtil {
 
     @NonNull
     public static String getInternalAppPath() {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
-            return UtilHelper.getInstance().getUtilConfig().getApplication().getApplicationInfo().dataDir;
-        }
         return UtilHelper.getInstance().getUtilConfig().getApplication().getDataDir().getAbsolutePath();
     }
 
     @NonNull
     public static String getInternalAppPath(@NonNull Context context) {
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.N ? context.getDataDir().getAbsolutePath() : context.getApplicationInfo().dataDir;
+        return context.getDataDir().getAbsolutePath();
     }
 
     /*清除缓存 操作 /data/data/package/cache */

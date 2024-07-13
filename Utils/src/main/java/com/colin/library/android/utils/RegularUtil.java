@@ -58,30 +58,24 @@ public final class RegularUtil {
     }
 
     /**
-     * 正则表达式 判断是否移动手机号码
-     *
      * @param mobile 国内移动手机号码
-     * @return
+     * @return true 手机号码 false 不是手机号码
      */
     public static boolean isMobile(@Nullable final CharSequence mobile) {
         return matcher(Constants.REGEX_MOBILE, mobile);
     }
 
     /**
-     * 正则表达式 判断是否国内座机号码
-     *
-     * @param telephone
-     * @return
+     * @param telephone 国内座机号码
+     * @return true 座机号码 false 不是座机号码
      */
     public static boolean isTelephone(@Nullable final CharSequence telephone) {
         return matcher(Constants.REGEX_TEL, telephone);
     }
 
     /**
-     * 正则表达式 判断身份证号码是否争取
-     *
-     * @param identity
-     * @return
+     * @param identity 身份证号码
+     * @return true 身份证号码 false 不是身份证号码
      */
     public static boolean isIdentity(@Nullable final CharSequence identity) {
         if (identity == null || identity.length() == 0) return false;
@@ -90,34 +84,29 @@ public final class RegularUtil {
     }
 
     /**
-     * 正则表达式 判断Email地址
-     *
-     * @param email
-     * @return
+     * @param email Email地址
+     * @return true 是Email地址 false 不是Email地址
      */
     public static boolean isEmail(@Nullable final CharSequence email) {
         return matcher(Constants.REGEX_EMAIL, email);
     }
 
     /**
-     * 正则表达式 合法的车牌号码
-     *
-     * @param plateCode
-     * @return
+     * @param plateCode 合法的车牌号码
+     * @return true 是合法的车牌号码 false 不是合法的车牌号码
      */
     public static boolean isPlateCode(@Nullable final CharSequence plateCode) {
         return matcher(Constants.REGEX_PLATE_CODE, plateCode);
     }
 
     /**
-     * 正则表达式 合法的IP地址
      * 1.  为什么三位数的匹配放在二位数/一位数的前面？因为正则表达式规则之一：最先开始的匹配拥有最高的优先权。
      * 2.  0.0.0.0和255.255.255.255是合法存在的IP地址，你知道是为什么吗？
      * 3.  192.169.01.108这种数字前面多带了个0的类型的，在这里不是合法的，为什么要这样？
      * 4.  为什么前面在最前面要有?:呢？它在这里有什么用？
      *
-     * @param ip
-     * @return
+     * @param ip 合法的IP地址
+     * @return true 是合法的IP地址 false 不是合法的IP地址
      */
     public static boolean isIp(@Nullable final CharSequence ip) {
         return matcher(Constants.REGEX_IP, ip);
@@ -126,7 +115,7 @@ public final class RegularUtil {
     /**
      * 正则表达式 验证验证输入汉字
      *
-     * @param chinese
+     * @param chinese 输入的汉字
      * @return 如果是符合格式的字符串, 返回 <b>true </b>,否则为 <b>false </b>
      */
     public static boolean isChinese(@Nullable final CharSequence chinese) {

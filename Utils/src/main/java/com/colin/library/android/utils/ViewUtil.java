@@ -33,11 +33,7 @@ public final class ViewUtil {
         }
     }
 
-    public static void init(@Nullable final RecyclerView view,
-                            @Nullable final RecyclerView.LayoutManager manager,
-                            @Nullable final RecyclerView.Adapter<?> adapter,
-                            @Nullable final RecyclerView.ItemAnimator animator,
-                            final boolean scroll) {
+    public static void init(@Nullable final RecyclerView view, @Nullable final RecyclerView.LayoutManager manager, @Nullable final RecyclerView.Adapter<?> adapter, @Nullable final RecyclerView.ItemAnimator animator, final boolean scroll) {
         if (null == view || null == manager || null == adapter) return;
         if (manager instanceof GridLayoutManager) {
             ((GridLayoutManager) manager).setRecycleChildrenOnDetach(true);
@@ -67,6 +63,7 @@ public final class ViewUtil {
                 return def;
         }
     }
+
     /*控件设置焦点 可触摸 可点击*/
     public static void setFocusable(@Nullable final View view, final boolean focusable) {
         if (null == view) return;

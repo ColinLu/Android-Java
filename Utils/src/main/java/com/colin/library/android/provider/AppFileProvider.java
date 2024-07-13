@@ -32,9 +32,9 @@ public final class AppFileProvider extends FileProvider {
     /**
      * 文件 转化uri
      *
-     * @param context
-     * @param file
-     * @return
+     * @param context 运用上下文
+     * @param file    当前文档
+     * @return 放回Uri
      */
     @NonNull
     public static Uri getUri(@NonNull Context context, @NonNull File file) {

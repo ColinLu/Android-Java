@@ -11,6 +11,7 @@ import java.lang.annotation.RetentionPolicy;
  * 时间： 2022-02-14 21:25
  * <p>
  * 描述： 编码方式
+ * java.nio.charset.StandardCharsets
  */
 @Retention(RetentionPolicy.SOURCE)
 @StringDef({Encode.UTF_8, Encode.UTF_16, Encode.UTF_32, Encode.UTF_16BE, Encode.UTF_16LE,

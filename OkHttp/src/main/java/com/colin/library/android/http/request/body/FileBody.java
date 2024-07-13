@@ -51,7 +51,7 @@ public class FileBody implements IRequestBody {
 
     @NonNull
     @Override
-    public okhttp3.RequestBody toRequestBody(@Nullable String charset) {
+    public RequestBody toRequestBody(@Nullable String charset) {
         return RequestBody.Companion.create(mFile, getMediaType(charset));
     }
 

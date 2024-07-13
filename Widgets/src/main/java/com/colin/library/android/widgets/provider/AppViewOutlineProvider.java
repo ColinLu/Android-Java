@@ -1,4 +1,4 @@
-package com.colin.library.android.provider;
+package com.colin.library.android.widgets.provider;
 
 import android.graphics.Outline;
 import android.graphics.Rect;

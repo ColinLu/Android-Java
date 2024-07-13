@@ -1,21 +1,21 @@
 package com.colin.library.android.utils;
 
 import android.os.Build;
-import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 
 import com.colin.library.android.annotation.Encode;
 
 import java.io.DataOutputStream;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.nio.charset.Charset;
 import java.util.Locale;
 import java.util.Scanner;
 
@@ -54,26 +54,44 @@ public final class HttpUtil {
         return (null != url) && (url.length() > length) && url.substring(startIndex, endIndex).equalsIgnoreCase(name);
     }
 
+    /*url 加密*/
     @Nullable
-    public static String encode(@Nullable final String text, @NonNull final String encode) {
-        if (TextUtils.isEmpty(text)) return null;
-        try {
-            return URLEncoder.encode(text, encode);
-        } catch (UnsupportedEncodingException e) {
-            LogUtil.log(e);
-        }
-        return null;
+    @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
+    public static String encode(@Nullable final String url) {
+        return encode(url, Encode.UTF_8);
+    }
+
+    /*url 加密*/
+    @Nullable
+    @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
+    public static String encode(@Nullable final String url, @NonNull @Encode final String encode) {
+        return encode(url, Charset.forName(encode));
     }
 
     @Nullable
-    public static String decode(@Nullable final String text, @NonNull final String encode) {
-        if (TextUtils.isEmpty(text)) return null;
-        try {
-            return URLDecoder.decode(text, encode);
-        } catch (UnsupportedEncodingException e) {
-            LogUtil.log(e);
-        }
-        return null;
+    @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
+    public static String encode(@Nullable final String url, @Nullable final Charset charset) {
+        return StringUtil.isEmpty(url) || charset == null ? url : URLEncoder.encode(url, charset);
+    }
+
+    /*url 解密*/
+    @Nullable
+    @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
+    public static String decode(@Nullable final String url) {
+        return decode(url, Encode.UTF_8);
+    }
+
+    /*url 解密*/
+    @Nullable
+    @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
+    public static String decode(@Nullable final String url, @NonNull @Encode final String encode) {
+        return decode(url, Charset.forName(encode));
+    }
+
+    @Nullable
+    @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
+    public static String decode(@Nullable final String url, @Nullable final Charset charset) {
+        return StringUtil.isEmpty(url) || charset == null ? url : URLDecoder.decode(url, charset);
     }
 
     /**
@@ -109,6 +127,7 @@ public final class HttpUtil {
      * @return
      */
     @Nullable
+    @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
     public static String getFileName(@Nullable final String url, @Nullable String encode) {
         if (StringUtil.isEmpty(url)) return null;
         final String[] strings = url.split("/");
