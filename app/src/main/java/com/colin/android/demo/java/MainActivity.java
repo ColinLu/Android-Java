@@ -27,10 +27,10 @@ public class MainActivity extends AppActivity<ActivityMainBinding> {
 
     @Override
     public void initView(@Nullable Bundle bundle) {
-        setSupportActionBar(mBinding.toolbar);
+        setSupportActionBar(mBinding.mToolbar);
         final NavController controller = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
         appBarConfiguration = new AppBarConfiguration.Builder(controller.getGraph()).build();
-        NavigationUI.setupWithNavController(mBinding.toolbar, controller, appBarConfiguration);
+        NavigationUI.setupWithNavController(mBinding.mToolbar, controller, appBarConfiguration);
 
         mBinding.mFab.setOnClickListener(view -> Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG).setAction("Action", null).show());
 
@@ -78,6 +78,6 @@ public class MainActivity extends AppActivity<ActivityMainBinding> {
     public void setExpanded(boolean expanded) {
         LogUtil.d("expanded:" + expanded);
         mBinding.mAppBar.setExpanded(expanded);
-        mBinding.toolbar.setTitle(getTitle());
+        mBinding.mToolbar.setTitle(getTitle());
     }
 }

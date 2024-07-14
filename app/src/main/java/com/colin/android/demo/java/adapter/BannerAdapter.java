@@ -7,6 +7,7 @@ import androidx.annotation.Nullable;
 import com.colin.android.demo.java.R;
 import com.colin.library.android.base.BaseAdapter;
 import com.colin.library.android.base.ViewHolder;
+import com.colin.library.android.widgets.def.OnItemClickListener;
 
 import java.util.List;
 
@@ -17,8 +18,8 @@ import java.util.List;
  * 描述： Banner适配器
  */
 public class BannerAdapter extends BaseAdapter<Integer> {
-    public BannerAdapter(@Nullable List<Integer> integers) {
-        super(integers);
+    public BannerAdapter(@Nullable List<Integer> integers, OnItemClickListener listener) {
+        super(integers, listener);
     }
 
     @LayoutRes
@@ -30,9 +31,8 @@ public class BannerAdapter extends BaseAdapter<Integer> {
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         final Integer res = mItemList.get(position);
-        holder.setImageResource(R.id.image_banner, res)
-                .setOnClickListener(R.id.image_banner, v -> {
-                    if (mItemClickListener != null) mItemClickListener.item(v, position, res);
-                });
+        holder.setImageResource(R.id.image_banner, res).setOnClickListener(R.id.image_banner, v -> {
+            if (mItemClickListener != null) mItemClickListener.item(v, position, res);
+        });
     }
 }

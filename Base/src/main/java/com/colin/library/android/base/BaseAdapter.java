@@ -28,12 +28,13 @@ public abstract class BaseAdapter<ITEM> extends RecyclerView.Adapter<ViewHolder>
     protected OnItemCheckedListener mItemCheckedListener;
 
     public BaseAdapter() {
-        this(null);
+        this(null, null);
     }
 
-    public BaseAdapter(@Nullable List<ITEM> list) {
-        mItemList = new ArrayList<>();
+    public BaseAdapter(@Nullable List<ITEM> list, @Nullable OnItemClickListener listener) {
+        this.mItemList = new ArrayList<>();
         if (list != null && !list.isEmpty()) mItemList.addAll(list);
+        this.mItemClickListener = listener;
     }
 
     public void setOnItemClickListener(@Nullable OnItemClickListener itemClickListener) {

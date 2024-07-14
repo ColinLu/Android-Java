@@ -18,6 +18,7 @@ import com.colin.android.demo.java.adapter.StringAdapter;
 import com.colin.android.demo.java.app.AppFragment;
 import com.colin.android.demo.java.databinding.LayoutListBinding;
 import com.colin.android.demo.java.def.LoadState;
+import com.colin.android.demo.java.utils.DemoUtils;
 import com.colin.android.demo.java.utils.DialogManager;
 import com.colin.library.android.utils.LogUtil;
 import com.colin.library.android.utils.PathUtil;
@@ -38,23 +39,14 @@ public class PathFragment extends AppFragment<LayoutListBinding> implements OnIt
 
     @Override
     public void initView(@Nullable Bundle bundle) {
-        initRecyclerView(getActivity());
+        initRecyclerView();
         mBinding.mRefreshList.setColorSchemeResources(R.color.colorAccent, R.color.colorPrimary);
         mBinding.mRefreshList.setOnRefreshListener(() -> loadData(true));
     }
 
-    private void initRecyclerView(Context context) {
-        if (context == null) {
-            return;
-        }
-        if (mAdapter == null) {
-            mAdapter = new StringAdapter();
-        }
-        mAdapter.setOnItemClickListener(this);
-        mBinding.mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
-        mBinding.mRecyclerView.setHasFixedSize(true);
-        mBinding.mRecyclerView.setAdapter(mAdapter);
-        mBinding.mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+    private void initRecyclerView() {
+        if (mAdapter == null) mAdapter = new StringAdapter(this);
+        DemoUtils.initRecyclerView(mBinding.mRecyclerView, mAdapter);
     }
 
     @Override

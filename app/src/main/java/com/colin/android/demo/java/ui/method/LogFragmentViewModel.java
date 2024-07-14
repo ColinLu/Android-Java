@@ -15,13 +15,13 @@ import java.util.List;
  * 作者： ColinLu
  * 时间： 2022-01-18 22:48
  * <p>
- * 描述： TODO
+ * 描述： Log
  */
-public class MethodFragmentViewModel extends ViewModel {
+public class LogFragmentViewModel extends ViewModel {
     private final MutableLiveData<List<String>> mList;
     private final MutableLiveData<Integer> mLoadState;
 
-    public MethodFragmentViewModel() {
+    public LogFragmentViewModel() {
         mList = new MutableLiveData<>();
         mLoadState = new MutableLiveData<>();
     }
@@ -29,7 +29,7 @@ public class MethodFragmentViewModel extends ViewModel {
     public void refresh(boolean refresh) {
         mLoadState.setValue(LoadState.ING);
         ThreadHelper.getInstance().doAsync(
-                () -> mList.postValue(DemoUtils.getStringList(R.array.method_list)));
+                () -> mList.postValue(DemoUtils.getStringList(R.array.log_list)));
         ThreadHelper.getInstance().postDelayed(() -> mLoadState.setValue(LoadState.SUCCESS), Constants.DURATION_DELAYED);
     }
 

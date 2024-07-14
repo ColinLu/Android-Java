@@ -1,6 +1,8 @@
 package com.colin.library.android.utils;
 
 import android.view.View;
+import android.view.ViewConfiguration;
+import android.webkit.WebView;
 import android.widget.EditText;
 
 import androidx.annotation.Nullable;
@@ -86,5 +88,24 @@ public final class ViewUtil {
         editText.setEnabled(editable);
     }
 
+
+    /*webview 销毁*/
+    public static void destroy(@Nullable final WebView view) {
+        if (null == view) return;
+        view.setVisibility(View.GONE);// 把destroy()延后
+        final long timeout = ViewConfiguration.getZoomControlsTimeout();
+        try {
+            view.postDelayed(() -> {
+                view.clearCache(true);
+                view.clearMatches();
+                view.clearFormData();
+                view.clearSslPreferences();
+                view.clearHistory();
+                view.destroy();
+            }, timeout);
+        } catch (Exception e) {
+            LogUtil.log(e);
+        }
+    }
 
 }

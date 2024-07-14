@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import com.colin.android.demo.java.R;
 import com.colin.library.android.base.BaseAdapter;
 import com.colin.library.android.base.ViewHolder;
+import com.colin.library.android.widgets.def.OnItemClickListener;
 
 /**
  * 作者： ColinLu
@@ -14,12 +15,12 @@ import com.colin.library.android.base.ViewHolder;
  * <p>
  * 描述： TODO
  */
-public class StringAdapter extends BaseAdapter<String>
-{
+public class StringAdapter extends BaseAdapter<String> {
     private Gravity mGravity;
 
-    public StringAdapter() {
+    public StringAdapter(OnItemClickListener listener) {
         super();
+        this.mItemClickListener = listener;
     }
 
     @Override
