@@ -16,10 +16,10 @@ import com.colin.library.android.widgets.def.OnItemClickListener;
  * <p>
  * 描述： String list
  */
-public class StringAdapter extends BaseAdapter<String> {
+public class ButtonAdapter extends BaseAdapter<String> {
     private int mGravity = Gravity.CENTER;
 
-    public StringAdapter(OnItemClickListener listener) {
+    public ButtonAdapter(OnItemClickListener listener) {
         super();
         this.mItemClickListener = listener;
     }

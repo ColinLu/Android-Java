@@ -399,7 +399,7 @@ public abstract class BaseDialog<Returner> extends DialogFragment implements IBa
             mShownByMe.set(newInstance, false);
             FragmentTransaction ft = manager.beginTransaction();
             ft.add(this, StringUtil.isEmpty(tag) ? manager.getClass().getSimpleName() : tag);
-            ft.commitNowAllowingStateLoss();
+            ft.commitAllowingStateLoss();
         } catch (Exception e) {
             LogUtil.log(e);
         }

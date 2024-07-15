@@ -1,7 +1,5 @@
 package com.colin.android.demo.java.ui.web;
 
-import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -11,16 +9,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
-import androidx.core.app.SharedElementCallback;
 
-import com.colin.android.demo.java.MainActivity;
 import com.colin.android.demo.java.R;
 import com.colin.android.demo.java.app.AppFragment;
 import com.colin.android.demo.java.databinding.FragmentWebIndexBinding;
 import com.colin.library.android.utils.LogUtil;
-
-import java.io.FileDescriptor;
-import java.io.PrintWriter;
 
 
 public class WebIndexFragment extends AppFragment<FragmentWebIndexBinding> {
@@ -29,16 +22,6 @@ public class WebIndexFragment extends AppFragment<FragmentWebIndexBinding> {
     public void initView(@Nullable Bundle bundle) {
         setHasOptionsMenu(true);
         ((AppCompatActivity) requireActivity()).setSupportActionBar(mBinding.mToolbar);
-    }
-
-    @Override
-    public void initData(@Nullable Bundle bundle) {
-
-    }
-
-    @Override
-    public void loadData(boolean refresh) {
-
     }
 
     @Override

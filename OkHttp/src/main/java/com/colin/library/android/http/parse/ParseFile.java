@@ -1,6 +1,7 @@
 package com.colin.library.android.http.parse;
 
 import android.os.Build;
+import android.os.Environment;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -13,7 +14,7 @@ import com.colin.library.android.http.progress.IProgress;
 import com.colin.library.android.utils.FileUtil;
 import com.colin.library.android.utils.IOUtil;
 import com.colin.library.android.utils.LogUtil;
-import com.colin.library.android.utils.PathUtil;
+import com.colin.library.android.utils.StorageUtil;
 import com.colin.library.android.utils.StringUtil;
 
 import java.io.File;
@@ -79,7 +80,9 @@ public class ParseFile implements IParse<File> {
     @NonNull
     private File getFolder() {
         if (FileUtil.isDir(mFolder)) return mFolder;
-        return PathUtil.getInternalCache();
+        File file = StorageUtil.getExternalDir(Environment.DIRECTORY_DOWNLOADS);
+        if (FileUtil.isDir(file)) return file;
+        return StorageUtil.getInternalDataDir();
     }
 
     @NonNull

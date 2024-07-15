@@ -20,10 +20,6 @@ public final class TipsDialog extends AppDialog<DialogTipsBinding> {
     private String mTitle;
     private String mTips;
 
-    @Override
-    public void initView(@Nullable Bundle bundle) {
-
-    }
 
     @Override
     public void initData(@Nullable Bundle bundle) {

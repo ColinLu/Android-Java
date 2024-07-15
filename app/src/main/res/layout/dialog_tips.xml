@@ -12,10 +12,10 @@
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/text_dialog_title"
-            style="@style/Text.Title"
             android:layout_width="@dimen/dp_0"
             android:layout_height="@dimen/app_title_height"
             android:gravity="center"
+            android:textAppearance="@style/Text.Title"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -28,6 +28,7 @@
             android:gravity="left|center_vertical"
             android:minHeight="@dimen/app_dialog_height"
             android:padding="@dimen/app_margin_big"
+            android:textAppearance="@style/Text"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"

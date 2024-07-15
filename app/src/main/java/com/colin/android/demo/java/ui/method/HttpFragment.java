@@ -3,11 +3,11 @@ package com.colin.android.demo.java.ui.method;
 import android.Manifest;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.os.Environment;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresPermission;
 
 import com.colin.android.demo.java.app.AppFragment;
 import com.colin.android.demo.java.databinding.FragmentHttpBinding;
@@ -17,12 +17,11 @@ import com.colin.library.android.http.OkHttpHelper;
 import com.colin.library.android.http.action.ActionBitmap;
 import com.colin.library.android.http.action.ActionFile;
 import com.colin.library.android.http.action.ActionString;
-import com.colin.library.android.utils.FileUtil;
 import com.colin.library.android.utils.LogUtil;
-import com.colin.library.android.utils.PathUtil;
-import com.colin.library.android.utils.PermissionUtil;
+import com.colin.library.android.utils.ToastUtil;
 
 import java.io.File;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * 作者： ColinLu
@@ -46,16 +45,27 @@ public class HttpFragment extends AppFragment<FragmentHttpBinding> {
     public static final int REQUEST_STORAGE = 1;
 
 
-    public static final String[] IMAGE_URL_ARRAY = {DOWN_IMAGE, "http://img6.16fan.com/201510/11/005258wdngg6rv0tpn8z9z.jpg",
-            "http://img6.16fan" + ".com/201510/11/013553aj3kp9u6iuz6k9uj.jpg", "http://img6.16fan.com/201510/11/011753fnanichdca0wbhxc.jpg",
-            "http" + "://img6.16fan" + ".com/201510/11/011819zbzbciir9ctn295o.jpg", "http://img6.16fan.com/201510/11/004847l7w568jc5n5wn385.jpg",
-            "http" + "://img6.16fan" + ".com/201510/11/004906z0a0a0e0hs56ce0t.jpg", "http://img6.16fan.com/201510/11/004937pwttwjt0bgtoton7.jpg",
-            "http" + "://img6.16fan" + ".com/201510/11/004946t38ybzt8bq8c838y.jpg", "http://img6.16fan.com/201510/11/004955d8ftz3t1sttt7ft7.jpg",
-            "http" + "://img6.16fan" + ".com/201510/11/005027qy2g55yyglb59zdu.jpg", "http://img6.16fan.com/201510/11/005229bbtxkczcl0btmw8e.jpg",
+    public static final String[] IMAGE_URL_ARRAY = {DOWN_IMAGE, "http://img6.16fan.com/201510/11/005258wdngg6rv0tpn8z9z.jpg", "http://img6.16fan" + ".com/201510/11/013553aj3kp9u6iuz6k9uj.jpg", "http://img6.16fan.com/201510/11/011753fnanichdca0wbhxc.jpg", "http" + "://img6.16fan" + ".com/201510/11/011819zbzbciir9ctn295o.jpg", "http://img6.16fan.com/201510/11/004847l7w568jc5n5wn385.jpg", "http" + "://img6.16fan" + ".com/201510/11/004906z0a0a0e0hs56ce0t.jpg", "http://img6.16fan.com/201510/11/004937pwttwjt0bgtoton7.jpg", "http" + "://img6.16fan" + ".com/201510/11/004946t38ybzt8bq8c838y.jpg", "http://img6.16fan.com/201510/11/004955d8ftz3t1sttt7ft7.jpg", "http" + "://img6.16fan" + ".com/201510/11/005027qy2g55yyglb59zdu.jpg", "http://img6.16fan.com/201510/11/005229bbtxkczcl0btmw8e.jpg",
             // 下面这张是：5760 * 3840
             "http://img6.16fan.com/attachments/wenzhang/201805/18/152660818127263ge.jpeg",
             // 下面这张是：2280 * 22116
             "http://img6.16fan.com/attachments/wenzhang/201805/18/152660818716180ge.jpeg"};
+
+    private final ActivityResultLauncher<String> mPermissionLauncher = registerForActivityResult(new ActivityResultContracts.RequestPermission(), (result -> {
+
+    }));
+
+    ActivityResultLauncher<String[]> mPermissionsLauncher = registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), result -> {
+        AtomicBoolean resultGranted = new AtomicBoolean(false);
+        result.forEach((permission, granted) -> {
+            LogUtil.i(String.format("result:%s granted:%s", permission, granted));
+            if (!granted) {
+                resultGranted.set(false);
+            }
+        });
+
+        httpDownload(resultGranted.get());
+    });
 
     @Override
     public void initView(@Nullable Bundle bundle) {
@@ -85,6 +95,11 @@ public class HttpFragment extends AppFragment<FragmentHttpBinding> {
         //        });
         OkHttpHelper.getInstance().get(DOWN_IMAGE).tag(this).execute(new ActionBitmap() {
             @Override
+            public void fail(@NonNull Throwable e) {
+                DialogManager.getInstance().showTip(getChildFragmentManager(), e.toString());
+            }
+
+            @Override
             public void success(@Nullable Bitmap bitmap) {
                 DialogManager.getInstance().showImage(getChildFragmentManager(), bitmap);
             }
@@ -92,7 +107,12 @@ public class HttpFragment extends AppFragment<FragmentHttpBinding> {
     }
 
     private void httpPost() {
-        OkHttpHelper.getInstance().post(HTTP_METHOD_POST).execute(new ActionString() {
+        OkHttpHelper.getInstance().post(HTTP_METHOD_POST).param("param", "post").execute(new ActionString() {
+            @Override
+            public void fail(@NonNull Throwable e) {
+                DialogManager.getInstance().showTip(getChildFragmentManager(), e.toString());
+            }
+
             @Override
             public void success(@Nullable String tips) {
                 DialogManager.getInstance().showTip(getChildFragmentManager(), tips);
@@ -103,7 +123,13 @@ public class HttpFragment extends AppFragment<FragmentHttpBinding> {
     private void httpDelete() {
         OkHttpHelper.getInstance().delete(HTTP_METHOD_DELETE).execute(new ActionString() {
             @Override
+            public void fail(@NonNull Throwable e) {
+                DialogManager.getInstance().showTip(getChildFragmentManager(), e.toString());
+            }
+
+            @Override
             public void success(@Nullable String tips) {
+
                 DialogManager.getInstance().showTip(getChildFragmentManager(), tips);
             }
         });
@@ -111,6 +137,11 @@ public class HttpFragment extends AppFragment<FragmentHttpBinding> {
 
     private void httpHead() {
         OkHttpHelper.getInstance().head(HTTP_METHOD_HEAD).execute(new ActionString() {
+            @Override
+            public void fail(@NonNull Throwable e) {
+                DialogManager.getInstance().showTip(getChildFragmentManager(), e.toString());
+            }
+
             @Override
             public void success(@Nullable String tips) {
                 DialogManager.getInstance().showTip(getChildFragmentManager(), tips);
@@ -121,6 +152,11 @@ public class HttpFragment extends AppFragment<FragmentHttpBinding> {
     private void httpOption() {
         OkHttpHelper.getInstance().options(HTTP_METHOD_OPTIONS).execute(new ActionString() {
             @Override
+            public void fail(@NonNull Throwable e) {
+                DialogManager.getInstance().showTip(getChildFragmentManager(), e.toString());
+            }
+
+            @Override
             public void success(@Nullable String tips) {
                 DialogManager.getInstance().showTip(getChildFragmentManager(), tips);
             }
@@ -129,6 +165,11 @@ public class HttpFragment extends AppFragment<FragmentHttpBinding> {
 
     private void httpPatch() {
         OkHttpHelper.getInstance().patch(HTTP_METHOD_PATCH).execute(new ActionString() {
+            @Override
+            public void fail(@NonNull Throwable e) {
+                DialogManager.getInstance().showTip(getChildFragmentManager(), e.toString());
+            }
+
             @Override
             public void success(@Nullable String tips) {
                 DialogManager.getInstance().showTip(getChildFragmentManager(), tips);
@@ -139,6 +180,11 @@ public class HttpFragment extends AppFragment<FragmentHttpBinding> {
     private void httpPut() {
         OkHttpHelper.getInstance().put(HTTP_METHOD_PUT).execute(new ActionString() {
             @Override
+            public void fail(@NonNull Throwable e) {
+                DialogManager.getInstance().showTip(getChildFragmentManager(), e.toString());
+            }
+
+            @Override
             public void success(@Nullable String tips) {
                 DialogManager.getInstance().showTip(getChildFragmentManager(), tips);
             }
@@ -148,22 +194,31 @@ public class HttpFragment extends AppFragment<FragmentHttpBinding> {
     private void httpTrace() {
         OkHttpHelper.getInstance().trace(HTTP_METHOD_TRACE).execute(new ActionString() {
             @Override
+            public void fail(@NonNull Throwable e) {
+                DialogManager.getInstance().showTip(getChildFragmentManager(), e.toString());
+            }
+
+            @Override
             public void success(@Nullable String tips) {
                 DialogManager.getInstance().showTip(getChildFragmentManager(), tips);
             }
         });
     }
 
-    @RequiresPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
+    //    @RequiresPermission(allOf = {Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE})
     private void httpDownload() {
-        if (!PermissionUtil.request(this, REQUEST_STORAGE, PermissionUtil.Group.STORAGE)) {
+        mPermissionsLauncher.launch(new String[]{Manifest.permission.MANAGE_EXTERNAL_STORAGE, Manifest.permission.READ_MEDIA_IMAGES, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE});
+    }
+
+    private void httpDownload(boolean granted) {
+        if (!granted) {
+            ToastUtil.show("请同意权限申请");
             return;
         }
         OkHttpHelper.getInstance().get(DOWN_TEXT).encode(Encode.UTF_8).execute(new ActionFile() {
             @Override
             public void success(@Nullable File file) {
-                DialogManager.getInstance().showTip(getChildFragmentManager(), file == null ? "file==null" : file.getName(),
-                        file == null ? "file==null" : file.getAbsolutePath());
+                DialogManager.getInstance().showTip(getChildFragmentManager(), file == null ? "file==null" : file.getName(), file == null ? "file==null" : file.getAbsolutePath());
             }
 
             @Override
@@ -173,12 +228,4 @@ public class HttpFragment extends AppFragment<FragmentHttpBinding> {
         });
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (requestCode == REQUEST_STORAGE && PermissionUtil.isGranted(grantResults)) {
-            httpDownload();
-            return;
-        }
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-    }
 }

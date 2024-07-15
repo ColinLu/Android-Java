@@ -161,12 +161,16 @@ public final class LogUtil {
         print(LogLevel.E, tag, format(error));
     }
 
-    public static void log(@Nullable Object obj) {
-        print(UtilHelper.getInstance().getLogLevel(), UtilHelper.getInstance().getLogTag(), StringUtil.toString(obj));
+    public static void log(@LogLevel int level, @NonNull String tag, @NonNull Throwable error) {
+        print(level, tag, format(error));
     }
 
-    public static void log(@NonNull String tag, @NonNull Object msg) {
-        print(UtilHelper.getInstance().getLogLevel(), tag, StringUtil.toString(msg));
+    public static void log(@Nullable String msg) {
+        print(UtilHelper.getInstance().getLogLevel(), UtilHelper.getInstance().getLogTag(), msg);
+    }
+
+    public static void log(@NonNull String format, @NonNull Object... args) {
+        print(UtilHelper.getInstance().getLogLevel(), UtilHelper.getInstance().getLogTag(), String.format(Locale.getDefault(), format, args));
     }
 
     public static void json(@Nullable Object obj) {

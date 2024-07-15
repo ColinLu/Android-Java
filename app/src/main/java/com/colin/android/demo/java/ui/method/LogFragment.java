@@ -1,6 +1,7 @@
 package com.colin.android.demo.java.ui.method;
 
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -39,6 +40,7 @@ public class LogFragment extends AppFragment<LayoutListBinding> implements OnIte
 
     private void initRecyclerView() {
         if (mAdapter == null) mAdapter = new StringAdapter(this);
+        mAdapter.setGravity(Gravity.START | Gravity.CENTER_VERTICAL);
         DemoUtils.initRecyclerView(mBinding.mRecyclerView, mAdapter);
     }
 

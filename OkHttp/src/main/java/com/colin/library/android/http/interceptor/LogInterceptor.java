@@ -2,6 +2,8 @@ package com.colin.library.android.http.interceptor;
 
 import android.text.TextUtils;
 
+import androidx.annotation.NonNull;
+
 import com.colin.library.android.http.progress.ProgressRequestBody;
 import com.colin.library.android.utils.LogUtil;
 import com.colin.library.android.utils.data.Constants;
@@ -52,12 +54,13 @@ public final class LogInterceptor implements Interceptor {
         this.mLimitSize = limit;
     }
 
+    @NonNull
     @Override
-    public Response intercept(Chain chain) throws IOException {
+    public Response intercept(@NonNull Chain chain) throws IOException {
         if (!mDebug) return chain.proceed(chain.request());
         Response response = null;
         long startTime = System.currentTimeMillis();
-        final StringBuffer sb = new StringBuffer();
+        final StringBuilder sb = new StringBuilder();
         try {
             sb.append(LABEL).append("Start:").append(startTime).append(LABEL).append('\n');
             Request request = chain.request();

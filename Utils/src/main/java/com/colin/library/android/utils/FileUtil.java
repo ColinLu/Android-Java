@@ -44,11 +44,7 @@ public final class FileUtil {
 
     private static int sBufferSize = Constants.BUFFER_FILE_SIZE;
 
-    /**
-     * 设置缓冲区尺寸
-     *
-     * @param bufferSize 缓冲区大小
-     */
+    /*bufferSize 文件缓冲区操作大小*/
     public static void setBufferSize(final int bufferSize) {
         sBufferSize = bufferSize;
     }
@@ -68,7 +64,6 @@ public final class FileUtil {
         return isDir(getFile(path));
     }
 
-
     /*判断文件夹（目录）是否存在*/
     public static boolean isDir(@Nullable final File dir) {
         return isExists(dir) && dir.isDirectory();
@@ -84,7 +79,7 @@ public final class FileUtil {
         return file != null && file.exists();
     }
 
-    /*路径转文件*/
+    /*文件路径转文件*/
     @Nullable
     public static File getFile(@Nullable final String path) {
         return StringUtil.isSpace(path) ? null : new File(path);
@@ -110,7 +105,7 @@ public final class FileUtil {
      * 判断文件是否存在，存在则在创建之前删除
      *
      * @param file   文件
-     * @param delete 判断文件是否存在，存在则在创建之前删除
+     * @param delete true 如果存在就会删除
      * @return {@code true}: 创建成功<br>{@code false}: 创建失败
      */
     public static boolean createFile(@Nullable final File file, boolean delete) {
@@ -125,7 +120,7 @@ public final class FileUtil {
         try {
             return file.createNewFile();
         } catch (IOException e) {
-            e.printStackTrace();
+            LogUtil.log(e);
             return false;
         }
     }
@@ -544,7 +539,7 @@ public final class FileUtil {
             IOUtil.flush(bos);
             return true;
         } catch (IOException e) {
-            e.printStackTrace();
+            LogUtil.log(e);
             return false;
         } finally {
             IOUtil.close(bos);
@@ -1029,7 +1024,7 @@ public final class FileUtil {
             mbb.get(result, 0, size);
             return result;
         } catch (IOException e) {
-            e.printStackTrace();
+            LogUtil.log(e);
             return null;
         } finally {
             IOUtil.close(fc);

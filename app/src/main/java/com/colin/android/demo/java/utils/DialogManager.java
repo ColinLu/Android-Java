@@ -52,15 +52,21 @@ public final class DialogManager {
         dialog.setImage(bitmap);
         dialog.show(manager, TAG);
     }
+
     public void showImage(@NonNull FragmentManager manager, @DrawableRes int res) {
         final ImageDialog dialog = new ImageDialog();
         dialog.setImageRes(res);
         dialog.show(manager, TAG);
     }
+
     public synchronized void showTip(@NonNull FragmentManager manager, @Nullable String title, @Nullable String msg) {
         if (StringUtil.isEmpty(title, msg)) return;
         final TipsDialog dialog = getTipsDialog(manager, "TipsDialog");
         dialog.setTips(title, msg);
+        if (dialog.isAdded() || dialog.isShowing()) {
+            LogUtil.log("showTip isAdded:%s isShowing:%s", dialog.isAdded(), dialog.isShowing());
+            return;
+        }
         dialog.show(manager, "TipsDialog");
     }
 

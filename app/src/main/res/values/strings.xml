@@ -119,12 +119,6 @@
         <item>@string/path</item>
         <item>@string/path</item>
     </string-array>
-    int V = Log.VERBOSE;
-    int D = Log.DEBUG;
-    int I = Log.INFO;
-    int W = Log.WARN;
-    int E = Log.ERROR;
-    int A = Log.ASSERT;
     <string-array name="log_list">
         <item>Log V</item>
         <item>Log V with Tag</item>
@@ -175,27 +169,42 @@
         <item>C++语言</item>
     </string-array>
     <string-array name="path_list">
-        <item>@string/path_root_system</item>
-        <item>@string/path_root_storage</item>
-        <item>@string/path_root_data</item>
-        <item>@string/path_external_dcim</item>
-        <item>@string/path_external_android_dcim</item>
-        <item>@string/path_external_picture</item>
-        <item>@string/path_external_android_picture</item>
-        <item>@string/path_external_download</item>
-        <item>@string/path_external_android_download</item>
-        <item>@string/path_external_music</item>
-        <item>@string/path_external_android_music</item>
-        <item>@string/path_external_custom</item>
-        <item>@string/path_external_android_custom</item>
-        <item>@string/path_external_cache</item>
-        <item>@string/path_user_data</item>
-        <item>@string/path_user_cache</item>
-        <item>@string/path_user_code_cache</item>
-        <item>@string/path_user_files</item>
-        <item>@string/path_sp</item>
-        <item>@string/path_sp_path</item>
-        <item>@string/path_db</item>
+        <item>can write</item>
+        <item>has sd card</item>
+        <item>root system</item>
+        <item>root data</item>
+        <item>user data</item>
+        <item>user cache</item>
+        <item>user code cache</item>
+        <item>internal files</item>
+        <item>internal data</item>
+        <item>internal cache</item>
+        <item>internal shared prefs</item>
+        <item>internal databases</item>
+        <item>internal code cache</item>
+        <item>internal append</item>
+        <item>internal private</item>
+        <item>external code cache</item>
+        <item>external empty</item>
+        <item>external music</item>
+        <item>external podcasts</item>
+        <item>external alarms</item>
+        <item>external notifications</item>
+        <item>external pictures</item>
+        <item>external movies</item>
+        <item>external download</item>
+        <item>external dcim</item>
+        <item>external documents</item>
+        <item>external public empty</item>
+        <item>external public music</item>
+        <item>external public podcasts</item>
+        <item>external public alarms</item>
+        <item>external public notifications</item>
+        <item>external public pictures</item>
+        <item>external public movies</item>
+        <item>external public download</item>
+        <item>external public dcim</item>
+        <item>external public documents</item>
     </string-array>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="span_touch_fix_1">\@Colin:span的点击事件与textView的点击事件完全分离#Colin#</string>
