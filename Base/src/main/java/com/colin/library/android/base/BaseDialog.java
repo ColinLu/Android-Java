@@ -25,16 +25,12 @@ import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 
 import com.colin.library.android.Utils;
 import com.colin.library.android.base.def.IBase;
 import com.colin.library.android.base.def.ILife;
-import com.colin.library.android.utils.LogUtil;
 import com.colin.library.android.utils.StringUtil;
 import com.colin.library.android.utils.data.Constants;
-
-import java.lang.reflect.Field;
 
 /**
  * 作者： ColinLu
@@ -388,21 +384,15 @@ public abstract class BaseDialog<Returner> extends DialogFragment implements IBa
 
     @Override
     public void show(@NonNull FragmentManager manager, @Nullable String tag) {
-        try {
-            Class<?> clazz = Class.forName("androidx.fragment.app.DialogFragment");
-            Field mDismissed = clazz.getDeclaredField("mDismissed");
-            Field mShownByMe = clazz.getDeclaredField("mShownByMe");
-            Object newInstance = clazz.getConstructor().newInstance();
-            mDismissed.setAccessible(true);
-            mDismissed.set(newInstance, false);
-            mShownByMe.setAccessible(true);
-            mShownByMe.set(newInstance, false);
-            FragmentTransaction ft = manager.beginTransaction();
-            ft.add(this, StringUtil.isEmpty(tag) ? manager.getClass().getSimpleName() : tag);
-            ft.commitAllowingStateLoss();
-        } catch (Exception e) {
-            LogUtil.log(e);
-        }
+        if (manager.isDestroyed()) return;
+        manager.beginTransaction().remove(this).commit();
+        super.show(manager, StringUtil.isEmpty(tag) ? manager.getClass().getSimpleName() : tag);
+    }
+    @Override
+    public void showNow(@NonNull FragmentManager manager, @Nullable String tag) {
+        if (manager.isDestroyed()) return;
+        manager.beginTransaction().remove(this).commit();
+        super.showNow(manager, StringUtil.isEmpty(tag) ? manager.getClass().getSimpleName() : tag);
     }
 
     /*基本参数设置*/

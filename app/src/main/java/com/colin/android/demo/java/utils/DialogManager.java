@@ -63,10 +63,6 @@ public final class DialogManager {
         if (StringUtil.isEmpty(title, msg)) return;
         final TipsDialog dialog = getTipsDialog(manager, "TipsDialog");
         dialog.setTips(title, msg);
-        if (dialog.isAdded() || dialog.isShowing()) {
-            LogUtil.log("showTip isAdded:%s isShowing:%s", dialog.isAdded(), dialog.isShowing());
-            return;
-        }
         dialog.show(manager, "TipsDialog");
     }
 
