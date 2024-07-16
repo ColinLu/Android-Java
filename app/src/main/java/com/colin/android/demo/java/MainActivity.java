@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.navigation.NavController;
@@ -24,6 +25,12 @@ public class MainActivity extends AppActivity<ActivityMainBinding> {
     @OnAppBarStateChangeListener.State
     private int mState;
     private int mOffset;
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        EdgeToEdge.enable(this);
+        super.onCreate(savedInstanceState);
+    }
 
     @Override
     public void initView(@Nullable Bundle bundle) {
@@ -80,4 +87,11 @@ public class MainActivity extends AppActivity<ActivityMainBinding> {
         mBinding.mAppBar.setExpanded(expanded);
         mBinding.mToolbar.setTitle(getTitle());
     }
+
+    public void updateTitle(@Nullable CharSequence title) {
+        mBinding.mToolbar.setTitle(title);
+    }
+
+
+
 }

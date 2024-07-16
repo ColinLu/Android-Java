@@ -15,7 +15,7 @@ import com.colin.library.android.utils.ResourceUtil;
  * 作者： ColinLu
  * 时间： 2022-12-31 23:15
  * <p>
- * 描述： TODO
+ * 描述： 滚动
  */
 public class NestedScrollTopWebView extends WebView implements INestedScrollTop {
     public static final String INSTANCE_STATE = "INSTANCE_STATE";

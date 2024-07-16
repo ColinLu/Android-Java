@@ -5,6 +5,8 @@
     android:id="@+id/mCoordinatorLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    app:statusBarBackground="@color/purple_700"
     tools:context=".MainActivity">
 
     <com.google.android.material.appbar.AppBarLayout

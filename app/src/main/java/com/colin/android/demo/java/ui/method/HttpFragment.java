@@ -1,12 +1,10 @@
 package com.colin.android.demo.java.ui.method;
 
 import android.Manifest;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.colin.android.demo.java.app.AppFragment;
@@ -14,7 +12,6 @@ import com.colin.android.demo.java.databinding.FragmentHttpBinding;
 import com.colin.android.demo.java.utils.DialogManager;
 import com.colin.library.android.annotation.Encode;
 import com.colin.library.android.http.OkHttpHelper;
-import com.colin.library.android.http.action.ActionBitmap;
 import com.colin.library.android.http.action.ActionFile;
 import com.colin.library.android.http.action.ActionString;
 import com.colin.library.android.utils.LogUtil;
@@ -87,32 +84,16 @@ public class HttpFragment extends AppFragment<FragmentHttpBinding> {
     }
 
     private void httpGet() {
-        //        OkHttpHelper.getInstance().get(HTTP_METHOD_GET).tag(this).execute(new ActionString() {
-        //            @Override
-        //            public void success(@Nullable String tips) {
-        //                DialogManager.getInstance().showImage(getChildFragmentManager(), tips);
-        //            }
-        //        });
-        OkHttpHelper.getInstance().get(DOWN_IMAGE).tag(this).execute(new ActionBitmap() {
+        OkHttpHelper.getInstance().get(HTTP_METHOD_GET).tag(this).execute(new ActionString() {
             @Override
-            public void fail(@NonNull Throwable e) {
-                DialogManager.getInstance().showTip(getChildFragmentManager(), e.toString());
-            }
-
-            @Override
-            public void success(@Nullable Bitmap bitmap) {
-                DialogManager.getInstance().showImage(getChildFragmentManager(), bitmap);
+            public void success(@Nullable String tips) {
+                DialogManager.getInstance().showTip(getChildFragmentManager(), tips);
             }
         });
     }
 
     private void httpPost() {
         OkHttpHelper.getInstance().post(HTTP_METHOD_POST).param("param", "post").execute(new ActionString() {
-            @Override
-            public void fail(@NonNull Throwable e) {
-                DialogManager.getInstance().showTip(getChildFragmentManager(), e.toString());
-            }
-
             @Override
             public void success(@Nullable String tips) {
                 DialogManager.getInstance().showTip(getChildFragmentManager(), tips);
@@ -122,11 +103,6 @@ public class HttpFragment extends AppFragment<FragmentHttpBinding> {
 
     private void httpDelete() {
         OkHttpHelper.getInstance().delete(HTTP_METHOD_DELETE).execute(new ActionString() {
-            @Override
-            public void fail(@NonNull Throwable e) {
-                DialogManager.getInstance().showTip(getChildFragmentManager(), e.toString());
-            }
-
             @Override
             public void success(@Nullable String tips) {
 
@@ -138,11 +114,6 @@ public class HttpFragment extends AppFragment<FragmentHttpBinding> {
     private void httpHead() {
         OkHttpHelper.getInstance().head(HTTP_METHOD_HEAD).execute(new ActionString() {
             @Override
-            public void fail(@NonNull Throwable e) {
-                DialogManager.getInstance().showTip(getChildFragmentManager(), e.toString());
-            }
-
-            @Override
             public void success(@Nullable String tips) {
                 DialogManager.getInstance().showTip(getChildFragmentManager(), tips);
             }
@@ -151,10 +122,6 @@ public class HttpFragment extends AppFragment<FragmentHttpBinding> {
 
     private void httpOption() {
         OkHttpHelper.getInstance().options(HTTP_METHOD_OPTIONS).execute(new ActionString() {
-            @Override
-            public void fail(@NonNull Throwable e) {
-                DialogManager.getInstance().showTip(getChildFragmentManager(), e.toString());
-            }
 
             @Override
             public void success(@Nullable String tips) {
@@ -165,10 +132,6 @@ public class HttpFragment extends AppFragment<FragmentHttpBinding> {
 
     private void httpPatch() {
         OkHttpHelper.getInstance().patch(HTTP_METHOD_PATCH).execute(new ActionString() {
-            @Override
-            public void fail(@NonNull Throwable e) {
-                DialogManager.getInstance().showTip(getChildFragmentManager(), e.toString());
-            }
 
             @Override
             public void success(@Nullable String tips) {
@@ -180,11 +143,6 @@ public class HttpFragment extends AppFragment<FragmentHttpBinding> {
     private void httpPut() {
         OkHttpHelper.getInstance().put(HTTP_METHOD_PUT).execute(new ActionString() {
             @Override
-            public void fail(@NonNull Throwable e) {
-                DialogManager.getInstance().showTip(getChildFragmentManager(), e.toString());
-            }
-
-            @Override
             public void success(@Nullable String tips) {
                 DialogManager.getInstance().showTip(getChildFragmentManager(), tips);
             }
@@ -193,11 +151,6 @@ public class HttpFragment extends AppFragment<FragmentHttpBinding> {
 
     private void httpTrace() {
         OkHttpHelper.getInstance().trace(HTTP_METHOD_TRACE).execute(new ActionString() {
-            @Override
-            public void fail(@NonNull Throwable e) {
-                DialogManager.getInstance().showTip(getChildFragmentManager(), e.toString());
-            }
-
             @Override
             public void success(@Nullable String tips) {
                 DialogManager.getInstance().showTip(getChildFragmentManager(), tips);

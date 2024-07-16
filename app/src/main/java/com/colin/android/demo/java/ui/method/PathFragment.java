@@ -24,7 +24,7 @@ import com.colin.library.android.widgets.def.OnItemClickListener;
  * 作者： ColinLu
  * 时间： 2022-01-18 22:41
  * <p>
- * 描述： TODO
+ * 描述： Android系统文件路径
  */
 public class PathFragment extends AppFragment<LayoutListBinding> implements OnItemClickListener {
     private PathFragmentViewModel mViewModel;

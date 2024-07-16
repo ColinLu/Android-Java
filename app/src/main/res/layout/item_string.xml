@@ -5,4 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="@dimen/item_title_height"
     android:background="@android:drawable/list_selector_background"
-    android:gravity="center" />
+    android:gravity="center"
+    android:paddingStart="@dimen/margin_default"
+    android:paddingEnd="@dimen/margin_default" />

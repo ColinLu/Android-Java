@@ -46,7 +46,7 @@
 
     <style name="Theme.App.Dialog.Translucent">
         <item name="android:windowTranslucentStatus">true</item>
-        <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
+        <item name="android:windowLightStatusBar" >true</item>
     </style>
 
     <style name="Theme.App.Toolbar" parent="Theme.AppCompat.Light.DarkActionBar">
@@ -60,7 +60,14 @@
         <item name="actionMenuTextColor">@color/app_text_title</item>
         <item name="contentInsetStartWithNavigation">@dimen/dp_0</item>
     </style>
-
+    <style name="Theme.App.Search" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">?attr/actionBarSize</item>
+        <item name="contentInsetStart">@dimen/app_margin_default</item>
+        <item name="contentInsetEnd">@dimen/app_margin_default</item>
+        <item name="navigationIcon">@drawable/ic_back</item>
+        <item name="contentInsetStartWithNavigation">@dimen/dp_0</item>
+    </style>
     <style name="Theme.App.Toolbar.AppBar" parent="ThemeOverlay.AppCompat.DayNight.ActionBar" />
 
     <style name="Theme.App.Toolbar.Popup" parent="ThemeOverlay.AppCompat.Light">

@@ -52,6 +52,7 @@
 
     <string name="search">Search</string>
     <string name="web">Web</string>
+        <string name="query_web_hint_link">https://m.baidu.com/</string>
 
     <string name="http">Http</string>
     <string name="http_get">Get</string>
@@ -211,4 +212,13 @@
     <string name="span_touch_fix_2">\@Colin:默认情况下，如果textView添加了clickSpan,#Colin#那么textView的事件将无法冒泡到父级。
         但在某些场景（例如微博评论需要整条可点），我们需要将事件冒泡给父元素进行处理。#qmui#</string>
 
+
+    <string-array name="url_address">
+        <item>http://test.taoqian123.com.cn</item>
+        <item>https://microservice.wacai.com/loan/leap/test</item>
+        <item>http://www.baidu.com</item>
+        <item>https://www.baidu.com</item>
+        <item>http://liyina91.github.io/liyina/UploadPictures/</item>
+        <item>https://docs.xinyan.com/docs/qzh5?token=jhqbrm8neXlb</item>
+    </string-array>
 </resources>

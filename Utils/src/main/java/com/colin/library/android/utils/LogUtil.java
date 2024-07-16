@@ -15,7 +15,6 @@ import org.json.JSONObject;
 import java.io.PrintWriter;
 import java.io.StringReader;
 import java.io.StringWriter;
-import java.net.UnknownHostException;
 import java.util.Formatter;
 import java.util.Locale;
 
@@ -221,7 +220,6 @@ public final class LogUtil {
     public static String format(@NonNull final Throwable error) {
         Throwable t = error;
         while (t != null) {
-            if (t instanceof UnknownHostException) return "UnknownHostException";
             t = t.getCause();
         }
         StringWriter sw = new StringWriter();

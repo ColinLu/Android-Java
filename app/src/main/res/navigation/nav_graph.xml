@@ -39,7 +39,7 @@
             android:id="@+id/action_Home_to_Method"
             app:destination="@id/navigation" />
         <action
-            android:id="@+id/action_Home_to_Web"
+            android:id="@+id/action_Home_to_WebIndex"
             app:destination="@+id/WebIndexFragment" />
     </fragment>
 
@@ -64,7 +64,20 @@
         android:id="@+id/WebIndexFragment"
         android:name="com.colin.android.demo.java.ui.web.WebIndexFragment"
         android:label="@string/web"
-        tools:layout="@layout/fragment_web_index" />
+        tools:layout="@layout/fragment_web_index">
+        <action
+            android:id="@+id/action_webIndex_to_web"
+            app:destination="@+id/WebViewFragment">
+            <argument
+                android:name="type"
+                android:defaultValue="0"
+                app:argType="integer" />
+            <argument
+                android:name="url"
+                android:defaultValue="www.baidu.com"
+                app:argType="string" />
+        </action>
+    </fragment>
     <fragment
         android:id="@+id/LogFragment"
         android:name="com.colin.android.demo.java.ui.method.LogFragment"
@@ -108,5 +121,20 @@
         android:name="com.colin.android.demo.java.ui.view.BehaviorFragment"
         android:label="@string/behavior"
         tools:layout="@layout/fragment_behavior" />
+    <fragment
+        android:id="@+id/WebViewFragment"
+        android:name="com.colin.android.demo.java.ui.web.WebViewFragment"
+        android:label="@string/web"
+        tools:layout="@layout/fragment_web_view">
+
+        <argument
+            android:name="type"
+            android:defaultValue="0"
+            app:argType="integer" />
+        <argument
+            android:name="url"
+            android:defaultValue="www.baidu.com"
+            app:argType="string" />
+    </fragment>
 
 </navigation>

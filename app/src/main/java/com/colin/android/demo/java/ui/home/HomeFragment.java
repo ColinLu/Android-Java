@@ -47,7 +47,7 @@ public class HomeFragment extends AppFragment<FragmentHomeBinding> {
     public void initView(@Nullable Bundle bundle) {
         mBinding.buttonView.setOnClickListener(v -> DemoUtils.toNavigate(this, R.id.action_Home_to_View));
         mBinding.buttonMethod.setOnClickListener(v -> DemoUtils.toNavigate(this, R.id.action_Home_to_Method));
-        mBinding.buttonWeb.setOnClickListener(v -> DemoUtils.toNavigate(this, R.id.action_Home_to_Web));
+        mBinding.buttonWeb.setOnClickListener(v -> DemoUtils.toNavigate(this, R.id.action_Home_to_WebIndex));
         mBinding.buttonImage.setOnClickListener(v -> requestImageIntent());
         mBinding.buttonCamera.setOnClickListener(v -> requestCameraIntent());
         mBinding.buttonVideo.setOnClickListener(v -> requestVideoIntent());

@@ -12,7 +12,7 @@ import com.colin.library.android.widgets.annotation.ScrollState;
  * 作者： ColinLu
  * 时间： 2022-12-31 21:04
  * <p>
- * 描述： TODO
+ * 描述： 控件实现滚动效果
  */
 public interface INestedScroll {
 

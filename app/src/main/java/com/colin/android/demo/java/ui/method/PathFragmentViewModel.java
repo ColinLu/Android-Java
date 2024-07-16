@@ -15,7 +15,7 @@ import java.util.List;
  * 作者： ColinLu
  * 时间： 2022-01-18 22:48
  * <p>
- * 描述： TODO
+ * 描述： 数据构建
  */
 public class PathFragmentViewModel extends ViewModel {
     private final MutableLiveData<List<String>> mList;

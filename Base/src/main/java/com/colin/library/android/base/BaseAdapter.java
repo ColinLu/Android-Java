@@ -77,6 +77,11 @@ public abstract class BaseAdapter<ITEM> extends RecyclerView.Adapter<ViewHolder>
         }
     }
 
+    public void addData(@NonNull ITEM item, int position) {
+        mItemList.add(item);
+        notifyItemChanged(position);
+    }
+
     @LayoutRes
     public abstract int layoutRes(int viewType);
 }
