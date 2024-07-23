@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.colin.library.android.base.def.IBase;
 import com.colin.library.android.base.def.ILife;
+import com.colin.library.android.utils.LogUtil;
 
 /**
  * 作者： ColinLu
@@ -22,6 +23,12 @@ import com.colin.library.android.base.def.ILife;
 public abstract class BaseActivity extends AppCompatActivity implements IBase, ILife {
 
     protected boolean mRefresh = true;
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        LogUtil.d(this.getClass().getSimpleName(), "onCreate");
+        super.onCreate(savedInstanceState);
+    }
 
     public void setContentView(@LayoutRes int layoutRes, @Nullable Bundle savedInstanceState) {
         super.setContentView(layoutRes);
@@ -36,12 +43,43 @@ public abstract class BaseActivity extends AppCompatActivity implements IBase, I
     }
 
     @Override
+    protected void onStart() {
+        LogUtil.d(this.getClass().getSimpleName(), "onStart");
+        super.onStart();
+    }
+
+    @Override
+    protected void onRestart() {
+        LogUtil.d(this.getClass().getSimpleName(), "onRestart");
+        super.onRestart();
+    }
+
+    @Override
     protected void onResume() {
+        LogUtil.d(this.getClass().getSimpleName(), "onResume");
         super.onResume();
         if (mRefresh) {
             mRefresh = false;
             loadData(true);
         }
+    }
+
+    @Override
+    protected void onPause() {
+        LogUtil.d(this.getClass().getSimpleName(), "onPause");
+        super.onPause();
+    }
+
+    @Override
+    protected void onStop() {
+        LogUtil.d(this.getClass().getSimpleName(), "onStop");
+        super.onStop();
+    }
+
+    @Override
+    protected void onDestroy() {
+        LogUtil.d(this.getClass().getSimpleName(), "onDestroy");
+        super.onDestroy();
     }
 
     @NonNull

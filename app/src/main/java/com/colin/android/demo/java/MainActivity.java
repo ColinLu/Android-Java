@@ -33,6 +33,11 @@ public class MainActivity extends AppActivity<ActivityMainBinding> {
     }
 
     @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+    }
+
+    @Override
     public void initView(@Nullable Bundle bundle) {
         setSupportActionBar(mBinding.mToolbar);
         final NavController controller = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
@@ -71,6 +76,7 @@ public class MainActivity extends AppActivity<ActivityMainBinding> {
 
     @Override
     public boolean onSupportNavigateUp() {
+        LogUtil.e("onSupportNavigateUp");
         final NavController controller = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
         return NavigationUI.navigateUp(controller, appBarConfiguration) || super.onSupportNavigateUp();
     }
@@ -91,7 +97,6 @@ public class MainActivity extends AppActivity<ActivityMainBinding> {
     public void updateTitle(@Nullable CharSequence title) {
         mBinding.mToolbar.setTitle(title);
     }
-
 
 
 }

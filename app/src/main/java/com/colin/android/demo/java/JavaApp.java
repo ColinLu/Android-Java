@@ -25,22 +25,13 @@ public final class JavaApp extends Application {
         UtilHelper.getInstance().init(getUtilConfig());
         CrashHelper.getInstance().init((error, crashInfo) -> LogUtil.e(crashInfo));
         OkHttpHelper.getInstance().init(getHttpConfig());
-        //        MediaHelper.getInstance().init(MediaConfig.newBuilder().build());
     }
 
     private UtilConfig getUtilConfig() {
-        return UtilConfig.newBuilder(this)
-                         .setShowLog(true)
-                         .setLogLevel(LogLevel.V)
-                         .setLogMethodCount(1)
-                         .setLogTag("Colin")
-                         .build();
+        return UtilConfig.newBuilder(this).setShowLog(true).setLogLevel(LogLevel.V).setLogMethodCount(1).setLogTag("Colin").build();
     }
 
     private HttpConfig getHttpConfig() {
-        return HttpConfig.newBuilder(this)
-                         .setHeader("GlobalHeader", "GlobalHeaderValue")
-                         .setParam("GlobalParam", "GlobalParamValue")
-                         .build();
+        return HttpConfig.newBuilder(this).setHeader("GlobalHeader", "GlobalHeaderValue").setParam("GlobalParam", "GlobalParamValue").build();
     }
 }

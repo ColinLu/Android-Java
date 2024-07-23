@@ -67,7 +67,7 @@ public class LogFragment extends AppFragment<LayoutListBinding> implements OnIte
                 LogUtil.v(TAG, value);
                 break;
             case "Log V by format":
-                LogUtil.v("format log-> int:%d float:%.2f string:%s", 3, 5.4567F, value);
+                LogUtil.v("format log-> tag:%s int:%d float:%.2f string:%s", TAG, 3, 5.4567F, value);
                 break;
             case "Log D":
                 LogUtil.d(value);

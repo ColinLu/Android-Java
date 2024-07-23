@@ -2,7 +2,9 @@ package com.colin.library.android.base;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
@@ -12,6 +14,7 @@ import androidx.fragment.app.Fragment;
 import com.colin.library.android.Utils;
 import com.colin.library.android.base.def.IBase;
 import com.colin.library.android.base.def.ILife;
+import com.colin.library.android.utils.LogUtil;
 
 /**
  * 作者： ColinLu
@@ -23,18 +26,63 @@ public abstract class BaseFragment extends Fragment implements IBase, ILife {
     protected boolean mRefresh = true;
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        LogUtil.d(this.getClass().getSimpleName(), "onCreate");
+        super.onCreate(savedInstanceState);
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        LogUtil.d(this.getClass().getSimpleName(), "onCreateView");
+        return super.onCreateView(inflater, container, savedInstanceState);
+    }
+
+    @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        LogUtil.d(this.getClass().getSimpleName(), "onViewCreated");
         initView(savedInstanceState);
         initData(getArguments());
     }
 
     @Override
+    public void onStart() {
+        LogUtil.d(this.getClass().getSimpleName(), "onStart");
+        super.onStart();
+    }
+
+    @Override
     public void onResume() {
+        LogUtil.d(this.getClass().getSimpleName(), "onResume");
         super.onResume();
         if (mRefresh) {
             mRefresh = false;
             loadData(true);
         }
+    }
+
+    @Override
+    public void onPause() {
+        LogUtil.d(this.getClass().getSimpleName(), "onPause");
+        super.onPause();
+    }
+
+    @Override
+    public void onStop() {
+        LogUtil.d(this.getClass().getSimpleName(), "onStop");
+        super.onStop();
+    }
+
+    @Override
+    public void onDestroyView() {
+        LogUtil.d(this.getClass().getSimpleName(), "onDestroyView");
+        super.onDestroyView();
+    }
+
+    @Override
+    public void onDestroy() {
+        LogUtil.d(this.getClass().getSimpleName(), "onDestroy");
+        super.onDestroy();
     }
 
     @NonNull
