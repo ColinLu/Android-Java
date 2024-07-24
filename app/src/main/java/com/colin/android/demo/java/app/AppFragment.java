@@ -1,6 +1,5 @@
 package com.colin.android.demo.java.app;
 
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,23 +22,15 @@ import java.lang.reflect.ParameterizedType;
  * 作者： ColinLu
  * 时间： 2021-12-24 23:31
  * <p>
- * 描述： TODO
+ * 描述： 构建App基本逻辑
  */
-public abstract class AppFragment<Bind extends ViewBinding> extends BaseFragment
-        implements ScreenReceiver.OnScreenBroadcastListener, NetBroadReceiver.OnNetListener {
-    protected Bind mBinding;
+public abstract class AppFragment<VB extends ViewBinding> extends BaseFragment implements ScreenReceiver.OnScreenBroadcastListener, NetBroadReceiver.OnNetListener {
+    protected VB mBinding ;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        final ParameterizedType type = (ParameterizedType) getClass().getGenericSuperclass();
-        final Class cls = (Class) type.getActualTypeArguments()[0];
-        try {
-            final Method inflate = cls.getDeclaredMethod("inflate", LayoutInflater.class, ViewGroup.class, boolean.class);
-            mBinding = (Bind) inflate.invoke(null, inflater, container, false);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        mBinding = reflectViewBinding(inflater, container);
         return mBinding.getRoot();
     }
 
@@ -56,11 +47,6 @@ public abstract class AppFragment<Bind extends ViewBinding> extends BaseFragment
         mBinding = null;
     }
 
-    @Override
-    public int layoutRes() {
-        return Resources.ID_NULL;
-    }
-
     protected void toNavigate(int action) {
         NavHostFragment.findNavController(this).navigate(action);
     }
@@ -73,5 +59,18 @@ public abstract class AppFragment<Bind extends ViewBinding> extends BaseFragment
     @Override
     public void screen(@NonNull String action) {
         LogUtil.i(action);
+    }
+
+
+    private VB reflectViewBinding(@NonNull LayoutInflater inflater, @Nullable ViewGroup container) throws IllegalStateException {
+        try {
+            final ParameterizedType type = (ParameterizedType) getClass().getGenericSuperclass();
+            final Class cls = (Class) type.getActualTypeArguments()[0];
+            final Method inflate = cls.getDeclaredMethod("inflate", LayoutInflater.class, ViewGroup.class, boolean.class);
+            return (VB) inflate.invoke(null, inflater, container, false);
+        } catch (Exception e) {
+            LogUtil.log(e);
+        }
+        throw new IllegalStateException("reflectViewBinding fail");
     }
 }

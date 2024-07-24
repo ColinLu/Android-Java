@@ -3,15 +3,16 @@ package com.colin.library.android.utils.encrypt;
 import android.os.Build;
 import android.text.Html;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 
-import com.colin.library.android.utils.LogUtil;
-import com.colin.library.android.utils.StringUtil;
 import com.colin.library.android.annotation.Encode;
+import com.colin.library.android.utils.StringUtil;
 
-import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.nio.charset.Charset;
 
 
 /**
@@ -24,40 +25,42 @@ public final class EncodeUtil {
 
     /*url 加密*/
     @Nullable
+    @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
     public static String encode(@Nullable final String url) {
         return encode(url, Encode.UTF_8);
     }
 
     /*url 加密*/
     @Nullable
-    public static String encode(@Nullable final String url, @Nullable final String enc) {
-        if (StringUtil.isEmpty(enc)) return url;
-        if (StringUtil.isEmpty(url)) return null;
-        try {
-            return URLEncoder.encode(url, enc);
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        return null;
+    @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
+    public static String encode(@Nullable final String url, @NonNull @Encode final String encode) {
+        return encode(url, Charset.forName(encode));
+    }
+
+    @Nullable
+    @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
+    public static String encode(@Nullable final String url, @Nullable final Charset charset) {
+        return StringUtil.isEmpty(url) || charset == null ? url : URLEncoder.encode(url, charset);
     }
 
     /*url 解密*/
     @Nullable
+    @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
     public static String decode(@Nullable final String url) {
         return decode(url, Encode.UTF_8);
     }
 
     /*url 解密*/
     @Nullable
-    public static String decode(@Nullable final String url, @Nullable final String enc) {
-        if (StringUtil.isEmpty(enc)) return url;
-        if (StringUtil.isEmpty(url)) return null;
-        try {
-            return URLDecoder.decode(url, enc);
-        } catch (UnsupportedEncodingException e) {
-            LogUtil.log(e);
-        }
-        return null;
+    @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
+    public static String decode(@Nullable final String url, @NonNull @Encode final String encode) {
+        return decode(url, Charset.forName(encode));
+    }
+
+    @Nullable
+    @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
+    public static String decode(@Nullable final String url, @Nullable final Charset charset) {
+        return StringUtil.isEmpty(url) || charset == null ? url : URLDecoder.decode(url, charset);
     }
 
     /**
@@ -66,8 +69,9 @@ public final class EncodeUtil {
      * @param input The input.
      * @return html-encode string
      */
+    @Nullable
     public static String htmlEncode(@Nullable final CharSequence input) {
-        if (input == null || input.length() == 0) return "";
+        if (StringUtil.isEmpty(input)) return null;
         StringBuilder sb = new StringBuilder();
         char c;
         for (int i = 0, len = input.length(); i < len; i++) {
@@ -106,14 +110,10 @@ public final class EncodeUtil {
      * @param input The input.
      * @return the string of decode html-encode string
      */
-    @SuppressWarnings("deprecation")
+    @Nullable
     public static CharSequence htmlDecode(@Nullable final String input) {
-        if (input == null || input.length() == 0) return "";
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            return Html.fromHtml(input, Html.FROM_HTML_MODE_LEGACY);
-        } else {
-            return Html.fromHtml(input);
-        }
+        if (StringUtil.isEmpty(input)) return null;
+        return Html.fromHtml(input, Html.FROM_HTML_MODE_LEGACY);
     }
 
     /**

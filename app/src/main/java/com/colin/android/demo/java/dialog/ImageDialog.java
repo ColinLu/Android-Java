@@ -10,7 +10,6 @@ import androidx.annotation.Nullable;
 import com.colin.android.demo.java.app.AppDialog;
 import com.colin.android.demo.java.databinding.DialogImageBinding;
 import com.colin.library.android.utils.BitmapUtil;
-import com.colin.library.android.utils.ResourceUtil;
 
 import java.lang.ref.WeakReference;
 

@@ -53,7 +53,7 @@ public class BaseRequestBody<Returner> extends BaseRequest<Returner> implements 
 
     @Override
     public Returner bytes(@Nullable byte[] bytes) {
-        return bytes(bytes, Constants.CONTENT_TYPE_STREAM, Constants.ENCODE_DEFAULT, 0, null == bytes ? 0 : bytes.length);
+        return bytes(bytes, Constants.CONTENT_TYPE_STREAM, null, 0, null == bytes ? 0 : bytes.length);
     }
 
     @Override
@@ -68,7 +68,7 @@ public class BaseRequestBody<Returner> extends BaseRequest<Returner> implements 
 
     @Override
     public Returner bytes(@Nullable byte[] bytes, @NonNull String contentType, int offset, int count) {
-        return bytes(bytes, contentType, Constants.ENCODE_DEFAULT, offset, count);
+        return bytes(bytes, contentType, null, offset, count);
     }
 
     @Override
@@ -207,9 +207,7 @@ public class BaseRequestBody<Returner> extends BaseRequest<Returner> implements 
 
     @Override
     public Returner body(@Nullable String contentType, @Nullable IRequestBody requestBody) {
-        if (!StringUtil.isEmpty(contentType)) {
-            mRequestBodyMap.put(contentType, requestBody);
-        }
+        if (!StringUtil.isEmpty(contentType)) mRequestBodyMap.put(contentType, requestBody);
         return (Returner) this;
     }
 
@@ -231,7 +229,7 @@ public class BaseRequestBody<Returner> extends BaseRequest<Returner> implements 
     // 辅助方法
     ///////////////////////////////////////////////////////////////////////////
     private boolean isMultipart() {
-        return mMultipartBody || (mFileBodyList != null && mFileBodyList.size() > 0);
+        return mMultipartBody || (mFileBodyList != null && !mFileBodyList.isEmpty());
     }
 
     @NonNull

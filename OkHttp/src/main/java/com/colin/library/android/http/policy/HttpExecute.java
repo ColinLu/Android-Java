@@ -68,7 +68,7 @@ public class HttpExecute implements IHttpExecute {
                 //开始请求服务器
                 request(action);
             } catch (Throwable e) {
-                fail(action, new HttpException(HttpException.CODE_HTTP_STATE, mRequest.toString(), e));
+                fail(action, new HttpException(HttpException.CODE_HTTP_STATE, mRequest.url().toString(), e));
             }
         });
     }
@@ -127,7 +127,7 @@ public class HttpExecute implements IHttpExecute {
                     mCall = mHttpClient.newCall(mRequest);
                     request(action);
                 } else {
-                    fail(action, new HttpException(HttpException.CODE_HTTP_FAIL, mRequest.toString(), e));
+                    fail(action, new HttpException(HttpException.CODE_HTTP_FAIL, mRequest.url().toString(), e));
                 }
             }
 
@@ -144,14 +144,14 @@ public class HttpExecute implements IHttpExecute {
                     responseBody = response.body();
                     //服务器问题 请求失败  或者没有请求体
                     if (!response.isSuccessful() || code == 404 || code >= 500) {
-                        fail(action, new HttpException(code, mRequest.toString(), response.message()));
+                        fail(action, new HttpException(code, mRequest.url().toString(), response.message()));
                         return;
                     }
                     //解析操作
                     final Result result = action.parse(response, mEncode, action);
                     success(action, result);
                 } catch (Throwable e) {
-                    fail(action, new HttpException(code, mRequest.toString(), e));
+                    fail(action, new HttpException(code, mRequest.url().toString(), e));
                 } finally {
                     IOUtil.close(responseBody, response);
                 }

@@ -17,6 +17,7 @@ import com.colin.android.demo.java.R;
 import com.colin.android.demo.java.adapter.StringAdapter;
 import com.colin.android.demo.java.app.AppFragment;
 import com.colin.android.demo.java.databinding.FragmentBehaviorBinding;
+import com.colin.library.android.utils.ViewUtil;
 import com.colin.library.android.widgets.Utils;
 import com.colin.library.android.widgets.behavior.BottomAreaBehavior;
 import com.colin.library.android.widgets.behavior.TopAreaBehavior;
@@ -58,7 +59,6 @@ public class BehaviorFragment extends AppFragment<FragmentBehaviorBinding> imple
     }
 
     private void initRecyclerView(@NonNull Context context) {
-        if (mRecyclerView == null) return;
         mRecyclerView.setLayoutManager(new LinearLayoutManager(context) {
             @Override
             public RecyclerView.LayoutParams generateDefaultLayoutParams() {
@@ -66,31 +66,20 @@ public class BehaviorFragment extends AppFragment<FragmentBehaviorBinding> imple
             }
         });
         if (mAdapter == null) {
-            mAdapter = new StringAdapter();
+            mAdapter = new StringAdapter(this);
             mAdapter.setData(Arrays.asList(context.getResources().getStringArray(R.array.flow_data)));
         }
-        mAdapter.setOnItemClickListener(this);
-//        mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
     }
 
-    @Override
-    public void initData(@Nullable Bundle bundle) {
-
-    }
-
-    @Override
-    public void loadData(boolean refresh) {
-
-    }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        Utils.destroy(mWebView);
+        ViewUtil.destroy(mWebView);
     }
 
     @Override

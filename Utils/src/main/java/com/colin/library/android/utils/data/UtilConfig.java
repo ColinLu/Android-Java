@@ -6,7 +6,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.colin.library.android.annotation.LogLevel;
-import com.colin.library.android.utils.BuildConfig;
 
 
 /**
@@ -98,7 +97,7 @@ public final class UtilConfig {
         private int mLogMethodCount = 3;
 
         public Builder(@NonNull Application application) {
-            this(application, BuildConfig.DEBUG);
+            this(application, true);
         }
 
         public Builder(@NonNull Application application, boolean debug) {

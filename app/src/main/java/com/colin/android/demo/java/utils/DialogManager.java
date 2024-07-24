@@ -8,7 +8,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
-import com.colin.android.demo.java.def.bean.ContactBean;
 import com.colin.android.demo.java.dialog.ImageDialog;
 import com.colin.android.demo.java.dialog.PathDialog;
 import com.colin.android.demo.java.dialog.TipsDialog;
@@ -40,11 +39,6 @@ public final class DialogManager {
     }
 
 
-    public void show(@Nullable FragmentManager manager, @Nullable ContactBean bean) {
-        if (manager == null || bean == null) return;
-
-    }
-
     public void showTip(@Nullable FragmentManager manager, @Nullable String msg) {
         if (manager == null || StringUtil.isEmpty(msg)) return;
         final TipsDialog dialog = getTipsDialog(manager, TAG);
@@ -52,19 +46,21 @@ public final class DialogManager {
         dialog.show(manager, TAG);
     }
 
-    public void showImage(@Nullable FragmentManager manager, @Nullable Bitmap bitmap) {
-        if (manager == null || BitmapUtil.isEmpty(bitmap)) return;
+    public void showImage(@NonNull FragmentManager manager, @Nullable Bitmap bitmap) {
+        if (BitmapUtil.isEmpty(bitmap)) return;
         final ImageDialog dialog = getImageDialog(manager, TAG);
         dialog.setImage(bitmap);
         dialog.show(manager, TAG);
     }
-    public void showImage(@Nullable FragmentManager manager, @DrawableRes int res) {
+
+    public void showImage(@NonNull FragmentManager manager, @DrawableRes int res) {
         final ImageDialog dialog = new ImageDialog();
         dialog.setImageRes(res);
         dialog.show(manager, TAG);
     }
-    public synchronized void showTip(@Nullable FragmentManager manager, @Nullable String title, @Nullable String msg) {
-        if (manager == null || StringUtil.isEmpty(title, msg)) return;
+
+    public synchronized void showTip(@NonNull FragmentManager manager, @Nullable String title, @Nullable String msg) {
+        if (StringUtil.isEmpty(title, msg)) return;
         final TipsDialog dialog = getTipsDialog(manager, "TipsDialog");
         dialog.setTips(title, msg);
         dialog.show(manager, "TipsDialog");

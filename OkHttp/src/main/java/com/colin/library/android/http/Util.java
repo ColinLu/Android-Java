@@ -1,18 +1,22 @@
 package com.colin.library.android.http;
 
+import android.os.Build;
 import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 
 import com.colin.library.android.annotation.Encode;
 import com.colin.library.android.http.def.Constants;
 import com.colin.library.android.utils.HttpUtil;
+import com.colin.library.android.utils.StringUtil;
 
 import java.util.StringTokenizer;
 
 import okhttp3.Cookie;
 import okhttp3.Headers;
+import okhttp3.MediaType;
 import okhttp3.Request;
 import okhttp3.Response;
 
@@ -23,7 +27,9 @@ import okhttp3.Response;
  * 描述： Util for OkHttp
  */
 public final class Util {
+
     @Nullable
+    @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
     public static String getFileName(@NonNull final Response response, @Nullable String encode) {
         final Request request = response.request();
         final Headers headers = request.headers();
@@ -46,7 +52,8 @@ public final class Util {
             indexOf = disposition.indexOf(split);
             if (indexOf != -1) {
                 String fileName = disposition.substring(indexOf + split.length());
-                if (fileName.startsWith(Encode.UTF_8)) fileName = fileName.substring(Encode.UTF_8.length());
+                if (fileName.startsWith(Encode.UTF_8))
+                    fileName = fileName.substring(Encode.UTF_8.length());
                 return fileName;
             }
         }
@@ -83,5 +90,11 @@ public final class Util {
             }
         }
         return def;
+    }
+
+    @Nullable
+    public static MediaType getMediaType(@Nullable String mimeType, @Nullable String encode) {
+        if (StringUtil.isEmpty(mimeType, encode)) return null;
+        return MediaType.parse(mimeType + "; charset=" + encode);
     }
 }

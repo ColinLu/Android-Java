@@ -9,9 +9,19 @@
         <item name="colorSecondary">@color/teal_200</item>
         <item name="colorSecondaryVariant">@color/teal_700</item>
         <item name="colorOnSecondary">@color/black</item>
+        <item name="colorAccent">@color/colorAccent</item>
         <!-- Status bar color. -->
-        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
+        <item name="colorError">@color/colorError</item>
+        <item name="colorOnError">@color/colorAccent</item>
+        <item name="android:clipToPadding">true</item>
+        <item name="android:windowBackground">@color/colorBackground</item>
+        <item name="android:navigationBarColor">@color/navigation_color</item>
+        <item name="android:statusBarColor">?attr/colorPrimaryDark</item>
+        <item name="android:windowLightStatusBar">@bool/app_status_mode</item>
+        <item name="android:forceDarkAllowed">@bool/app_dark_allowed</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation.Activity</item>
     </style>
 
     <style name="Theme.App.NoActionBar">
@@ -22,6 +32,50 @@
     <style name="Theme.App.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="Theme.App.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="Theme.App.Dialog" parent="Theme.AppCompat.DayNight.Dialog">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowIsTranslucent">false</item>
+        <item name="android:backgroundDimAmount">0.6</item>
+    </style>
+
+    <style name="Theme.App.Dialog.Translucent">
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowLightStatusBar" >true</item>
+    </style>
+
+    <style name="Theme.App.Toolbar" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">?attr/actionBarSize</item>
+        <item name="contentInsetStart">@dimen/app_margin_default</item>
+        <item name="contentInsetEnd">@dimen/app_margin_default</item>
+        <item name="navigationIcon">@drawable/ic_back</item>
+        <item name="titleTextAppearance">@style/Text.Title</item>
+        <item name="navigationContentDescription">@string/app_name</item>
+        <item name="actionMenuTextColor">@color/app_text_title</item>
+        <item name="contentInsetStartWithNavigation">@dimen/dp_0</item>
+    </style>
+    <style name="Theme.App.Search" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">?attr/actionBarSize</item>
+        <item name="contentInsetStart">@dimen/app_margin_default</item>
+        <item name="contentInsetEnd">@dimen/app_margin_default</item>
+        <item name="navigationIcon">@drawable/ic_back</item>
+        <item name="contentInsetStartWithNavigation">@dimen/dp_0</item>
+    </style>
+    <style name="Theme.App.Toolbar.AppBar" parent="ThemeOverlay.AppCompat.DayNight.ActionBar" />
+
+    <style name="Theme.App.Toolbar.Popup" parent="ThemeOverlay.AppCompat.Light">
+        <item name="overlapAnchor">false</item>
+        <item name="android:popupBackground">@color/colorBackground</item>
+        <item name="android:textSize">@dimen/app_text_default</item>
+        <item name="android:textColor">@color/app_text_default</item>
+    </style>
 
     <!--点击按钮样式-->
     <style name="Theme.App.Button" parent="Theme.MaterialComponents.DayNight">
@@ -87,9 +141,57 @@
     </style>
 
     <style name="Theme.App.Image" parent="Theme.MaterialComponents.DayNight" />
+    <!--图片-->
+    <style name="Theme.App.ImageView" parent="Theme.MaterialComponents.DayNight">
+        <item name="android:layout_width">@dimen/app_title_height</item>
+        <item name="android:layout_height">@dimen/app_title_height</item>
+        <item name="android:background">@null</item>
+        <item name="android:description">@string/app_name</item>
+        <item name="android:scaleType">centerCrop</item>
+    </style>
+    <!--RecyclerView-->
+    <style name="Theme.App.RecyclerView" parent="Theme.MaterialComponents.DayNight">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+    </style>
+    <!--SwipeRefresh-->
+    <style name="Theme.App.SwipeRefresh" parent="Theme.MaterialComponents.DayNight">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+    </style>
+
+    <!--TabLayout-->
+    <style name="App.TabLayout" parent="Widget.MaterialComponents.TabLayout">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">?attr/actionBarSize</item>
+        <item name="android:background">@null</item>
+        <item name="tabUnboundedRipple">false</item>
+        <item name="tabRippleColor">@color/transparent</item>
+        <item name="tabTextColor">@color/app_text_hint</item>
+        <item name="tabSelectedTextColor">@color/app_text_title</item>
+        <item name="tabTextAppearance">@style/Text.Title</item>
+    </style>
 
     <style name="Circle">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">50%</item>
+    </style>
+
+    <style name="Text" parent="TextAppearance.AppCompat.Body1">
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textSize">@dimen/app_text_default</item>
+        <item name="android:textColor">@color/app_text_default</item>
+    </style>
+
+    <style name="Text.Title" parent="Text">
+        <item name="android:textSize">@dimen/app_text_title</item>
+        <item name="android:textColor">@color/app_text_title</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="Text.Subtitle" parent="Text">
+        <item name="android:textSize">@dimen/app_text_small</item>
+        <item name="android:textColor">@color/app_text_title</item>
+        <item name="android:textStyle">normal</item>
     </style>
 </resources>

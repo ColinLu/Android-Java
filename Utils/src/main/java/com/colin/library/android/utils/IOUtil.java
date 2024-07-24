@@ -6,7 +6,6 @@ import androidx.annotation.Size;
 
 import com.colin.library.android.utils.data.Constants;
 
-
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
@@ -71,7 +70,7 @@ public final class IOUtil {
             write(input, output);
             bytes = output.toByteArray();
         } catch (IOException e) {
-            e.printStackTrace();
+            LogUtil.log(e);
         } finally {
             close(input, output);
         }
@@ -89,7 +88,7 @@ public final class IOUtil {
             write(input, output);
             bytes = output.toByteArray();
         } catch (IOException e) {
-            e.printStackTrace();
+            LogUtil.log(e);
         } finally {
             close(input, output);
         }
@@ -106,7 +105,7 @@ public final class IOUtil {
             write(input, output, charset);
             bytes = output.toByteArray();
         } catch (IOException e) {
-            e.printStackTrace();
+            LogUtil.log(e);
         } finally {
             close(input, output);
         }
@@ -124,7 +123,7 @@ public final class IOUtil {
                 offset += byteCount;
             if (offset != size) return null;
         } catch (IOException e) {
-            e.printStackTrace();
+            LogUtil.log(e);
         }
         return data;
     }
@@ -392,13 +391,13 @@ public final class IOUtil {
      * @param closeables closeables
      */
     public static void close(@Nullable final Closeable... closeables) {
-        if (closeables == null || closeables.length == 0) return;
+        if (closeables == null) return;
         for (Closeable closeable : closeables) {
             if (null == closeable) continue;
             try {
                 closeable.close();
             } catch (IOException e) {
-                e.printStackTrace();
+                LogUtil.log(e);
             }
         }
     }
@@ -415,13 +414,13 @@ public final class IOUtil {
      * @param flushables
      */
     public static void flush(final Flushable... flushables) {
-        if (flushables == null || flushables.length == 0) return;
+        if (flushables == null) return;
         for (Flushable flush : flushables) {
             if (null == flush) continue;
             try {
                 flush.flush();
             } catch (IOException e) {
-                e.printStackTrace();
+                LogUtil.log(e);
             }
         }
     }

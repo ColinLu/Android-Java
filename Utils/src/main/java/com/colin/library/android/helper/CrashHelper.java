@@ -9,7 +9,7 @@ import com.colin.library.android.utils.AppUtil;
 import com.colin.library.android.utils.FileUtil;
 import com.colin.library.android.utils.LogUtil;
 import com.colin.library.android.utils.OSUtil;
-import com.colin.library.android.utils.PathUtil;
+import com.colin.library.android.utils.StorageUtil;
 import com.colin.library.android.utils.StringUtil;
 import com.colin.library.android.utils.TimeUtil;
 import com.colin.library.android.utils.data.Constants;
@@ -51,7 +51,7 @@ public final class CrashHelper {
     }
 
     public File getFile() {
-        return PathUtil.getExternalCache();
+        return StorageUtil.getExternalCacheDir();
     }
 
     public String getFileName() {

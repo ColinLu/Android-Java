@@ -12,7 +12,6 @@
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/text_dialog_title"
-            style="@style/Text.Title"
             android:layout_width="@dimen/dp_0"
             android:layout_height="@dimen/app_title_height"
             android:gravity="center"

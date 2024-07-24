@@ -1,21 +1,18 @@
 package com.colin.android.demo.java.ui.method;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.colin.android.demo.java.R;
 import com.colin.android.demo.java.adapter.StringAdapter;
 import com.colin.android.demo.java.app.AppFragment;
-import com.colin.android.demo.java.databinding.FragmentMethodBinding;
 import com.colin.android.demo.java.databinding.LayoutListBinding;
 import com.colin.android.demo.java.def.LoadState;
+import com.colin.android.demo.java.utils.DemoUtils;
 import com.colin.library.android.widgets.def.OnItemClickListener;
 
 /**
@@ -30,23 +27,14 @@ public class MethodFragment extends AppFragment<LayoutListBinding> implements On
 
     @Override
     public void initView(@Nullable Bundle bundle) {
-        initRecyclerView(getActivity());
+        initRecyclerView();
         mBinding.mRefreshList.setColorSchemeResources(R.color.colorAccent, R.color.colorPrimary);
         mBinding.mRefreshList.setOnRefreshListener(() -> loadData(true));
     }
 
-    private void initRecyclerView(Context context) {
-        if (context == null) {
-            return;
-        }
-        if (mAdapter == null) {
-            mAdapter = new StringAdapter();
-        }
-        mAdapter.setOnItemClickListener(this);
-        mBinding.mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
-        mBinding.mRecyclerView.setHasFixedSize(true);
-        mBinding.mRecyclerView.setAdapter(mAdapter);
-        mBinding.mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+    private void initRecyclerView() {
+        if (mAdapter == null) mAdapter = new StringAdapter(this);
+        DemoUtils.initRecyclerView(mBinding.mRecyclerView, mAdapter);
     }
 
     @Override

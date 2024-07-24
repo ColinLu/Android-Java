@@ -14,7 +14,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.Px;
 import androidx.appcompat.widget.AppCompatImageView;
 
-import com.colin.library.android.provider.AppViewOutlineProvider;
+import com.colin.library.android.widgets.provider.AppViewOutlineProvider;
 import com.colin.library.android.widgets.R;
 
 /**

@@ -26,6 +26,7 @@ public final class ArrayUtil {
      * @param arrays
      * @return
      */
+    @SafeVarargs
     public static <ARRAY> boolean isEmpty(@Nullable final ARRAY... arrays) {
         return null == arrays || arrays.length == 0;
     }

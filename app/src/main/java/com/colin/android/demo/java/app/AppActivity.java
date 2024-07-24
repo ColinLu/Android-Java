@@ -1,9 +1,7 @@
 package com.colin.android.demo.java.app;
 
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -23,43 +21,23 @@ import java.lang.reflect.ParameterizedType;
  * <p>
  * 描述： 构建App基本逻辑
  */
-public abstract class AppActivity<Bind extends ViewBinding> extends BaseActivity
-        implements ScreenReceiver.OnScreenBroadcastListener, NetBroadReceiver.OnNetListener {
-    protected Bind mBinding;
+public abstract class AppActivity<VB extends ViewBinding> extends BaseActivity implements ScreenReceiver.OnScreenBroadcastListener, NetBroadReceiver.OnNetListener {
+    protected VB mBinding;
 
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        final ParameterizedType type = (ParameterizedType) getClass().getGenericSuperclass();
-        final Class cls = (Class) type.getActualTypeArguments()[0];
-        try {
-            Method inflate = cls.getDeclaredMethod("inflate", LayoutInflater.class);
-            mBinding = (Bind) inflate.invoke(null, getLayoutInflater());
-            setContentView(mBinding.getRoot());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        mBinding = reflectViewBinding();
+        setContentView(mBinding.getRoot(), savedInstanceState);
         ScreenReceiver.bind(this);
         NetBroadReceiver.bind(this);
-    }
-
-
-    @Nullable
-    @Override
-    public View onCreatePanelView(int featureId) {
-        return super.onCreatePanelView(featureId);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         mBinding = null;
-    }
-
-    @Override
-    public int layoutRes() {
-        return Resources.ID_NULL;
     }
 
     @Override
@@ -70,5 +48,18 @@ public abstract class AppActivity<Bind extends ViewBinding> extends BaseActivity
     @Override
     public void screen(@NonNull String action) {
         LogUtil.i(action);
+    }
+
+
+    private VB reflectViewBinding() throws IllegalStateException {
+        try {
+            final ParameterizedType type = (ParameterizedType) getClass().getGenericSuperclass();
+            final Class cls = (Class) type.getActualTypeArguments()[0];
+            Method inflate = cls.getDeclaredMethod("inflate", LayoutInflater.class);
+            return (VB) inflate.invoke(null, getLayoutInflater());
+        } catch (Exception e) {
+            LogUtil.log(e);
+        }
+        throw new IllegalStateException("reflectViewBinding fail");
     }
 }

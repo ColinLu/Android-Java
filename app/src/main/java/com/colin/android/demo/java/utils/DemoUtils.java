@@ -12,6 +12,9 @@ import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelStoreOwner;
 import androidx.navigation.fragment.NavHostFragment;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.colin.library.android.utils.ResourceUtil;
 
@@ -41,6 +44,7 @@ public final class DemoUtils {
         NavHostFragment.findNavController(fragment).navigate(action, bundle);
     }
 
+
     @NonNull
     public static List<String> getStringList(@ArrayRes int arrayRes) {
         if (arrayRes == Resources.ID_NULL) return Collections.emptyList();
@@ -48,5 +52,10 @@ public final class DemoUtils {
         return Arrays.asList(array);
     }
 
-
+    public static void initRecyclerView(@NonNull RecyclerView view, @NonNull RecyclerView.Adapter<?> adapter) {
+        view.setLayoutManager(new LinearLayoutManager(view.getContext()));
+        view.setHasFixedSize(true);
+        view.setAdapter(adapter);
+        view.setItemAnimator(new DefaultItemAnimator());
+    }
 }

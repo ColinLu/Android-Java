@@ -246,19 +246,17 @@ public final class NetUtil {
             for (InetAddress add : adds) {
                 if (!add.isLoopbackAddress()) {
                     String hostAddress = add.getHostAddress();
-                    boolean isIPv4 = hostAddress.indexOf(':') < 0;
+                    boolean isIPv4 = (hostAddress != null ? hostAddress.indexOf(':') : 0) < 0;
                     if (useIPv4) if (isIPv4) return hostAddress;
                     else {
-                        if (!isIPv4) {
-                            int index = hostAddress.indexOf('%');
-                            return index < 0 ? hostAddress.toUpperCase()
-                                    : hostAddress.substring(0, index).toUpperCase();
-                        }
+                        int index = hostAddress != null ? hostAddress.indexOf('%') : 0;
+                        return index < 0 ? hostAddress.toUpperCase()
+                                : hostAddress != null ? hostAddress.substring(0, index).toUpperCase() : null;
                     }
                 }
             }
         } catch (SocketException e) {
-            e.printStackTrace();
+            LogUtil.log(e);
         }
         return "";
     }
@@ -283,7 +281,7 @@ public final class NetUtil {
                 }
             }
         } catch (SocketException e) {
-            e.printStackTrace();
+            LogUtil.log(e);
         }
         return "";
     }

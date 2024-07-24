@@ -7,7 +7,6 @@ import androidx.annotation.Nullable;
 
 import com.colin.library.android.Utils;
 import com.colin.library.android.annotation.LogLevel;
-import com.colin.library.android.utils.BuildConfig;
 import com.colin.library.android.utils.data.UtilConfig;
 
 /**
@@ -23,7 +22,6 @@ public final class UtilHelper {
     private UtilHelper() {
     }
 
-
     public static UtilHelper getInstance() {
         if (sHelper == null) {
             synchronized (UtilHelper.class) {
@@ -34,7 +32,7 @@ public final class UtilHelper {
     }
 
     public void init(@NonNull Application app) {
-        init(new UtilConfig.Builder(app, BuildConfig.DEBUG).build());
+        init(new UtilConfig.Builder(app, true).build());
     }
 
     public void init(@NonNull UtilConfig config) {

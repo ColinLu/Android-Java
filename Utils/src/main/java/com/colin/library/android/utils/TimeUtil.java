@@ -7,7 +7,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.collection.LruCache;
 
-import com.colin.library.android.utils.StringUtil;
 import com.colin.library.android.utils.data.Constants;
 
 import java.text.ParseException;
@@ -78,9 +77,7 @@ public final class TimeUtil {
     /**
      * 获取当前时间戳格式化字符串
      * yyyy-MM-dd HH:mm:ss:SSS
-     *
-     * @return
-     */
+     **/
     @NonNull
     public static String getTimeString() {
         return getTimeString(System.currentTimeMillis());
@@ -90,8 +87,8 @@ public final class TimeUtil {
      * 时间戳字符串格式化
      * yyyy-MM-dd HH:mm:ss:SSS
      *
-     * @param time
-     * @return
+     * @param time 时间戳
+     * @return 时间字符串
      */
     @NonNull
     public static String getTimeString(final long time) {
@@ -102,7 +99,7 @@ public final class TimeUtil {
      * 当前时间制定格式化成字符串
      *
      * @param pattern 时间格式
-     * @return
+     * @return 时间字符串
      */
     @NonNull
     public static String getTimeString(@NonNull final String pattern) {
@@ -112,9 +109,9 @@ public final class TimeUtil {
     /**
      * 格式化时间戳
      *
-     * @param pattern
-     * @param time
-     * @return
+     * @param pattern 时间格式
+     * @param time    时间戳
+     * @return 时间字符串
      */
     @NonNull
     public static String getTimeString(@NonNull final String pattern, final long time) {
@@ -124,8 +121,8 @@ public final class TimeUtil {
     /**
      * 格式化时间戳
      *
-     * @param simpleDateFormat
-     * @return
+     * @param simpleDateFormat 时间格式
+     * @return 时间字符串
      */
     @NonNull
     public static String getTimeString(@NonNull final SimpleDateFormat simpleDateFormat) {
@@ -135,8 +132,8 @@ public final class TimeUtil {
     /**
      * 格式化时间戳
      *
-     * @param simpleDateFormat
-     * @return
+     * @param simpleDateFormat 时间格式
+     * @return 时间字符串
      */
     @NonNull
     public static String getTimeString(@NonNull final SimpleDateFormat simpleDateFormat, final long time) {
@@ -144,15 +141,15 @@ public final class TimeUtil {
     }
 
     public static long getTime(@Nullable String pattern, @Nullable final String time) {
-        if (StringUtil.isEmpty(pattern) || StringUtil.isEmpty(time)) return -1;
+        if (StringUtil.isEmpty(pattern) || StringUtil.isEmpty(time)) return Constants.INVALID;
         try {
             SimpleDateFormat dateFormat = getDateFormat(pattern);
             Date date = dateFormat.parse(time);
-            return null == date ? -1 : date.getTime();
+            return null == date ? Constants.INVALID : date.getTime();
         } catch (Exception e) {
-            e.printStackTrace();
+            LogUtil.log(e);
         }
-        return -1;
+        return Constants.INVALID;
     }
 
     public static String format(long second) {
@@ -170,22 +167,19 @@ public final class TimeUtil {
     /**
      * 时间戳转换成时间格式
      *
-     * @param duration
-     * @return
+     * @param duration 时间间隔
+     * @return 时间
      */
     public static String formatDuration(long duration) {
-        return String.format(Locale.getDefault(), "%02d:%02d",
-                TimeUnit.MILLISECONDS.toMinutes(duration),
-                TimeUnit.MILLISECONDS.toSeconds(duration)
-                        - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(duration)));
+        return String.format(Locale.getDefault(), "%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(duration), TimeUnit.MILLISECONDS.toSeconds(duration) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(duration)));
     }
 
     /**
      * 更具时间字符串 转化成日期格式
      *
-     * @param timeString
-     * @param formatString
-     * @return
+     * @param timeString   时间字符串
+     * @param formatString 时间格式
+     * @return 日期
      */
     public static Date getDateByString(String timeString, String formatString) {
         if (StringUtil.isEmpty(timeString)) return new Date();
@@ -193,7 +187,7 @@ public final class TimeUtil {
         try {
             return simpleDateFormat.parse(timeString);
         } catch (ParseException e) {
-            e.printStackTrace();
+            LogUtil.log(e);
             return new Date();
         }
     }
@@ -217,9 +211,15 @@ public final class TimeUtil {
      * @return 指定年份所属的月份的天数
      */
     public static int getMonthDayNumberAll(final int year, final int month) {
-        int number = 31;
         // 判断返回的标识数字
         switch (month) {
+            case 2:
+                return isLeapYear(year) ? 29 : 28;
+            case 4:
+            case 6:
+            case 9:
+            case 11:
+                return 30;
             case 1:
             case 3:
             case 5:
@@ -227,23 +227,9 @@ public final class TimeUtil {
             case 8:
             case 10:
             case 12:
-                number = 31;
-                break;
-            case 2:
-                if (isLeapYear(year)) {
-                    number = 29;
-                } else {
-                    number = 28;
-                }
-                break;
-            case 4:
-            case 6:
-            case 9:
-            case 11:
-                number = 30;
-                break;
+            default:
+                return 31;
         }
-        return number;
     }
 
     public static long parseHttpTime(@Nullable String time) {

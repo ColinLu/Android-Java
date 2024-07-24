@@ -30,8 +30,7 @@ public class MethodFragmentViewModel extends ViewModel {
         mLoadState.setValue(LoadState.ING);
         ThreadHelper.getInstance().doAsync(
                 () -> mList.postValue(DemoUtils.getStringList(R.array.method_list)));
-        ThreadHelper.getInstance().postDelayed(() -> mLoadState.setValue(LoadState.SUCCESS),
-                                               Constants.DURATION_DELAYED);
+        ThreadHelper.getInstance().postDelayed(() -> mLoadState.setValue(LoadState.SUCCESS), Constants.DURATION_DELAYED);
     }
 
     public MutableLiveData<List<String>> getList() {

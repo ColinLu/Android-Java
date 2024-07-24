@@ -2,7 +2,6 @@ package com.colin.library.android.utils;
 
 import android.content.Context;
 import android.net.Uri;
-import android.os.Build;
 
 import androidx.annotation.NonNull;
 
@@ -29,19 +28,13 @@ public final class UriUtil {
 
     @NonNull
     public static Uri getUri(@NonNull Context context, @NonNull final Uri uri, int id, @NonNull String path) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            return uri.buildUpon().appendPath(String.valueOf(id)).build();
-        }
-        return AppFileProvider.getUri(context, new File(path));
+        return uri.buildUpon().appendPath(String.valueOf(id)).build();
     }
 
     /*File 转 Uri*/
     @NonNull
     public static Uri getUri(@NonNull Context context, @NonNull File file) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            return AppFileProvider.getUri(context, file);
-        }
-        return Uri.fromFile(file);
+        return AppFileProvider.getUri(context, file);
     }
 
 }

@@ -18,7 +18,7 @@ import okhttp3.Response;
  * <p>
  * 描述： Callback Result->File
  */
-public class ActionFile implements IAction<File> {
+public class  ActionFile implements IAction<File> {
     @NonNull
     protected final IParse<File> mParseResult;
 

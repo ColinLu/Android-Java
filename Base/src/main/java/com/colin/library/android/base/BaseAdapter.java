@@ -28,12 +28,13 @@ public abstract class BaseAdapter<ITEM> extends RecyclerView.Adapter<ViewHolder>
     protected OnItemCheckedListener mItemCheckedListener;
 
     public BaseAdapter() {
-        this(null);
+        this(null, null);
     }
 
-    public BaseAdapter(@Nullable List<ITEM> list) {
-        mItemList = new ArrayList<>();
-        if (list != null && list.size() > 0) mItemList.addAll(list);
+    public BaseAdapter(@Nullable List<ITEM> list, @Nullable OnItemClickListener listener) {
+        this.mItemList = new ArrayList<>();
+        if (list != null && !list.isEmpty()) mItemList.addAll(list);
+        this.mItemClickListener = listener;
     }
 
     public void setOnItemClickListener(@Nullable OnItemClickListener itemClickListener) {
@@ -63,7 +64,7 @@ public abstract class BaseAdapter<ITEM> extends RecyclerView.Adapter<ViewHolder>
     @SuppressLint("NotifyDataSetChanged")
     public void setData(@Nullable List<ITEM> items) {
         mItemList.clear();
-        if (items != null && items.size() > 0) mItemList.addAll(items);
+        if (items != null && !items.isEmpty()) mItemList.addAll(items);
         notifyDataSetChanged();
     }
 
@@ -74,6 +75,11 @@ public abstract class BaseAdapter<ITEM> extends RecyclerView.Adapter<ViewHolder>
             mItemList.addAll(items);
             notifyDataSetChanged();
         }
+    }
+
+    public void addData(@NonNull ITEM item, int position) {
+        mItemList.add(item);
+        notifyItemChanged(position);
     }
 
     @LayoutRes

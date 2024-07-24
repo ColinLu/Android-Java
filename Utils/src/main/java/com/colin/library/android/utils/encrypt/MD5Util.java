@@ -73,14 +73,14 @@ public final class MD5Util {
     @Nullable
     public static String getString(@Nullable final byte[] data) {
         if (ArrayUtil.isEmpty(data)) return null;
-        return HexUtil.getString(EncryptUtil.digest(Algorithm.MD_5, data));
+        return HexUtil.getHex(EncryptUtil.digest(Algorithm.MD_5, data));
     }
 
     /* hex string */
     @Nullable
     public static String getString(@Nullable final String data) {
         if (StringUtil.isEmpty(data)) return null;
-        return HexUtil.getString(EncryptUtil.digest(Algorithm.MD_5, data.getBytes()));
+        return HexUtil.getHex(EncryptUtil.digest(Algorithm.MD_5, data.getBytes()));
     }
 
 
@@ -88,7 +88,7 @@ public final class MD5Util {
     @Nullable
     public static String getString(@Nullable final File file) {
         if (!FileUtil.isFile(file)) return null;
-        return HexUtil.getString(EncryptUtil.digest(Algorithm.MD_5, file));
+        return HexUtil.getHex(EncryptUtil.digest(Algorithm.MD_5, file));
     }
 
     public static String getString(@Nullable final byte[] data, @Nullable final byte[] salt) {

@@ -1,5 +1,6 @@
 package com.colin.library.android.base.def;
 
+import android.content.res.Resources;
 import android.os.Bundle;
 
 import androidx.annotation.LayoutRes;
@@ -14,14 +15,19 @@ import androidx.annotation.Nullable;
 public interface IBase {
 
     @LayoutRes
-    int layoutRes();
+    default int layoutRes() {
+        return Resources.ID_NULL;
+    }
 
-    void initView(@Nullable Bundle bundle);
+    default void initView(@Nullable Bundle bundle) {
+    }
 
     /*Previous interface data*/
-    void initData(@Nullable Bundle bundle);
+    default void initData(@Nullable Bundle bundle) {
+    }
 
     /*local sqlite net*/
-    void loadData(boolean refresh);
+    default void loadData(boolean refresh) {
+    }
 
 }
