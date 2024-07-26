@@ -22,7 +22,7 @@ public class CircleImageFragment extends AppFragment<FragmentCircleImageBinding>
         mBinding.seek.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                mBinding.imageSet.setRadius(progress);
+                mBinding.imageSet.setRadius(progress * 4);
             }
 
             @Override

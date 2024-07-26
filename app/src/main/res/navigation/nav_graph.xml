@@ -14,7 +14,11 @@
             tools:layout="@layout/layout_list">
             <action
                 android:id="@+id/action_Method_to_Log"
-                app:destination="@+id/LogFragment" />
+                app:destination="@+id/LogFragment"
+                app:enterAnim="@animator/nav_default_enter_anim"
+                app:exitAnim="@animator/nav_default_exit_anim"
+                app:popEnterAnim="@animator/nav_default_pop_enter_anim"
+                app:popExitAnim="@animator/nav_default_pop_exit_anim" />
             <action
                 android:id="@+id/action_Method_to_ContactList"
                 app:destination="@+id/ContactListFragment" />

@@ -51,7 +51,7 @@ public final class CrashHelper {
     }
 
     public File getFile() {
-        return StorageUtil.getExternalCacheDir();
+        return StorageUtil.getInternalCacheDir();
     }
 
     public String getFileName() {

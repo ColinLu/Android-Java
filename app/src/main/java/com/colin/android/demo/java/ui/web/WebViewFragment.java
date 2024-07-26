@@ -1,6 +1,7 @@
 package com.colin.android.demo.java.ui.web;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
@@ -17,6 +18,7 @@ import androidx.annotation.Nullable;
 import androidx.core.app.ActivityOptionsCompat;
 
 import com.colin.android.demo.java.MainActivity;
+import com.colin.android.demo.java.R;
 import com.colin.android.demo.java.app.AppFragment;
 import com.colin.android.demo.java.databinding.FragmentWebViewBinding;
 import com.colin.android.demo.java.def.Constants;
@@ -50,17 +52,37 @@ public class WebViewFragment extends AppFragment<FragmentWebViewBinding> impleme
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        requireActivity().getOnBackPressedDispatcher().addCallback(this, mBackCallback);
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        requireActivity().getOnBackPressedDispatcher().addCallback(this, mBackCallback);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mBinding.mWebView.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mBinding.mWebView.onPause();
+    }
+
+
+    @Override
+    public void onDestroyView() {
+        ViewUtil.destroy(mBinding.mWebView);
+        super.onDestroyView();
     }
 
     @Override
     public void initView(@Nullable Bundle bundle) {
+        mBinding.mRefreshList.setColorSchemeResources(R.color.colorAccent, R.color.colorPrimary);
+        mBinding.mRefreshList.setOnRefreshListener(() -> mBinding.mWebView.reload());
         ViewUtil.init(mBinding.mWebView, new DemoWebViewClient(this), new DemoWebChromeClient(this));
     }
 
@@ -82,6 +104,38 @@ public class WebViewFragment extends AppFragment<FragmentWebViewBinding> impleme
         return true;
     }
 
+    @Override
+    public void onReceivedTitle(@NonNull WebView view, @Nullable String title) {
+        ((MainActivity) requireActivity()).updateTitle(title);
+    }
+
+    @Override
+    public void onPageStarted(@NonNull WebView view, String url, Bitmap favicon) {
+        mBinding.mRefreshList.setRefreshing(true);
+        mBinding.mProgress.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void onProgressChanged(@NonNull WebView view, int newProgress) {
+        mBinding.mProgress.setProgress(newProgress);
+    }
+
+    @Override
+    public void onPageFinished(@NonNull WebView view, String url) {
+        mBinding.mRefreshList.setRefreshing(false);
+        mBinding.mProgress.setVisibility(View.GONE);
+        final boolean canGoBack = mBinding.mWebView.canGoBack();
+        LogUtil.i("onPageFinished canGoBack:%s", canGoBack);
+        mBackCallback.setEnabled(!canGoBack);
+    }
+
+    @Override
+    public boolean onShowFileChooser(@NonNull WebView webView, ValueCallback<Uri[]> filePathCallback, WebChromeClient.FileChooserParams fileChooserParams) {
+        LogUtil.i("fileChooserParams:%s", fileChooserParams.createIntent().toString());
+        launcherIntent.launch(fileChooserParams.createIntent(), ActivityOptionsCompat.makeBasic());
+        return true;
+    }
+
     private boolean shouldInterceptUri(@NonNull final Uri uri) {
         String scheme = uri.getScheme();
         String host = uri.getHost();
@@ -95,35 +149,5 @@ public class WebViewFragment extends AppFragment<FragmentWebViewBinding> impleme
             return true;
         }
         return false;
-    }
-
-    @Override
-    public void onPageFinished(@NonNull WebView view, String url) {
-        final boolean canGoBack = mBinding.mWebView.canGoBack();
-        LogUtil.i("onPageFinished canGoBack:%s", canGoBack);
-//        mBackCallback.setEnabled(!canGoBack);
-    }
-
-    @Override
-    public void onReceivedTitle(@NonNull WebView view, @Nullable String title) {
-        ((MainActivity) requireActivity()).updateTitle(title);
-    }
-
-    @Override
-    public void onProgressChanged(@NonNull WebView view, int newProgress) {
-        mBinding.mProgress.setProgress(newProgress);
-        if (newProgress >= 0 && newProgress <= 100) {
-            mBinding.mProgress.setVisibility(View.VISIBLE);
-        }
-        if (newProgress >= 100 || newProgress < 0) {
-            mBinding.mProgress.setVisibility(View.GONE);
-        }
-    }
-
-    @Override
-    public boolean onShowFileChooser(@NonNull WebView webView, ValueCallback<Uri[]> filePathCallback, WebChromeClient.FileChooserParams fileChooserParams) {
-        LogUtil.i("fileChooserParams:%s", fileChooserParams.createIntent().toString());
-        launcherIntent.launch(fileChooserParams.createIntent(), ActivityOptionsCompat.makeBasic());
-        return true;
     }
 }

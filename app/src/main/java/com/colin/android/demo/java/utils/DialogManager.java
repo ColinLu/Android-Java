@@ -9,7 +9,6 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import com.colin.android.demo.java.dialog.ImageDialog;
-import com.colin.android.demo.java.dialog.PathDialog;
 import com.colin.android.demo.java.dialog.TipsDialog;
 import com.colin.library.android.utils.BitmapUtil;
 import com.colin.library.android.utils.LogUtil;
@@ -104,19 +103,4 @@ public final class DialogManager {
         return dialog;
     }
 
-    private PathDialog getPathDialog(@NonNull FragmentManager manager, @NonNull String tag) {
-        Fragment fragment = mDialogRef == null ? null : mDialogRef.get();
-        if (fragment instanceof PathDialog) {
-            LogUtil.i("dialog mDialogRef");
-            return (PathDialog) fragment;
-        }
-        fragment = manager.findFragmentByTag(tag);
-        if (fragment instanceof PathDialog) {
-            LogUtil.i("dialog findFragmentByTag");
-            return (PathDialog) fragment;
-        }
-        final PathDialog dialog = new PathDialog();
-        mDialogRef = new WeakReference<>(dialog);
-        return dialog;
-    }
 }

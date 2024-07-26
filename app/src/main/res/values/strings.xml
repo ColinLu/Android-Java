@@ -25,6 +25,7 @@
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
+    <string name="exit_toast">再按一次退出</string>
 
     <string name="path_root_system">root system</string>
     <string name="path_root_data">root data</string>
@@ -220,5 +221,6 @@
         <item>https://www.baidu.com</item>
         <item>http://liyina91.github.io/liyina/UploadPictures/</item>
         <item>https://docs.xinyan.com/docs/qzh5?token=jhqbrm8neXlb</item>
+        <item>https://mp.weixin.qq.com/s/zgfLOMD2JfZJKfHx-5BsBg</item>
     </string-array>
 </resources>

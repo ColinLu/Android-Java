@@ -57,7 +57,7 @@ public class HomeFragment extends AppFragment<FragmentHomeBinding> {
     @Override
     public void onResume() {
         super.onResume();
-        ((MainActivity) getActivity()).setExpanded(true);
+        ((MainActivity) requireActivity()).setExpanded(true);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)

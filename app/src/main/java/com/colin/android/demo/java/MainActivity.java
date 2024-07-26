@@ -5,6 +5,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import androidx.activity.EdgeToEdge;
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.navigation.NavController;
@@ -16,6 +17,7 @@ import com.colin.android.demo.java.app.AppActivity;
 import com.colin.android.demo.java.databinding.ActivityMainBinding;
 import com.colin.library.android.utils.LogUtil;
 import com.colin.library.android.utils.ToastUtil;
+import com.colin.library.android.utils.data.Constants;
 import com.colin.library.android.widgets.def.OnAppBarStateChangeListener;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.snackbar.Snackbar;
@@ -25,11 +27,28 @@ public class MainActivity extends AppActivity<ActivityMainBinding> {
     @OnAppBarStateChangeListener.State
     private int mState;
     private int mOffset;
+    private long mLastBackPressTime = Constants.INVALID;
+    private final OnBackPressedCallback mBackCallback = new OnBackPressedCallback(true) {
+        @Override
+        public void handleOnBackPressed() {
+            if (onSupportNavigateUp()) {
+                return;
+            }
+            final long currentTime = System.currentTimeMillis();
+            if (mLastBackPressTime == Constants.INVALID || currentTime - mLastBackPressTime >= 1000) {
+                ToastUtil.show(R.string.exit_toast);
+                mLastBackPressTime = currentTime;
+            } else {
+                finish();
+            }
+        }
+    };
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         EdgeToEdge.enable(this);
         super.onCreate(savedInstanceState);
+        getOnBackPressedDispatcher().addCallback(this, mBackCallback);
     }
 
     @Override
@@ -76,9 +95,10 @@ public class MainActivity extends AppActivity<ActivityMainBinding> {
 
     @Override
     public boolean onSupportNavigateUp() {
-        LogUtil.e("onSupportNavigateUp");
         final NavController controller = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
-        return NavigationUI.navigateUp(controller, appBarConfiguration) || super.onSupportNavigateUp();
+        final boolean navigateUp = NavigationUI.navigateUp(controller, appBarConfiguration) || super.onSupportNavigateUp();
+        LogUtil.e("onSupportNavigateUp navigateUp:" + navigateUp);
+        return navigateUp;
     }
 
     public void setExpanded() {

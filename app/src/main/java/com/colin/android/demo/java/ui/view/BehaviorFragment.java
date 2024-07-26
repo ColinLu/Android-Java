@@ -17,13 +17,15 @@ import com.colin.android.demo.java.R;
 import com.colin.android.demo.java.adapter.StringAdapter;
 import com.colin.android.demo.java.app.AppFragment;
 import com.colin.android.demo.java.databinding.FragmentBehaviorBinding;
+import com.colin.android.demo.java.ui.web.DemoWebChromeClient;
+import com.colin.android.demo.java.ui.web.DemoWebViewClient;
 import com.colin.library.android.utils.ViewUtil;
-import com.colin.library.android.widgets.Utils;
 import com.colin.library.android.widgets.behavior.BottomAreaBehavior;
 import com.colin.library.android.widgets.behavior.TopAreaBehavior;
 import com.colin.library.android.widgets.def.OnItemClickListener;
 import com.colin.library.android.widgets.scroll.NestedScrollBottomRecyclerView;
 import com.colin.library.android.widgets.scroll.NestedScrollTopWebView;
+import com.colin.library.android.widgets.web.IWebClient;
 
 import java.util.Arrays;
 
@@ -33,26 +35,25 @@ import java.util.Arrays;
  * <p>
  * 描述： TODO
  */
-public class BehaviorFragment extends AppFragment<FragmentBehaviorBinding> implements OnItemClickListener {
+public class BehaviorFragment extends AppFragment<FragmentBehaviorBinding> implements OnItemClickListener, IWebClient {
     private WebView mWebView;
     private RecyclerView mRecyclerView;
     private StringAdapter mAdapter;
+    private String mUrl = "https://mp.weixin.qq.com/s/zgfLOMD2JfZJKfHx-5BsBg";
 
     @Override
     public void initView(@Nullable Bundle bundle) {
-        final CoordinatorLayout.LayoutParams topParams = new CoordinatorLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        final CoordinatorLayout.LayoutParams topParams = new CoordinatorLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         topParams.setBehavior(new TopAreaBehavior(requireContext()));
         mWebView = new NestedScrollTopWebView(requireContext());
         mBinding.mCoordinator.setTopAreaView(mWebView, topParams);
 
         mRecyclerView = new NestedScrollBottomRecyclerView(requireContext());
-        final CoordinatorLayout.LayoutParams bottomParams = new CoordinatorLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        final CoordinatorLayout.LayoutParams bottomParams = new CoordinatorLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         bottomParams.setBehavior(new BottomAreaBehavior());
         mBinding.mCoordinator.setBottomAreaView(mRecyclerView, bottomParams);
-
-//        Utils.init(mWebView, "https://mp.weixin.qq.com/s/zgfLOMD2JfZJKfHx-5BsBg");
+        ViewUtil.init(mWebView, new DemoWebViewClient(this), new DemoWebChromeClient(this));
+        mWebView.loadUrl(mUrl);
         initRecyclerView(requireContext());
 
 

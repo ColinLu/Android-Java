@@ -23,13 +23,7 @@ import java.util.List;
  * 描述： 联系人辅助类
  */
 public final class ContactUtils {
-    private static final String[] PROJECTION_CONTACT_LIST = {
-            Phone._ID,
-            Phone.CONTACT_ID,
-            Phone.DISPLAY_NAME,
-            Phone.NUMBER,
-            Phone.PHOTO_URI
-    };
+    private static final String[] PROJECTION_CONTACT_LIST = {Phone._ID, Phone.CONTACT_ID, Phone.DISPLAY_NAME, Phone.NUMBER, Phone.PHOTO_URI};
 
     @NonNull
     public static List<ContactBean> getContactList(@Nullable Context context) {
@@ -38,8 +32,7 @@ public final class ContactUtils {
         print(context, ContactsContract.RawContacts.CONTENT_URI);
         print(context, ContactsContract.Contacts.CONTENT_URI);
         print(context, ContactsContract.RawContactsEntity.CONTENT_URI);
-        final Cursor cursor = getCursor(context, Phone.CONTENT_URI, PROJECTION_CONTACT_LIST,
-                null, null, null);
+        final Cursor cursor = getCursor(context, Phone.CONTENT_URI, PROJECTION_CONTACT_LIST, null, null, null);
         LogUtil.e(new Gson().toJson(cursor));
         if (cursor == null) {
             return list;
@@ -87,8 +80,8 @@ public final class ContactUtils {
                 for (int i = 0; i < cursor.getColumnCount(); i++) {
                     final String name = cursor.getColumnName(i);
                     final String value = cursor.getString(i);
-                    sb.append("name").append(name).append('\n');
-                    sb.append("value").append(value == null ? "null" : value).append('\n');
+                    sb.append("ColumnName").append(":").append(name).append('\n');
+                    sb.append("ColumnValue").append(":").append(value == null ? "null" : value).append('\n');
                 }
             } while (cursor.moveToNext());
         }
@@ -97,8 +90,7 @@ public final class ContactUtils {
 
 
     @Nullable
-    private static Cursor getCursor(@Nullable Context context, @Nullable Uri uri, @Nullable String[] projection,
-                                    @Nullable String selection, @Nullable String[] selectionArgs, @Nullable String sortOrder) {
+    private static Cursor getCursor(@Nullable Context context, @Nullable Uri uri, @Nullable String[] projection, @Nullable String selection, @Nullable String[] selectionArgs, @Nullable String sortOrder) {
         if (context == null || uri == null) {
             return null;
         }

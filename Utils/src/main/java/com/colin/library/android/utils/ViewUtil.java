@@ -3,7 +3,7 @@ package com.colin.library.android.utils;
 import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.view.View;
-import android.view.ViewConfiguration;
+import android.view.ViewGroup;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -29,7 +29,8 @@ public final class ViewUtil {
     }
 
     public static void init(@Nullable final RecyclerView view, @Nullable final RecyclerView.Adapter<?> adapter) {
-        init(view, adapter, 0, false);
+        if (view == null || view.getContext() == null) return;
+        init(view, new LinearLayoutManager(view.getContext()), adapter, null, false);
     }
 
     public static void init(@Nullable final RecyclerView view, @Nullable final RecyclerView.Adapter<?> adapter, final int grid, final boolean scroll) {
@@ -166,17 +167,17 @@ public final class ViewUtil {
     /*webview 销毁*/
     public static void destroy(@Nullable final WebView view) {
         if (null == view) return;
-        view.setVisibility(View.GONE);// 把destroy()延后
-        final long timeout = ViewConfiguration.getZoomControlsTimeout();
         try {
-            view.postDelayed(() -> {
-                view.clearCache(true);
-                view.clearMatches();
-                view.clearFormData();
-                view.clearSslPreferences();
-                view.clearHistory();
-                view.destroy();
-            }, timeout);
+            view.setVisibility(View.GONE);// 把destroy()延后
+            view.loadUrl("about:blank");
+            ViewGroup parent = (ViewGroup) view.getParent();
+            parent.removeView(view);
+            view.clearCache(true);
+            view.clearMatches();
+            view.clearFormData();
+            view.clearSslPreferences();
+            view.clearHistory();
+            view.destroy();
         } catch (Exception e) {
             LogUtil.log(e);
         }

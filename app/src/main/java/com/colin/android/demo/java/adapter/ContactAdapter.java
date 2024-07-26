@@ -8,6 +8,7 @@ import com.colin.android.demo.java.R;
 import com.colin.android.demo.java.def.bean.ContactBean;
 import com.colin.library.android.base.BaseAdapter;
 import com.colin.library.android.base.ViewHolder;
+import com.colin.library.android.widgets.def.OnItemClickListener;
 
 /**
  * 作者： ColinLu
@@ -16,8 +17,8 @@ import com.colin.library.android.base.ViewHolder;
  * 描述： 联系人适配器
  */
 public class ContactAdapter extends BaseAdapter<ContactBean> {
-    public ContactAdapter() {
-        super();
+    public ContactAdapter(OnItemClickListener onItemClickListener) {
+        super(onItemClickListener);
     }
 
     @Override
@@ -28,10 +29,11 @@ public class ContactAdapter extends BaseAdapter<ContactBean> {
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         final ContactBean bean = mItemList.get(position);
-        holder.setImageURI(R.id.mContactPhoto, bean.photo == null ? null : Uri.parse(bean.photo)).setText(R.id.mContactName, bean.name)
-              .setText(R.id.mContactNumber, bean.number).setOnClickListener(R.id.mItemLayout, v -> {
-                  if (mItemClickListener != null) mItemClickListener.item(v, position, bean);
-
-              });
+        holder.setImageURI(R.id.mContactPhoto, bean.photo == null ? null : Uri.parse(bean.photo))
+                .setText(R.id.mContactName, bean.name)
+                .setText(R.id.mContactNumber, bean.number)
+                .setOnClickListener(R.id.mItemLayout, v -> {
+                    if (mItemClickListener != null) mItemClickListener.item(v, position, bean);
+                });
     }
 }

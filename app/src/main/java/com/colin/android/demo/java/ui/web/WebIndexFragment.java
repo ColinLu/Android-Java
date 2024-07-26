@@ -63,15 +63,20 @@ public class WebIndexFragment extends AppFragment<FragmentWebIndexBinding> imple
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        ((MainActivity) requireActivity()).setExpanded(false);
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
-        ((MainActivity) getActivity()).setExpanded(false);
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        ((MainActivity) getActivity()).setExpanded(true);
+        ((MainActivity) requireActivity()).setExpanded(true);
     }
 
     /**
@@ -102,8 +107,10 @@ public class WebIndexFragment extends AppFragment<FragmentWebIndexBinding> imple
         });
 
         mSearchView.setOnKeyListener((v, keyCode, event) -> {
+            LogUtil.i("setOnKeyListener keyCode:$d event:%s", keyCode, event.toString());
+
             if (keyCode == EditorInfo.IME_ACTION_DONE) {
-                LogUtil.i("setOnKeyListener keyCode:$d event:%s", keyCode, event.toString());
+
             }
             return false;
         });

@@ -1,7 +1,6 @@
 package com.colin.android.demo.java.ui.method;
 
 import android.Manifest;
-import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 
@@ -10,8 +9,6 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.colin.android.demo.java.R;
 import com.colin.android.demo.java.adapter.ContactAdapter;
@@ -21,7 +18,9 @@ import com.colin.android.demo.java.def.LoadState;
 import com.colin.android.demo.java.def.bean.ContactBean;
 import com.colin.android.demo.java.utils.DialogManager;
 import com.colin.library.android.utils.ToastUtil;
+import com.colin.library.android.utils.ViewUtil;
 import com.colin.library.android.widgets.def.OnItemClickListener;
+import com.google.gson.Gson;
 
 /**
  * 作者： ColinLu
@@ -36,23 +35,14 @@ public class ContactListFragment extends AppFragment<LayoutListBinding> implemen
 
     @Override
     public void initView(@Nullable Bundle bundle) {
-        initRecyclerView(getActivity());
+        initRecyclerView();
         mBinding.mRefreshList.setColorSchemeResources(R.color.colorAccent, R.color.colorPrimary);
         mBinding.mRefreshList.setOnRefreshListener(() -> loadData(true));
     }
 
-    private void initRecyclerView(Context context) {
-        if (context == null) {
-            return;
-        }
-        if (mAdapter == null) {
-            mAdapter = new ContactAdapter();
-        }
-        mAdapter.setOnItemClickListener(this);
-        mBinding.mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
-        mBinding.mRecyclerView.setHasFixedSize(true);
-        mBinding.mRecyclerView.setAdapter(mAdapter);
-        mBinding.mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+    private void initRecyclerView() {
+        if (mAdapter == null) mAdapter = new ContactAdapter(this);
+        ViewUtil.init(mBinding.mRecyclerView, mAdapter);
     }
 
     @Override
@@ -76,7 +66,7 @@ public class ContactListFragment extends AppFragment<LayoutListBinding> implemen
     @Override
     public void item(@NonNull View view, int position, @Nullable Object object) {
         if (object instanceof ContactBean) {
-//            DialogManager.getInstance().show(getChildFragmentManager(), (ContactBean) object);
+            DialogManager.getInstance().showTip(getChildFragmentManager(), new Gson().toJson(object));
         }
     }
 }

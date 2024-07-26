@@ -22,7 +22,7 @@ import java.util.List;
  * 描述： 基类 Adapter
  */
 public abstract class BaseAdapter<ITEM> extends RecyclerView.Adapter<ViewHolder> {
-    protected final List<ITEM> mItemList;
+    protected final List<ITEM> mItemList = new ArrayList<>(10);
     protected OnItemClickListener mItemClickListener;
     protected OnItemLongClickListener mItemLongClickListener;
     protected OnItemCheckedListener mItemCheckedListener;
@@ -31,8 +31,11 @@ public abstract class BaseAdapter<ITEM> extends RecyclerView.Adapter<ViewHolder>
         this(null, null);
     }
 
+    public BaseAdapter(@Nullable OnItemClickListener listener) {
+        this(null, listener);
+    }
+
     public BaseAdapter(@Nullable List<ITEM> list, @Nullable OnItemClickListener listener) {
-        this.mItemList = new ArrayList<>();
         if (list != null && !list.isEmpty()) mItemList.addAll(list);
         this.mItemClickListener = listener;
     }
