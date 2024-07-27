@@ -5,6 +5,8 @@
     android:id="@+id/mAppRootLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingStart="@dimen/dp_5"
+    android:paddingEnd="@dimen/dp_5"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".ui.home.HomeFragment">
 

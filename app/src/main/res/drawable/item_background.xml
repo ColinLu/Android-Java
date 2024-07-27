@@ -1,22 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ripple xmlns:android="http://schemas.android.com/apk/res/android"
-    android:color="@color/app_ripple">
+    android:color="@color/app_button_background_ripple_color">
     <item>
         <selector>
-            <!-- Even though these two point to the same resource, have two states so the drawable will invalidate itself when coming out of pressed state. -->
             <item
-                android:drawable="@color/color_FF999999"
+                android:drawable="@color/grey_500"
                 android:state_pressed="true" />
 
             <item
-                android:drawable="@color/white"
+                android:drawable="@color/grey_100"
                 android:state_selected="true" />
 
             <item
-                android:drawable="@color/color_FF666666"
+                android:drawable="@color/grey_600"
                 android:state_enabled="false" />
 
-            <item android:drawable="@color/color_FFDDDDDD" />
+            <item android:drawable="@color/grey_300" />
         </selector>
     </item>
 </ripple>

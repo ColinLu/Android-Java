@@ -13,6 +13,7 @@ import com.colin.android.demo.java.R;
 import com.colin.android.demo.java.adapter.StringAdapter;
 import com.colin.android.demo.java.app.AppFragment;
 import com.colin.android.demo.java.databinding.LayoutListBinding;
+import com.colin.android.demo.java.def.Constants;
 import com.colin.android.demo.java.def.LoadState;
 import com.colin.android.demo.java.utils.DemoUtils;
 import com.colin.android.demo.java.utils.DialogManager;
@@ -33,7 +34,7 @@ public class PathFragment extends AppFragment<LayoutListBinding> implements OnIt
     @Override
     public void initView(@Nullable Bundle bundle) {
         initRecyclerView();
-        mBinding.mRefreshList.setColorSchemeResources(R.color.colorAccent, R.color.colorPrimary);
+        mBinding.mRefreshList.setColorSchemeResources(Constants.REFRESH_IDS);
         mBinding.mRefreshList.setOnRefreshListener(() -> loadData(true));
     }
 

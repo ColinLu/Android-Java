@@ -18,7 +18,6 @@ import androidx.annotation.Nullable;
 import androidx.core.app.ActivityOptionsCompat;
 
 import com.colin.android.demo.java.MainActivity;
-import com.colin.android.demo.java.R;
 import com.colin.android.demo.java.app.AppFragment;
 import com.colin.android.demo.java.databinding.FragmentWebViewBinding;
 import com.colin.android.demo.java.def.Constants;
@@ -81,7 +80,7 @@ public class WebViewFragment extends AppFragment<FragmentWebViewBinding> impleme
 
     @Override
     public void initView(@Nullable Bundle bundle) {
-        mBinding.mRefreshList.setColorSchemeResources(R.color.colorAccent, R.color.colorPrimary);
+        mBinding.mRefreshList.setColorSchemeResources(Constants.REFRESH_IDS);
         mBinding.mRefreshList.setOnRefreshListener(() -> mBinding.mWebView.reload());
         ViewUtil.init(mBinding.mWebView, new DemoWebViewClient(this), new DemoWebChromeClient(this));
     }

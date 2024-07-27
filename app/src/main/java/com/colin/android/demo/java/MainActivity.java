@@ -3,6 +3,7 @@ package com.colin.android.demo.java;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import androidx.activity.EdgeToEdge;
 import androidx.activity.OnBackPressedCallback;
@@ -111,8 +112,15 @@ public class MainActivity extends AppActivity<ActivityMainBinding> {
     public void setExpanded(boolean expanded) {
         LogUtil.d("expanded:" + expanded);
         mBinding.mAppBar.setExpanded(expanded);
-        mBinding.mToolbar.setTitle(getTitle());
     }
+
+    public void setToolbar(boolean show) {
+        LogUtil.d("show:" + show);
+        mBinding.mAppBar.setVisibility(show ? View.VISIBLE : View.GONE);
+        mBinding.mToolbar.setVisibility(show ? View.VISIBLE : View.GONE);
+        mBinding.mAppBar.setExpanded(show);
+    }
+
 
     public void updateTitle(@Nullable CharSequence title) {
         mBinding.mToolbar.setTitle(title);

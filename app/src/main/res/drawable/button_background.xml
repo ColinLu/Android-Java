@@ -1,35 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ripple xmlns:android="http://schemas.android.com/apk/res/android"
-    android:color="@color/app_ripple">
+    android:color="@color/app_button_background_ripple_color">
 
     <item>
         <selector>
-            <item
-                android:drawable="@color/transparent"
-                android:state_window_focused="false" />
-
             <item android:state_pressed="true">
                 <shape android:shape="rectangle">
-                    <solid android:color="@color/app_button_selected" />
-                    <corners android:radius="@dimen/app_button_height" />
+                    <solid android:color="@color/app_button_background_pressed_color" />
+                    <corners android:radius="@dimen/button_height" />
                 </shape>
             </item>
-            <item android:state_selected="true">
+            <item
+                android:state_checked="true"
+                android:state_selected="true">
                 <shape android:shape="rectangle">
-                    <solid android:color="@color/app_button_selected" />
-                    <corners android:radius="@dimen/app_button_height" />
+                    <solid android:color="@color/app_button_background_selected_color" />
+                    <corners android:radius="@dimen/button_height" />
                 </shape>
             </item>
-            <item android:state_checked="true">
+            <item
+                android:state_enabled="false"
+                android:state_window_focused="false">
                 <shape android:shape="rectangle">
-                    <solid android:color="@color/app_button_selected" />
-                    <corners android:radius="@dimen/app_button_height" />
+                    <solid android:color="@color/app_button_background_disable_color" />
+                    <corners android:radius="@dimen/button_height" />
                 </shape>
             </item>
+
             <item>
                 <shape android:shape="rectangle">
-                    <solid android:color="@color/app_button_default" />
-                    <corners android:radius="@dimen/app_button_height" />
+                    <solid android:color="@color/app_button_background_color" />
+                    <corners android:radius="@dimen/button_height" />
                 </shape>
             </item>
         </selector>

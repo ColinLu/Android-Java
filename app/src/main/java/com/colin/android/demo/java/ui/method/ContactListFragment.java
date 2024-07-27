@@ -14,6 +14,7 @@ import com.colin.android.demo.java.R;
 import com.colin.android.demo.java.adapter.ContactAdapter;
 import com.colin.android.demo.java.app.AppFragment;
 import com.colin.android.demo.java.databinding.LayoutListBinding;
+import com.colin.android.demo.java.def.Constants;
 import com.colin.android.demo.java.def.LoadState;
 import com.colin.android.demo.java.def.bean.ContactBean;
 import com.colin.android.demo.java.utils.DemoUtils;
@@ -36,7 +37,7 @@ public class ContactListFragment extends AppFragment<LayoutListBinding> implemen
     @Override
     public void initView(@Nullable Bundle bundle) {
         initRecyclerView();
-        mBinding.mRefreshList.setColorSchemeResources(R.color.colorAccent, R.color.colorPrimary);
+        mBinding.mRefreshList.setColorSchemeResources(Constants.REFRESH_IDS);
         mBinding.mRefreshList.setOnRefreshListener(() -> loadData(true));
     }
 

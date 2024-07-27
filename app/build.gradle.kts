@@ -4,6 +4,14 @@ plugins {
 }
 
 android {
+    signingConfigs {
+        create("release") {
+            storeFile = file("/Users/Colin/Project/Android/Android-Java/app/app.jks")
+            storePassword = "ludapeng31"
+            keyAlias = "colinapp"
+            keyPassword = "ludapeng31"
+        }
+    }
     namespace = libs.versions.app.id.get()
     compileSdk = libs.versions.compileSdk.get().toInt()
 
@@ -23,6 +31,7 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            signingConfig = signingConfigs.getByName("release")
         }
     }
     compileOptions {

@@ -33,7 +33,7 @@ public class StringAdapter extends BaseAdapter<String> {
     }
 
     public void setGravity(int gravity) {
-        mGravity = gravity;
+        this.mGravity = gravity;
     }
 
     public void setSelected(int selected) {
