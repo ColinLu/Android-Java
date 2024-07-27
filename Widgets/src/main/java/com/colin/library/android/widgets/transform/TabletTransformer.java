@@ -4,6 +4,8 @@ import android.graphics.Camera;
 import android.graphics.Matrix;
 import android.view.View;
 
+import androidx.annotation.NonNull;
+
 public class TabletTransformer extends BaseTransformer {
 
     private static final Matrix OFFSET_MATRIX = new Matrix();
@@ -11,7 +13,7 @@ public class TabletTransformer extends BaseTransformer {
     private static final float[] OFFSET_TEMP_FLOAT = new float[2];
 
     @Override
-    protected void onTransform(View view, float position) {
+    protected void onTransform(@NonNull View view, float position) {
         final float rotation = (position < 0 ? 30f : -30f) * Math.abs(position);
 
         view.setTranslationX(getOffsetXForRotation(rotation, view.getWidth(), view.getHeight()));

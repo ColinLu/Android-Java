@@ -1,9 +1,9 @@
 package com.colin.library.android.widgets.transform;
 
 import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
-import androidx.viewpager.widget.ViewPager;
 
 public class MeiZuEffectTransformer extends BaseTransformer {
     private float reduceX = 0.0f;
@@ -20,7 +20,7 @@ public class MeiZuEffectTransformer extends BaseTransformer {
 
     @Override
     public void transformPage(@NonNull View view, float position) {
-        ViewPager parent = (ViewPager) view.getParent();
+        ViewGroup parent = (ViewGroup) view.getParent();
         if (offsetPosition == 0f) {
             float paddingLeft = parent.getPaddingLeft();
             float paddingRight = parent.getPaddingRight();

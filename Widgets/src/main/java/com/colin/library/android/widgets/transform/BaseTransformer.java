@@ -98,8 +98,8 @@ public abstract class BaseTransformer implements ViewPager2.PageTransformer {
      * @param min
      * @return
      */
-    protected static final float min(float val, float min) {
-        return val < min ? min : val;
+    protected static float min(float val, float min) {
+        return Math.max(val, min);
     }
 
 }

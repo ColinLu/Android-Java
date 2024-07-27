@@ -1,5 +1,24 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
+<!--    <item name="isMaterialTheme">true</item>-->
+
+<!--    <item name="colorPrimaryVariant">@color/design_default_color_primary_variant</item>-->
+<!--    <item name="colorSecondary">@color/design_default_color_secondary</item>-->
+<!--    <item name="colorSecondaryVariant">@color/design_default_color_secondary_variant</item>-->
+<!--    <item name="colorSurface">@color/design_default_color_surface</item>-->
+<!--    <item name="colorPrimarySurface">?attr/colorPrimary</item>-->
+<!--    <item name="colorOnPrimary">@color/design_default_color_on_primary</item>-->
+<!--    <item name="colorOnSecondary">@color/design_default_color_on_secondary</item>-->
+<!--    <item name="colorOnBackground">@color/design_default_color_on_background</item>-->
+<!--    <item name="colorOnError">@color/design_default_color_on_error</item>-->
+<!--    <item name="colorOnSurface">@color/design_default_color_on_surface</item>-->
+<!--    <item name="colorOnPrimarySurface">?attr/colorOnPrimary</item>-->
+
+<!--    <item name="scrimBackground">@color/mtrl_scrim_color</item>-->
+<!--    <item name="popupMenuBackground">@drawable/mtrl_popupmenu_background</item>-->
+
+<!--    <item name="minTouchTargetSize">@dimen/mtrl_min_touch_target_size</item>-->
+
     <style name="Theme.App" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/purple_500</item>
@@ -194,5 +213,9 @@
         <item name="android:textSize">@dimen/app_text_small</item>
         <item name="android:textColor">@color/app_text_title</item>
         <item name="android:textStyle">normal</item>
+    </style>
+
+    <style name="Text.Item">
+        <item name="android:textColor">@color/item_text_color</item>
     </style>
 </resources>

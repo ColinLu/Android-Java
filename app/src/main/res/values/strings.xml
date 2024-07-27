@@ -15,6 +15,7 @@
     <string name="path">Path</string>
     <string name="view">View</string>
     <string name="motion">Motion</string>
+    <string name="banner">Banner</string>
     <string name="edge">Edge</string>
     <string name="gradient">Gradient</string>
     <string name="circle">Circle</string>
@@ -53,7 +54,7 @@
 
     <string name="search">Search</string>
     <string name="web">Web</string>
-        <string name="query_web_hint_link">https://m.baidu.com/</string>
+    <string name="query_web_hint_link">https://m.baidu.com/</string>
 
     <string name="http">Http</string>
     <string name="http_get">Get</string>
@@ -66,7 +67,7 @@
         <item>@string/text</item>
         <item>@string/circle</item>
         <item>@string/behavior</item>
-        <item>@string/path</item>
+        <item>@string/banner</item>
         <item>@string/path</item>
         <item>@string/path</item>
         <item>@string/path</item>
@@ -222,5 +223,29 @@
         <item>http://liyina91.github.io/liyina/UploadPictures/</item>
         <item>https://docs.xinyan.com/docs/qzh5?token=jhqbrm8neXlb</item>
         <item>https://mp.weixin.qq.com/s/zgfLOMD2JfZJKfHx-5BsBg</item>
+    </string-array>
+
+    <string-array name="banner_transformer">
+        <item>Accordion</item>
+        <item>BackgroundToForeground</item>
+        <item>CubeIn</item>
+        <item>CubeOut</item>
+        <item>Custom</item>
+        <item>Default</item>
+        <item>DepthPage</item>
+        <item>FlipHorizontal</item>
+        <item>FlipVertical</item>
+        <item>ForegroundToBackground</item>
+        <item>MeiZuEffect</item>
+        <item>RotateDown</item>
+        <item>RotateUp</item>
+        <item>ScaleInOut</item>
+        <item>ScaleIn</item>
+        <item>ScaleY</item>
+        <item>Stack</item>
+        <item>Tablet</item>
+        <item>ZoomIn</item>
+        <item>ZoomOutSlide</item>
+        <item>ZoomOut</item>
     </string-array>
 </resources>

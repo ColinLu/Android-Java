@@ -75,6 +75,9 @@ public class ViewFragment extends AppFragment<LayoutListBinding> implements OnIt
             case "Behavior":
                 DemoUtils.toNavigate(this, R.id.action_View_to_behavior);
                 break;
+            case "Banner":
+                DemoUtils.toNavigate(this, R.id.action_View_to_banner);
+                break;
             default:
                 break;
         }

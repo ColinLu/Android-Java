@@ -7,4 +7,4 @@
     android:gravity="center"
     android:paddingStart="@dimen/margin_default"
     android:paddingEnd="@dimen/margin_default"
-    android:textAppearance="@style/Text" />
+    android:textAppearance="@style/Text.Item" />

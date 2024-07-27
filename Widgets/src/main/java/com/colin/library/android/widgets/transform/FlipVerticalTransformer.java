@@ -2,10 +2,12 @@ package com.colin.library.android.widgets.transform;
 
 import android.view.View;
 
+import androidx.annotation.NonNull;
+
 public class FlipVerticalTransformer extends BaseTransformer {
 
     @Override
-    protected void onTransform(View view, float position) {
+    protected void onTransform(@NonNull View view, float position) {
         final float rotation = -180f * position;
 
         view.setAlpha(rotation > 90f || rotation < -90f ? 0f : 1f);

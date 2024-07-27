@@ -63,6 +63,9 @@
         <action
             android:id="@+id/action_View_to_behavior"
             app:destination="@+id/BehaviorFragment" />
+        <action
+            android:id="@+id/action_View_to_banner"
+            app:destination="@+id/BannerFragment" />
     </fragment>
     <fragment
         android:id="@+id/WebIndexFragment"
@@ -140,5 +143,9 @@
             android:defaultValue="www.baidu.com"
             app:argType="string" />
     </fragment>
-
+    <fragment
+        android:id="@+id/BannerFragment"
+        android:name="com.colin.android.demo.java.ui.view.BannerFragment"
+        android:label="@string/banner"
+        tools:layout="@layout/fragment_banner" />
 </navigation>

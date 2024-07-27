@@ -3,12 +3,16 @@ package com.colin.android.demo.java.adapter;
 import android.view.Gravity;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatButton;
 
 import com.colin.android.demo.java.R;
 import com.colin.library.android.base.BaseAdapter;
 import com.colin.library.android.base.ViewHolder;
+import com.colin.library.android.utils.data.Constants;
 import com.colin.library.android.widgets.def.OnItemClickListener;
+
+import java.util.List;
 
 /**
  * 作者： ColinLu
@@ -18,14 +22,26 @@ import com.colin.library.android.widgets.def.OnItemClickListener;
  */
 public class StringAdapter extends BaseAdapter<String> {
     private int mGravity = Gravity.CENTER;
+    private int mSelected = Constants.INVALID;
 
-    public StringAdapter(OnItemClickListener listener) {
-        super();
-        this.mItemClickListener = listener;
+    public StringAdapter(@Nullable OnItemClickListener listener) {
+        this(null, listener);
+    }
+
+    public StringAdapter(@Nullable List<String> list, @Nullable OnItemClickListener listener) {
+        super(list, listener);
     }
 
     public void setGravity(int gravity) {
         mGravity = gravity;
+    }
+
+    public void setSelected(int selected) {
+        mSelected = selected;
+    }
+
+    public int getSelected() {
+        return mSelected;
     }
 
     @Override
@@ -39,6 +55,6 @@ public class StringAdapter extends BaseAdapter<String> {
         ((AppCompatButton) holder.getView(R.id.button_title)).setGravity(mGravity);
         holder.setText(R.id.button_title, text).setOnClickListener(R.id.button_title, v -> {
             if (mItemClickListener != null) mItemClickListener.item(v, position, text);
-        });
+        }).setSelected(R.id.button_title, mSelected == position);
     }
 }

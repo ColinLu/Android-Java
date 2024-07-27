@@ -2,13 +2,15 @@ package com.colin.library.android.widgets.transform;
 
 import android.view.View;
 
+import androidx.annotation.NonNull;
+
 public class ZoomOutSlideTransformer extends BaseTransformer {
 
     private static final float MIN_SCALE = 0.85f;
     private static final float MIN_ALPHA = 0.5f;
 
     @Override
-    protected void onTransform(View view, float position) {
+    protected void onTransform(@NonNull View view, float position) {
         if (position >= -1 || position <= 1) {
             // Modify the default slide transition to shrink the page as well
             final float height = view.getHeight();

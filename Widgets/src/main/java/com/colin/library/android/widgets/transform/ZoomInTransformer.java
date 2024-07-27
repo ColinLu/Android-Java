@@ -2,10 +2,12 @@ package com.colin.library.android.widgets.transform;
 
 import android.view.View;
 
+import androidx.annotation.NonNull;
+
 public class ZoomInTransformer extends BaseTransformer {
 
     @Override
-    protected void onTransform(View view, float position) {
+    protected void onTransform(@NonNull View view, float position) {
         final float scale = position < 0 ? position + 1f : Math.abs(1f - position);
         view.setScaleX(scale);
         view.setScaleY(scale);
