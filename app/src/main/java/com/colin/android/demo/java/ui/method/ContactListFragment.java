@@ -16,9 +16,9 @@ import com.colin.android.demo.java.app.AppFragment;
 import com.colin.android.demo.java.databinding.LayoutListBinding;
 import com.colin.android.demo.java.def.LoadState;
 import com.colin.android.demo.java.def.bean.ContactBean;
+import com.colin.android.demo.java.utils.DemoUtils;
 import com.colin.android.demo.java.utils.DialogManager;
 import com.colin.library.android.utils.ToastUtil;
-import com.colin.library.android.utils.ViewUtil;
 import com.colin.library.android.widgets.def.OnItemClickListener;
 import com.google.gson.Gson;
 
@@ -38,11 +38,6 @@ public class ContactListFragment extends AppFragment<LayoutListBinding> implemen
         initRecyclerView();
         mBinding.mRefreshList.setColorSchemeResources(R.color.colorAccent, R.color.colorPrimary);
         mBinding.mRefreshList.setOnRefreshListener(() -> loadData(true));
-    }
-
-    private void initRecyclerView() {
-        if (mAdapter == null) mAdapter = new ContactAdapter(this);
-        ViewUtil.init(mBinding.mRecyclerView, mAdapter);
     }
 
     @Override
@@ -68,5 +63,10 @@ public class ContactListFragment extends AppFragment<LayoutListBinding> implemen
         if (object instanceof ContactBean) {
             DialogManager.getInstance().showTip(getChildFragmentManager(), new Gson().toJson(object));
         }
+    }
+
+    private void initRecyclerView() {
+        if (mAdapter == null) mAdapter = new ContactAdapter(this);
+        DemoUtils.initRecyclerView(mBinding.mRecyclerView, mAdapter);
     }
 }

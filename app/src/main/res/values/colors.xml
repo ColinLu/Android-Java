@@ -58,11 +58,11 @@
     <!--App Text不可点击颜色-->
     <color name="app_text_disabled">#FF777777</color>
     <!--App Button 默认背景颜色-->
-    <color name="app_button_default">#FF4E9AF7</color>
+    <color name="app_button_default">@color/purple_500</color>
     <!--App Button 按下、选中背景颜色-->
-    <color name="app_button_checked">#FF2B8AFF</color>
+    <color name="app_button_selected">@color/purple_200</color>
     <!--App Button 不可操作背景颜色-->
-    <color name="app_button_disabled">#FFCCCCCC</color>
+    <color name="app_button_disabled">@color/purple_700</color>
     <!--App item 背景颜色-->
     <color name="app_item">#FFFFFFFF</color>
     <!--App 可点击控件View波纹颜色-->

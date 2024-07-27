@@ -133,12 +133,12 @@ public class MediaScanner implements MediaScannerConnection.MediaScannerConnecti
     }
 
     private void completed(final String path, final Uri uri) {
-        LogUtil.d(null == mUri ? "mUri" : mUri.toString(),
+        LogUtil.d(LogUtil.format(null == mUri ? "mUri" : mUri.toString(),
                 null == mPath ? "mPath" : mPath,
                 null == uri ? "uri" : uri.toString(),
                 null == path ? "path" : path,
                 "mScannerTimes:" + mScannerTimes,
-                "mScannerCount:" + mScannerCount);
+                "mScannerCount:" + mScannerCount));
         Context context = null == mContextRef ? null : mContextRef.get();
         if (null == context || null == mListener) return;
         ContextCompat.getMainExecutor(context).execute(() -> mListener.onScanCompleted(path, uri));

@@ -107,7 +107,7 @@ public class WebIndexFragment extends AppFragment<FragmentWebIndexBinding> imple
         });
 
         mSearchView.setOnKeyListener((v, keyCode, event) -> {
-            LogUtil.i("setOnKeyListener keyCode:$d event:%s", keyCode, event.toString());
+            LogUtil.i(String.format("setOnKeyListener keyCode:$d event:%s", keyCode, event.toString()));
 
             if (keyCode == EditorInfo.IME_ACTION_DONE) {
 

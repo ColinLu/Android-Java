@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.appcompat.widget.AppCompatButton xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/button_title"
-    style="@style/Text"
     android:layout_width="match_parent"
     android:layout_height="@dimen/item_title_height"
-    android:background="@android:drawable/list_selector_background"
+    android:background="@drawable/item_background"
     android:gravity="center"
     android:paddingStart="@dimen/margin_default"
-    android:paddingEnd="@dimen/margin_default" />
+    android:paddingEnd="@dimen/margin_default"
+    android:textAppearance="@style/Text" />

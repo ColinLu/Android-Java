@@ -1,10 +1,7 @@
 package com.colin.android.demo.java.ui.method;
 
-import android.Manifest;
 import android.os.Bundle;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 
 import com.colin.android.demo.java.app.AppFragment;
@@ -15,10 +12,8 @@ import com.colin.library.android.http.OkHttpHelper;
 import com.colin.library.android.http.action.ActionFile;
 import com.colin.library.android.http.action.ActionString;
 import com.colin.library.android.utils.LogUtil;
-import com.colin.library.android.utils.ToastUtil;
 
 import java.io.File;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * 作者： ColinLu
@@ -48,21 +43,6 @@ public class HttpFragment extends AppFragment<FragmentHttpBinding> {
             // 下面这张是：2280 * 22116
             "http://img6.16fan.com/attachments/wenzhang/201805/18/152660818716180ge.jpeg"};
 
-    private final ActivityResultLauncher<String> mPermissionLauncher = registerForActivityResult(new ActivityResultContracts.RequestPermission(), (result -> {
-
-    }));
-
-    ActivityResultLauncher<String[]> mPermissionsLauncher = registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), result -> {
-        AtomicBoolean resultGranted = new AtomicBoolean(false);
-        result.forEach((permission, granted) -> {
-            LogUtil.i(String.format("result:%s granted:%s", permission, granted));
-            if (!granted) {
-                resultGranted.set(false);
-            }
-        });
-
-        httpDownload(resultGranted.get());
-    });
 
     @Override
     public void initView(@Nullable Bundle bundle) {
@@ -105,7 +85,6 @@ public class HttpFragment extends AppFragment<FragmentHttpBinding> {
         OkHttpHelper.getInstance().delete(HTTP_METHOD_DELETE).execute(new ActionString() {
             @Override
             public void success(@Nullable String tips) {
-
                 DialogManager.getInstance().showTip(getChildFragmentManager(), tips);
             }
         });
@@ -158,16 +137,7 @@ public class HttpFragment extends AppFragment<FragmentHttpBinding> {
         });
     }
 
-    //    @RequiresPermission(allOf = {Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE})
     private void httpDownload() {
-        mPermissionsLauncher.launch(new String[]{Manifest.permission.MANAGE_EXTERNAL_STORAGE, Manifest.permission.READ_MEDIA_IMAGES, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE});
-    }
-
-    private void httpDownload(boolean granted) {
-        if (!granted) {
-            ToastUtil.show("请同意权限申请");
-            return;
-        }
         OkHttpHelper.getInstance().get(DOWN_TEXT).encode(Encode.UTF_8).execute(new ActionFile() {
             @Override
             public void success(@Nullable File file) {
@@ -176,9 +146,10 @@ public class HttpFragment extends AppFragment<FragmentHttpBinding> {
 
             @Override
             public void progress(long total, long progress) {
-                LogUtil.d("progress:total=%d progress=%d", total, progress);
+                LogUtil.d(String.format("progress:total=%d progress=%d", total, progress));
             }
         });
     }
+
 
 }

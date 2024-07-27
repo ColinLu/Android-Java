@@ -13,7 +13,7 @@ import com.colin.android.demo.java.databinding.FragmentCircleImageBinding;
  * 作者： ColinLu
  * 时间： 2022-01-16 22:52
  * <p>
- * 描述： TODO
+ * 描述： 圆形控件展示
  */
 public class CircleImageFragment extends AppFragment<FragmentCircleImageBinding> {
 
@@ -35,15 +35,5 @@ public class CircleImageFragment extends AppFragment<FragmentCircleImageBinding>
 
             }
         });
-    }
-
-    @Override
-    public void initData(@Nullable Bundle bundle) {
-
-    }
-
-    @Override
-    public void loadData(boolean refresh) {
-
     }
 }

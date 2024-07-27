@@ -14,6 +14,7 @@ import com.colin.android.demo.java.app.AppFragment;
 import com.colin.android.demo.java.databinding.LayoutListBinding;
 import com.colin.android.demo.java.def.LoadState;
 import com.colin.android.demo.java.utils.DemoUtils;
+import com.colin.library.android.annotation.LogLevel;
 import com.colin.library.android.utils.LogUtil;
 import com.colin.library.android.widgets.def.OnItemClickListener;
 
@@ -67,7 +68,7 @@ public class LogFragment extends AppFragment<LayoutListBinding> implements OnIte
                 LogUtil.v(TAG, value);
                 break;
             case "Log V by format":
-                LogUtil.v("format log-> tag:%s int:%d float:%.2f string:%s", TAG, 3, 5.4567F, value);
+                LogUtil.log(LogLevel.V, "format log-> tag:%s int:%d float:%.2f string:%s", TAG, 3, 5.4567F, value);
                 break;
             case "Log D":
                 LogUtil.d(value);
@@ -76,25 +77,25 @@ public class LogFragment extends AppFragment<LayoutListBinding> implements OnIte
                 LogUtil.d(TAG, value);
                 break;
             case "Log D by format":
-                LogUtil.d("format log-> int:%d float:%.2f string:%s", 3, 5.4567F, value);
+                LogUtil.log(LogLevel.D, "format log-> int:%d float:%.2f string:%s", 3, 5.4567F, value);
                 break;
             case "Log I":
                 LogUtil.i(value);
                 break;
             case "Log I with Tag":
-                LogUtil.i(TAG, value);
+                LogUtil.i(TAG, LogUtil.format("format log-> int:%d float:%.2f string:%s", 3, 5.4567F, value));
                 break;
             case "Log I by format":
-                LogUtil.i("format log-> int:%d float:%.2f string:%s", 3, 5.4567F, value);
+                LogUtil.log(LogLevel.I, "format log-> int:%d float:%.2f string:%s", 3, 5.4567F, value);
                 break;
             case "Log W":
                 LogUtil.w(value);
                 break;
             case "Log W with Tag":
-                LogUtil.w(TAG, value);
+                LogUtil.w(TAG, LogUtil.format("format log-> int:%d float:%.2f string:%s", 3, 5.4567F, value));
                 break;
             case "Log W by format":
-                LogUtil.w("format log-> int:%d float:%.2f string:%s", 3, 5.4567F, value);
+                LogUtil.log(LogLevel.W, "format log-> int:%d float:%.2f string:%s", 3, 5.4567F, value);
                 break;
             case "Log E":
                 LogUtil.e(value);
@@ -103,7 +104,7 @@ public class LogFragment extends AppFragment<LayoutListBinding> implements OnIte
                 LogUtil.e(TAG, value);
                 break;
             case "Log E by format":
-                LogUtil.e("format log-> int:%d float:%.2f string:%s", 3, 5.4567F, value);
+                LogUtil.log(LogLevel.E, "format log-> int:%d float:%.2f string:%s", 3, 5.4567F, value);
                 break;
             case "Log A":
                 LogUtil.a(value);
@@ -112,7 +113,7 @@ public class LogFragment extends AppFragment<LayoutListBinding> implements OnIte
                 LogUtil.a(TAG, value);
                 break;
             case "Log A by format":
-                LogUtil.a("format log-> int:%d float:%.2f string:%s", 3, 5.4567F, value);
+                LogUtil.log(LogLevel.A, "format log-> int:%d float:%.2f string:%s", 3, 5.4567F, value);
                 break;
             case "Log Json":
                 LogUtil.json(JSON);

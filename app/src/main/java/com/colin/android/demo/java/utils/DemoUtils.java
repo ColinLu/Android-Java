@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.colin.library.android.utils.ResourceUtil;
+import com.colin.library.android.widgets.recycler.SpaceItemDecoration;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -57,5 +58,6 @@ public final class DemoUtils {
         view.setHasFixedSize(true);
         view.setAdapter(adapter);
         view.setItemAnimator(new DefaultItemAnimator());
+        view.addItemDecoration(new SpaceItemDecoration(5));
     }
 }

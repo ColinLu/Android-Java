@@ -39,7 +39,7 @@ public class WebViewFragment extends AppFragment<FragmentWebViewBinding> impleme
 
         @Override
         public void handleOnBackPressed() {
-            LogUtil.e("handleOnBackPressed canGoBack:%s", mBinding.mWebView.canGoBack());
+            LogUtil.e(String.format("handleOnBackPressed canGoBack:%s", mBinding.mWebView.canGoBack()));
             if (mBinding.mWebView.canGoBack()) {
                 mBinding.mWebView.goBack();
             }
@@ -125,7 +125,7 @@ public class WebViewFragment extends AppFragment<FragmentWebViewBinding> impleme
         mBinding.mRefreshList.setRefreshing(false);
         mBinding.mProgress.setVisibility(View.GONE);
         final boolean canGoBack = mBinding.mWebView.canGoBack();
-        LogUtil.i("onPageFinished canGoBack:%s", canGoBack);
+        LogUtil.i(String.format("onPageFinished canGoBack:%s", canGoBack));
         mBackCallback.setEnabled(!canGoBack);
     }
 
@@ -139,7 +139,7 @@ public class WebViewFragment extends AppFragment<FragmentWebViewBinding> impleme
     private boolean shouldInterceptUri(@NonNull final Uri uri) {
         String scheme = uri.getScheme();
         String host = uri.getHost();
-        LogUtil.i("uri scheme:%s host:%s", scheme == null ? "null" : scheme, host);
+        LogUtil.i(String.format("uri scheme:%s host:%s", scheme == null ? "null" : scheme, host));
         if ("sms".equalsIgnoreCase(scheme) || "smsto".equalsIgnoreCase(scheme)) {
             launcherIntent.launch(new Intent(Intent.ACTION_SENDTO, uri), ActivityOptionsCompat.makeBasic());
             return true;

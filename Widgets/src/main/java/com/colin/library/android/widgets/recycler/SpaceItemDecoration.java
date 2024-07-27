@@ -8,13 +8,14 @@ import androidx.annotation.Px;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.colin.library.android.utils.data.Constants;
 import com.colin.library.android.widgets.annotation.Orientation;
 
 /**
  * 作者： ColinLu
  * 时间： 2022-02-15 23:17
  * <p>
- * 描述： TODO
+ * 描述： Item 之间的间隔
  */
 public class SpaceItemDecoration extends RecyclerView.ItemDecoration {
     @Orientation
@@ -59,27 +60,27 @@ public class SpaceItemDecoration extends RecyclerView.ItemDecoration {
     }
 
     private void getHorizontalItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
-        final int itemCount = parent.getAdapter().getItemCount();
-        if (itemCount == 0) return;
+        final int itemCount = parent.getAdapter() == null ? Constants.ZERO : parent.getAdapter().getItemCount();
+        if (itemCount == Constants.ZERO) return;
         final int position = parent.getChildAdapterPosition(view);
         final int size = mSpace >> 1;
-        if (position == 0) {
-            outRect.set(mEdge ? mSpace : 0, 0, size, 0);
+        if (position == Constants.ZERO) {
+            outRect.set(mEdge ? mSpace : Constants.ZERO, Constants.ZERO, size, Constants.ZERO);
         } else if (position == itemCount - 1) {
-            outRect.set(size, 0, mEdge ? mSpace : 0, 0);
-        } else outRect.set(size, 0, size, 0);
+            outRect.set(size, Constants.ZERO, mEdge ? mSpace : Constants.ZERO, Constants.ZERO);
+        } else outRect.set(size, Constants.ZERO, size, Constants.ZERO);
     }
 
     private void getVerticalItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
-        final int itemCount = parent.getAdapter().getItemCount();
-        if (itemCount == 0) return;
+        final int itemCount = parent.getAdapter() == null ? Constants.ZERO : parent.getAdapter().getItemCount();
+        if (itemCount == Constants.ZERO) return;
         final int position = parent.getChildAdapterPosition(view);
         final int size = mSpace >> 1;
-        if (position == 0) {
-            outRect.set(0, mEdge ? mSpace : 0, 0, size);
+        if (position == Constants.ZERO) {
+            outRect.set(Constants.ZERO, mEdge ? mSpace : Constants.ZERO, Constants.ZERO, size);
         } else if (position == itemCount - 1) {
-            outRect.set(0, size, 0, mEdge ? mSpace : 0);
-        } else outRect.set(0, size, 0, size);
+            outRect.set(Constants.ZERO, size, Constants.ZERO, mEdge ? mSpace : Constants.ZERO);
+        } else outRect.set(Constants.ZERO, size, Constants.ZERO, size);
     }
 
 }

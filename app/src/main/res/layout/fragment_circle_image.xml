@@ -20,7 +20,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@+id/image_right"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/image" />
+        app:srcCompat="@mipmap/banner1" />
 
     <com.colin.library.android.widgets.image.CircleImageView
         android:id="@+id/image_right"
@@ -35,7 +35,7 @@
         app:layout_constraintLeft_toRightOf="@+id/image_left"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ticket_image" />
+        app:srcCompat="@mipmap/banner2" />
 
     <com.colin.library.android.widgets.image.CircleImageView
         android:id="@+id/image_set"
@@ -46,8 +46,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/image_left"
-        app:srcCompat="@drawable/image"
-        tools:ignore="ImageContrastCheck" />
+        app:srcCompat="@mipmap/banner3" />
 
     <androidx.appcompat.widget.AppCompatSeekBar
         android:id="@+id/seek"
@@ -73,6 +72,6 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/seek"
         app:shapeAppearance="@style/Circle"
-        app:srcCompat="@drawable/ticket" />
+        app:srcCompat="@mipmap/banner4" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
