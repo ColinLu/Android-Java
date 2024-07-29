@@ -21,6 +21,8 @@ import com.colin.android.demo.java.utils.DialogManager;
 import com.colin.library.android.utils.LogUtil;
 import com.colin.library.android.utils.ToastUtil;
 
+import java.util.Locale;
+
 
 public class HomeFragment extends AppFragment<FragmentHomeBinding> {
     @Override
@@ -84,7 +86,7 @@ public class HomeFragment extends AppFragment<FragmentHomeBinding> {
             if (result) {
                 requestContent(mimeType);
             } else {
-                ToastUtil.show(String.format("requestPermission permission:%s failed", permission));
+                ToastUtil.show(String.format(Locale.US, "requestPermission permission:%s failed", permission));
             }
         }));
     }

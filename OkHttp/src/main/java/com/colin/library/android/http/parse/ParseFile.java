@@ -16,11 +16,13 @@ import com.colin.library.android.utils.IOUtil;
 import com.colin.library.android.utils.LogUtil;
 import com.colin.library.android.utils.StorageUtil;
 import com.colin.library.android.utils.StringUtil;
+import com.colin.library.android.utils.data.Constants;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Locale;
 
 import okhttp3.Response;
 import okhttp3.ResponseBody;
@@ -48,27 +50,27 @@ public class ParseFile implements IParse<File> {
     @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
     public File parse(@NonNull final Response response, @Nullable String encode, @NonNull final IProgress progress) throws IOException {
         final ResponseBody body = response.body();
-        if (body == null) return null;
-        final long total = body.contentLength();
-        if (total == 0) return null;
+        final long total = body == null ? Constants.ZERO : body.contentLength();
+        if (total == Constants.ZERO) return null;
         final String fileName = getFileName(response, encode);
         final File folder = getFolder();
         final File file = new File(folder, fileName);
         final boolean exists = FileUtil.createFile(file, true);
+        LogUtil.i(String.format(Locale.US, "name:%s path:%s isExists:%s", fileName, file.getPath(), exists));
         if (!exists) return null;
-        LogUtil.d(fileName, file.getPath());
         InputStream is = null;
-        final byte[] buffer = new byte[1024];
-        int len;
+        final byte[] buffer = new byte[8192];
         FileOutputStream out = null;
         try {
+            int len;
+            long sum = Constants.ZERO;
             is = body.byteStream();
-            out = new FileOutputStream(fileName);
-            long sum = 0;
-            while ((len = is.read(buffer)) != -1) {
-                out.write(buffer, 0, len);
-                final long pro = sum + len;
-                ThreadHelper.getInstance().post(() -> progress.progress(total, pro));
+            out = new FileOutputStream(file);
+            while ((len = is.read(buffer)) != Constants.INVALID) {
+                out.write(buffer, Constants.ZERO, len);
+                sum += len;
+                final long progressValue = sum;
+                ThreadHelper.getInstance().post(() -> progress.progress(total, progressValue));
             }
             IOUtil.flush(out);
             return file;
@@ -80,8 +82,8 @@ public class ParseFile implements IParse<File> {
     @NonNull
     private File getFolder() {
         if (FileUtil.isDir(mFolder)) return mFolder;
-        File file = StorageUtil.getExternalDir(Environment.DIRECTORY_DOWNLOADS);
-        if (FileUtil.isDir(file)) return file;
+        File dir = StorageUtil.getExternalDir(Environment.DIRECTORY_DOWNLOADS);
+        if (FileUtil.isDir(dir)) return dir;
         return StorageUtil.getInternalDataDir();
     }
 

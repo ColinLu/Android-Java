@@ -7,7 +7,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
-import com.colin.library.android.annotation.Encode;
 import com.colin.library.android.http.def.Constants;
 import com.colin.library.android.utils.HttpUtil;
 import com.colin.library.android.utils.StringUtil;
@@ -38,27 +37,6 @@ public final class Util {
         return TextUtils.isEmpty(filename) ? HttpUtil.getFileName(request.url().toString(), encode) : filename;
     }
 
-
-    @Nullable
-    public static String getFileName(@NonNull final Headers headers) {
-        String disposition = headers.get(Constants.HEAD_KEY_CONTENT_DISPOSITION);
-        if (disposition != null) {
-            //文件名可能包含双引号，需要去除
-            disposition = disposition.replaceAll("\"", "");
-            String split = "filename=";
-            int indexOf = disposition.indexOf(split);
-            if (indexOf != -1) return disposition.substring(indexOf + split.length());
-            split = "filename*=";
-            indexOf = disposition.indexOf(split);
-            if (indexOf != -1) {
-                String fileName = disposition.substring(indexOf + split.length());
-                if (fileName.startsWith(Encode.UTF_8))
-                    fileName = fileName.substring(Encode.UTF_8.length());
-                return fileName;
-            }
-        }
-        return null;
-    }
 
 
     public static boolean isCookieExpired(@NonNull Cookie cookie) {

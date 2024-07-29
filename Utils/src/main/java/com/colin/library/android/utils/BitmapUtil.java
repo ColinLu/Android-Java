@@ -20,7 +20,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.ExifInterface;
 import android.net.Uri;
-import android.os.Build;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
@@ -240,12 +239,7 @@ public final class BitmapUtil {
      * 得到bitmap的大小
      */
     public static long getSize(@Nullable Bitmap bitmap) {
-        if (isEmpty(bitmap)) return 0;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) // API 19
-            return bitmap.getAllocationByteCount();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1)  // API 12
-            return bitmap.getByteCount();
-        return bitmap.getRowBytes() * bitmap.getHeight();
+        return isEmpty(bitmap) ? Constants.ZERO : bitmap.getAllocationByteCount();
     }
 
 

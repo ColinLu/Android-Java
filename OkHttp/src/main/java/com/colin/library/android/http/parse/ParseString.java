@@ -21,6 +21,6 @@ public class ParseString implements IParse<String> {
     @Override
     @WorkerThread
     public String parse(@NonNull Response response, @Nullable String encode, @NonNull IProgress progress) throws IOException {
-        return response.body().string();
+        return response.body() == null ? null : response.body().string();
     }
 }

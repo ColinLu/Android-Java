@@ -59,8 +59,6 @@
     <style name="Theme.App.Toolbar.Popup" parent="ThemeOverlay.AppCompat.Light">
         <item name="overlapAnchor">false</item>
         <item name="android:popupBackground">@color/app_background_color</item>
-        <item name="android:textSize">@dimen/app_text_default</item>
-        <item name="android:textColor">@color/app_text_text_color</item>
     </style>
 
     <!--点击按钮样式-->

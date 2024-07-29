@@ -26,6 +26,7 @@ import java.net.URLConnection;
 import java.nio.ByteBuffer;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
+import java.nio.file.Files;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -116,7 +117,7 @@ public final class FileUtil {
         //不需要删除旧文件，判断是否存在  并且是文件
         if (!delete && file.exists()) return file.isFile();
         // 创建目录失败返回 false
-        if (!createOrExistsDir(file.getParentFile())) return false;
+        if (!createDir(file.getParentFile())) return false;
         try {
             return file.createNewFile();
         } catch (IOException e) {
@@ -125,40 +126,28 @@ public final class FileUtil {
         }
     }
 
-    /*创建文件  不存在 创建，存在不创建*/
+    /*创建文件  不存在,创建;存在,不创建*/
     public static boolean createOrExistsFile(@Nullable final String path) {
         return createOrExistsFile(getFile(path));
     }
 
-    /*创建文件  不存在 创建，存在不创建*/
+    /*创建文件  不存在,创建;存在,不创建*/
     public static boolean createOrExistsFile(@Nullable final File parent, @Nullable String fileName) {
         return createOrExistsFile(getFile(parent, fileName));
     }
 
-    /*创建文件  不存在 创建，存在不创建*/
+    /*创建文件  不存在,创建;存在,不创建*/
     public static boolean createOrExistsFile(@Nullable final File file) {
-        //文件不存在
-        if (file == null) return false;
-        //文件存在是否是文件
-        if (file.exists()) return file.isFile();
-        //判断是否存在文件夹 或者是否创建文件夹是否成功
-        if (!createOrExistsDir(file.getParentFile())) return false;
-        //创建新文件
-        try {
-            return file.createNewFile();
-        } catch (IOException e) {
-            LogUtil.log(e);
-            return false;
-        }
+        return createFile(file, false);
     }
 
-    /*创建文件夹  不存在 创建，存在不创建*/
-    public static boolean createOrExistsDir(@Nullable final String path) {
-        return createOrExistsDir(getFile(path));
+    /*创建文件夹  不存在,创建;存在,不创建*/
+    public static boolean createDir(@Nullable final String path) {
+        return createDir(getFile(path));
     }
 
-    /*创建文件夹  不存在 创建，存在不创建*/
-    public static boolean createOrExistsDir(@Nullable final File dir) {
+    /*创建文件夹  不存在,创建;存在,不创建*/
+    public static boolean createDir(@Nullable final File dir) {
         return dir != null && (dir.exists() ? dir.isDirectory() : dir.mkdirs());
     }
 
@@ -183,7 +172,7 @@ public final class FileUtil {
     public static String getFileName(final String path) {
         if (StringUtil.isSpace(path)) return null;
         int lastSep = path.lastIndexOf(File.separator);
-        return lastSep == -1 ? path : path.substring(lastSep + 1);
+        return lastSep == Constants.INVALID ? path : path.substring(lastSep + 1);
     }
 
     /**
@@ -205,7 +194,7 @@ public final class FileUtil {
     public static String getDirName(@Nullable final String path) {
         if (StringUtil.isSpace(path)) return null;
         int lastSep = path.lastIndexOf(File.separator);
-        return lastSep == -1 ? "" : path.substring(0, lastSep + 1);
+        return lastSep == Constants.INVALID ? "" : path.substring(0, lastSep + 1);
     }
 
     /**
@@ -230,7 +219,7 @@ public final class FileUtil {
         int pos = 0;
         InputStream is = null;
         try {
-            is = new BufferedInputStream(new FileInputStream(file));
+            is = new BufferedInputStream(Files.newInputStream(file.toPath()));
             pos = (is.read() << 8) + is.read();
         } catch (IOException e) {
             LogUtil.log(e);

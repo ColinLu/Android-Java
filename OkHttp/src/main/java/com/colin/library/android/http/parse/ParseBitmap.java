@@ -12,6 +12,7 @@ import com.colin.library.android.utils.BitmapUtil;
 import java.io.IOException;
 
 import okhttp3.Response;
+import okhttp3.ResponseBody;
 
 /**
  * 作者： ColinLu
@@ -51,6 +52,7 @@ public class ParseBitmap implements IParse<Bitmap> {
     @Nullable
     @Override
     public Bitmap parse(@NonNull Response response, @Nullable String encode, @NonNull IProgress progress) throws IOException {
-        return BitmapUtil.getBitmap(response.body().bytes(), mConfig, mScaleType, mMaxWidth, mMaxHeight);
+        final ResponseBody body = response.body();
+        return BitmapUtil.getBitmap(body == null ? null : body.bytes(), mConfig, mScaleType, mMaxWidth, mMaxHeight);
     }
 }

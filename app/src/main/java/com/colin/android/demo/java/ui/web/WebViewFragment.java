@@ -25,6 +25,8 @@ import com.colin.library.android.utils.LogUtil;
 import com.colin.library.android.utils.ViewUtil;
 import com.colin.library.android.widgets.web.IWebClient;
 
+import java.util.Locale;
+
 /**
  * Author:ColinLu
  * E-mail:945919945@qq.com
@@ -38,7 +40,7 @@ public class WebViewFragment extends AppFragment<FragmentWebViewBinding> impleme
 
         @Override
         public void handleOnBackPressed() {
-            LogUtil.e(String.format("handleOnBackPressed canGoBack:%s", mBinding.mWebView.canGoBack()));
+            LogUtil.e(String.format(Locale.US,"handleOnBackPressed canGoBack:%s", mBinding.mWebView.canGoBack()));
             if (mBinding.mWebView.canGoBack()) {
                 mBinding.mWebView.goBack();
             }
@@ -124,7 +126,7 @@ public class WebViewFragment extends AppFragment<FragmentWebViewBinding> impleme
         mBinding.mRefreshList.setRefreshing(false);
         mBinding.mProgress.setVisibility(View.GONE);
         final boolean canGoBack = mBinding.mWebView.canGoBack();
-        LogUtil.i(String.format("onPageFinished canGoBack:%s", canGoBack));
+        LogUtil.i(String.format(Locale.US,"onPageFinished canGoBack:%s", canGoBack));
         mBackCallback.setEnabled(!canGoBack);
     }
 

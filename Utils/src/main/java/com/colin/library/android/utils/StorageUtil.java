@@ -195,10 +195,10 @@ public final class StorageUtil {
     /*创建缓存文件夹*/
     @NonNull
     public static File getCacheDir() {
-        File dir = getExternalCacheDir();
-        if (dir == null) return getInternalCacheDir();
-        return dir;
+        final File dir = getExternalCacheDir();
+        return dir == null ? getInternalCacheDir() : dir;
     }
+
 
     @Nullable
     public static String getPath(@Nullable final File file) {

@@ -1,5 +1,6 @@
 package com.colin.android.demo.java.ui.method;
 
+import android.graphics.Bitmap;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -9,11 +10,13 @@ import com.colin.android.demo.java.databinding.FragmentHttpBinding;
 import com.colin.android.demo.java.utils.DialogManager;
 import com.colin.library.android.annotation.Encode;
 import com.colin.library.android.http.OkHttpHelper;
+import com.colin.library.android.http.action.ActionBitmap;
 import com.colin.library.android.http.action.ActionFile;
 import com.colin.library.android.http.action.ActionString;
 import com.colin.library.android.utils.LogUtil;
 
 import java.io.File;
+import java.util.Locale;
 
 /**
  * 作者： ColinLu
@@ -22,8 +25,9 @@ import java.io.File;
  * 描述： TODO
  */
 public class HttpFragment extends AppFragment<FragmentHttpBinding> {
-    public static final String DOWN_TEXT = "https://txt.xbaoshu.com/d/file/down/2023/11/29/都市医仙.txt";
+    //    public static final String DOWN_TEXT = "https://txt.xbaoshu.com/d/file/down/2023/11/29/都市医仙.txt";txt
     public static final String DOWN_IMAGE = "http://inews.gtimg.com/newsapp_bt/0/876781763/1000";
+    public static final String DOWN_TEXT = "http://dt.80zw.la/167882/%E9%87%8D%E7%94%9F%E6%97%A5%E5%B8%B8%E4%BF%AE%E4%BB%99.txt";
 
     public static final String HTTP_BASE = "https://postman-echo.com/";
     public static final String HTTP_METHOD_GET = HTTP_BASE + "get?test=123";
@@ -64,10 +68,10 @@ public class HttpFragment extends AppFragment<FragmentHttpBinding> {
     }
 
     private void httpGet() {
-        OkHttpHelper.getInstance().get(HTTP_METHOD_GET).tag(this).execute(new ActionString() {
+        OkHttpHelper.getInstance().get(DOWN_IMAGE).tag(this).execute(new ActionBitmap() {
             @Override
-            public void success(@Nullable String tips) {
-                DialogManager.getInstance().showTip(getChildFragmentManager(), tips);
+            public void success(@Nullable Bitmap bitmap) {
+                DialogManager.getInstance().showImage(getChildFragmentManager(), bitmap);
             }
         });
     }
@@ -141,12 +145,13 @@ public class HttpFragment extends AppFragment<FragmentHttpBinding> {
         OkHttpHelper.getInstance().get(DOWN_TEXT).encode(Encode.UTF_8).execute(new ActionFile() {
             @Override
             public void success(@Nullable File file) {
+                LogUtil.e("file:" + (file == null ? "file is null" : file.getAbsolutePath()));
                 DialogManager.getInstance().showTip(getChildFragmentManager(), file == null ? "file==null" : file.getName(), file == null ? "file==null" : file.getAbsolutePath());
             }
 
             @Override
             public void progress(long total, long progress) {
-                LogUtil.d(String.format("progress:total=%d progress=%d", total, progress));
+                LogUtil.d(String.format(Locale.US, "progress:total=%d progress=%d", total, progress));
             }
         });
     }

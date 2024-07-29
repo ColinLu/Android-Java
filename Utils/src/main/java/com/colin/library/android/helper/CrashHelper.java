@@ -15,6 +15,7 @@ import com.colin.library.android.utils.TimeUtil;
 import com.colin.library.android.utils.data.Constants;
 
 import java.io.File;
+import java.util.Locale;
 
 /**
  * 作者： ColinLu
@@ -72,24 +73,14 @@ public final class CrashHelper {
         @Override
         public void uncaughtException(@NonNull Thread t, @NonNull Throwable e) {
             final StringBuilder sb = new StringBuilder();
-            sb.append("****************************** Log Start ******************************").append(Constants.LINE_SEP)
-                    .append("Time Of Crash      : ").append(TimeUtil.getTimeString()).append(Constants.LINE_SEP)
-                    .append("OS name            : ").append(OSUtil.getName()).append(Constants.LINE_SEP)
-                    .append("OS version         : ").append(OSUtil.getVersion()).append(Constants.LINE_SEP)
-                    .append("Device Manufacturer: ").append(Build.MANUFACTURER).append(Constants.LINE_SEP)
-                    .append("Device Model       : ").append(Build.MODEL).append(Constants.LINE_SEP)
-                    .append("Android Version    : ").append(Build.VERSION.RELEASE).append(Constants.LINE_SEP)
-                    .append("Android SDK        : ").append(Build.VERSION.SDK_INT).append(Constants.LINE_SEP)
-                    .append("App VersionName    : ").append(AppUtil.getVersionName()).append(Constants.LINE_SEP)
-                    .append("App VersionCode    : ").append(AppUtil.getVersionCode()).append(Constants.LINE_SEP)
-                    .append(Constants.LINE_SEP).append(LogUtil.format(e)).append(Constants.LINE_SEP)
-                    .append("****************************** Log End ******************************").append(Constants.LINE_SEP);
+            sb.append("****************************** Log Start ******************************").append(Constants.LINE_SEP).append("Time Of Crash      : ").append(TimeUtil.getTimeString()).append(Constants.LINE_SEP).append("OS name            : ").append(OSUtil.getName()).append(Constants.LINE_SEP).append("OS version         : ").append(OSUtil.getVersion()).append(Constants.LINE_SEP).append("Device Manufacturer: ").append(Build.MANUFACTURER).append(Constants.LINE_SEP).append("Device Model       : ").append(Build.MODEL).append(Constants.LINE_SEP).append("Android Version    : ").append(Build.VERSION.RELEASE).append(Constants.LINE_SEP).append("Android SDK        : ").append(Build.VERSION.SDK_INT).append(Constants.LINE_SEP).append("App VersionName    : ").append(AppUtil.getVersionName()).append(Constants.LINE_SEP).append("App VersionCode    : ").append(AppUtil.getVersionCode()).append(Constants.LINE_SEP).append(Constants.LINE_SEP).append(LogUtil.format(e)).append(Constants.LINE_SEP).append("****************************** Log End ******************************").append(Constants.LINE_SEP);
             if (mOnCrashListener != null) mOnCrashListener.crash(e, sb.toString());
             if (FileUtil.isDir(mFolder)) mFolder = getInstance().getFile();
             if (StringUtil.isEmpty(mFileName)) mFileName = getInstance().getFileName();
             final File file = new File(mFolder, mFileName);
-            LogUtil.e(file.getAbsolutePath());
-            ThreadHelper.getInstance().doAsync(() -> FileUtil.toFile(file, sb, true));
+            boolean exit = FileUtil.createFile(file, false);
+            LogUtil.e(String.format(Locale.US, "path:%s exit:%s", file.getAbsolutePath(), exit));
+            if (exit) ThreadHelper.getInstance().doAsync(() -> FileUtil.toFile(file, sb, true));
         }
     }
 
