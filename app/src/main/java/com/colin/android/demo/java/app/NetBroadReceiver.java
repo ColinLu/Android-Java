@@ -70,9 +70,7 @@ public final class NetBroadReceiver extends BaseReceiver {
         }
         this.mCurrentNetType = netType;
         final OnNetListener listener = (OnNetListener) mOnBroadcastListenerRef.get();
-        if (listener != null) {
-            listener.network(netType);
-        }
+        if (listener != null) listener.network(netType);
     }
 
     ///////////////////////////////////////////////////////////////////////////

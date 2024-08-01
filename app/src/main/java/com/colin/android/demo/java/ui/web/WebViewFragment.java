@@ -40,10 +40,8 @@ public class WebViewFragment extends AppFragment<FragmentWebViewBinding> impleme
 
         @Override
         public void handleOnBackPressed() {
-            LogUtil.e(String.format(Locale.US,"handleOnBackPressed canGoBack:%s", mBinding.mWebView.canGoBack()));
-            if (mBinding.mWebView.canGoBack()) {
-                mBinding.mWebView.goBack();
-            }
+            LogUtil.e(String.format(Locale.US, "handleOnBackPressed canGoBack:%s", mBinding.mWebView.canGoBack()));
+            mBinding.mWebView.goBack();
         }
     };
     ActivityResultLauncher<Intent> launcherIntent = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), (result -> {
@@ -53,12 +51,20 @@ public class WebViewFragment extends AppFragment<FragmentWebViewBinding> impleme
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requireActivity().getOnBackPressedDispatcher().addCallback(this, mBackCallback);
+    }
+
+    @Override
+    public boolean onBack() {
+        final boolean back = mBinding.mWebView.canGoBack();
+        LogUtil.e(String.format(Locale.US, "handleOnBackPressed canGoBack:%s", back));
+        if (back) mBinding.mWebView.goBack();
+        return back;
     }
 
     @Override
     public void onStart() {
         super.onStart();
+        requireActivity().getOnBackPressedDispatcher().addCallback(this, mBackCallback);
     }
 
     @Override
@@ -71,6 +77,7 @@ public class WebViewFragment extends AppFragment<FragmentWebViewBinding> impleme
     public void onPause() {
         super.onPause();
         mBinding.mWebView.onPause();
+        mBackCallback.remove();
     }
 
 
@@ -126,8 +133,8 @@ public class WebViewFragment extends AppFragment<FragmentWebViewBinding> impleme
         mBinding.mRefreshList.setRefreshing(false);
         mBinding.mProgress.setVisibility(View.GONE);
         final boolean canGoBack = mBinding.mWebView.canGoBack();
-        LogUtil.i(String.format(Locale.US,"onPageFinished canGoBack:%s", canGoBack));
-        mBackCallback.setEnabled(!canGoBack);
+        LogUtil.i(String.format(Locale.US, "onPageFinished canGoBack:%s", canGoBack));
+//        mBackCallback.setEnabled(!canGoBack);
     }
 
     @Override

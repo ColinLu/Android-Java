@@ -25,7 +25,8 @@ import java.lang.reflect.ParameterizedType;
  * 描述： 构建App基本逻辑
  */
 public abstract class AppFragment<VB extends ViewBinding> extends BaseFragment implements ScreenReceiver.OnScreenBroadcastListener, NetBroadReceiver.OnNetListener {
-    protected VB mBinding ;
+    protected VB mBinding;
+
 
     @Nullable
     @Override
@@ -60,7 +61,6 @@ public abstract class AppFragment<VB extends ViewBinding> extends BaseFragment i
     public void screen(@NonNull String action) {
         LogUtil.i(action);
     }
-
 
     private VB reflectViewBinding(@NonNull LayoutInflater inflater, @Nullable ViewGroup container) throws IllegalStateException {
         try {

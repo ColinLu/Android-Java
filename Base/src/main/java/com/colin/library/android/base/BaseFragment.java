@@ -12,6 +12,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.colin.library.android.Utils;
+import com.colin.library.android.base.def.IBack;
 import com.colin.library.android.base.def.IBase;
 import com.colin.library.android.base.def.ILife;
 import com.colin.library.android.utils.LogUtil;
@@ -22,7 +23,7 @@ import com.colin.library.android.utils.LogUtil;
  * <p>
  * 描述： Fragment 基类
  */
-public abstract class BaseFragment extends Fragment implements IBase, ILife {
+public abstract class BaseFragment extends Fragment implements IBase, ILife, IBack {
     protected boolean mRefresh = true;
 
     @Override

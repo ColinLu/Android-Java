@@ -24,11 +24,6 @@ public final class ImageDialog extends AppDialog<DialogImageBinding> {
     private String mImage;
     private int mRes = Resources.ID_NULL;
 
-    @Override
-    public void initView(@Nullable Bundle bundle) {
-
-    }
-
     public void setImage(@NonNull Bitmap bitmap) {
         mBitmapRef = new WeakReference<>(bitmap);
         initData(null);
@@ -37,6 +32,22 @@ public final class ImageDialog extends AppDialog<DialogImageBinding> {
     public void setImageRes(int res) {
         this.mRes = res;
         initData(null);
+    }
+
+    @Override
+    public void initView(@Nullable Bundle bundle) {
+        mBinding.imageDialog.setOnLongClickListener(v -> {
+            final Bitmap bitmap = mBitmapRef == null ? null : mBitmapRef.get();
+            if (!BitmapUtil.isEmpty(bitmap)) {
+
+                return true;
+            }
+            if (mRes != Resources.ID_NULL) {
+
+                return true;
+            }
+            return false;
+        });
     }
 
     @Override

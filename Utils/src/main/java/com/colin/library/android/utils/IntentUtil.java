@@ -292,6 +292,6 @@ public final class IntentUtil {
     @SuppressLint("QueryPermissionsNeeded")
     public static boolean isAvailable(@Nullable Context context, @Nullable Intent intent) {
         if (null == context || null == intent) return false;
-        return context.getPackageManager().queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY).size() > 0;
+        return !context.getPackageManager().queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY).isEmpty();
     }
 }

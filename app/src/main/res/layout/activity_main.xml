@@ -32,6 +32,7 @@
         android:layout_gravity="bottom|end"
         android:layout_marginEnd="@dimen/fab_margin"
         android:layout_marginBottom="16dp"
+        android:tint="@color/white"
         android:importantForAccessibility="no"
         app:srcCompat="@drawable/ic_home_black_24dp" />
 

@@ -3,7 +3,6 @@ package com.colin.android.demo.java.ui.home;
 import android.Manifest;
 import android.os.Build;
 import android.os.Bundle;
-import android.view.View;
 
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
@@ -25,10 +24,6 @@ import java.util.Locale;
 
 
 public class HomeFragment extends AppFragment<FragmentHomeBinding> {
-    @Override
-    public void registerForContextMenu(@NonNull View view) {
-        super.registerForContextMenu(view);
-    }
 
     private String mMimeType = null;
     private final ActivityResultLauncher<String> mLauncherContent = registerForActivityResult(new ActivityResultContracts.GetContent(), (result -> {

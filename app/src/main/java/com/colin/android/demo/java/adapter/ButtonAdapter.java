@@ -20,8 +20,7 @@ public class ButtonAdapter extends BaseAdapter<String> {
     private int mGravity = Gravity.CENTER;
 
     public ButtonAdapter(OnItemClickListener listener) {
-        super();
-        this.mItemClickListener = listener;
+        super(listener);
     }
 
     public void setGravity(int gravity) {

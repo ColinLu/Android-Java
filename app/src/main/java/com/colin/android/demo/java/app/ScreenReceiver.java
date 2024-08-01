@@ -38,7 +38,7 @@ public class ScreenReceiver extends BaseReceiver {
     public void onReceive(Context context, Intent intent) {
         final OnScreenBroadcastListener listener = null == mOnBroadcastListenerRef ? null : (OnScreenBroadcastListener) mOnBroadcastListenerRef.get();
         final String action = intent.getAction();
-        if (null == listener || null == listener.getContext() || TextUtils.isEmpty(action)) return;
+        if (null == listener || TextUtils.isEmpty(action)) return;
         listener.screen(action);
     }
 

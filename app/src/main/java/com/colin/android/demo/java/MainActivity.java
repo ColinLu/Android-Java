@@ -9,6 +9,7 @@ import androidx.activity.EdgeToEdge;
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -16,6 +17,7 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.colin.android.demo.java.app.AppActivity;
 import com.colin.android.demo.java.databinding.ActivityMainBinding;
+import com.colin.library.android.base.def.IBack;
 import com.colin.library.android.utils.LogUtil;
 import com.colin.library.android.utils.ToastUtil;
 import com.colin.library.android.utils.data.Constants;
@@ -32,6 +34,11 @@ public class MainActivity extends AppActivity<ActivityMainBinding> {
     private final OnBackPressedCallback mBackCallback = new OnBackPressedCallback(true) {
         @Override
         public void handleOnBackPressed() {
+            Fragment currentFragment = getCurrentFragment();
+            if (currentFragment instanceof IBack && ((IBack) currentFragment).onBack()) {
+                LogUtil.i(currentFragment.getClass().getSimpleName() + "->back");
+                return;
+            }
             if (onSupportNavigateUp()) {
                 return;
             }
@@ -45,16 +52,21 @@ public class MainActivity extends AppActivity<ActivityMainBinding> {
         }
     };
 
+    @Nullable
+    private Fragment getCurrentFragment() {
+        for (Fragment fragment : getSupportFragmentManager().getFragments()) {
+            final boolean visible = fragment.isVisible();
+            LogUtil.i(String.format("fragment:%s visible:%s", fragment.getClass().getSimpleName(), visible));
+            if (visible) return fragment;
+        }
+        return null;
+    }
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         EdgeToEdge.enable(this);
         super.onCreate(savedInstanceState);
         getOnBackPressedDispatcher().addCallback(this, mBackCallback);
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
     }
 
     @Override
