@@ -11,7 +11,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
-import com.colin.android.demo.java.MainActivity;
 import com.colin.android.demo.java.R;
 import com.colin.android.demo.java.app.AppFragment;
 import com.colin.android.demo.java.databinding.FragmentHomeBinding;
@@ -50,11 +49,14 @@ public class HomeFragment extends AppFragment<FragmentHomeBinding> {
         mBinding.buttonVideo.setOnClickListener(v -> requestVideoIntent());
     }
 
+    @Override
+    public void initData(@Nullable Bundle bundle) {
+
+    }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        ((MainActivity) requireActivity()).setExpanded(true);
+    public void loadData(boolean refresh) {
+
     }
 
     @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)

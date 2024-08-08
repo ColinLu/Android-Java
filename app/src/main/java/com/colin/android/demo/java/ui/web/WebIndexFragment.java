@@ -2,15 +2,11 @@ package com.colin.android.demo.java.ui.web;
 
 import android.os.Bundle;
 import android.view.Gravity;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -18,7 +14,7 @@ import com.colin.android.demo.java.MainActivity;
 import com.colin.android.demo.java.R;
 import com.colin.android.demo.java.adapter.StringAdapter;
 import com.colin.android.demo.java.app.AppFragment;
-import com.colin.android.demo.java.databinding.FragmentWebIndexBinding;
+import com.colin.android.demo.java.databinding.LayoutListBinding;
 import com.colin.android.demo.java.def.Constants;
 import com.colin.android.demo.java.utils.DemoUtils;
 import com.colin.library.android.utils.LogUtil;
@@ -29,17 +25,18 @@ import com.colin.library.android.widgets.web.IWebClient;
 import java.util.Objects;
 
 
-public class WebIndexFragment extends AppFragment<FragmentWebIndexBinding> implements IWebClient, OnItemClickListener {
+public class WebIndexFragment extends AppFragment<LayoutListBinding> implements IWebClient, OnItemClickListener {
     private WebIndexFragmentViewModel mViewModel;
     private StringAdapter mAdapter;
 
     @Override
     public void initView(@Nullable Bundle bundle) {
-        setHasOptionsMenu(true);
-        ((AppCompatActivity) requireActivity()).setSupportActionBar(mBinding.mToolbar);
+        mBinding.mRefreshList.setColorSchemeResources(Constants.REFRESH_IDS);
+        mBinding.mRefreshList.setOnRefreshListener(() -> loadData(true));
         if (mAdapter == null) mAdapter = new StringAdapter(this);
         mAdapter.setGravity(Gravity.START | Gravity.CENTER_VERTICAL);
         DemoUtils.initRecyclerView(mBinding.mRecyclerView, mAdapter);
+        initSearch(((MainActivity) requireActivity()).getMenuItem(R.id.menu_search));
     }
 
     @Override
@@ -50,43 +47,42 @@ public class WebIndexFragment extends AppFragment<FragmentWebIndexBinding> imple
     }
 
     @Override
-    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_search, menu);
-        initSearch(menu);
+    public void loadData(boolean refresh) {
+        mBinding.mRefreshList.setRefreshing(false);
     }
 
     @Override
     public void onDestroyView() {
-        setHasOptionsMenu(false);
-        requireActivity().invalidateOptionsMenu();
         super.onDestroyView();
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        ((MainActivity) requireActivity()).setExpanded(false);
     }
 
     @Override
     public void onResume() {
+        ((MainActivity) requireActivity()).setItemVisible(R.id.menu_search, true);
         super.onResume();
     }
 
     @Override
     public void onPause() {
-        super.onPause();
+        ((MainActivity) requireActivity()).setItemVisible(R.id.menu_search, false);
         ((MainActivity) requireActivity()).setExpanded(true);
+        super.onPause();
     }
 
     /**
      * 初始化搜索框
      *
-     * @param menu
+     * @param searchItem
      */
-    private void initSearch(Menu menu) {
-        menu.removeItem(R.id.action_settings);
-        final MenuItem searchItem = menu.findItem(R.id.menu_search);
+    private void initSearch(final MenuItem searchItem) {
+        LogUtil.i("searchItem:" + (searchItem == null ? "searchItem is null" : searchItem.toString()));
+        if (searchItem == null) return;
+        searchItem.setVisible(true);
         SearchView mSearchView = (SearchView) searchItem.getActionView();
         assert mSearchView != null;
         mSearchView.setQueryHint(getString(R.string.query_web_hint_link));
@@ -106,14 +102,6 @@ public class WebIndexFragment extends AppFragment<FragmentWebIndexBinding> imple
             }
         });
 
-        mSearchView.setOnKeyListener((v, keyCode, event) -> {
-            LogUtil.i(String.format("setOnKeyListener keyCode:$d event:%s", keyCode, event.toString()));
-
-            if (keyCode == EditorInfo.IME_ACTION_DONE) {
-
-            }
-            return false;
-        });
     }
 
     private void toWebView(@Nullable final String url, boolean record) {

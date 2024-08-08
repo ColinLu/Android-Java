@@ -56,6 +56,16 @@ public class BannerFragment extends AppFragment<FragmentBannerBinding> implement
         initBanner(getTransformer(mAdapter.getSelected()));
     }
 
+    @Override
+    public void initData(@Nullable Bundle bundle) {
+
+    }
+
+    @Override
+    public void loadData(boolean refresh) {
+
+    }
+
     private void initBanner(ViewPager2.PageTransformer transformer) {
         final List<Integer> list = Arrays.asList(R.mipmap.banner1, R.mipmap.banner2, R.mipmap.banner3, R.mipmap.banner4, R.mipmap.banner5);
         final BannerAdapter adapter = new BannerAdapter(list, (view, position, object) -> {

@@ -107,20 +107,22 @@ public final class ViewUtil {
     @SuppressLint("SetJavaScriptEnabled")
     public static void init(@NonNull WebView view, WebViewClient webClient, WebChromeClient chromeClient) {
         WebSettings settings = view.getSettings();
+        settings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
+        settings.setDomStorageEnabled(true);
+        settings.setAllowContentAccess(true);
         settings.setAllowFileAccess(true);
+        settings.setUseWideViewPort(true);
+        settings.setLoadWithOverviewMode(true);
+        settings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
+        settings.setJavaScriptEnabled(true);
+        settings.setJavaScriptCanOpenWindowsAutomatically(true);
         settings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.TEXT_AUTOSIZING);
         settings.setSupportZoom(true);
         settings.setBuiltInZoomControls(true);
         settings.setDisplayZoomControls(false); //隐藏原生的缩放控件
-        settings.setUseWideViewPort(true);
         settings.setSupportMultipleWindows(false);
-        settings.setLoadWithOverviewMode(true);
         settings.setDatabaseEnabled(true);
-        settings.setDomStorageEnabled(true);
-        settings.setJavaScriptEnabled(true);
         settings.setGeolocationEnabled(true);
-        settings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
-        settings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
         view.setWebViewClient(webClient);
         view.setWebChromeClient(chromeClient);
     }

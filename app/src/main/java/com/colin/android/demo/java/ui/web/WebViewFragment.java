@@ -104,6 +104,11 @@ public class WebViewFragment extends AppFragment<FragmentWebViewBinding> impleme
     }
 
     @Override
+    public void loadData(boolean refresh) {
+
+    }
+
+    @Override
     public boolean shouldOverrideUrlLoading(@NonNull WebView view, @NonNull WebResourceRequest request) {
         final Uri uri = request.getUrl();
         LogUtil.i("shouldOverrideUrlLoading uri:%s", uri.toString());

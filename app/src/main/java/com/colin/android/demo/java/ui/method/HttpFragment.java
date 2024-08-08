@@ -62,6 +62,16 @@ public class HttpFragment extends AppFragment<FragmentHttpBinding> {
     }
 
     @Override
+    public void initData(@Nullable Bundle bundle) {
+
+    }
+
+    @Override
+    public void loadData(boolean refresh) {
+
+    }
+
+    @Override
     public void onDestroyView() {
         super.onDestroyView();
         OkHttpHelper.getInstance().cancelTag(this);

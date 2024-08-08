@@ -7,6 +7,7 @@ import android.view.View;
 
 import androidx.activity.EdgeToEdge;
 import androidx.activity.OnBackPressedCallback;
+import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -88,10 +89,21 @@ public class MainActivity extends AppActivity<ActivityMainBinding> {
         });
     }
 
+    @Override
+    public void initData(@Nullable Bundle bundle) {
+
+    }
+
+    @Override
+    public void loadData(boolean refresh) {
+
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
+        setItemVisible(menu, R.id.menu_search, false);
         return true;
     }
 
@@ -124,6 +136,20 @@ public class MainActivity extends AppActivity<ActivityMainBinding> {
     public void setExpanded(boolean expanded) {
         LogUtil.d("expanded:" + expanded);
         mBinding.mAppBar.setExpanded(expanded);
+    }
+
+    public void setItemVisible(@IdRes int res, boolean visible) {
+        setItemVisible(mBinding.mToolbar.getMenu(), res, visible);
+    }
+
+    public void setItemVisible(@Nullable Menu menu, @IdRes int res, boolean visible) {
+        final MenuItem menuItem = menu == null ? null : menu.findItem(res);
+        if (menuItem != null) menuItem.setVisible(visible);
+    }
+
+    public MenuItem getMenuItem(@IdRes int res) {
+        final Menu menu = mBinding.mToolbar.getMenu();
+        return menu == null ? null : menu.findItem(res);
     }
 
     public void setToolbar(boolean show) {

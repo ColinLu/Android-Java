@@ -27,7 +27,6 @@ import java.lang.reflect.ParameterizedType;
 public abstract class AppFragment<VB extends ViewBinding> extends BaseFragment implements ScreenReceiver.OnScreenBroadcastListener, NetBroadReceiver.OnNetListener {
     protected VB mBinding;
 
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -65,9 +64,10 @@ public abstract class AppFragment<VB extends ViewBinding> extends BaseFragment i
     private VB reflectViewBinding(@NonNull LayoutInflater inflater, @Nullable ViewGroup container) throws IllegalStateException {
         try {
             final ParameterizedType type = (ParameterizedType) getClass().getGenericSuperclass();
-            final Class cls = (Class) type.getActualTypeArguments()[0];
-            final Method inflate = cls.getDeclaredMethod("inflate", LayoutInflater.class, ViewGroup.class, boolean.class);
-            return (VB) inflate.invoke(null, inflater, container, false);
+            assert type != null;
+            final Class<VB> cls = (Class<VB>) type.getActualTypeArguments()[0];
+            final Method method = cls.getDeclaredMethod("inflate", LayoutInflater.class, ViewGroup.class, boolean.class);
+            return (VB) method.invoke(null, inflater, container, false);
         } catch (Exception e) {
             LogUtil.log(e);
         }

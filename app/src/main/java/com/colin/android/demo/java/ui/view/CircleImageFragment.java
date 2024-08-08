@@ -36,4 +36,14 @@ public class CircleImageFragment extends AppFragment<FragmentCircleImageBinding>
             }
         });
     }
+
+    @Override
+    public void initData(@Nullable Bundle bundle) {
+
+    }
+
+    @Override
+    public void loadData(boolean refresh) {
+
+    }
 }

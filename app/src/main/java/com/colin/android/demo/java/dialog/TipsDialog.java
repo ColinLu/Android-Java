@@ -22,6 +22,11 @@ public final class TipsDialog extends AppDialog<DialogTipsBinding> {
 
 
     @Override
+    public void initView(@Nullable Bundle bundle) {
+
+    }
+
+    @Override
     public void initData(@Nullable Bundle bundle) {
         if (mBinding == null) return;
         if (!StringUtil.isEmpty(mTitle)) {

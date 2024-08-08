@@ -59,6 +59,16 @@ public class BehaviorFragment extends AppFragment<FragmentBehaviorBinding> imple
 
     }
 
+    @Override
+    public void initData(@Nullable Bundle bundle) {
+
+    }
+
+    @Override
+    public void loadData(boolean refresh) {
+
+    }
+
     private void initRecyclerView(@NonNull Context context) {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(context) {
             @Override

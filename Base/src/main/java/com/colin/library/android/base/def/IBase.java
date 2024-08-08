@@ -19,15 +19,15 @@ public interface IBase {
         return Resources.ID_NULL;
     }
 
-    default void initView(@Nullable Bundle bundle) {
-    }
+    void initView(@Nullable Bundle bundle);
+
 
     /*Previous interface data*/
-    default void initData(@Nullable Bundle bundle) {
-    }
+    void initData(@Nullable Bundle bundle);
+
 
     /*local sqlite net*/
-    default void loadData(boolean refresh) {
-    }
+    void loadData(boolean refresh);
+
 
 }
