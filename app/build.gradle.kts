@@ -28,8 +28,7 @@ android {
         release {
             isMinifyEnabled = false
             proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
             )
             signingConfig = signingConfigs.getByName("release")
         }
@@ -66,6 +65,7 @@ dependencies {
     implementation(libs.androidx.swiperefreshlayout)
     implementation(libs.okhttp)
     implementation(libs.gson)
+    implementation(libs.map.gaode.location)
 //    implementation(libs.android.java)
 
     testImplementation(libs.junit)

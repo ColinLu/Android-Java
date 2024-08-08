@@ -2,6 +2,7 @@ package com.colin.android.demo.java;
 
 import android.app.Application;
 
+import com.amap.api.location.AMapLocationClient;
 import com.colin.library.android.annotation.LogLevel;
 import com.colin.library.android.helper.CrashHelper;
 import com.colin.library.android.helper.UtilHelper;
@@ -25,6 +26,7 @@ public final class JavaApp extends Application {
         UtilHelper.getInstance().init(getUtilConfig());
         CrashHelper.getInstance().init((error, crashInfo) -> LogUtil.e(crashInfo));
         OkHttpHelper.getInstance().init(getHttpConfig());
+        AMapLocationClient.setApiKey("76ce55152ae3c7f64348eb213819e02f");
     }
 
     private UtilConfig getUtilConfig() {

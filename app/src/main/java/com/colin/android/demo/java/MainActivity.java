@@ -7,10 +7,11 @@ import android.view.View;
 
 import androidx.activity.EdgeToEdge;
 import androidx.activity.OnBackPressedCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -18,7 +19,6 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.colin.android.demo.java.app.AppActivity;
 import com.colin.android.demo.java.databinding.ActivityMainBinding;
-import com.colin.library.android.base.def.IBack;
 import com.colin.library.android.utils.LogUtil;
 import com.colin.library.android.utils.ToastUtil;
 import com.colin.library.android.utils.data.Constants;
@@ -26,20 +26,29 @@ import com.colin.library.android.widgets.def.OnAppBarStateChangeListener;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.snackbar.Snackbar;
 
+import java.util.Locale;
+import java.util.concurrent.atomic.AtomicBoolean;
+
 public class MainActivity extends AppActivity<ActivityMainBinding> {
     private AppBarConfiguration appBarConfiguration;
     @OnAppBarStateChangeListener.State
     private int mState;
     private int mOffset;
     private long mLastBackPressTime = Constants.INVALID;
+
+    private final ActivityResultLauncher<String[]> mLauncherPermission = registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), result -> {
+        LogUtil.log(String.format(Locale.US, "requestPermission result:%s", result.toString()));
+        AtomicBoolean isGranted = new AtomicBoolean(false);
+        result.forEach((permission, granted) -> {
+            if (granted) isGranted.set(true);
+        });
+        if (isGranted.get()) startLocation();
+    });
+
+
     private final OnBackPressedCallback mBackCallback = new OnBackPressedCallback(true) {
         @Override
         public void handleOnBackPressed() {
-            Fragment currentFragment = getCurrentFragment();
-            if (currentFragment instanceof IBack && ((IBack) currentFragment).onBack()) {
-                LogUtil.i(currentFragment.getClass().getSimpleName() + "->back");
-                return;
-            }
             if (onSupportNavigateUp()) {
                 return;
             }
@@ -52,16 +61,6 @@ public class MainActivity extends AppActivity<ActivityMainBinding> {
             }
         }
     };
-
-    @Nullable
-    private Fragment getCurrentFragment() {
-        for (Fragment fragment : getSupportFragmentManager().getFragments()) {
-            final boolean visible = fragment.isVisible();
-            LogUtil.i(String.format("fragment:%s visible:%s", fragment.getClass().getSimpleName(), visible));
-            if (visible) return fragment;
-        }
-        return null;
-    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -96,7 +95,7 @@ public class MainActivity extends AppActivity<ActivityMainBinding> {
 
     @Override
     public void loadData(boolean refresh) {
-
+        mLauncherPermission.launch(com.colin.android.demo.java.def.Constants.PERMISSIONS_OF_LOCATION);
     }
 
 
@@ -164,5 +163,7 @@ public class MainActivity extends AppActivity<ActivityMainBinding> {
         mBinding.mToolbar.setTitle(title);
     }
 
+    private void startLocation() {
 
+    }
 }

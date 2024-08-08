@@ -1,5 +1,7 @@
 package com.colin.android.demo.java.def;
 
+import android.Manifest;
+
 import com.colin.android.demo.java.R;
 
 /**
@@ -18,4 +20,7 @@ public interface Constants {
     int EXTRAS_WEB_TYPE_DEFAULT = 0;
     String EXTRAS_WEB_URL_DEFAULT = "www.baidu.com";
     int[] REFRESH_IDS = {R.color.purple_50, R.color.purple_100, R.color.purple_200, R.color.purple_300, R.color.purple_400, R.color.purple_500, R.color.purple_600, R.color.purple_700, R.color.purple_800, R.color.purple_900};
+    String[] PERMISSIONS_OF_LOCATION = {
+            Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
+}
 }
