@@ -84,11 +84,18 @@ class GaoDeLocationRepository implements ILocationProxy, AMapLocationListener {
 
     @NonNull
     private AMapLocationClient createClient() {
-        final Application application = MapHelper.getInstance().getMapConfig().getApplication();
-        final AMapLocationClient locationClient = new AMapLocationClient(application);
-        locationClient.setLocationListener(this);
-        locationClient.setLocationOption(createOption());
-        return locationClient;
+        try {
+            final Application application = MapHelper.getInstance().getMapConfig().getApplication();
+            AMapLocationClient.updatePrivacyAgree(application, true);
+            AMapLocationClient.updatePrivacyShow(application, true, true);
+            final AMapLocationClient locationClient = new AMapLocationClient(application);
+            locationClient.setLocationListener(this);
+            locationClient.setLocationOption(createOption());
+            return locationClient;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
     private AMapLocationClientOption createOption() {

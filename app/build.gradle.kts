@@ -66,9 +66,9 @@ dependencies {
     implementation(libs.androidx.swiperefreshlayout)
     implementation(libs.okhttp)
     implementation(libs.gson)
-//    implementation(libs.map.gaode.location)
+    implementation(libs.map.gaode.location)
 //    implementation(libs.map.gaode.search)
-    implementation(libs.map.gaode.navi)
+//    implementation(libs.map.gaode.navi)
 //    implementation(libs.android.java)
 
     testImplementation(libs.junit)
