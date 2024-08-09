@@ -2,12 +2,13 @@ package com.colin.android.demo.java;
 
 import android.app.Application;
 
-import com.amap.api.location.AMapLocationClient;
 import com.colin.library.android.annotation.LogLevel;
 import com.colin.library.android.helper.CrashHelper;
 import com.colin.library.android.helper.UtilHelper;
 import com.colin.library.android.http.OkHttpHelper;
 import com.colin.library.android.http.def.HttpConfig;
+import com.colin.library.android.map.MapHelper;
+import com.colin.library.android.map.def.MapType;
 import com.colin.library.android.utils.LogUtil;
 import com.colin.library.android.utils.data.UtilConfig;
 
@@ -26,7 +27,7 @@ public final class JavaApp extends Application {
         UtilHelper.getInstance().init(getUtilConfig());
         CrashHelper.getInstance().init((error, crashInfo) -> LogUtil.e(crashInfo));
         OkHttpHelper.getInstance().init(getHttpConfig());
-        AMapLocationClient.setApiKey("76ce55152ae3c7f64348eb213819e02f");
+        MapHelper.getInstance().init(this, MapType.GaoDe, "76ce55152ae3c7f64348eb213819e02f");
     }
 
     private UtilConfig getUtilConfig() {

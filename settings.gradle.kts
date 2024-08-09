@@ -26,6 +26,4 @@ include(":Base")
 include(":OkHttp")
 include(":Utils")
 include(":Widgets")
-
-
-
+include(":Map")

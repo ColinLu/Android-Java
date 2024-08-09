@@ -1,5 +1,6 @@
 package com.colin.android.demo.java;
 
+import android.location.Location;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -7,8 +8,6 @@ import android.view.View;
 
 import androidx.activity.EdgeToEdge;
 import androidx.activity.OnBackPressedCallback;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -19,6 +18,9 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.colin.android.demo.java.app.AppActivity;
 import com.colin.android.demo.java.databinding.ActivityMainBinding;
+import com.colin.library.android.map.MapHelper;
+import com.colin.library.android.map.def.Status;
+import com.colin.library.android.map.location.OnLocationListener;
 import com.colin.library.android.utils.LogUtil;
 import com.colin.library.android.utils.ToastUtil;
 import com.colin.library.android.utils.data.Constants;
@@ -26,24 +28,12 @@ import com.colin.library.android.widgets.def.OnAppBarStateChangeListener;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.snackbar.Snackbar;
 
-import java.util.Locale;
-import java.util.concurrent.atomic.AtomicBoolean;
-
-public class MainActivity extends AppActivity<ActivityMainBinding> {
+public class MainActivity extends AppActivity<ActivityMainBinding> implements OnLocationListener {
     private AppBarConfiguration appBarConfiguration;
     @OnAppBarStateChangeListener.State
     private int mState;
     private int mOffset;
     private long mLastBackPressTime = Constants.INVALID;
-
-    private final ActivityResultLauncher<String[]> mLauncherPermission = registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), result -> {
-        LogUtil.log(String.format(Locale.US, "requestPermission result:%s", result.toString()));
-        AtomicBoolean isGranted = new AtomicBoolean(false);
-        result.forEach((permission, granted) -> {
-            if (granted) isGranted.set(true);
-        });
-        if (isGranted.get()) startLocation();
-    });
 
 
     private final OnBackPressedCallback mBackCallback = new OnBackPressedCallback(true) {
@@ -90,12 +80,11 @@ public class MainActivity extends AppActivity<ActivityMainBinding> {
 
     @Override
     public void initData(@Nullable Bundle bundle) {
-
+        MapHelper.getInstance().bindLocation(getActivityResultRegistry(), getLifecycle(), this);
     }
 
     @Override
     public void loadData(boolean refresh) {
-        mLauncherPermission.launch(com.colin.android.demo.java.def.Constants.PERMISSIONS_OF_LOCATION);
     }
 
 
@@ -163,7 +152,9 @@ public class MainActivity extends AppActivity<ActivityMainBinding> {
         mBinding.mToolbar.setTitle(title);
     }
 
-    private void startLocation() {
 
+    @Override
+    public void change(@Status int status, @NonNull Location location) {
+        LogUtil.i(location.toString());
     }
 }

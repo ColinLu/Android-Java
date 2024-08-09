@@ -22,14 +22,17 @@ publish-group-utils = "com.colin.library.android.utils"
 publish-group-base = "com.colin.library.android.base"
 publish-group-okhttp = "com.colin.library.android.okhttp"
 publish-group-widgets = "com.colin.library.android.widgets"
+publish-group-map = "com.colin.library.android.map"
 publish-artifact-utils = "Utils"
 publish-artifact-base = "Base"
 publish-artifact-okhttp = "OkHttp"
 publish-artifact-widgets = "Widgets"
+publish-artifact-map = "Map"
 publish-version-utils = "0.2.3"
 publish-version-base = "0.2.3"
 publish-version-okhttp = "0.2.3"
 publish-version-widgets = "0.2.3"
+publish-version-map = "0.2.3"
 navigationRuntime = "2.7.7"
 navigationFragment = "2.7.7"
 navigationUi = "2.7.7"
@@ -37,6 +40,8 @@ tag = "0.2.3"
 swiperefreshlayout = "1.1.0"
 map-gaode-key = "76ce55152ae3c7f64348eb213819e02f"
 location = "6.4.5"
+search = "+"
+navi = "+"
 
 [libraries]
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
@@ -55,6 +60,8 @@ androidx-navigation-ui = { group = "androidx.navigation", name = "navigation-ui"
 androidx-swiperefreshlayout = { group = "androidx.swiperefreshlayout", name = "swiperefreshlayout", version.ref = "swiperefreshlayout" }
 android-java = { group = "com.github.ColinLu", name = "Android-Java", version.ref = "tag" }
 map-gaode-location = { group = "com.amap.api", name = "location", version.ref = "location" }
+map-gaode-search = { group = "com.amap.api", name = "search", version.ref = "search" }
+map-gaode-navi = { group = "com.amap.api", name = "navi", version.ref = "navi" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
