@@ -33,7 +33,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * <p>
  * Des   :http://amappc.cn-hangzhou.oss-pub.aliyun-inc.com/lbs/static/unzip/Android_Location_Doc/index.html
  */
-public class GaoDeLocationRepository implements ILocationProxy, AMapLocationListener {
+class GaoDeLocationRepository implements ILocationProxy, AMapLocationListener {
     public static final String TAG = "GaoDeLocationRepository";
     private AMapLocationClient mLocationClient;
     private WeakReference<OnLocationListener> mListenerRef;

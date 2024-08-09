@@ -9,7 +9,7 @@ import androidx.annotation.Nullable;
  * <p>
  * Des   :TODO
  */
-public interface ILocationProxy {
+interface ILocationProxy {
     void start(boolean granted, @Nullable OnLocationListener listener);
 
     void pause();

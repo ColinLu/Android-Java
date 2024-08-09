@@ -12,7 +12,7 @@ import com.colin.library.android.map.def.MapType;
  * <p>
  * Des   :TODO
  */
-public class LocationFactory {
+class LocationFactory {
 
     public static ILocationProxy getLocationRepository(@MapType int type, @NonNull ActivityResultRegistry registry) {
         if (type == MapType.GaoDe) return new GaoDeLocationRepository(registry);

@@ -13,7 +13,7 @@ import java.lang.ref.WeakReference;
  * <p>
  * Des   :TODO
  */
-public class BaiduLocationRepository implements ILocationProxy {
+class BaiduLocationRepository implements ILocationProxy {
     private WeakReference<ActivityResultRegistry> mRegistryRef;
 
     public BaiduLocationRepository(@NonNull ActivityResultRegistry registry) {
