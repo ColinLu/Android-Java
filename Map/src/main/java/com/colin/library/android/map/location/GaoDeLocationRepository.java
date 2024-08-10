@@ -8,9 +8,7 @@ import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.ActivityResultRegistry;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.activity.result.contract.ActivityResultContracts.RequestMultiplePermissions;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
@@ -33,40 +31,42 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * <p>
  * Des   :http://amappc.cn-hangzhou.oss-pub.aliyun-inc.com/lbs/static/unzip/Android_Location_Doc/index.html
  */
-class GaoDeLocationRepository implements ILocationProxy, AMapLocationListener {
+class GaoDeLocationRepository implements ILocationProxy, ActivityResultCallback<Map<String, Boolean>>, AMapLocationListener {
     public static final String TAG = "GaoDeLocationRepository";
-    private AMapLocationClient mLocationClient;
+    private ActivityResultLauncher<String[]> mLauncher;
     private WeakReference<OnLocationListener> mListenerRef;
+    private AMapLocationClient mLocationClient;
 
-    private final ActivityResultLauncher<String[]> mLauncher;
-    private final RequestMultiplePermissions mPermissions = new ActivityResultContracts.RequestMultiplePermissions();
-    private final ActivityResultCallback<Map<String, Boolean>> mCallback = result -> {
-        AtomicBoolean isGranted = new AtomicBoolean(false);
-        result.forEach((permission, granted) -> {
-            Log.e(TAG, "permission:" + permission + "\t granted:" + granted);
-            if (granted) isGranted.set(true);
-            if (isGranted.get()) start(true, mListenerRef == null ? null : mListenerRef.get());
-        });
-    };
-
-
-    public GaoDeLocationRepository(@NonNull ActivityResultRegistry registry) {
-        mLauncher = registry.register(TAG, mPermissions, mCallback);
+    public GaoDeLocationRepository(@NonNull ActivityResultRegistry registry, @NonNull OnLocationListener listener) {
+        this.mLauncher = registry.register(TAG, new ActivityResultContracts.RequestMultiplePermissions(), this);
+        this.mListenerRef = new WeakReference<>(listener);
     }
 
+    @Override
+    public void onActivityResult(@NonNull Map<String, Boolean> result) {
+        AtomicBoolean isGranted = new AtomicBoolean(false);
+        result.forEach((permission, granted) -> {
+            Log.i(TAG, "permission:" + permission + "\t granted:" + granted);
+            if (granted) isGranted.set(true);
+            start(isGranted.get());
+        });
+    }
 
     @Override
-    public void start(boolean granted, @Nullable OnLocationListener listener) {
+    public void start() {
+        mLauncher.launch(Constants.PERMISSIONS_OF_LOCATION);
+    }
+
+    private void start(boolean granted) {
         if (!granted) {
-            mListenerRef = new WeakReference<>(listener);
-            mLauncher.launch(Constants.PERMISSIONS_OF_LOCATION);
+            notify(Status.Failed, new Location(TAG));
             return;
         }
-        mListenerRef = new WeakReference<>(listener);
         if (mLocationClient == null) mLocationClient = createClient();
         if (mLocationClient.isStarted()) mLocationClient.stopLocation();
         mLocationClient.startLocation();
     }
+
 
     @Override
     public void pause() {
@@ -75,11 +75,13 @@ class GaoDeLocationRepository implements ILocationProxy, AMapLocationListener {
 
     @Override
     public void destroy() {
+        mLauncher = null;
+        mListenerRef = null;
         if (mLocationClient != null) {
             if (mLocationClient.isStarted()) mLocationClient.stopLocation();
             mLocationClient.onDestroy();
+            mLocationClient = null;
         }
-        mLocationClient = null;
     }
 
     @NonNull
@@ -108,15 +110,13 @@ class GaoDeLocationRepository implements ILocationProxy, AMapLocationListener {
     }
 
     @Override
-    public void onLocationChanged(AMapLocation mapLocation) {
+    public void onLocationChanged(@NonNull AMapLocation mapLocation) {
         LogUtil.i(TAG, String.format(Locale.US, "code:%d msg:%s", mapLocation.getErrorCode(), mapLocation.getErrorInfo()));
-        OnLocationListener listener = mListenerRef == null ? null : mListenerRef.get();
-        if (listener == null) return;
-        if (mapLocation.getErrorCode() == 0) listener.change(Status.Success, convert(mapLocation));
-        else listener.change(Status.Failed, convert(mapLocation));
+        notify(mapLocation.getErrorCode() == 0 ? Status.Success : Status.Failed, convert(mapLocation));
     }
 
-    private Location convert(AMapLocation mapLocation) {
+    @NonNull
+    private Location convert(@NonNull AMapLocation mapLocation) {
         final Location location = new Location(TAG);
         location.setAccuracy(mapLocation.getAccuracy());
         location.setTime(mapLocation.getTime());
@@ -133,5 +133,8 @@ class GaoDeLocationRepository implements ILocationProxy, AMapLocationListener {
         return location;
     }
 
-
+    private void notify(@Status int status, @NonNull Location location) {
+        OnLocationListener listener = mListenerRef == null ? null : mListenerRef.get();
+        if (listener != null) listener.change(status, location);
+    }
 }

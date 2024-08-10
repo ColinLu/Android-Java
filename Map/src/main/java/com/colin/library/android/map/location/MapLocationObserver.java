@@ -8,40 +8,34 @@ import androidx.lifecycle.LifecycleOwner;
 
 import com.colin.library.android.map.def.MapType;
 
-import java.lang.ref.WeakReference;
-
 /**
  * Author:ColinLu
  * E-mail:945919945@qq.com
  * Date  :2024-08-09
  * <p>
- * Des   :TODO
+ * Des   :定位逻辑实现观察者
  */
-public class MapLocation implements LifecycleEventObserver {
-    private final WeakReference<OnLocationListener> mListenerRef;
+public class MapLocationObserver implements LifecycleEventObserver {
     private final ILocationProxy mLocationProxy;
 
-
-    public MapLocation(@NonNull ActivityResultRegistry registry, @NonNull Lifecycle lifecycle, @NonNull OnLocationListener listener, @MapType int type) {
+    public MapLocationObserver(@NonNull ActivityResultRegistry registry, @NonNull Lifecycle lifecycle, @NonNull OnLocationListener listener, @MapType int type) {
         lifecycle.addObserver(this);
-        this.mListenerRef = new WeakReference<>(listener);
-        this.mLocationProxy = LocationFactory.getLocationRepository(type, registry);
+        this.mLocationProxy = LocationFactory.getLocationRepository(type, registry, listener);
     }
 
     @Override
     public void onStateChanged(@NonNull LifecycleOwner lifecycleOwner, @NonNull Lifecycle.Event event) {
         switch (event) {
             case ON_START:
-                mLocationProxy.start(false, mListenerRef == null ? null : mListenerRef.get());
-                break;
-            case ON_RESUME:
-
+                mLocationProxy.start();
                 break;
             case ON_PAUSE:
                 mLocationProxy.pause();
                 break;
             case ON_DESTROY:
                 mLocationProxy.destroy();
+                break;
+            default:
                 break;
         }
     }

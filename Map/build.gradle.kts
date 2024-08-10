@@ -37,7 +37,7 @@ dependencies {
     compileOnly(libs.androidx.appcompat)
     compileOnly(libs.material)
     compileOnly(libs.map.gaode.location)
-//    compileOnly(libs.map.gaode.search)
+    compileOnly(libs.map.gaode.search)
 //    compileOnly(libs.map.gaode.navi)
 }
 

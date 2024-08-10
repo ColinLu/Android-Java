@@ -2,11 +2,13 @@ package com.colin.library.android.base;
 
 import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.collection.SparseArrayCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.colin.library.android.widgets.def.OnItemCheckedListener;
@@ -22,6 +24,10 @@ import java.util.List;
  * 描述： 基类 Adapter
  */
 public abstract class BaseAdapter<ITEM> extends RecyclerView.Adapter<ViewHolder> {
+    private final SparseArrayCompat<View> mHeaderViews = new SparseArrayCompat<>(0);
+    private final SparseArrayCompat<View> mFooterViews = new SparseArrayCompat<>(0);
+    private static final int ITEM_TYPE_HEADER = 100000;
+    private static final int ITEM_TYPE_FOOTER = 200000;
     protected final List<ITEM> mItemList = new ArrayList<>(10);
     protected OnItemClickListener mItemClickListener;
     protected OnItemLongClickListener mItemLongClickListener;
@@ -54,12 +60,16 @@ public abstract class BaseAdapter<ITEM> extends RecyclerView.Adapter<ViewHolder>
 
     @Override
     public int getItemCount() {
-        return mItemList.size();
+        return mItemList.size() + mHeaderViews.size() + mFooterViews.size();
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        final View heaederView = mHeaderViews.get(viewType);
+        if (heaederView != null) return new ViewHolder(heaederView);
+        final View footerView = mFooterViews.get(viewType);
+        if (footerView != null) return new ViewHolder(footerView);
         return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(layoutRes(viewType), parent, false));
     }
 
@@ -82,7 +92,7 @@ public abstract class BaseAdapter<ITEM> extends RecyclerView.Adapter<ViewHolder>
 
     public void addData(@NonNull ITEM item, int position) {
         mItemList.add(item);
-        notifyItemChanged(position);
+        notifyItemChanged(position + mHeaderViews.size());
     }
 
     @LayoutRes

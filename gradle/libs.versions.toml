@@ -41,7 +41,7 @@ swiperefreshlayout = "1.1.0"
 map-gaode-key = "76ce55152ae3c7f64348eb213819e02f"
 location = "6.4.5"
 search = "+"
-navi = "+"
+navi = "1.9.4"
 
 [libraries]
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }

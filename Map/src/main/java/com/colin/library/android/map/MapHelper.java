@@ -9,7 +9,7 @@ import androidx.lifecycle.Lifecycle;
 import com.amap.api.location.AMapLocationClient;
 import com.colin.library.android.map.def.MapConfig;
 import com.colin.library.android.map.def.MapType;
-import com.colin.library.android.map.location.MapLocation;
+import com.colin.library.android.map.location.MapLocationObserver;
 import com.colin.library.android.map.location.OnLocationListener;
 
 /**
@@ -53,7 +53,13 @@ public final class MapHelper {
         return mMapConfig;
     }
 
-    public MapLocation bindLocation(@NonNull ActivityResultRegistry registry, Lifecycle lifecycle, @NonNull OnLocationListener listener) {
-        return new MapLocation(registry, lifecycle, listener, getMapConfig().getMapType());
+    /**
+     * @param registry  权限处理
+     * @param lifecycle 生命周期感知对象
+     * @param listener  定位监听器
+     * @return 定位数据观察者
+     */
+    public MapLocationObserver location(@NonNull ActivityResultRegistry registry, @NonNull Lifecycle lifecycle, @NonNull OnLocationListener listener) {
+        return new MapLocationObserver(registry, lifecycle, listener, getMapConfig().getMapType());
     }
 }

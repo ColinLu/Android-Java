@@ -20,6 +20,7 @@ import com.colin.android.demo.java.app.AppActivity;
 import com.colin.android.demo.java.databinding.ActivityMainBinding;
 import com.colin.library.android.map.MapHelper;
 import com.colin.library.android.map.def.Status;
+import com.colin.library.android.map.location.MapLocationObserver;
 import com.colin.library.android.map.location.OnLocationListener;
 import com.colin.library.android.utils.LogUtil;
 import com.colin.library.android.utils.ToastUtil;
@@ -80,7 +81,8 @@ public class MainActivity extends AppActivity<ActivityMainBinding> implements On
 
     @Override
     public void initData(@Nullable Bundle bundle) {
-        MapHelper.getInstance().bindLocation(getActivityResultRegistry(), getLifecycle(), this);
+        MapLocationObserver observer = MapHelper.getInstance().location(getActivityResultRegistry(), getLifecycle(), this);
+
     }
 
     @Override

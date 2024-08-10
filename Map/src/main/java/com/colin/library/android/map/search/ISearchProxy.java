@@ -1,4 +1,4 @@
-package com.colin.library.android.map.location;
+package com.colin.library.android.map.search;
 
 /**
  * Author:ColinLu
@@ -7,7 +7,7 @@ package com.colin.library.android.map.location;
  * <p>
  * Des   :TODO
  */
-interface ILocationProxy {
+interface ISearchProxy {
     void start();
 
     void pause();
