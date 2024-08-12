@@ -40,8 +40,8 @@ class GaoDeSearchRepository implements ISearchProxy, ActivityResultCallback<Map<
         result.forEach((permission, granted) -> {
             Log.i(TAG, "permission:" + permission + "\t granted:" + granted);
             if (granted) isGranted.set(true);
-            start(isGranted.get());
         });
+        start(isGranted.get());
     }
 
 

@@ -6,7 +6,7 @@ import androidx.activity.result.ActivityResultRegistry;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.Lifecycle;
 
-import com.amap.api.location.AMapLocationClient;
+import com.amap.api.maps.MapsInitializer;
 import com.colin.library.android.map.def.MapConfig;
 import com.colin.library.android.map.def.MapType;
 import com.colin.library.android.map.location.MapLocationObserver;
@@ -43,7 +43,9 @@ public final class MapHelper {
     public void init(@NonNull MapConfig config) {
         mMapConfig = config;
         if (config.getMapType() == MapType.GaoDe) {
-            AMapLocationClient.setApiKey(config.getKey());
+            MapsInitializer.setApiKey(config.getKey());
+            MapsInitializer.updatePrivacyShow(config.getApplication(),true,true);
+            MapsInitializer.updatePrivacyAgree(config.getApplication(),true);
         }
     }
 

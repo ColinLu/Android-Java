@@ -17,8 +17,7 @@ android {
         release {
             isMinifyEnabled = false
             proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
             )
         }
     }
@@ -33,12 +32,14 @@ android {
 
 dependencies {
     compileOnly(project(":Utils"))
+    compileOnly(project(":AAR"))
     compileOnly(libs.androidx.core.ktx)
     compileOnly(libs.androidx.appcompat)
     compileOnly(libs.material)
-    compileOnly(libs.map.gaode.location)
-    compileOnly(libs.map.gaode.search)
+//    compileOnly(libs.map.gaode.location)
+//    compileOnly(libs.map.gaode.search)
 //    compileOnly(libs.map.gaode.navi)
+//    compileOnly(libs.map.gaode.map3d)
 }
 
 afterEvaluate {

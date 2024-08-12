@@ -40,8 +40,9 @@ tag = "0.2.3"
 swiperefreshlayout = "1.1.0"
 map-gaode-key = "76ce55152ae3c7f64348eb213819e02f"
 location = "6.4.5"
-search = "+"
-navi = "1.9.4"
+search = "9.7.2"
+navi = "10.0.700"
+map3d = "10.0.700"
 
 [libraries]
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
@@ -62,6 +63,7 @@ android-java = { group = "com.github.ColinLu", name = "Android-Java", version.re
 map-gaode-location = { group = "com.amap.api", name = "location", version.ref = "location" }
 map-gaode-search = { group = "com.amap.api", name = "search", version.ref = "search" }
 map-gaode-navi = { group = "com.amap.api", name = "navi", version.ref = "navi" }
+map-gaode-map3d = { group = "com.amap.api", name = "map3d", version.ref = "map3d" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

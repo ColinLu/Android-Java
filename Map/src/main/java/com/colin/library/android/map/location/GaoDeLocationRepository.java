@@ -48,8 +48,8 @@ class GaoDeLocationRepository implements ILocationProxy, ActivityResultCallback<
         result.forEach((permission, granted) -> {
             Log.i(TAG, "permission:" + permission + "\t granted:" + granted);
             if (granted) isGranted.set(true);
-            start(isGranted.get());
         });
+        start(isGranted.get());
     }
 
     @Override
