@@ -3,10 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/AMapFragment">
+    app:startDestination="@id/GoogleMapFragment">
     <navigation
         android:id="@+id/navigation"
-        app:startDestination="@id/MethodFragment">
+        app:startDestination="@id/GoogleMapFragment">
         <fragment
             android:id="@+id/MethodFragment"
             android:name="com.colin.android.demo.java.ui.method.MethodFragment"
@@ -154,4 +154,10 @@
         android:name="com.colin.library.android.map.amap.AMapFragment"
         android:label="@string/amap_map3d_app_name"
         tools:layout="@layout/fragment_a_map" />
+
+    <fragment
+        android:id="@+id/GoogleMapFragment"
+        android:name="com.colin.library.android.map.google.GoogleMapFragment"
+        android:label="@string/amap_map3d_app_name"
+        tools:layout="@layout/fragment_google_map" />
 </navigation>

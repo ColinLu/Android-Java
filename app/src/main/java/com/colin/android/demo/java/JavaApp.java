@@ -27,7 +27,7 @@ public final class JavaApp extends Application {
         UtilHelper.getInstance().init(getUtilConfig());
         CrashHelper.getInstance().init((error, crashInfo) -> LogUtil.e(crashInfo));
         OkHttpHelper.getInstance().init(getHttpConfig());
-        MapHelper.getInstance().init(this, MapType.GaoDe, "76ce55152ae3c7f64348eb213819e02f");
+        MapHelper.getInstance().init(this, MapType.GOOGLE, "76ce55152ae3c7f64348eb213819e02f");
     }
 
     private UtilConfig getUtilConfig() {

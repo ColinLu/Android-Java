@@ -14,9 +14,10 @@ import com.colin.library.android.map.def.MapType;
  */
 class LocationFactory {
 
-    public static ILocationProxy getLocationRepository(@MapType int type, @NonNull ActivityResultRegistry registry, @NonNull OnLocationListener listener ) {
-        if (type == MapType.GaoDe) return new GaoDeLocationRepository(registry,listener);
-        if (type == MapType.Baidu) return new BaiduLocationRepository(registry,listener);
+    public static ILocationProxy getLocationRepository(@MapType int type, @NonNull ActivityResultRegistry registry, @NonNull OnLocationListener listener) {
+        if (type == MapType.GaoDe) return new GaoDeLocationRepository(registry, listener);
+        if (type == MapType.Baidu) return new BaiduLocationRepository(registry, listener);
+        if (type == MapType.GOOGLE) return new GoogleLocationRepository(registry, listener);
         throw new RuntimeException("not support:" + type);
     }
 }

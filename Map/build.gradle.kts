@@ -36,6 +36,7 @@ dependencies {
     compileOnly(libs.androidx.core.ktx)
     compileOnly(libs.androidx.appcompat)
     compileOnly(libs.material)
+    compileOnly(libs.map.google.location) //Google地图：定位
 //    compileOnly(libs.map.gaode.location)
 //    compileOnly(libs.map.gaode.search)
 //    compileOnly(libs.map.gaode.navi)
