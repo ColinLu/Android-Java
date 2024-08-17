@@ -60,7 +60,8 @@ public class AMapFragment extends Fragment implements OnLocationListener {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        initMapView(view.findViewById(R.id.map_view), savedInstanceState);
+        if (view instanceof GaodeMapView) initMapView((GaodeMapView) view, savedInstanceState);
+        else initMapView(view.findViewById(R.id.map_view), savedInstanceState);
     }
 
     private void initMapView(@NonNull GaodeMapView view, @Nullable Bundle savedInstanceState) {

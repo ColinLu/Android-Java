@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.colin.library.android.map.widgets.GoogleMapView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/map_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".google.GoogleMapFragment">
 
-    <TextView
-        android:id="@+id/location"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-</FrameLayout>
+</com.colin.library.android.map.widgets.GoogleMapView>

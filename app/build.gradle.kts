@@ -68,6 +68,7 @@ dependencies {
     implementation(libs.okhttp)
     implementation(libs.gson)
     implementation(libs.map.google.location)
+    implementation(libs.map.google.map)
 
 //    implementation(libs.map.gaode.location)
 //    implementation(libs.map.gaode.search)
