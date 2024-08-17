@@ -33,8 +33,8 @@ class BaiduLocationRepository implements ILocationProxy {
         result.forEach((permission, granted) -> {
             Log.e(TAG, "permission:" + permission + "\t granted:" + granted);
             if (granted) isGranted.set(true);
-            start(isGranted.get());
         });
+        start(isGranted.get());
     };
 
     public BaiduLocationRepository(@NonNull ActivityResultRegistry registry, @NonNull OnLocationListener listener) {

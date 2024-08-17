@@ -1,6 +1,5 @@
 package com.colin.android.demo.java;
 
-import android.location.Location;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,10 +17,6 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.colin.android.demo.java.app.AppActivity;
 import com.colin.android.demo.java.databinding.ActivityMainBinding;
-import com.colin.library.android.map.MapHelper;
-import com.colin.library.android.map.def.Status;
-import com.colin.library.android.map.location.MapLocationObserver;
-import com.colin.library.android.map.location.OnLocationListener;
 import com.colin.library.android.utils.LogUtil;
 import com.colin.library.android.utils.ToastUtil;
 import com.colin.library.android.utils.data.Constants;
@@ -29,7 +24,7 @@ import com.colin.library.android.widgets.def.OnAppBarStateChangeListener;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.snackbar.Snackbar;
 
-public class MainActivity extends AppActivity<ActivityMainBinding> implements OnLocationListener {
+public class MainActivity extends AppActivity<ActivityMainBinding> {
     private AppBarConfiguration appBarConfiguration;
     @OnAppBarStateChangeListener.State
     private int mState;
@@ -81,7 +76,6 @@ public class MainActivity extends AppActivity<ActivityMainBinding> implements On
 
     @Override
     public void initData(@Nullable Bundle bundle) {
-        MapLocationObserver observer = MapHelper.getInstance().location(getActivityResultRegistry(), getLifecycle(), this);
 
     }
 
@@ -152,11 +146,5 @@ public class MainActivity extends AppActivity<ActivityMainBinding> implements On
 
     public void updateTitle(@Nullable CharSequence title) {
         mBinding.mToolbar.setTitle(title);
-    }
-
-
-    @Override
-    public void change(@Status int status, @NonNull Location location) {
-        LogUtil.i(location.toString());
     }
 }

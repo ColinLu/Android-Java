@@ -87,12 +87,13 @@ class GaoDeLocationRepository implements ILocationProxy, ActivityResultCallback<
     @NonNull
     private AMapLocationClient createClient() {
         try {
+            // 初始化定位客户端
             final Application application = MapHelper.getInstance().getMapConfig().getApplication();
-            AMapLocationClient.updatePrivacyAgree(application, true);
-            AMapLocationClient.updatePrivacyShow(application, true, true);
             final AMapLocationClient locationClient = new AMapLocationClient(application);
-            locationClient.setLocationListener(this);
+            // 设置定位参数
             locationClient.setLocationOption(createOption());
+            // 设置定位监听
+            locationClient.setLocationListener(this);
             return locationClient;
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -102,8 +103,14 @@ class GaoDeLocationRepository implements ILocationProxy, ActivityResultCallback<
 
     private AMapLocationClientOption createOption() {
         AMapLocationClientOption option = new AMapLocationClientOption();
-        option.setOnceLocationLatest(false);
+        // 设置定位模式为高精度模式
         option.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
+        // 设置是否返回地址信息
+        option.setNeedAddress(true);
+        // 设置定位间隔
+        option.setInterval(2000);
+        // 是否实时定位
+        option.setOnceLocationLatest(false);
         option.setOnceLocation(true);
         option.setOffset(false);
         return option;

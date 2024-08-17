@@ -43,6 +43,7 @@ location = "6.4.5"
 search = "9.7.2"
 navi = "10.0.700"
 map3d = "10.0.700"
+google_location = "21.0.1"
 
 [libraries]
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
@@ -60,6 +61,7 @@ androidx-navigation-fragment = { group = "androidx.navigation", name = "navigati
 androidx-navigation-ui = { group = "androidx.navigation", name = "navigation-ui", version.ref = "navigationUi" }
 androidx-swiperefreshlayout = { group = "androidx.swiperefreshlayout", name = "swiperefreshlayout", version.ref = "swiperefreshlayout" }
 android-java = { group = "com.github.ColinLu", name = "Android-Java", version.ref = "tag" }
+map-google-location = { group = "com.google.android.gms", name = "play-services-location", version.ref = "google_location" }
 map-gaode-location = { group = "com.amap.api", name = "location", version.ref = "location" }
 map-gaode-search = { group = "com.amap.api", name = "search", version.ref = "search" }
 map-gaode-navi = { group = "com.amap.api", name = "navi", version.ref = "navi" }
