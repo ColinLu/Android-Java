@@ -52,8 +52,10 @@ public class GoogleMapView extends MapView implements LifecycleEventObserver, On
     @Nullable
     @Override
     protected Parcelable onSaveInstanceState() {
+        final Parcelable state = super.onSaveInstanceState();
+        if (state instanceof Bundle) return state;
         final Bundle bundle = new Bundle();
-        bundle.putParcelable(INSTANCE_STATE, super.onSaveInstanceState());
+        bundle.putParcelable(INSTANCE_STATE, state);
         return bundle;
     }
 
@@ -84,6 +86,7 @@ public class GoogleMapView extends MapView implements LifecycleEventObserver, On
                 break;
             case ON_DESTROY:
                 mMap = null;
+                mLatLng = null;
                 this.onDestroy();
                 break;
             default:
@@ -95,7 +98,7 @@ public class GoogleMapView extends MapView implements LifecycleEventObserver, On
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         this.mMap = googleMap;
-        mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+        this.mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         updateLocation(mLatLng);
     }
 
@@ -103,7 +106,7 @@ public class GoogleMapView extends MapView implements LifecycleEventObserver, On
         if (mMap == null || latLng == null) return;
         this.mLatLng = latLng;
         mMap.addMarker(new MarkerOptions().position(latLng));
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10F));
 
     }
 }
