@@ -45,8 +45,9 @@ public class GoogleMapView extends MapView implements LifecycleEventObserver, On
         super(context, attributeSet, i);
     }
 
-    public void init(@NonNull Lifecycle lifecycle) {
+    public void init(@NonNull Lifecycle lifecycle, Bundle bundle) {
         lifecycle.addObserver(this);
+        onCreate(bundle);
     }
 
     @Nullable
@@ -107,6 +108,5 @@ public class GoogleMapView extends MapView implements LifecycleEventObserver, On
         this.mLatLng = latLng;
         mMap.addMarker(new MarkerOptions().position(latLng));
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10F));
-
     }
 }

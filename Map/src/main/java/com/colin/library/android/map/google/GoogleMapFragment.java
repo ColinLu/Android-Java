@@ -16,7 +16,6 @@ import com.colin.library.android.map.R;
 import com.colin.library.android.map.amap.AMapFragment;
 import com.colin.library.android.map.location.MapLocationObserver;
 import com.colin.library.android.map.location.OnLocationListener;
-import com.colin.library.android.map.widgets.GaodeMapView;
 import com.colin.library.android.map.widgets.GoogleMapView;
 import com.google.android.gms.maps.model.LatLng;
 
@@ -53,18 +52,18 @@ public class GoogleMapFragment extends Fragment implements OnLocationListener {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        if (view instanceof GaodeMapView) initMapView((GoogleMapView) view, savedInstanceState);
+        if (view instanceof GoogleMapView) initMapView((GoogleMapView) view, savedInstanceState);
         else initMapView(view.findViewById(R.id.map_view), savedInstanceState);
     }
 
     private void initMapView(GoogleMapView view, Bundle bundle) {
-
+        view.init(getLifecycle(), bundle);
     }
 
     @Override
     public void change(int status, @NonNull Location location) {
         ContextCompat.getMainExecutor(requireContext()).execute(() -> {
-            GoogleMapView mapView = getView().findViewById(R.id.map_view);
+            GoogleMapView mapView = requireView().findViewById(R.id.map_view);
             mapView.updateLocation(new LatLng(location.getLatitude(), location.getLongitude()));
         });
     }
