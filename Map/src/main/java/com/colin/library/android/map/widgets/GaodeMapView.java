@@ -2,17 +2,19 @@ package com.colin.library.android.map.widgets;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.os.Bundle;
-import android.os.Parcelable;
+import android.location.Location;
 import android.util.AttributeSet;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleEventObserver;
 import androidx.lifecycle.LifecycleOwner;
 
+import com.amap.api.maps.AMap;
+import com.amap.api.maps.CameraUpdateFactory;
 import com.amap.api.maps.MapView;
+import com.amap.api.maps.model.LatLng;
+import com.amap.api.maps.model.MarkerOptions;
 
 /**
  * Author:ColinLu
@@ -36,21 +38,7 @@ public class GaodeMapView extends MapView implements LifecycleEventObserver {
 
     public void init(@NonNull Lifecycle lifecycle) {
         lifecycle.addObserver(this);
-    }
-
-    @Nullable
-    @Override
-    protected Parcelable onSaveInstanceState() {
-        Parcelable parcelable = super.onSaveInstanceState();
-        if (parcelable instanceof Bundle) this.onSaveInstanceState((Bundle) parcelable);
-        return parcelable;
-    }
-
-    @Override
-    protected void onRestoreInstanceState(Parcelable state) {
-        super.onRestoreInstanceState(state);
-        if (state instanceof Bundle) this.onCreate((Bundle) state);
-        else this.onCreate(null);
+        getMap().setMapType(AMap.MAP_TYPE_NORMAL);
     }
 
     @Override
@@ -68,6 +56,14 @@ public class GaodeMapView extends MapView implements LifecycleEventObserver {
             default:
                 break;
         }
+    }
+
+    public void updateLocation(Location location) {
+        // 移动地图到定位点
+        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+        getMap().moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
+        // 添加定位标记
+        getMap().addMarker(new MarkerOptions().position(latLng));
     }
 
 

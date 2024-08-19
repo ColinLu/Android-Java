@@ -14,9 +14,11 @@ import androidx.fragment.app.Fragment;
 import com.colin.library.android.map.MapHelper;
 import com.colin.library.android.map.R;
 import com.colin.library.android.map.amap.AMapFragment;
+import com.colin.library.android.map.def.Status;
 import com.colin.library.android.map.location.MapLocationObserver;
 import com.colin.library.android.map.location.OnLocationListener;
 import com.colin.library.android.map.widgets.GoogleMapView;
+import com.colin.library.android.utils.ToastUtil;
 import com.google.android.gms.maps.model.LatLng;
 
 
@@ -61,10 +63,15 @@ public class GoogleMapFragment extends Fragment implements OnLocationListener {
     }
 
     @Override
-    public void change(int status, @NonNull Location location) {
+    public void change(@Status int status, @NonNull Location location) {
         ContextCompat.getMainExecutor(requireContext()).execute(() -> {
-            GoogleMapView mapView = requireView().findViewById(R.id.map_view);
-            mapView.updateLocation(new LatLng(location.getLatitude(), location.getLongitude()));
+            if (status == Status.Success) {
+                GoogleMapView mapView = requireView().findViewById(R.id.map_view);
+                mapView.updateLocation(new LatLng(location.getLatitude(), location.getLongitude()));
+            } else {
+                ToastUtil.show("定位失败");
+            }
+
         });
     }
 }

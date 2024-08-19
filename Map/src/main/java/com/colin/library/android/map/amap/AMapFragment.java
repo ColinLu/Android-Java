@@ -10,13 +10,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.amap.api.maps.CameraUpdateFactory;
-import com.amap.api.maps.model.LatLng;
-import com.amap.api.maps.model.MarkerOptions;
 import com.colin.library.android.map.MapHelper;
 import com.colin.library.android.map.R;
 import com.colin.library.android.map.def.Status;
-import com.colin.library.android.map.location.MapLocationObserver;
 import com.colin.library.android.map.location.OnLocationListener;
 import com.colin.library.android.map.widgets.GaodeMapView;
 import com.colin.library.android.utils.ToastUtil;
@@ -31,7 +27,6 @@ public class AMapFragment extends Fragment implements OnLocationListener {
 
     private static final String EXTRA_KEY = "EXTRA_KEY";
     private String mKey;
-    private MapLocationObserver mLocationObserver;
 
     public static AMapFragment newInstance(@NonNull String key) {
         AMapFragment fragment = new AMapFragment();
@@ -50,8 +45,9 @@ public class AMapFragment extends Fragment implements OnLocationListener {
         super.onCreate(savedInstanceState);
         final Bundle bundle = getArguments();
         if (bundle != null) mKey = bundle.getString(EXTRA_KEY);
-        mLocationObserver = MapHelper.getInstance().location(requireActivity().getActivityResultRegistry(), getLifecycle(), this);
+        MapHelper.getInstance().location(requireActivity().getActivityResultRegistry(), getLifecycle(), this);
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -65,24 +61,22 @@ public class AMapFragment extends Fragment implements OnLocationListener {
     }
 
     private void initMapView(@NonNull GaodeMapView view, @Nullable Bundle savedInstanceState) {
+        view.onCreate(savedInstanceState);
+        view.init(getLifecycle());
+    }
 
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        ((GaodeMapView) requireView().findViewById(R.id.map_view)).onSaveInstanceState(outState);
     }
 
     @Override
     public void change(int status, @NonNull Location location) {
         if (status == Status.Success) {
-            refresh(getView().findViewById(R.id.map_view), location);
+            ((GaodeMapView) requireView().findViewById(R.id.map_view)).updateLocation(location);
         } else {
             ToastUtil.show("定位失败");
         }
-    }
-
-    private void refresh(@NonNull GaodeMapView view, @NonNull Location location) {
-        // 移动地图到定位点
-        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-        view.getMap().moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
-        // 添加定位标记
-        view.getMap().addMarker(new MarkerOptions().position(latLng));
-
     }
 }
