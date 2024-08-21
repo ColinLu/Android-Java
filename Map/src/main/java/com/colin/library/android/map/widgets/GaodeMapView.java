@@ -11,8 +11,10 @@ import androidx.lifecycle.LifecycleEventObserver;
 import androidx.lifecycle.LifecycleOwner;
 
 import com.amap.api.maps.AMap;
+import com.amap.api.maps.AMapOptions;
 import com.amap.api.maps.CameraUpdateFactory;
 import com.amap.api.maps.MapView;
+import com.amap.api.maps.UiSettings;
 import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.MarkerOptions;
 
@@ -24,6 +26,9 @@ import com.amap.api.maps.model.MarkerOptions;
  * Des   :自定义高德地图
  */
 public class GaodeMapView extends MapView implements LifecycleEventObserver {
+    private AMap mMap;
+    private UiSettings mSettings;
+
     public GaodeMapView(Context context) {
         this(context, null, Resources.ID_NULL);
     }
@@ -38,7 +43,33 @@ public class GaodeMapView extends MapView implements LifecycleEventObserver {
 
     public void init(@NonNull Lifecycle lifecycle) {
         lifecycle.addObserver(this);
-        getMap().setMapType(AMap.MAP_TYPE_NORMAL);
+        final AMap map = getMap();
+        map.setMapType(AMap.MAP_TYPE_NAVI);
+        final UiSettings uiSettings = getSettings();
+        // 显示缩放控件
+        uiSettings.setZoomControlsEnabled(true);
+        // 显示指南针
+        uiSettings.setCompassEnabled(true);
+        // 显示定位按钮
+        uiSettings.setMyLocationButtonEnabled(true);
+        // 显示比例尺
+        uiSettings.setScaleControlsEnabled(true);
+        // 设置Logo位置
+        uiSettings.setLogoPosition(AMapOptions.LOGO_POSITION_BOTTOM_LEFT);
+
+    }
+
+    @NonNull
+    @Override
+    public AMap getMap() {
+        if (mMap == null) mMap = super.getMap();
+        return mMap;
+    }
+
+    @NonNull
+    public UiSettings getSettings() {
+        if (mSettings == null) mSettings = getMap().getUiSettings();
+        return mSettings;
     }
 
     @Override
